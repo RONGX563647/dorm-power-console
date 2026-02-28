@@ -164,53 +164,63 @@ jobs:
             echo "Docker配置完成！"
           ENDSSH
 
-      - name: Pull Docker images
+      - name: Check local Docker images
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             set -e
             cd /opt/dorm-power
             
-            # 确保DNS配置生效
-            echo "nameserver 223.5.5.5" > /etc/resolv.conf
-            echo "nameserver 223.6.6.6" >> /etc/resolv.conf
-            echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-            
             echo "=========================================="
-            echo "  拉取Docker Hub官方镜像"
+            echo "  检查本地Docker镜像"
             echo "=========================================="
             
-            # 定义重试函数
-            retry_pull() {
+            # 检查必需的镜像
+            check_image() {
               local image=$1
-              local retries=5
-              local count=0
-              until docker pull $image; do
-                count=$((count+1))
-                if [ $count -ge $retries ]; then
-                  echo "❌ 镜像 $image 拉取失败（重试 $retries 次）"
-                  return 1
-                fi
-                echo "⚠️  镜像 $image 拉取失败，10秒后重试（第 $count 次）..."
-                sleep 10
-              done
-              echo "✅ 镜像 $image 拉取成功"
+              if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^${image}$"; then
+                echo "✅ 镜像 $image 已存在"
+                return 0
+              else
+                echo "❌ 镜像 $image 不存在"
+                return 1
+              fi
             }
             
-            echo "1. 拉取 PostgreSQL 镜像..."
-            retry_pull postgres:16-alpine || exit 1
+            missing_images=()
             
-            echo "2. 拉取 Mosquitto 镜像..."
-            retry_pull eclipse-mosquitto:2 || exit 1
+            echo "检查 PostgreSQL 镜像..."
+            check_image "postgres:16-alpine" || missing_images+=("postgres:16-alpine")
             
-            echo "3. 拉取 Nginx 镜像..."
-            retry_pull nginx:alpine || exit 1
+            echo "检查 Mosquitto 镜像..."
+            check_image "eclipse-mosquitto:2" || missing_images+=("eclipse-mosquitto:2")
             
+            echo "检查 Nginx 镜像..."
+            check_image "nginx:alpine" || missing_images+=("nginx:alpine")
+            
+            if [ ${#missing_images[@]} -gt 0 ]; then
+              echo ""
+              echo "=========================================="
+              echo "  ⚠️  缺少以下镜像，请手动拉取："
+              echo "=========================================="
+              for img in "${missing_images[@]}"; do
+                echo "  docker pull $img"
+              done
+              echo ""
+              echo "或者执行以下命令一次性拉取所有镜像："
+              echo "  docker pull postgres:16-alpine"
+              echo "  docker pull eclipse-mosquitto:2"
+              echo "  docker pull nginx:alpine"
+              echo "=========================================="
+              exit 1
+            fi
+            
+            echo ""
             echo "=========================================="
-            echo "  所有镜像拉取完成！"
+            echo "  ✅ 所有镜像已就绪！"
             echo "=========================================="
             
-            # 显示已拉取的镜像
+            # 显示本地镜像
             docker images | grep -E "postgres|mosquitto|nginx"
           ENDSSH
 
