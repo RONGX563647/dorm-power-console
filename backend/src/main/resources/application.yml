@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: dorm-power-backend
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:dorm_power}
+    username: ${DB_USERNAME:rongx}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  validation:
+    enabled: true
+  config:
+    import: optional:file:.env[.properties]
+
+server:
+  port: ${SERVER_PORT:8000}
+
+mqtt:
+  enabled: ${MQTT_ENABLED:true}
+  broker-url: ${MQTT_BROKER_URL:tcp://localhost:1883}
+  client-id: ${MQTT_CLIENT_ID:dorm-power-backend}
+  username: ${MQTT_USERNAME:admin}
+  password: ${MQTT_PASSWORD:admin}
+  topic-prefix: ${MQTT_TOPIC_PREFIX:dorm}
+  topics:
+    device-status: status
+    device-telemetry: telemetry
+    device-command: cmd
+    device-ack: ack
+    device-event: event
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:your-secret-key-must-be-at-least-256-bits-long-for-jwt}
+    expiration: ${JWT_EXPIRATION:86400000}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:info}
+    com.dormpower: ${LOG_LEVEL_APP:debug}

@@ -1,0 +1,19 @@
+# 后端项目依赖包
+# 每行指定一个依赖包及其版本号
+
+# Web框架
+fastapi==0.116.1          # FastAPI框架，用于构建高性能API
+uvicorn[standard]==0.35.0  # ASGI服务器，用于运行FastAPI应用
+
+# 数据库
+SQLAlchemy==2.0.43         # Python SQL工具包和ORM
+psycopg[binary]==3.2.9      # PostgreSQL数据库适配器
+
+# 数据验证
+pydantic==2.11.7           # 数据验证和设置管理
+
+# MQTT客户端
+paho-mqtt==2.1.0          # MQTT客户端库，用于物联网设备通信
+
+# 环境变量管理
+python-dotenv==1.1.1        # 从.env文件读取环境变量

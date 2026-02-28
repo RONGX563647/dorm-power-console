@@ -1,0 +1,214 @@
+# Dorm Power Production Docker Compose
+# 服务器配置: 2核2G
+# 服务器IP: 117.72.210.10
+
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:16-alpine
+    container_name: dorm-power-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-dorm_power}
+      POSTGRES_USER: ${DB_USERNAME:-dormpower}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backup/postgres:/backup
+    ports:
+      - "127.0.0.1:5432:5432"  # 仅本地访问，提高安全性
+    command: >
+      postgres
+      -c max_connections=50
+      -c shared_buffers=128MB
+      -c effective_cache_size=512MB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-dormpower} -d ${DB_NAME:-dorm_power}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: ${POSTGRES_MEMORY_LIMIT:-512M}
+        reservations:
+          cpus: '0.25'
+          memory: ${POSTGRES_MEMORY_RESERVATION:-256M}
+    restart: unless-stopped
+    networks:
+      - dorm-power-network
+
+  # MQTT Broker
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: dorm-power-mosquitto
+    volumes:
+      - ./backend/mosquitto/config:/mosquitto/config:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+    ports:
+      - "127.0.0.1:1883:1883"   # 仅本地访问
+      - "127.0.0.1:9001:9001"   # WebSocket端口
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    restart: unless-stopped
+    networks:
+      - dorm-power-network
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: dorm-power-backend:latest
+    container_name: dorm-power-backend
+    environment:
+      # 数据库配置
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-dorm_power}
+      DB_USERNAME: ${DB_USERNAME:-dormpower}
+      DB_PASSWORD: ${DB_PASSWORD:-changeme}
+      
+      # JWT配置
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-must-be-at-least-256-bits-long-for-jwt}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+      
+      # MQTT配置
+      MQTT_ENABLED: "true"
+      MQTT_BROKER_URL: tcp://mosquitto:1883
+      MQTT_CLIENT_ID: ${MQTT_CLIENT_ID:-dorm-power-backend}
+      MQTT_USERNAME: ${MQTT_USERNAME:-admin}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-admin}
+      MQTT_TOPIC_PREFIX: ${MQTT_TOPIC_PREFIX:-dorm}
+      
+      # 服务器配置
+      SERVER_PORT: 8000
+      
+      # 日志配置
+      LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-warn}
+      LOG_LEVEL_APP: ${LOG_LEVEL_APP:-info}
+      
+      # Spring Profile
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      
+      # JVM优化参数 (2核2G服务器)
+      JAVA_OPTS: >
+        -server
+        -Xms512m
+        -Xmx768m
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=200
+        -XX:+UnlockExperimentalVMOptions
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+        -Djava.security.egd=file:/dev/./urandom
+        -Dspring.backgroundpreinitializer.ignore=true
+        -Dspring.jmx.enabled=false
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: ${BACKEND_MEMORY_LIMIT:-1G}
+        reservations:
+          cpus: '0.5'
+          memory: ${BACKEND_MEMORY_RESERVATION:-512M}
+    restart: unless-stopped
+    networks:
+      - dorm-power-network
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./dorm-power-console
+      dockerfile: Dockerfile
+    image: dorm-power-console:latest
+    container_name: dorm-power-console
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      BACKEND_BASE_URL: http://117.72.210.10:8000
+      NEXT_PUBLIC_APP_NAME: Dorm Power Console
+      NEXT_PUBLIC_APP_VERSION: 1.0.0
+      NEXT_TELEMETRY_DISABLED: "1"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: ${FRONTEND_MEMORY_LIMIT:-512M}
+        reservations:
+          cpus: '0.25'
+          memory: ${FRONTEND_MEMORY_RESERVATION:-256M}
+    restart: unless-stopped
+    networks:
+      - dorm-power-network
+
+  # Nginx 反向代理 (可选，推荐用于生产环境)
+  nginx:
+    image: nginx:alpine
+    container_name: dorm-power-nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    restart: unless-stopped
+    networks:
+      - dorm-power-network
+
+volumes:
+  postgres_data:
+  mosquitto_data:
+  mosquitto_logs:
+  nginx_logs:
+
+networks:
+  dorm-power-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

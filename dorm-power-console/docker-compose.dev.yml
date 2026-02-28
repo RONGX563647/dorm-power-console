@@ -1,0 +1,23 @@
+﻿services:
+  dorm-power-console-dev:
+    image: node:20-alpine
+    container_name: dorm-power-console-dev
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+    volumes:
+      - ./:/app
+      - dorm_power_node_modules:/app/node_modules
+      - dorm_power_next_cache:/app/.next
+    command: sh -c "npm install && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    restart: unless-stopped
+
+volumes:
+  dorm_power_node_modules:
+  dorm_power_next_cache:

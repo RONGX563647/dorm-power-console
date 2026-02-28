@@ -1,0 +1,82 @@
+﻿:root {
+  --bg-base: #ecf2f7;
+  --bg-accent: #d5e5f3;
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-strong: rgba(255, 255, 255, 0.96);
+  --ink-1: #0f253f;
+  --ink-2: #46627c;
+  --brand-1: #0f7fb0;
+  --brand-2: #2ba58f;
+  --warn: #dd6b20;
+  --danger: #d64545;
+  --ok: #2f9e44;
+  --shadow-lg: 0 18px 40px rgba(20, 45, 80, 0.13);
+  --shadow-md: 0 10px 24px rgba(20, 45, 80, 0.09);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  color: var(--ink-1);
+  font-family: "Bahnschrift", "DIN Alternate", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background:
+    radial-gradient(1200px 700px at 90% -10%, rgba(43, 165, 143, 0.2), transparent 65%),
+    radial-gradient(850px 520px at -10% -20%, rgba(15, 127, 176, 0.23), transparent 60%),
+    linear-gradient(145deg, var(--bg-base) 0%, #f5f9fc 45%, var(--bg-accent) 100%);
+  background-attachment: fixed;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#__next {
+  min-height: 100%;
+}
+
+.shell-layout {
+  background: transparent !important;
+}
+
+.shell-content {
+  margin: 20px;
+}
+
+.glass-card.ant-card {
+  background: var(--panel);
+  border: 1px solid rgba(15, 127, 176, 0.14);
+  box-shadow: var(--shadow-md);
+  border-radius: 16px;
+  backdrop-filter: blur(5px);
+}
+
+.glass-card.ant-card .ant-card-head {
+  border-bottom: 1px solid rgba(35, 102, 133, 0.12);
+}
+
+.offline-row td {
+  background: #fff2ef !important;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.status-dot-ok {
+  background: var(--ok);
+  box-shadow: 0 0 0 5px rgba(47, 158, 68, 0.16);
+}
+
+.status-dot-off {
+  background: #94a7bb;
+}
+
+.status-dot-bad {
+  background: var(--danger);
+  box-shadow: 0 0 0 5px rgba(214, 69, 69, 0.14);
+}
