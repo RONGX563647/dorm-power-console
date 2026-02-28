@@ -106,10 +106,14 @@ jobs:
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             cd /opt/dorm-power
             cp .env.production.example .env.production
-            sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env.production
-            sed -i "s/JWT_SECRET=.*/JWT_SECRET=${{ secrets.JWT_SECRET }}/" .env.production
-            sed -i "s/MQTT_PASSWORD=.*/MQTT_PASSWORD=${{ secrets.MQTT_PASSWORD }}/" .env.production
+            sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${DB_PASSWORD}/" .env.production
+            sed -i "s/JWT_SECRET=.*/JWT_SECRET=${JWT_SECRET}/" .env.production
+            sed -i "s/MQTT_PASSWORD=.*/MQTT_PASSWORD=${MQTT_PASSWORD}/" .env.production
           ENDSSH
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
 
       - name: Deploy with Docker
         run: |
