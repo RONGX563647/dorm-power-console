@@ -115,6 +115,44 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
 
+      - name: Configure Docker registry mirrors
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            echo "配置 Docker 镜像加速源..."
+            
+            # 创建 Docker 配置目录
+            mkdir -p /etc/docker
+            
+            # 写入镜像配置
+            cat > /etc/docker/daemon.json << 'EOF'
+            {
+              "registry-mirrors": [
+                "https://docker.m.daocloud.io",
+                "https://docker.imgdb.de",
+                "https://docker.hlmirror.com",
+                "https://docker.1ms.run",
+                "https://docker.1panel.live",
+                "https://hub.rat.dev",
+                "https://docker.mrxn.net",
+                "https://docker.anyhub.us.kg",
+                "https://docker-mirror.aigc2d.com"
+              ],
+              "log-driver": "json-file",
+              "log-opts": {
+                "max-size": "10m",
+                "max-file": "3"
+              }
+            }
+            EOF
+            
+            # 重启 Docker 服务
+            systemctl restart docker
+            systemctl status docker --no-pager
+            
+            echo "Docker 镜像加速配置完成！"
+          ENDSSH
+
       - name: Deploy with Docker
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \

@@ -2,8 +2,6 @@
 # 服务器配置: 2核2G
 # 服务器IP: 117.72.210.10
 
-version: '3.8'
-
 services:
   # PostgreSQL 数据库
   postgres:
