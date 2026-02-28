@@ -115,7 +115,7 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
 
-      - name: Configure DNS and Docker registry mirrors
+      - name: Configure DNS and Docker
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
@@ -131,15 +131,10 @@ jobs:
             # 创建 Docker 配置目录
             mkdir -p /etc/docker
             
-            # 写入Docker配置（包含DNS和镜像加速）
+            # 写入Docker配置（仅DNS，不使用镜像加速）
             cat > /etc/docker/daemon.json << 'EOF'
             {
               "dns": ["223.5.5.5", "223.6.6.6", "8.8.8.8", "8.8.4.4"],
-              "registry-mirrors": [
-                "https://hub-mirror.c.163.com",
-                "https://mirror.baidubce.com",
-                "https://docker.m.daocloud.io"
-              ],
               "log-driver": "json-file",
               "log-opts": {
                 "max-size": "10m",
@@ -162,10 +157,9 @@ jobs:
             # 验证 Docker 状态
             systemctl status docker --no-pager
             
-            # 验证DNS和镜像配置
+            # 验证DNS配置
             echo "验证Docker配置..."
             docker info | grep -A 3 "DNS" || echo "DNS配置未生效"
-            docker info | grep -A 5 "Registry Mirrors" || echo "镜像配置未生效"
             
             echo "Docker配置完成！"
           ENDSSH
@@ -183,13 +177,13 @@ jobs:
             echo "nameserver 8.8.8.8" >> /etc/resolv.conf
             
             echo "=========================================="
-            echo "  拉取国内镜像（使用可靠镜像源）"
+            echo "  拉取Docker Hub官方镜像"
             echo "=========================================="
             
             # 定义重试函数
             retry_pull() {
               local image=$1
-              local retries=3
+              local retries=5
               local count=0
               until docker pull $image; do
                 count=$((count+1))
@@ -197,20 +191,20 @@ jobs:
                   echo "❌ 镜像 $image 拉取失败（重试 $retries 次）"
                   return 1
                 fi
-                echo "⚠️  镜像 $image 拉取失败，5秒后重试（第 $count 次）..."
-                sleep 5
+                echo "⚠️  镜像 $image 拉取失败，10秒后重试（第 $count 次）..."
+                sleep 10
               done
               echo "✅ 镜像 $image 拉取成功"
             }
             
             echo "1. 拉取 PostgreSQL 镜像..."
-            retry_pull hub-mirror.c.163.com/library/postgres:16-alpine || exit 1
+            retry_pull postgres:16-alpine || exit 1
             
             echo "2. 拉取 Mosquitto 镜像..."
-            retry_pull hub-mirror.c.163.com/library/eclipse-mosquitto:2 || exit 1
+            retry_pull eclipse-mosquitto:2 || exit 1
             
             echo "3. 拉取 Nginx 镜像..."
-            retry_pull hub-mirror.c.163.com/library/nginx:alpine || exit 1
+            retry_pull nginx:alpine || exit 1
             
             echo "=========================================="
             echo "  所有镜像拉取完成！"
