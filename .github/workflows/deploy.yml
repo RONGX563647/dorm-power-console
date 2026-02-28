@@ -136,14 +136,40 @@ jobs:
 
       - name: Health check
         run: |
-          sleep 30
-          response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ env.SERVER_IP }}:8000/health)
-          if [ $response -eq 200 ]; then
-            echo "Health check passed!"
-          else
-            echo "Health check failed with status code: $response"
-            exit 1
-          fi
+          echo "等待服务启动..."
+          sleep 60
+          
+          echo "开始健康检查..."
+          MAX_RETRIES=5
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            echo "尝试 $((RETRY_COUNT + 1))/$MAX_RETRIES..."
+            
+            response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://${{ env.SERVER_IP }}:8000/health 2>&1) || response="000"
+            
+            if [ "$response" = "200" ]; then
+              echo "✅ 健康检查通过！"
+              echo "前端: http://${{ env.SERVER_IP }}:3000"
+              echo "后端: http://${{ env.SERVER_IP }}:8000"
+              exit 0
+            else
+              echo "响应码: $response"
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "等待 10 秒后重试..."
+                sleep 10
+              fi
+            fi
+          done
+          
+          echo "❌ 健康检查失败！"
+          echo "检查服务状态..."
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} \
+            "docker ps -a && docker-compose -f /opt/dorm-power/docker-compose.production.yml logs --tail=50"
+          exit 1
 
       - name: Cleanup SSH key
         if: always()
