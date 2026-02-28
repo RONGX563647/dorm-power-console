@@ -57,7 +57,17 @@ jobs:
       - name: Copy files to server
         run: |
           rsync -avz --delete \
+            --compress-level=9 \
+            --no-inc-recursive \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            # 1. 排除绝对无用的目录/文件
+            --exclude='back_end' \
+            --exclude='backend/src/test' \
+            --exclude='doc' \
+            --exclude='dorm-power-console/.next' \
+            --exclude='dorm-power-console/*.md' \
+            --exclude='dorm-power-console/package-lock.json' \
+            --exclude='*.sh' \
             --exclude='.git' \
             --exclude='.github' \
             --exclude='node_modules' \
@@ -69,6 +79,29 @@ jobs:
             --exclude='postgres_data' \
             --exclude='mosquitto/data' \
             --exclude='mosquitto/log' \
+            --exclude='.gitignore' \
+            --exclude='.eslintrc.json' \
+            --exclude='next-env.d.ts' \
+            # 2. 只传核心目录/文件
+            --include='backend/src/main' \
+            --include='backend/pom.xml' \
+            --include='backend/Dockerfile' \
+            --include='dorm-power-console/src' \
+            --include='dorm-power-console/package.json' \
+            --include='dorm-power-console/Dockerfile' \
+            --include='dorm-power-console/next.config.ts' \
+            --include='dorm-power-console/tsconfig.json' \
+            --include='docker-compose.yml' \
+            --include='docker-compose.production.yml' \
+            --include='nginx/' \
+            --include='.env.production.example' \
+            --include='.env.docker.example' \
+            --include='deploy-production.sh' \
+            --include='server-deploy.sh' \
+            --include='backup.sh' \
+            # 3. 排除其他所有未明确包含的内容
+            --exclude='*' \
+            # 4. 传输到服务器指定目录
             ./ ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.SERVER_PATH }}/
 
       - name: Create environment file on server
