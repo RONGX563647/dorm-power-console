@@ -148,9 +148,47 @@ jobs:
             
             # 重启 Docker 服务
             systemctl restart docker
+            
+            # 等待 Docker 完全启动
+            sleep 5
+            
+            # 验证 Docker 状态
             systemctl status docker --no-pager
             
+            # 验证镜像配置
+            echo "验证镜像配置..."
+            docker info | grep -A 5 "Registry Mirrors" || echo "镜像配置未生效"
+            
             echo "Docker 镜像加速配置完成！"
+          ENDSSH
+
+      - name: Pull Docker images
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            set -e
+            cd /opt/dorm-power
+            
+            echo "=========================================="
+            echo "  预先拉取镜像（避免构建时超时）"
+            echo "=========================================="
+            
+            echo "1. 拉取 PostgreSQL 镜像..."
+            docker pull postgres:16-alpine || {
+              echo "警告: PostgreSQL 镜像拉取失败，将在构建时重试"
+            }
+            
+            echo "2. 拉取 Mosquitto 镜像..."
+            docker pull eclipse-mosquitto:2 || {
+              echo "警告: Mosquitto 镜像拉取失败，将在构建时重试"
+            }
+            
+            echo "3. 拉取 Nginx 镜像..."
+            docker pull nginx:alpine || {
+              echo "警告: Nginx 镜像拉取失败，将在构建时重试"
+            }
+            
+            echo "镜像拉取完成！"
           ENDSSH
 
       - name: Deploy with Docker
@@ -161,37 +199,53 @@ jobs:
             cd /opt/dorm-power
             
             echo "=========================================="
-            echo "  开始部署 - 修复Docker Compose命令"
+            echo "  开始部署 - 使用预拉取的镜像"
             echo "=========================================="
             
             echo "1. 清理系统资源..."
-            docker system prune -af || true
-            sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+            docker system prune -f || true
             
             echo "2. 停止旧服务..."
             docker compose -f docker-compose.production.yml down --remove-orphans || true
             sleep 5
             
-            echo "3. 分步启动服务（避免内存峰值）..."
+            echo "3. 检查镜像状态..."
+            docker images | grep -E "postgres|mosquitto|nginx|dorm-power" || echo "部分镜像不存在"
             
-            echo "  3.1 启动数据库和MQTT..."
-            docker compose -f docker-compose.production.yml up -d postgres mosquitto
+            echo "4. 分步启动服务..."
+            
+            echo "  4.1 启动数据库和MQTT..."
+            docker compose -f docker-compose.production.yml up -d postgres mosquitto || {
+              echo "错误: 数据库或MQTT启动失败"
+              docker compose -f docker-compose.production.yml logs postgres mosquitto
+              exit 1
+            }
             sleep 15
             
-            echo "  3.2 启动后端服务..."
-            docker compose -f docker-compose.production.yml up -d backend
+            echo "  4.2 启动后端服务..."
+            docker compose -f docker-compose.production.yml up -d --build backend || {
+              echo "错误: 后端服务启动失败"
+              docker compose -f docker-compose.production.yml logs backend
+              exit 1
+            }
             sleep 20
             
-            echo "  3.3 启动前端服务..."
-            docker compose -f docker-compose.production.yml up -d frontend
+            echo "  4.3 启动前端服务..."
+            docker compose -f docker-compose.production.yml up -d --build frontend || {
+              echo "错误: 前端服务启动失败"
+              docker compose -f docker-compose.production.yml logs frontend
+              exit 1
+            }
             
-            echo "  3.4 启动Nginx..."
-            docker compose -f docker-compose.production.yml up -d nginx
+            echo "  4.4 启动Nginx..."
+            docker compose -f docker-compose.production.yml up -d nginx || {
+              echo "警告: Nginx启动失败，继续..."
+            }
             
-            echo "4. 等待服务稳定..."
+            echo "5. 等待服务稳定..."
             sleep 10
             
-            echo "5. 检查容器状态..."
+            echo "6. 检查容器状态..."
             docker ps
             
             echo "=========================================="
