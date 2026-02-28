@@ -80,22 +80,29 @@ jobs:
             --exclude='.gitignore' \
             --exclude='.eslintrc.json' \
             --exclude='next-env.d.ts' \
+            --include='backend/' \
+            --include='backend/src/' \
             --include='backend/src/main/' \
+            --include='backend/src/main/**' \
+            --include='backend/src/main/resources/**' \
             --include='backend/pom.xml' \
             --include='backend/Dockerfile' \
+            --include='backend/.env.example' \
+            --include='dorm-power-console/' \
             --include='dorm-power-console/src/' \
+            --include='dorm-power-console/src/**' \
             --include='dorm-power-console/package.json' \
             --include='dorm-power-console/Dockerfile' \
             --include='dorm-power-console/next.config.ts' \
             --include='dorm-power-console/tsconfig.json' \
+            --include='dorm-power-console/public/' \
+            --include='dorm-power-console/public/**' \
             --include='docker-compose.yml' \
             --include='docker-compose.production.yml' \
             --include='nginx/' \
+            --include='nginx/**' \
             --include='.env.production.example' \
             --include='.env.docker.example' \
-            --include='deploy-production.sh' \
-            --include='server-deploy.sh' \
-            --include='backup.sh' \
             --exclude='*' \
             ./ \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.SERVER_PATH }}/
