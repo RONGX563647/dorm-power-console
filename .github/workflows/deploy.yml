@@ -120,35 +120,21 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             echo "=========================================="
-            echo "  配置服务器DNS解析"
+            echo "  配置服务器DNS和Docker"
             echo "=========================================="
             
-            # 备份原有DNS配置
-            cp /etc/resolv.conf /etc/resolv.conf.backup
-            
-            # 配置公共DNS服务器（阿里云DNS + Google DNS）
-            cat > /etc/resolv.conf << 'EOF'
-            nameserver 223.5.5.5
-            nameserver 223.6.6.6
-            nameserver 8.8.8.8
-            nameserver 8.8.4.4
-            EOF
-            
-            # 测试DNS解析
-            echo "测试DNS解析..."
-            nslookup docker.mirrors.ustc.edu.cn || echo "DNS解析测试完成"
-            ping -c 2 docker.mirrors.ustc.edu.cn || echo "网络连接测试完成"
-            
-            echo "=========================================="
-            echo "  配置 Docker 镜像加速源"
-            echo "=========================================="
+            # 配置系统DNS（临时）
+            echo "nameserver 223.5.5.5" > /etc/resolv.conf
+            echo "nameserver 223.6.6.6" >> /etc/resolv.conf
+            echo "nameserver 8.8.8.8" >> /etc/resolv.conf
             
             # 创建 Docker 配置目录
             mkdir -p /etc/docker
             
-            # 写入镜像配置（使用可靠的镜像源）
+            # 写入Docker配置（包含DNS和镜像加速）
             cat > /etc/docker/daemon.json << 'EOF'
             {
+              "dns": ["223.5.5.5", "223.6.6.6", "8.8.8.8", "8.8.4.4"],
               "registry-mirrors": [
                 "https://hub-mirror.c.163.com",
                 "https://mirror.baidubce.com",
@@ -169,18 +155,19 @@ jobs:
             systemctl daemon-reload
             systemctl restart docker
             
-            # 等待 Docker 完全启动（关键：等待10秒）
+            # 等待 Docker 完全启动
             echo "等待 Docker 启动..."
-            sleep 10
+            sleep 15
             
             # 验证 Docker 状态
             systemctl status docker --no-pager
             
-            # 验证镜像配置
-            echo "验证镜像配置..."
+            # 验证DNS和镜像配置
+            echo "验证Docker配置..."
+            docker info | grep -A 3 "DNS" || echo "DNS配置未生效"
             docker info | grep -A 5 "Registry Mirrors" || echo "镜像配置未生效"
             
-            echo "DNS和Docker镜像加速配置完成！"
+            echo "Docker配置完成！"
           ENDSSH
 
       - name: Pull Docker images
@@ -189,6 +176,11 @@ jobs:
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             set -e
             cd /opt/dorm-power
+            
+            # 确保DNS配置生效
+            echo "nameserver 223.5.5.5" > /etc/resolv.conf
+            echo "nameserver 223.6.6.6" >> /etc/resolv.conf
+            echo "nameserver 8.8.8.8" >> /etc/resolv.conf
             
             echo "=========================================="
             echo "  拉取国内镜像（使用可靠镜像源）"
