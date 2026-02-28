@@ -146,6 +146,9 @@ jobs:
             echo "✅ Deployment successful!"
             echo "Frontend: http://${{ env.SERVER_IP }}:3000"
             echo "Backend: http://${{ env.SERVER_IP }}:8000"
+          elif [ "${{ job.status }}" == "cancelled" ]; then
+            echo "⚠️  Deployment cancelled!"
+            echo "The deployment was manually cancelled."
           else
             echo "❌ Deployment failed!"
             exit 1
