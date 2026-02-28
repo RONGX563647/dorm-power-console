@@ -43,10 +43,10 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: ${POSTGRES_MEMORY_LIMIT:-512M}
+          memory: ${POSTGRES_MEMORY_LIMIT:-400M}
         reservations:
           cpus: '0.25'
-          memory: ${POSTGRES_MEMORY_RESERVATION:-256M}
+          memory: ${POSTGRES_MEMORY_RESERVATION:-200M}
     restart: unless-stopped
     networks:
       - dorm-power-network
@@ -114,13 +114,13 @@ services:
       # JVM优化参数 (2核2G服务器)
       JAVA_OPTS: >
         -server
-        -Xms512m
-        -Xmx768m
+        -Xms384m
+        -Xmx512m
         -XX:+UseG1GC
         -XX:MaxGCPauseMillis=200
         -XX:+UnlockExperimentalVMOptions
         -XX:+UseContainerSupport
-        -XX:MaxRAMPercentage=75.0
+        -XX:MaxRAMPercentage=70.0
         -Djava.security.egd=file:/dev/./urandom
         -Dspring.backgroundpreinitializer.ignore=true
         -Dspring.jmx.enabled=false
@@ -135,10 +135,10 @@ services:
       resources:
         limits:
           cpus: '0.75'
-          memory: ${BACKEND_MEMORY_LIMIT:-1G}
+          memory: ${BACKEND_MEMORY_LIMIT:-600M}
         reservations:
           cpus: '0.5'
-          memory: ${BACKEND_MEMORY_RESERVATION:-512M}
+          memory: ${BACKEND_MEMORY_RESERVATION:-400M}
     restart: unless-stopped
     networks:
       - dorm-power-network
@@ -165,10 +165,10 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: ${FRONTEND_MEMORY_LIMIT:-512M}
+          memory: ${FRONTEND_MEMORY_LIMIT:-300M}
         reservations:
           cpus: '0.25'
-          memory: ${FRONTEND_MEMORY_RESERVATION:-256M}
+          memory: ${FRONTEND_MEMORY_RESERVATION:-200M}
     restart: unless-stopped
     networks:
       - dorm-power-network

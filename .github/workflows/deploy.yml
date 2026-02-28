@@ -120,18 +120,44 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             cd /opt/dorm-power
-            chmod +x deploy-production.sh
             
-            echo "清理系统资源..."
-            docker system prune -f || true
+            echo "=========================================="
+            echo "  开始部署 - 优化内存使用"
+            echo "=========================================="
             
-            echo "停止旧服务..."
+            echo "1. 清理系统资源..."
+            docker system prune -af --volumes || true
+            sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+            
+            echo "2. 停止旧服务..."
             docker-compose -f docker-compose.production.yml down --remove-orphans || true
+            sleep 5
             
-            echo "启动新服务..."
-            docker-compose -f docker-compose.production.yml up -d --build
+            echo "3. 分步启动服务（避免内存峰值）..."
             
-            echo "部署完成！"
+            echo "  3.1 启动数据库和MQTT..."
+            docker-compose -f docker-compose.production.yml up -d postgres mosquitto
+            sleep 15
+            
+            echo "  3.2 启动后端服务..."
+            docker-compose -f docker-compose.production.yml up -d backend
+            sleep 20
+            
+            echo "  3.3 启动前端服务..."
+            docker-compose -f docker-compose.production.yml up -d frontend
+            
+            echo "  3.4 启动Nginx..."
+            docker-compose -f docker-compose.production.yml up -d nginx
+            
+            echo "4. 等待服务稳定..."
+            sleep 10
+            
+            echo "5. 检查容器状态..."
+            docker ps
+            
+            echo "=========================================="
+            echo "  部署完成！"
+            echo "=========================================="
           ENDSSH
 
       - name: Health check
