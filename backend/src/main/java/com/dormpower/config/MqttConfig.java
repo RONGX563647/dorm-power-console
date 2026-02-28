@@ -69,16 +69,25 @@ public class MqttConfig {
         try {
             MqttClient client = new MqttClient(brokerUrl, clientId);
             MqttConnectOptions options = new MqttConnectOptions();
-            options.setUserName(username);
-            options.setPassword(password.toCharArray());
+            
+            if (username != null && !username.isEmpty() && !"admin".equals(username)) {
+                options.setUserName(username);
+                options.setPassword(password.toCharArray());
+                System.out.println("MQTT connecting with authentication");
+            } else {
+                System.out.println("MQTT connecting without authentication");
+            }
+            
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
+            options.setConnectionTimeout(10);
+            options.setKeepAliveInterval(60);
             client.connect(options);
             System.out.println("MQTT connected to " + brokerUrl);
             return client;
         } catch (MqttException e) {
             System.err.println("Failed to connect to MQTT broker: " + e.getMessage());
-            // 返回null，允许应用启动
+            e.printStackTrace();
             return null;
         }
     }

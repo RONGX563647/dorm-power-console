@@ -89,8 +89,8 @@ services:
       MQTT_ENABLED: "true"
       MQTT_BROKER_URL: tcp://mosquitto:1883
       MQTT_CLIENT_ID: ${MQTT_CLIENT_ID:-dorm-power-backend}
-      MQTT_USERNAME: ${MQTT_USERNAME:-admin}
-      MQTT_PASSWORD: ${MQTT_PASSWORD:-admin}
+      MQTT_USERNAME: ""
+      MQTT_PASSWORD: ""
       MQTT_TOPIC_PREFIX: ${MQTT_TOPIC_PREFIX:-dorm}
       SERVER_PORT: 8000
       LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-warn}
