@@ -115,10 +115,30 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
 
-      - name: Configure Docker registry mirrors
+      - name: Configure DNS and Docker registry mirrors
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            echo "=========================================="
+            echo "  配置服务器DNS解析"
+            echo "=========================================="
+            
+            # 备份原有DNS配置
+            cp /etc/resolv.conf /etc/resolv.conf.backup
+            
+            # 配置公共DNS服务器（阿里云DNS + Google DNS）
+            cat > /etc/resolv.conf << 'EOF'
+            nameserver 223.5.5.5
+            nameserver 223.6.6.6
+            nameserver 8.8.8.8
+            nameserver 8.8.4.4
+            EOF
+            
+            # 测试DNS解析
+            echo "测试DNS解析..."
+            nslookup docker.mirrors.ustc.edu.cn || echo "DNS解析测试完成"
+            ping -c 2 docker.mirrors.ustc.edu.cn || echo "网络连接测试完成"
+            
             echo "=========================================="
             echo "  配置 Docker 镜像加速源"
             echo "=========================================="
@@ -126,14 +146,10 @@ jobs:
             # 创建 Docker 配置目录
             mkdir -p /etc/docker
             
-            # 清空原有配置
-            > /etc/docker/daemon.json
-            
-            # 写入镜像配置
+            # 写入镜像配置（使用可靠的镜像源）
             cat > /etc/docker/daemon.json << 'EOF'
             {
               "registry-mirrors": [
-                "https://docker.mirrors.ustc.edu.cn",
                 "https://hub-mirror.c.163.com",
                 "https://mirror.baidubce.com",
                 "https://docker.m.daocloud.io"
@@ -164,7 +180,7 @@ jobs:
             echo "验证镜像配置..."
             docker info | grep -A 5 "Registry Mirrors" || echo "镜像配置未生效"
             
-            echo "Docker 镜像加速配置完成！"
+            echo "DNS和Docker镜像加速配置完成！"
           ENDSSH
 
       - name: Pull Docker images
@@ -175,7 +191,7 @@ jobs:
             cd /opt/dorm-power
             
             echo "=========================================="
-            echo "  拉取国内镜像（公开源，无需登录）"
+            echo "  拉取国内镜像（使用可靠镜像源）"
             echo "=========================================="
             
             # 定义重试函数
@@ -196,13 +212,13 @@ jobs:
             }
             
             echo "1. 拉取 PostgreSQL 镜像..."
-            retry_pull docker.mirrors.ustc.edu.cn/library/postgres:16-alpine || exit 1
+            retry_pull hub-mirror.c.163.com/library/postgres:16-alpine || exit 1
             
             echo "2. 拉取 Mosquitto 镜像..."
-            retry_pull docker.mirrors.ustc.edu.cn/library/eclipse-mosquitto:2 || exit 1
+            retry_pull hub-mirror.c.163.com/library/eclipse-mosquitto:2 || exit 1
             
             echo "3. 拉取 Nginx 镜像..."
-            retry_pull mirrors.cloud.tencent.com/library/nginx:alpine || exit 1
+            retry_pull hub-mirror.c.163.com/library/nginx:alpine || exit 1
             
             echo "=========================================="
             echo "  所有镜像拉取完成！"
