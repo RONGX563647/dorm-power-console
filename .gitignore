@@ -81,6 +81,10 @@ out/
 # ============================================
 node_modules/
 .mvn/
+.npm-cache/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # ============================================
 # Docker 数据卷
