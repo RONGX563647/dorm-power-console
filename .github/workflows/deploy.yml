@@ -119,24 +119,24 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
-            echo "配置 Docker 镜像加速源..."
+            echo "=========================================="
+            echo "  配置 Docker 镜像加速源"
+            echo "=========================================="
             
             # 创建 Docker 配置目录
             mkdir -p /etc/docker
+            
+            # 清空原有配置
+            > /etc/docker/daemon.json
             
             # 写入镜像配置
             cat > /etc/docker/daemon.json << 'EOF'
             {
               "registry-mirrors": [
-                "https://docker.m.daocloud.io",
-                "https://docker.imgdb.de",
-                "https://docker.hlmirror.com",
-                "https://docker.1ms.run",
-                "https://docker.1panel.live",
-                "https://hub.rat.dev",
-                "https://docker.mrxn.net",
-                "https://docker.anyhub.us.kg",
-                "https://docker-mirror.aigc2d.com"
+                "https://docker.mirrors.ustc.edu.cn",
+                "https://hub-mirror.c.163.com",
+                "https://mirror.baidubce.com",
+                "https://docker.m.daocloud.io"
               ],
               "log-driver": "json-file",
               "log-opts": {
@@ -146,11 +146,16 @@ jobs:
             }
             EOF
             
+            # 赋予正确权限
+            chmod 644 /etc/docker/daemon.json
+            
             # 重启 Docker 服务
+            systemctl daemon-reload
             systemctl restart docker
             
-            # 等待 Docker 完全启动
-            sleep 5
+            # 等待 Docker 完全启动（关键：等待10秒）
+            echo "等待 Docker 启动..."
+            sleep 10
             
             # 验证 Docker 状态
             systemctl status docker --no-pager
@@ -170,25 +175,41 @@ jobs:
             cd /opt/dorm-power
             
             echo "=========================================="
-            echo "  预先拉取镜像（避免构建时超时）"
+            echo "  拉取国内镜像（阿里云镜像仓库）"
             echo "=========================================="
             
-            echo "1. 拉取 PostgreSQL 镜像..."
-            docker pull postgres:16-alpine || {
-              echo "警告: PostgreSQL 镜像拉取失败，将在构建时重试"
+            # 定义重试函数
+            retry_pull() {
+              local image=$1
+              local retries=3
+              local count=0
+              until docker pull $image; do
+                count=$((count+1))
+                if [ $count -ge $retries ]; then
+                  echo "❌ 镜像 $image 拉取失败（重试 $retries 次）"
+                  return 1
+                fi
+                echo "⚠️  镜像 $image 拉取失败，5秒后重试（第 $count 次）..."
+                sleep 5
+              done
+              echo "✅ 镜像 $image 拉取成功"
             }
+            
+            echo "1. 拉取 PostgreSQL 镜像..."
+            retry_pull registry.cn-hangzhou.aliyuncs.com/library/postgres:16-alpine || exit 1
             
             echo "2. 拉取 Mosquitto 镜像..."
-            docker pull eclipse-mosquitto:2 || {
-              echo "警告: Mosquitto 镜像拉取失败，将在构建时重试"
-            }
+            retry_pull registry.cn-hangzhou.aliyuncs.com/library/eclipse-mosquitto:2 || exit 1
             
             echo "3. 拉取 Nginx 镜像..."
-            docker pull nginx:alpine || {
-              echo "警告: Nginx 镜像拉取失败，将在构建时重试"
-            }
+            retry_pull registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine || exit 1
             
-            echo "镜像拉取完成！"
+            echo "=========================================="
+            echo "  所有镜像拉取完成！"
+            echo "=========================================="
+            
+            # 显示已拉取的镜像
+            docker images | grep registry.cn-hangzhou.aliyuncs.com
           ENDSSH
 
       - name: Deploy with Docker
