@@ -175,7 +175,7 @@ jobs:
             cd /opt/dorm-power
             
             echo "=========================================="
-            echo "  拉取国内镜像（阿里云镜像仓库）"
+            echo "  拉取国内镜像（公开源，无需登录）"
             echo "=========================================="
             
             # 定义重试函数
@@ -196,20 +196,20 @@ jobs:
             }
             
             echo "1. 拉取 PostgreSQL 镜像..."
-            retry_pull registry.cn-hangzhou.aliyuncs.com/library/postgres:16-alpine || exit 1
+            retry_pull docker.mirrors.ustc.edu.cn/library/postgres:16-alpine || exit 1
             
             echo "2. 拉取 Mosquitto 镜像..."
-            retry_pull registry.cn-hangzhou.aliyuncs.com/library/eclipse-mosquitto:2 || exit 1
+            retry_pull docker.mirrors.ustc.edu.cn/library/eclipse-mosquitto:2 || exit 1
             
             echo "3. 拉取 Nginx 镜像..."
-            retry_pull registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine || exit 1
+            retry_pull mirrors.cloud.tencent.com/library/nginx:alpine || exit 1
             
             echo "=========================================="
             echo "  所有镜像拉取完成！"
             echo "=========================================="
             
             # 显示已拉取的镜像
-            docker images | grep registry.cn-hangzhou.aliyuncs.com
+            docker images | grep -E "postgres|mosquitto|nginx"
           ENDSSH
 
       - name: Deploy with Docker
