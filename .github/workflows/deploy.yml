@@ -58,9 +58,7 @@ jobs:
         run: |
           rsync -avz --delete \
             --compress-level=9 \
-            --no-inc-recursive \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            # 1. 排除绝对无用的目录/文件
             --exclude='back_end' \
             --exclude='backend/src/test' \
             --exclude='doc' \
@@ -82,11 +80,10 @@ jobs:
             --exclude='.gitignore' \
             --exclude='.eslintrc.json' \
             --exclude='next-env.d.ts' \
-            # 2. 只传核心目录/文件
-            --include='backend/src/main' \
+            --include='backend/src/main/' \
             --include='backend/pom.xml' \
             --include='backend/Dockerfile' \
-            --include='dorm-power-console/src' \
+            --include='dorm-power-console/src/' \
             --include='dorm-power-console/package.json' \
             --include='dorm-power-console/Dockerfile' \
             --include='dorm-power-console/next.config.ts' \
@@ -99,10 +96,9 @@ jobs:
             --include='deploy-production.sh' \
             --include='server-deploy.sh' \
             --include='backup.sh' \
-            # 3. 排除其他所有未明确包含的内容
             --exclude='*' \
-            # 4. 传输到服务器指定目录
-            ./ ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.SERVER_PATH }}/
+            ./ \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.SERVER_PATH }}/
 
       - name: Create environment file on server
         run: |
