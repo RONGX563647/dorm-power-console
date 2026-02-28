@@ -1,0 +1,119 @@
+name: Deploy to Production Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  SERVER_IP: 117.72.210.10
+  SERVER_USER: root
+  SERVER_PATH: /opt/dorm-power
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: dorm-power-console/package-lock.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Build Backend
+        run: |
+          cd backend
+          mvn clean package -DskipTests -B
+
+      - name: Build Frontend
+        run: |
+          cd dorm-power-console
+          npm ci
+          npm run build
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Copy files to server
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='target' \
+            --exclude='.vscode' \
+            --exclude='.trae' \
+            --exclude='*.log' \
+            --exclude='backup' \
+            --exclude='postgres_data' \
+            --exclude='mosquitto/data' \
+            --exclude='mosquitto/log' \
+            ./ ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.SERVER_PATH }}/
+
+      - name: Create environment file on server
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            cd /opt/dorm-power
+            cp .env.production.example .env.production
+            sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/" .env.production
+            sed -i "s/JWT_SECRET=.*/JWT_SECRET=${{ secrets.JWT_SECRET }}/" .env.production
+            sed -i "s/MQTT_PASSWORD=.*/MQTT_PASSWORD=${{ secrets.MQTT_PASSWORD }}/" .env.production
+          ENDSSH
+
+      - name: Deploy with Docker
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            cd /opt/dorm-power
+            chmod +x deploy-production.sh
+            ./deploy-production.sh --update
+          ENDSSH
+
+      - name: Health check
+        run: |
+          sleep 30
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ env.SERVER_IP }}:8000/health)
+          if [ $response -eq 200 ]; then
+            echo "Health check passed!"
+          else
+            echo "Health check failed with status code: $response"
+            exit 1
+          fi
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+            echo "Frontend: http://${{ env.SERVER_IP }}:3000"
+            echo "Backend: http://${{ env.SERVER_IP }}:8000"
+          else
+            echo "❌ Deployment failed!"
+            exit 1
+          fi
