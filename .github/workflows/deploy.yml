@@ -224,6 +224,45 @@ jobs:
             docker images | grep -E "postgres|mosquitto|nginx"
           ENDSSH
 
+      - name: Fix cgroup for JD Cloud
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            echo "=========================================="
+            echo "  修复京东云轻量服务器cgroup挂载"
+            echo "=========================================="
+            
+            # 检查cgroup挂载状态
+            echo "检查cgroup挂载..."
+            if ! mount | grep -q "cgroup on /sys/fs/cgroup/cpu"; then
+              echo "cgroup未正确挂载，正在修复..."
+              
+              # 创建cgroup目录
+              mkdir -p /sys/fs/cgroup/cpu /sys/fs/cgroup/cpuacct
+              
+              # 挂载cgroup
+              mount -t cgroup cgroup -o cpu,cpuacct /sys/fs/cgroup/cpu 2>/dev/null || {
+                echo "⚠️  cgroup挂载失败，但继续部署（可能已挂载）"
+              }
+              
+              # 设置开机自动挂载
+              if [ ! -f /etc/rc.local ]; then
+                echo "#!/bin/bash" > /etc/rc.local
+              fi
+              
+              if ! grep -q "mount -t cgroup" /etc/rc.local; then
+                echo "mount -t cgroup cgroup -o cpu,cpuacct /sys/fs/cgroup/cpu" >> /etc/rc.local
+                chmod +x /etc/rc.local
+                echo "已添加开机自动挂载cgroup"
+              fi
+            else
+              echo "✅ cgroup已正确挂载"
+            fi
+            
+            # 验证挂载
+            mount | grep cgroup || echo "cgroup挂载验证完成"
+          ENDSSH
+
       - name: Deploy with Docker
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
@@ -232,7 +271,7 @@ jobs:
             cd /opt/dorm-power
             
             echo "=========================================="
-            echo "  开始部署 - 使用预拉取的镜像"
+            echo "  开始部署 - 适配京东云（无CPU限制）"
             echo "=========================================="
             
             echo "1. 清理系统资源..."

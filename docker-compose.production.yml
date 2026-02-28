@@ -1,6 +1,7 @@
 # Dorm Power Production Docker Compose
-# 服务器配置: 2核2G
+# 服务器配置: 2核2G (京东云轻量服务器)
 # 服务器IP: 117.72.210.10
+# 注意: 京东云轻量服务器内核不支持CPU限制，已移除所有cpus配置
 
 services:
   # PostgreSQL 数据库
@@ -16,7 +17,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backup/postgres:/backup
     ports:
-      - "127.0.0.1:5432:5432"  # 仅本地访问，提高安全性
+      - "127.0.0.1:5432:5432"
     command: >
       postgres
       -c max_connections=50
@@ -37,17 +38,16 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: ${POSTGRES_MEMORY_LIMIT:-400M}
-        reservations:
-          cpus: '0.25'
-          memory: ${POSTGRES_MEMORY_RESERVATION:-200M}
+    mem_limit: ${POSTGRES_MEMORY_LIMIT:-400M}
+    memswap_limit: ${POSTGRES_MEMORY_LIMIT:-400M}
     restart: unless-stopped
     networks:
       - dorm-power-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # MQTT Broker
   mosquitto:
@@ -58,19 +58,18 @@ services:
       - mosquitto_data:/mosquitto/data
       - mosquitto_logs:/mosquitto/log
     ports:
-      - "127.0.0.1:1883:1883"   # 仅本地访问
-      - "127.0.0.1:9001:9001"   # WebSocket端口
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 128M
-        reservations:
-          cpus: '0.1'
-          memory: 64M
+      - "127.0.0.1:1883:1883"
+      - "127.0.0.1:9001:9001"
+    mem_limit: 128M
+    memswap_limit: 128M
     restart: unless-stopped
     networks:
       - dorm-power-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # 后端服务
   backend:
@@ -80,36 +79,23 @@ services:
     image: dorm-power-backend:latest
     container_name: dorm-power-backend
     environment:
-      # 数据库配置
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-dorm_power}
       DB_USERNAME: ${DB_USERNAME:-dormpower}
       DB_PASSWORD: ${DB_PASSWORD:-changeme}
-      
-      # JWT配置
       JWT_SECRET: ${JWT_SECRET:-your-secret-key-must-be-at-least-256-bits-long-for-jwt}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
-      
-      # MQTT配置
       MQTT_ENABLED: "true"
       MQTT_BROKER_URL: tcp://mosquitto:1883
       MQTT_CLIENT_ID: ${MQTT_CLIENT_ID:-dorm-power-backend}
       MQTT_USERNAME: ${MQTT_USERNAME:-admin}
       MQTT_PASSWORD: ${MQTT_PASSWORD:-admin}
       MQTT_TOPIC_PREFIX: ${MQTT_TOPIC_PREFIX:-dorm}
-      
-      # 服务器配置
       SERVER_PORT: 8000
-      
-      # 日志配置
       LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-warn}
       LOG_LEVEL_APP: ${LOG_LEVEL_APP:-info}
-      
-      # Spring Profile
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
-      
-      # JVM优化参数 (2核2G服务器)
       JAVA_OPTS: >
         -server
         -Xms384m
@@ -129,17 +115,16 @@ services:
         condition: service_healthy
       mosquitto:
         condition: service_started
-    deploy:
-      resources:
-        limits:
-          cpus: '0.75'
-          memory: ${BACKEND_MEMORY_LIMIT:-600M}
-        reservations:
-          cpus: '0.5'
-          memory: ${BACKEND_MEMORY_RESERVATION:-400M}
+    mem_limit: ${BACKEND_MEMORY_LIMIT:-600M}
+    memswap_limit: ${BACKEND_MEMORY_LIMIT:-600M}
     restart: unless-stopped
     networks:
       - dorm-power-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # 前端服务
   frontend:
@@ -159,19 +144,18 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: ${FRONTEND_MEMORY_LIMIT:-300M}
-        reservations:
-          cpus: '0.25'
-          memory: ${FRONTEND_MEMORY_RESERVATION:-200M}
+    mem_limit: ${FRONTEND_MEMORY_LIMIT:-300M}
+    memswap_limit: ${FRONTEND_MEMORY_LIMIT:-300M}
     restart: unless-stopped
     networks:
       - dorm-power-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-  # Nginx 反向代理 (可选，推荐用于生产环境)
+  # Nginx 反向代理
   nginx:
     image: nginx:alpine
     container_name: dorm-power-nginx
@@ -186,17 +170,16 @@ services:
     depends_on:
       - frontend
       - backend
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 128M
-        reservations:
-          cpus: '0.1'
-          memory: 64M
+    mem_limit: 128M
+    memswap_limit: 128M
     restart: unless-stopped
     networks:
       - dorm-power-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   postgres_data:
