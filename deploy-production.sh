@@ -207,9 +207,17 @@ case "${1:-}" in
     --update)
         echo -e "${YELLOW}更新部署...${NC}"
         cd ${PROJECT_DIR}
-        docker-compose -f docker-compose.production.yml down
-        docker-compose -f docker-compose.production.yml build --no-cache
-        docker-compose -f docker-compose.production.yml up -d
+        
+        echo -e "${YELLOW}清理系统资源...${NC}"
+        docker system prune -f 2>/dev/null || true
+        sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+        
+        echo -e "${YELLOW}停止旧服务...${NC}"
+        docker-compose -f docker-compose.production.yml down --remove-orphans 2>/dev/null || true
+        
+        echo -e "${YELLOW}启动新服务...${NC}"
+        docker-compose -f docker-compose.production.yml up -d --build
+        
         echo -e "${GREEN}更新完成${NC}"
         ;;
     --help|-h)

@@ -121,7 +121,17 @@ jobs:
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             cd /opt/dorm-power
             chmod +x deploy-production.sh
-            ./deploy-production.sh --update
+            
+            echo "清理系统资源..."
+            docker system prune -f || true
+            
+            echo "停止旧服务..."
+            docker-compose -f docker-compose.production.yml down --remove-orphans || true
+            
+            echo "启动新服务..."
+            docker-compose -f docker-compose.production.yml up -d --build
+            
+            echo "部署完成！"
           ENDSSH
 
       - name: Health check
