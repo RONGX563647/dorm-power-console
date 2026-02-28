@@ -37,10 +37,10 @@ check_docker() {
         systemctl start docker
     fi
     
-    if ! command -v docker-compose &> /dev/null; then
-        echo -e "${YELLOW}Docker Compose 未安装，正在安装...${NC}"
-        curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
+    if ! docker compose version &> /dev/null; then
+        echo -e "${YELLOW}Docker Compose 未安装，正在安装插件...${NC}"
+        apt-get update
+        apt-get install -y docker-compose-plugin
     fi
     
     echo -e "${GREEN}Docker 环境检查完成${NC}"
@@ -101,7 +101,7 @@ deploy_services() {
     
     # 停止旧服务
     echo -e "${YELLOW}停止旧服务...${NC}"
-    docker-compose -f docker-compose.production.yml down 2>/dev/null || true
+    docker compose -f docker-compose.production.yml down 2>/dev/null || true
     
     # 清理旧镜像
     echo -e "${YELLOW}清理旧镜像...${NC}"
@@ -109,8 +109,8 @@ deploy_services() {
     
     # 构建并启动服务
     echo -e "${YELLOW}构建并启动服务...${NC}"
-    docker-compose -f docker-compose.production.yml --env-file .env.production build --no-cache
-    docker-compose -f docker-compose.production.yml --env-file .env.production up -d
+    docker compose -f docker-compose.production.yml --env-file .env.production build --no-cache
+    docker compose -f docker-compose.production.yml --env-file .env.production up -d
     
     # 等待服务启动
     echo -e "${YELLOW}等待服务启动...${NC}"
@@ -127,7 +127,7 @@ check_services() {
     
     # 检查容器状态
     echo -e "${YELLOW}容器状态:${NC}"
-    docker-compose -f docker-compose.production.yml ps
+    docker compose -f docker-compose.production.yml ps
     
     # 检查后端健康状态
     echo -e "${YELLOW}检查后端服务...${NC}"
@@ -162,10 +162,10 @@ show_access_info() {
     echo -e "  HTTP: ${YELLOW}http://${SERVER_IP}${NC}"
     echo ""
     echo -e "${BLUE}管理命令:${NC}"
-    echo -e "  查看日志: ${YELLOW}cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml logs -f${NC}"
-    echo -e "  停止服务: ${YELLOW}cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml down${NC}"
-    echo -e "  重启服务: ${YELLOW}cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml restart${NC}"
-    echo -e "  查看状态: ${YELLOW}cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml ps${NC}"
+    echo -e "  查看日志: ${YELLOW}cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml logs -f${NC}"
+    echo -e "  停止服务: ${YELLOW}cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml down${NC}"
+    echo -e "  重启服务: ${YELLOW}cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml restart${NC}"
+    echo -e "  查看状态: ${YELLOW}cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml ps${NC}"
     echo ""
     echo -e "${BLUE}数据备份:${NC}"
     echo -e "  备份数据库: ${YELLOW}${PROJECT_DIR}/backup.sh${NC}"
@@ -193,16 +193,16 @@ case "${1:-}" in
         ;;
     --stop)
         echo -e "${YELLOW}停止服务...${NC}"
-        cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml down
+        cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml down
         echo -e "${GREEN}服务已停止${NC}"
         ;;
     --restart)
         echo -e "${YELLOW}重启服务...${NC}"
-        cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml restart
+        cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml restart
         echo -e "${GREEN}服务已重启${NC}"
         ;;
     --logs)
-        cd ${PROJECT_DIR} && docker-compose -f docker-compose.production.yml logs -f
+        cd ${PROJECT_DIR} && docker compose -f docker-compose.production.yml logs -f
         ;;
     --update)
         echo -e "${YELLOW}更新部署...${NC}"
@@ -213,10 +213,10 @@ case "${1:-}" in
         sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
         
         echo -e "${YELLOW}停止旧服务...${NC}"
-        docker-compose -f docker-compose.production.yml down --remove-orphans 2>/dev/null || true
+        docker compose -f docker-compose.production.yml down --remove-orphans 2>/dev/null || true
         
         echo -e "${YELLOW}启动新服务...${NC}"
-        docker-compose -f docker-compose.production.yml up -d --build
+        docker compose -f docker-compose.production.yml up -d --build
         
         echo -e "${GREEN}更新完成${NC}"
         ;;

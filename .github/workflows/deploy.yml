@@ -119,35 +119,36 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            set -e
             cd /opt/dorm-power
             
             echo "=========================================="
-            echo "  开始部署 - 优化内存使用"
+            echo "  开始部署 - 修复Docker Compose命令"
             echo "=========================================="
             
             echo "1. 清理系统资源..."
-            docker system prune -af --volumes || true
+            docker system prune -af || true
             sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
             
             echo "2. 停止旧服务..."
-            docker-compose -f docker-compose.production.yml down --remove-orphans || true
+            docker compose -f docker-compose.production.yml down --remove-orphans || true
             sleep 5
             
             echo "3. 分步启动服务（避免内存峰值）..."
             
             echo "  3.1 启动数据库和MQTT..."
-            docker-compose -f docker-compose.production.yml up -d postgres mosquitto
+            docker compose -f docker-compose.production.yml up -d postgres mosquitto
             sleep 15
             
             echo "  3.2 启动后端服务..."
-            docker-compose -f docker-compose.production.yml up -d backend
+            docker compose -f docker-compose.production.yml up -d backend
             sleep 20
             
             echo "  3.3 启动前端服务..."
-            docker-compose -f docker-compose.production.yml up -d frontend
+            docker compose -f docker-compose.production.yml up -d frontend
             
             echo "  3.4 启动Nginx..."
-            docker-compose -f docker-compose.production.yml up -d nginx
+            docker compose -f docker-compose.production.yml up -d nginx
             
             echo "4. 等待服务稳定..."
             sleep 10
@@ -194,7 +195,7 @@ jobs:
           echo "检查服务状态..."
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} \
-            "docker ps -a && docker-compose -f /opt/dorm-power/docker-compose.production.yml logs --tail=50"
+            "docker ps -a && docker compose -f /opt/dorm-power/docker-compose.production.yml logs --tail=50"
           exit 1
 
       - name: Cleanup SSH key
