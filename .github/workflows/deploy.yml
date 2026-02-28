@@ -88,6 +88,8 @@ jobs:
             --include='backend/pom.xml' \
             --include='backend/Dockerfile' \
             --include='backend/.env.example' \
+            --include='backend/mosquitto/' \
+            --include='backend/mosquitto/**' \
             --include='dorm-power-console/' \
             --include='dorm-power-console/src/' \
             --include='dorm-power-console/src/**' \
@@ -268,6 +270,43 @@ jobs:
             
             # 验证挂载
             mount | grep cgroup || echo "cgroup挂载验证完成"
+          ENDSSH
+
+      - name: Fix mosquitto permissions
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
+            echo "=========================================="
+            echo "  修复Mosquitto配置和权限"
+            echo "=========================================="
+            
+            cd /opt/dorm-power
+            
+            # 创建mosquitto目录（如果不存在）
+            mkdir -p ./backend/mosquitto/config
+            mkdir -p ./backend/mosquitto/data
+            mkdir -p ./backend/mosquitto/log
+            
+            # 修复权限
+            chmod -R 777 ./backend/mosquitto
+            
+            # 验证配置文件
+            if [ -f ./backend/mosquitto/config/mosquitto.conf ]; then
+              echo "✅ Mosquitto配置文件已存在"
+              cat ./backend/mosquitto/config/mosquitto.conf
+            else
+              echo "⚠️  Mosquitto配置文件不存在，创建默认配置"
+              cat > ./backend/mosquitto/config/mosquitto.conf << 'EOF'
+          listener 1883
+          allow_anonymous true
+          persistence true
+          persistence_location /mosquitto/data/
+          log_dest file /mosquitto/log/mosquitto.log
+          log_type all
+          EOF
+            fi
+            
+            echo "Mosquitto配置完成！"
           ENDSSH
 
       - name: Deploy with Docker

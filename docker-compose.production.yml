@@ -55,8 +55,8 @@ services:
     container_name: dorm-power-mosquitto
     volumes:
       - ./backend/mosquitto/config:/mosquitto/config:ro
-      - mosquitto_data:/mosquitto/data
-      - mosquitto_logs:/mosquitto/log
+      - ./backend/mosquitto/data:/mosquitto/data
+      - ./backend/mosquitto/log:/mosquitto/log
     ports:
       - "127.0.0.1:1883:1883"
       - "127.0.0.1:9001:9001"
@@ -165,8 +165,8 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - nginx_logs:/var/log/nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+      - "8443:443"
     depends_on:
       - frontend
       - backend
@@ -183,8 +183,6 @@ services:
 
 volumes:
   postgres_data:
-  mosquitto_data:
-  mosquitto_logs:
   nginx_logs:
 
 networks:
