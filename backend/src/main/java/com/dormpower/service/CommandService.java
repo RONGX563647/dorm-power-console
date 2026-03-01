@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,12 @@ import java.util.Map;
 @Service
 public class CommandService {
 
+    private static final int CMD_TIMEOUT_SECONDS = 30;
+    private static final String STATE_PENDING = "pending";
+    private static final String STATE_SUCCESS = "success";
+    private static final String STATE_FAILED = "failed";
+    private static final String STATE_TIMEOUT = "timeout";
+
     @Autowired
     private CommandRecordRepository commandRecordRepository;
 
@@ -27,24 +34,17 @@ public class CommandService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final int CMD_TIMEOUT_SECONDS = 30;
-
-    /**
-     * 创建命令记录
-     * @param deviceId 设备ID
-     * @param request 命令请求
-     * @return 命令记录
-     */
     public CommandRecord createCommandRecord(String deviceId, Map<String, Object> request) {
-        String cmdId = "cmd-" + System.currentTimeMillis();
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
+        final String cmdId = "cmd-" + now;
 
         CommandRecord commandRecord = new CommandRecord();
         commandRecord.setCmdId(cmdId);
         commandRecord.setDeviceId(deviceId);
         commandRecord.setAction((String) request.getOrDefault("action", "toggle"));
         
-        Integer socket = request.get("socket") != null ? ((Number) request.get("socket")).intValue() : null;
+        Object socketObj = request.get("socket");
+        Integer socket = socketObj != null ? ((Number) socketObj).intValue() : null;
         commandRecord.setSocket(socket);
 
         try {
@@ -53,7 +53,7 @@ public class CommandService {
             commandRecord.setPayloadJson("{}");
         }
 
-        commandRecord.setState("pending");
+        commandRecord.setState(STATE_PENDING);
         commandRecord.setMessage("");
         commandRecord.setCreatedAt(now);
         commandRecord.setUpdatedAt(now);
@@ -62,20 +62,15 @@ public class CommandService {
         return commandRecordRepository.save(commandRecord);
     }
 
-    /**
-     * 检查是否存在冲突的待处理命令
-     * @param deviceId 设备ID
-     * @param socket 插座编号
-     * @return 是否存在冲突
-     */
     public boolean hasPendingConflict(String deviceId, Integer socket) {
-        List<CommandRecord> pendingCommands = commandRecordRepository.findByDeviceIdAndState(deviceId, "pending");
+        List<CommandRecord> pendingCommands = commandRecordRepository.findByDeviceIdAndState(deviceId, STATE_PENDING);
         
         for (CommandRecord cmd : pendingCommands) {
-            if (socket == null && cmd.getSocket() == null) {
+            Integer cmdSocket = cmd.getSocket();
+            if (socket == null && cmdSocket == null) {
                 return true;
             }
-            if (socket != null && socket.equals(cmd.getSocket())) {
+            if (socket != null && socket.equals(cmdSocket)) {
                 return true;
             }
         }
@@ -83,36 +78,28 @@ public class CommandService {
         return false;
     }
 
-    /**
-     * 更新命令状态
-     * @param cmdId 命令ID
-     * @param state 状态
-     * @param message 消息
-     */
     public void updateCommandState(String cmdId, String state, String message) {
         commandRecordRepository.findById(cmdId).ifPresent(cmd -> {
+            final long now = System.currentTimeMillis();
             cmd.setState(state);
             cmd.setMessage(message != null ? message : "");
-            cmd.setUpdatedAt(System.currentTimeMillis());
+            cmd.setUpdatedAt(now);
             
-            if ("success".equals(state) || "failed".equals(state)) {
-                cmd.setDurationMs((int) (System.currentTimeMillis() - cmd.getCreatedAt()));
+            if (STATE_SUCCESS.equals(state) || STATE_FAILED.equals(state)) {
+                cmd.setDurationMs((int) (now - cmd.getCreatedAt()));
             }
             
             commandRecordRepository.save(cmd);
         });
     }
 
-    /**
-     * 标记超时的命令
-     */
     public void markTimeouts() {
-        long now = System.currentTimeMillis();
-        List<CommandRecord> pendingCommands = commandRecordRepository.findByState("pending");
+        final long now = System.currentTimeMillis();
+        List<CommandRecord> pendingCommands = commandRecordRepository.findByState(STATE_PENDING);
         
         for (CommandRecord cmd : pendingCommands) {
             if (cmd.getExpiresAt() < now) {
-                cmd.setState("timeout");
+                cmd.setState(STATE_TIMEOUT);
                 cmd.setMessage("Command timed out");
                 cmd.setUpdatedAt(now);
                 commandRecordRepository.save(cmd);
@@ -120,26 +107,22 @@ public class CommandService {
         }
     }
 
-    /**
-     * 发送命令
-     * @param deviceId 设备ID
-     * @param request 命令请求
-     * @return 命令响应
-     */
     public Map<String, Object> sendCommand(String deviceId, Map<String, Object> request) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
         if (device == null) {
             throw new RuntimeException("Device not found");
         }
 
-        Integer socket = request.get("socket") != null ? ((Number) request.get("socket")).intValue() : null;
+        Object socketObj = request.get("socket");
+        Integer socket = socketObj != null ? ((Number) socketObj).intValue() : null;
+        
         if (hasPendingConflict(deviceId, socket)) {
             throw new RuntimeException("Pending command exists for target");
         }
 
         CommandRecord commandRecord = createCommandRecord(deviceId, request);
 
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>(4);
         response.put("ok", true);
         response.put("cmdId", commandRecord.getCmdId());
         response.put("stripId", deviceId);
@@ -147,11 +130,6 @@ public class CommandService {
         return response;
     }
 
-    /**
-     * 获取命令状态
-     * @param cmdId 命令ID
-     * @return 命令状态
-     */
     public Map<String, Object> getCommandStatus(String cmdId) {
         CommandRecord commandRecord = commandRecordRepository.findById(cmdId).orElse(null);
         
@@ -159,42 +137,33 @@ public class CommandService {
             return null;
         }
 
-        Map<String, Object> status = new HashMap<>();
+        Map<String, Object> status = new HashMap<>(4);
         status.put("cmdId", commandRecord.getCmdId());
         status.put("state", commandRecord.getState());
         status.put("message", commandRecord.getMessage());
         status.put("updatedAt", commandRecord.getUpdatedAt());
-        if (commandRecord.getDurationMs() != null) {
-            status.put("durationMs", commandRecord.getDurationMs());
+        
+        Integer duration = commandRecord.getDurationMs();
+        if (duration != null) {
+            status.put("durationMs", duration);
         }
         
         return status;
     }
 
-    /**
-     * 构建命令负载
-     * @param cmd 命令记录
-     * @param request 原始请求
-     * @return 命令负载
-     */
     public Map<String, Object> buildCommandPayload(CommandRecord cmd, Map<String, Object> request) {
-        Map<String, Object> payload = new HashMap<>();
+        Map<String, Object> payload = new HashMap<>(8);
         payload.put("cmdId", cmd.getCmdId());
         payload.put("ts", System.currentTimeMillis() / 1000);
         payload.put("type", cmd.getAction().toUpperCase());
         payload.put("socketId", cmd.getSocket());
-        payload.put("payload", request.getOrDefault("payload", new HashMap<>()));
+        payload.put("payload", request.getOrDefault("payload", Collections.emptyMap()));
         payload.put("mode", request.getOrDefault("mode", "immediate"));
         payload.put("duration", request.getOrDefault("duration", 0));
         payload.put("source", "web");
         return payload;
     }
 
-    /**
-     * 获取设备的命令历史
-     * @param deviceId 设备ID
-     * @return 命令历史列表
-     */
     public List<CommandRecord> getCommandsByDeviceId(String deviceId) {
         return commandRecordRepository.findByDeviceIdOrderByCreatedAtDesc(deviceId);
     }

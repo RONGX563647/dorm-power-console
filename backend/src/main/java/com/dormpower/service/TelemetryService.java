@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,83 +25,84 @@ public class TelemetryService {
     @Autowired
     private TelemetryRepository telemetryRepository;
 
-    private static final Map<String, RangeConfig> RANGE_CONFIG = Map.of(
-        "60s", new RangeConfig(60, 1),
-        "24h", new RangeConfig(96, 900),
-        "7d", new RangeConfig(168, 3600),
-        "30d", new RangeConfig(120, 21600)
-    );
+    private static final Map<String, RangeConfig> RANGE_CONFIG;
+    
+    static {
+        Map<String, RangeConfig> config = new HashMap<>(4);
+        config.put("60s", new RangeConfig(60, 1));
+        config.put("24h", new RangeConfig(96, 900));
+        config.put("7d", new RangeConfig(168, 3600));
+        config.put("30d", new RangeConfig(120, 21600));
+        RANGE_CONFIG = Collections.unmodifiableMap(config);
+    }
 
-    /**
-     * 获取遥测数据
-     * @param deviceId 设备ID
-     * @param range 时间范围
-     * @return 遥测数据列表
-     */
     @Cacheable(value = "telemetry", key = "#deviceId + '_' + #range")
     public List<Map<String, Object>> getTelemetry(String deviceId, String range) {
-        logger.debug("获取遥测数据: device={}, range={}", deviceId, range);
-        
         RangeConfig config = RANGE_CONFIG.get(range);
         if (config == null) {
-            logger.warn("无效的时间范围: {}", range);
             throw new IllegalArgumentException("Invalid range: " + range);
         }
 
-        int points = config.points;
-        int step = config.step;
-        long nowTs = System.currentTimeMillis() / 1000;
-        long startTs = nowTs - (long) (points - 1) * step;
+        final int points = config.points;
+        final int step = config.step;
+        final long nowTs = System.currentTimeMillis() / 1000;
+        final long startTs = nowTs - (long) (points - 1) * step;
 
-        List<Telemetry> rows = telemetryRepository.findByDeviceIdAndTsBetweenOrderByTsAsc(
-            deviceId, startTs, nowTs
-        );
+        List<Telemetry> rows = telemetryRepository.findByDeviceIdAndTsBetweenOrderByTsAsc(deviceId, startTs, nowTs);
 
-        logger.debug("查询到{}条遥测数据", rows.size());
+        if (rows.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         if (!range.equals("60s")) {
-            if (rows.isEmpty()) {
-                logger.info("设备{}在{}范围内无遥测数据", deviceId, range);
-                return new ArrayList<>();
-            }
-            
-            if (rows.size() <= points) {
-                List<Map<String, Object>> result = new ArrayList<>();
-                for (Telemetry r : rows) {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("ts", r.getTs());
-                    data.put("power_w", Math.round(r.getPowerW() * 1000.0) / 1000.0);
-                    result.add(data);
-                }
-                logger.info("返回{}条遥测数据点", result.size());
-                return result;
-            }
+            return processNon60sRange(rows, points);
+        }
 
-            List<Map<String, Object>> result = new ArrayList<>();
-            double stepIdx = (double) (rows.size() - 1) / (points - 1);
-            for (int i = 0; i < points; i++) {
-                int idx = (int) Math.round(i * stepIdx);
-                Telemetry r = rows.get(idx);
-                Map<String, Object> data = new HashMap<>();
+        return process60sRange(deviceId, rows, points, step, startTs);
+    }
+
+    private List<Map<String, Object>> processNon60sRange(List<Telemetry> rows, int points) {
+        final int size = rows.size();
+        
+        if (size <= points) {
+            List<Map<String, Object>> result = new ArrayList<>(size);
+            for (Telemetry r : rows) {
+                Map<String, Object> data = new HashMap<>(2);
                 data.put("ts", r.getTs());
-                data.put("power_w", Math.round(r.getPowerW() * 1000.0) / 1000.0);
+                data.put("power_w", roundPower(r.getPowerW()));
                 result.add(data);
             }
-            logger.info("降采样后返回{}条遥测数据点", result.size());
             return result;
         }
 
-        List<Map<String, Object>> result = new ArrayList<>();
+        List<Map<String, Object>> result = new ArrayList<>(points);
+        final double stepIdx = (double) (size - 1) / (points - 1);
+        
+        for (int i = 0; i < points; i++) {
+            int idx = (int) Math.round(i * stepIdx);
+            Telemetry r = rows.get(idx);
+            Map<String, Object> data = new HashMap<>(2);
+            data.put("ts", r.getTs());
+            data.put("power_w", roundPower(r.getPowerW()));
+            result.add(data);
+        }
+        return result;
+    }
+
+    private List<Map<String, Object>> process60sRange(String deviceId, List<Telemetry> rows, int points, int step, long startTs) {
+        List<Map<String, Object>> result = new ArrayList<>(points);
         
         Telemetry prevRow = telemetryRepository.findFirstByDeviceIdAndTsLessThanOrderByTsDesc(deviceId, startTs);
-        Double prevPower = prevRow != null ? prevRow.getPowerW() : 0.0;
+        double prevPower = prevRow != null ? prevRow.getPowerW() : 0.0;
 
+        final int rowsSize = rows.size();
         int rowIdx = 0;
+        
         for (int i = 0; i < points; i++) {
             long slotTs = startTs + (long) i * step;
             double power = prevPower;
 
-            while (rowIdx < rows.size()) {
+            while (rowIdx < rowsSize) {
                 Telemetry row = rows.get(rowIdx);
                 if (row.getTs() <= slotTs) {
                     power = row.getPowerW();
@@ -110,26 +112,20 @@ public class TelemetryService {
                 }
             }
 
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>(2);
             data.put("ts", slotTs);
-            data.put("power_w", Math.round(power * 1000.0) / 1000.0);
+            data.put("power_w", roundPower(power));
             result.add(data);
         }
 
-        logger.info("返回{}条遥测数据点(60s范围)", result.size());
         return result;
     }
 
-    /**
-     * 保存遥测数据
-     * @param deviceId 设备ID
-     * @param ts 时间戳
-     * @param powerW 功率
-     * @param voltageV 电压
-     * @param currentA 电流
-     */
+    private static double roundPower(double power) {
+        return Math.round(power * 1000.0) / 1000.0;
+    }
+
     public void saveTelemetry(String deviceId, long ts, double powerW, double voltageV, double currentA) {
-        logger.debug("保存遥测数据: device={}, ts={}, power={}W", deviceId, ts, powerW);
         Telemetry telemetry = new Telemetry();
         telemetry.setDeviceId(deviceId);
         telemetry.setTs(ts);
@@ -139,7 +135,7 @@ public class TelemetryService {
         telemetryRepository.save(telemetry);
     }
 
-    private static class RangeConfig {
+    private static final class RangeConfig {
         final int points;
         final int step;
 
