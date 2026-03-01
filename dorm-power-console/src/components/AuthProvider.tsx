@@ -91,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
  * @param account 用户名或邮箱
  * @param password 密码
  */
-  const login = async (account: string, password: string) => {
+  const login = useCallback(async (account: string, password: string) => {
     const data = await postJSON<{ token: string; user: AuthUser }>("/api/auth/login", { account, password });
     // 将令牌和用户信息保存到本地存储
     localStorage.setItem(TOKEN_KEY, data.token);
@@ -99,13 +99,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // 更新状态
     setToken(data.token);
     setUser(data.user);
-  };
+  }, []);
 
   /**
  * 用户登出函数
  * 调用后端登出接口并清除本地存储和状态中的认证信息
  */
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       // 调用后端登出接口
       await fetch("/api/auth/logout", { method: "POST" });
@@ -118,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(null);
       setUser(null);
     }
-  };
+  }, []);
 
   // 创建上下文值，使用useMemo优化性能
   const value = useMemo<AuthContextValue>(() => ({

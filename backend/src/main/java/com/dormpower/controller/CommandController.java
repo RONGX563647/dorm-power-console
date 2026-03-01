@@ -1,5 +1,7 @@
 package com.dormpower.controller;
 
+import com.dormpower.annotation.AuditLog;
+import com.dormpower.annotation.RateLimit;
 import com.dormpower.mqtt.MqttBridge;
 import com.dormpower.service.CommandService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,6 +47,8 @@ public class CommandController {
             @ApiResponse(responseCode = "200", description = "命令下发成功"),
             @ApiResponse(responseCode = "409", description = "命令冲突，设备有待处理命令")
     })
+    @RateLimit(value = 5.0, type = "device")
+    @AuditLog(value = "下发设备控制命令", type = "CONTROL")
     @PostMapping("/strips/{deviceId}/cmd")
     public ResponseEntity<Map<String, Object>> sendCommand(
             @Parameter(description = "设备ID", required = true, example = "device_001")

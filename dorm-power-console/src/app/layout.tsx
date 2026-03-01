@@ -46,7 +46,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   headerBg: "rgba(0, 212, 255, 0.05)",
                   headerColor: "#8ba3c7",
                   rowSelectedBg: "rgba(0, 212, 255, 0.15)",
-                  rowSelectedColor: "#ffffff",
                 },
                 Input: {
                   colorBgContainer: "rgba(16, 24, 40, 0.6)",
@@ -61,11 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 },
                 Segmented: {
                   colorText: "#8ba3c7",
-                  colorTextHover: "#e8f4ff",
-                  colorTextSelected: "#ffffff",
-                  colorBgSelected: "rgba(0, 212, 255, 0.15)",
                   colorBorder: "rgba(0, 212, 255, 0.2)",
-                  colorBorderSelected: "#00d4ff",
                 },
                 Button: {
                   defaultBg: "rgba(0, 212, 255, 0.1)",

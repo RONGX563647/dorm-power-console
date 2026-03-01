@@ -1,5 +1,7 @@
 package com.dormpower.controller;
 
+import com.dormpower.annotation.AuditLog;
+import com.dormpower.annotation.RateLimit;
 import com.dormpower.dto.LoginRequest;
 import com.dormpower.exception.AuthenticationException;
 import com.dormpower.service.AuthService;
@@ -46,6 +48,8 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "登录成功"),
             @ApiResponse(responseCode = "401", description = "账号或密码错误")
     })
+    @RateLimit(value = 2.0, type = "login")
+    @AuditLog(value = "用户登录", type = "AUTH")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {

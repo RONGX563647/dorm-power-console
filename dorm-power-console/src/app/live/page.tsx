@@ -39,7 +39,7 @@ type CmdStateResp = {
 };
 
 // 拆分组件：状态显示组件
-const StatusDisplay = React.memo(({
+const StatusDisplay = React.memo(function StatusDisplay({
   powerState,
   timerPreset,
   modeText,
@@ -47,7 +47,7 @@ const StatusDisplay = React.memo(({
   powerState: PowerState;
   timerPreset: TimerKey;
   modeText: string;
-}) => {
+}) {
   const powerTag = useMemo(() => {
     if (powerState === "on") return (
       <Tag 
@@ -139,7 +139,7 @@ const StatusDisplay = React.memo(({
 });
 
 // 拆分组件：命令历史组件
-const CommandHistory = React.memo(({
+const CommandHistory = React.memo(function CommandHistory({
   records,
 }: {
   records: Array<{
@@ -148,7 +148,7 @@ const CommandHistory = React.memo(({
     state: string;
     durationMs?: number;
   }>;
-}) => {
+}) {
   return (
     <div style={{ marginTop: 12 }}>
       <Tag 
@@ -173,7 +173,7 @@ const CommandHistory = React.memo(({
 });
 
 // 拆分组件：控制面板组件
-const ControlPanel = React.memo(({
+const ControlPanel = React.memo(function ControlPanel({
   canControl,
   dispatcher,
   powerState,
@@ -185,7 +185,15 @@ const ControlPanel = React.memo(({
   cmdAlert,
 }: {
   canControl: boolean;
-  dispatcher: any;
+  dispatcher: {
+    isBusy: boolean;
+    records: Array<{
+      at: number;
+      action: string;
+      state: string;
+      durationMs?: number;
+    }>;
+  };
   powerState: PowerState;
   timerPreset: TimerKey;
   mode: ModeKey;
@@ -193,7 +201,7 @@ const ControlPanel = React.memo(({
   onToggleTimer: (timer: Exclude<TimerKey, null>) => void;
   onToggleMode: (mode: Exclude<ModeKey, null>) => void;
   cmdAlert: React.ReactNode;
-}) => {
+}) {
   return (
     <Card className="glass-card" title={<span style={{ color: "#e8f4ff" }}>快捷控制</span>} styles={{ body: { padding: 16 } }}>
       {!canControl ? (
@@ -382,24 +390,6 @@ export default function LivePage() {
     return "timeout";
   }, [device]);
 
-  const runCommand = useCallback(async (
-    action: string,
-    payload: Record<string, unknown>,
-    onSuccess: () => void,
-  ) => {
-    const result = await dispatcher.runCommand(action, onSuccess, {
-      executor: () => executeBackendCommand(payload),
-    });
-    if (result === "success") {
-      message.success(`命令成功：${action}`);
-      reload().catch(console.error);
-    } else if (result === "failed") {
-      message.error(`命令失败：${action}`);
-    } else {
-      message.warning(`命令超时：${action}`);
-    }
-  }, [dispatcher, executeBackendCommand]);
-
   const reload = useCallback(async () => {
     const target = device || devices[0]?.id;
     if (!target) {
@@ -416,6 +406,24 @@ export default function LivePage() {
     setPoints(t);
     setLastUpdated(Date.now());
   }, [device, devices, range]);
+
+  const runCommand = useCallback(async (
+    action: string,
+    payload: Record<string, unknown>,
+    onSuccess: () => void,
+  ) => {
+    const result = await dispatcher.runCommand(action, onSuccess, {
+      executor: () => executeBackendCommand(payload),
+    });
+    if (result === "success") {
+      message.success(`命令成功：${action}`);
+      reload().catch(console.error);
+    } else if (result === "failed") {
+      message.error(`命令失败：${action}`);
+    } else {
+      message.warning(`命令超时：${action}`);
+    }
+  }, [dispatcher, executeBackendCommand, reload]);
 
   const togglePower = useCallback(() => {
     if (!canControl) {
