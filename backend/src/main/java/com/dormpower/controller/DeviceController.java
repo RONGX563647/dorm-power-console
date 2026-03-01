@@ -5,6 +5,12 @@ import com.dormpower.model.StripStatus;
 import com.dormpower.repository.DeviceRepository;
 import com.dormpower.repository.StripStatusRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +30,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api")
+@Tag(name = "设备管理", description = "设备查询和状态管理接口")
 public class DeviceController {
 
     @Autowired
@@ -39,8 +46,11 @@ public class DeviceController {
 
     /**
      * 获取设备列表
-     * @return 设备列表
      */
+    @Operation(summary = "获取设备列表", description = "获取所有设备的列表信息", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
     @GetMapping("/devices")
     public List<Map<String, Object>> getDevices() {
         List<Device> devices = deviceRepository.findAll();
@@ -65,11 +75,16 @@ public class DeviceController {
 
     /**
      * 获取设备状态
-     * @param deviceId 设备ID
-     * @return 设备状态
      */
+    @Operation(summary = "获取设备状态", description = "获取指定设备的详细状态信息", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "获取成功"),
+            @ApiResponse(responseCode = "404", description = "设备不存在")
+    })
     @GetMapping("/devices/{deviceId}/status")
-    public ResponseEntity<?> getDeviceStatus(@PathVariable String deviceId) {
+    public ResponseEntity<?> getDeviceStatus(
+            @Parameter(description = "设备ID", required = true, example = "device_001")
+            @PathVariable String deviceId) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
         StripStatus status = stripStatusRepository.findByDeviceId(deviceId);
         

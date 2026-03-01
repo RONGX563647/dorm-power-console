@@ -4,6 +4,12 @@ import com.dormpower.dto.LoginRequest;
 import com.dormpower.exception.AuthenticationException;
 import com.dormpower.service.AuthService;
 import com.dormpower.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +29,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "认证管理", description = "用户认证相关接口")
 public class AuthController {
 
     @Autowired
@@ -33,9 +40,12 @@ public class AuthController {
 
     /**
      * 登录接口
-     * @param request 登录请求
-     * @return 登录响应
      */
+    @Operation(summary = "用户登录", description = "使用账号密码登录系统，返回JWT令牌")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "登录成功"),
+            @ApiResponse(responseCode = "401", description = "账号或密码错误")
+    })
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
@@ -56,11 +66,15 @@ public class AuthController {
 
     /**
      * 登出接口
-     * @param token 认证令牌
-     * @return 登出响应
      */
+    @Operation(summary = "用户登出", description = "退出登录状态", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "登出成功")
+    })
     @PostMapping("/logout")
-    public Map<String, Object> logout(@RequestHeader(value = "Authorization", required = false) String token) {
+    public Map<String, Object> logout(
+            @Parameter(description = "认证令牌", required = false)
+            @RequestHeader(value = "Authorization", required = false) String token) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Logged out successfully");
         response.put("timestamp", System.currentTimeMillis());
@@ -69,11 +83,15 @@ public class AuthController {
 
     /**
      * 获取当前用户信息
-     * @param token 认证令牌
-     * @return 用户信息
      */
+    @Operation(summary = "获取当前用户", description = "获取当前登录用户的信息", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
     @GetMapping("/me")
-    public Map<String, Object> getCurrentUser(@RequestHeader(value = "Authorization", required = false) String token) {
+    public Map<String, Object> getCurrentUser(
+            @Parameter(description = "认证令牌", required = false)
+            @RequestHeader(value = "Authorization", required = false) String token) {
         Map<String, Object> user = new HashMap<>();
         user.put("username", "admin");
         user.put("role", "admin");
@@ -84,11 +102,15 @@ public class AuthController {
 
     /**
      * 刷新令牌
-     * @param token 旧令牌
-     * @return 新令牌
      */
+    @Operation(summary = "刷新令牌", description = "刷新JWT令牌，延长有效期", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "刷新成功")
+    })
     @PostMapping("/refresh")
-    public Map<String, Object> refreshToken(@RequestHeader(value = "Authorization", required = false) String token) {
+    public Map<String, Object> refreshToken(
+            @Parameter(description = "旧认证令牌", required = false)
+            @RequestHeader(value = "Authorization", required = false) String token) {
         String username = "admin";
         if (token != null && token.startsWith("Bearer ")) {
             String jwtToken = token.substring(7);

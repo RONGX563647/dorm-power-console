@@ -2,6 +2,12 @@ package com.dormpower.controller;
 
 import com.dormpower.mqtt.MqttBridge;
 import com.dormpower.service.CommandService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +26,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api")
+@Tag(name = "设备控制", description = "设备控制命令下发接口")
 public class CommandController {
 
     @Autowired
@@ -29,14 +36,20 @@ public class CommandController {
     private MqttBridge mqttBridge;
 
     /**
-     * 下发控制命令 - 与Python后端保持一致的路由
-     * @param deviceId 设备ID
-     * @param request 命令请求
-     * @return 命令响应
+     * 下发控制命令
      */
+    @Operation(summary = "下发控制命令", 
+               description = "向指定设备下发控制命令，支持开关操作和定时功能", 
+               security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "命令下发成功"),
+            @ApiResponse(responseCode = "409", description = "命令冲突，设备有待处理命令")
+    })
     @PostMapping("/strips/{deviceId}/cmd")
     public ResponseEntity<Map<String, Object>> sendCommand(
+            @Parameter(description = "设备ID", required = true, example = "device_001")
             @PathVariable String deviceId,
+            @Parameter(description = "命令请求体", required = true)
             @RequestBody Map<String, Object> request) {
         try {
             Map<String, Object> response = commandService.sendCommand(deviceId, request);

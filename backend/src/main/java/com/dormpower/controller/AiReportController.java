@@ -1,6 +1,12 @@
 package com.dormpower.controller;
 
 import com.dormpower.service.AiReportService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/rooms")
+@Tag(name = "AI分析报告", description = "智能用电分析报告接口")
 public class AiReportController {
 
     @Autowired
@@ -25,20 +32,30 @@ public class AiReportController {
 
     /**
      * 获取AI分析报告
-     * @param roomId 房间ID
-     * @param period 时间范围
-     * @return AI分析报告
      */
+    @Operation(summary = "获取AI分析报告", 
+               description = "获取指定房间的智能用电分析报告，包含用电趋势、异常检测和节能建议", 
+               security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "获取成功"),
+            @ApiResponse(responseCode = "400", description = "参数错误"),
+            @ApiResponse(responseCode = "500", description = "服务器内部错误")
+    })
     @GetMapping("/{roomId}/ai_report")
     public ResponseEntity<?> getAiReport(
+            @Parameter(description = "房间ID", required = true, example = "room_001")
             @PathVariable String roomId,
+            @Parameter(description = "时间范围：7d(7天)、30d(30天)", 
+                       required = false, 
+                       example = "7d",
+                       allowableValues = {"7d", "30d"})
             @RequestParam(defaultValue = "7d") String period) {
         try {
             if (!period.equals("7d") && !period.equals("30d")) {
                 Map<String, Object> error = new HashMap<>();
                 error.put("ok", false);
                 error.put("code", "BAD_REQUEST");
-                error.put("message", "period is invalid");
+                error.put("message", "period is invalid, must be one of: 7d, 30d");
                 return ResponseEntity.badRequest().body(error);
             }
 
