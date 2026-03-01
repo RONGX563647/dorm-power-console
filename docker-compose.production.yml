@@ -10,8 +10,8 @@ services:
     container_name: dorm-power-postgres
     environment:
       POSTGRES_DB: ${DB_NAME:-dorm_power}
-      POSTGRES_USER: ${DB_USERNAME:-dormpower}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -33,7 +33,7 @@ services:
       -c min_wal_size=1GB
       -c max_wal_size=4GB
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-dormpower} -d ${DB_NAME:-dorm_power}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ${DB_NAME:-dorm_power}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -82,9 +82,9 @@ services:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-dorm_power}
-      DB_USERNAME: ${DB_USERNAME:-dormpower}
-      DB_PASSWORD: ${DB_PASSWORD:-changeme}
-      JWT_SECRET: ${JWT_SECRET:-your-secret-key-must-be-at-least-256-bits-long-for-jwt}
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
       MQTT_ENABLED: "true"
       MQTT_BROKER_URL: tcp://mosquitto:1883
