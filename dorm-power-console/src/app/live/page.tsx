@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import type { Device, StripStatus, TelemetryPoint } from "@/components/types";
 import { fetchJSON } from "@/lib/fetcher";

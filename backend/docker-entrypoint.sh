@@ -69,7 +69,13 @@ echo ""
 echo "Starting Spring Boot application..."
 echo "=========================================="
 
-exec java $JAVA_OPTS \
+# JVM参数（适合2核2G服务器）
+DEFAULT_JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+DEFAULT_JAVA_OPTS="$DEFAULT_JAVA_OPTS -XX:+UseStringDeduplication -XX:+OptimizeStringConcat"
+DEFAULT_JAVA_OPTS="$DEFAULT_JAVA_OPTS -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=64m"
+DEFAULT_JAVA_OPTS="$DEFAULT_JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs"
+
+exec java ${JAVA_OPTS:-$DEFAULT_JAVA_OPTS} \
     -Dspring.datasource.url="jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}" \
     -Dspring.datasource.username="${DB_USERNAME}" \
     -Dspring.datasource.password="${DB_PASSWORD}" \

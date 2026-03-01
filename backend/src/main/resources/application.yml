@@ -7,21 +7,25 @@ spring:
     password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
     hikari:
-      minimum-idle: 2
-      maximum-pool-size: 10
-      idle-timeout: 30000
+      minimum-idle: 1
+      maximum-pool-size: 5
+      idle-timeout: 60000
       pool-name: DormPowerHikariPool
       max-lifetime: 1800000
       connection-timeout: 30000
-      leak-detection-threshold: 60000
+      leak-detection-threshold: 120000
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -29,6 +33,8 @@ spring:
     enabled: true
   config:
     import: optional:file:.env[.properties],optional:file:.env.production[.properties]
+  jackson:
+    default-property-inclusion: non_null
 
 server:
   port: ${SERVER_PORT:8000}
@@ -54,8 +60,10 @@ security:
 
 logging:
   level:
-    root: ${LOG_LEVEL_ROOT:info}
-    com.dormpower: ${LOG_LEVEL_APP:debug}
+    root: warn
+    com.dormpower: info
+    org.hibernate.SQL: off
+    org.hibernate.type: off
 
 # Actuator配置
 management:

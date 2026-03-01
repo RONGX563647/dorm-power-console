@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import type { Device, TelemetryPoint } from "@/components/types";
 import { fetchJSON } from "@/lib/fetcher";
-import { Button, Card, Col, Row, Statistic, Table, Tag, Typography } from "antd";
+import { Button, Card, Col, Row, Statistic, Table, Tag } from "antd";
 import PowerLineChart from "@/components/PowerLineChart";
 import PageToolbar from "@/components/common/PageToolbar";
 import { 
@@ -13,8 +13,6 @@ import {
   RiseOutlined,
   FallOutlined,
 } from "@ant-design/icons";
-
-const { Text } = Typography;
 
 type RangeKey = "24h" | "7d" | "30d";
 

@@ -67,7 +67,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   defaultBorderColor: "rgba(0, 212, 255, 0.3)",
                   defaultColor: "#00d4ff",
                   primaryColor: "#00d4ff",
-                  primaryHoverColor: "#0099ff",
                 },
                 Tag: {
                   colorText: "#00d4ff",

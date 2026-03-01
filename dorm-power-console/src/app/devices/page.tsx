@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import type { Device, StripStatus } from "@/components/types";
 import { fetchJSON } from "@/lib/fetcher";
-import { Card, Input, Select, Space, Statistic, Table, Tag, Typography } from "antd";
+import { Card, Input, Select, Space, Statistic, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { 
@@ -14,8 +14,6 @@ import {
   ThunderboltOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-
-const { Text } = Typography;
 
 /**
  * 设备页面组件 - 科技风深蓝配色
