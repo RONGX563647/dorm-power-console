@@ -1,38 +1,55 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, Form, Input, Space, Typography, message } from "antd";
-import { ThunderboltOutlined, SafetyOutlined } from "@ant-design/icons";
-import { useAuth } from "@/components/AuthProvider";
+import { SafetyOutlined, UserOutlined, LockOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-/**
- * 登录页面组件 - 科技风深蓝配色
- * 
- * 提供用户登录界面，验证用户凭据并跳转到仪表板。
- * 使用Ant Design的Form组件处理表单验证和提交。
- */
-export default function LoginPage() {
-  // Next.js路由钩子，用于页面导航
+type ChangePasswordFormValues = {
+  account: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};
+
+async function postJSON<T>(url: string, body: Record<string, unknown>): Promise<T> {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = typeof data?.message === "string" ? data.message : "request failed";
+    throw new Error(msg);
+  }
+  return data as T;
+}
+
+export default function ChangePasswordPage() {
   const router = useRouter();
-  // 从认证上下文获取登录函数和认证状态
-  const { login, isAuthenticated, ready } = useAuth();
-  // 创建表单实例，用于管理表单状态和验证
-  const [form] = Form.useForm<{ account: string; password: string }>();
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm<ChangePasswordFormValues>();
 
-  // 当认证状态就绪且已认证时，自动跳转到仪表板
-  useEffect(() => {
-    if (ready && isAuthenticated) {
-      router.replace("/dashboard");
+  const handleChangePassword = async (values: ChangePasswordFormValues) => {
+    setLoading(true);
+    try {
+      await postJSON<{ ok: boolean; message: string }>("/api/auth/change-password", {
+        account: values.account,
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+      message.success("密码修改成功，请重新登录");
+      router.push("/login");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "密码修改失败");
+    } finally {
+      setLoading(false);
     }
-  }, [ready, isAuthenticated, router]);
+  };
 
-  // 如果已认证，不渲染登录表单
-  if (ready && isAuthenticated) return null;
-
-  // 渲染登录表单
   return (
     <div 
       style={{ 
@@ -48,7 +65,6 @@ export default function LoginPage() {
         overflow: "hidden",
       }}
     >
-      {/* 背景装饰 */}
       <div
         style={{
           position: "absolute",
@@ -87,7 +103,6 @@ export default function LoginPage() {
         }}
         styles={{ body: { padding: "32px" } }}
       >
-        {/* 顶部发光线条 */}
         <div
           style={{
             position: "absolute",
@@ -100,7 +115,6 @@ export default function LoginPage() {
         />
         
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          {/* Logo和标题区域 */}
           <div style={{ textAlign: "center", marginBottom: 8 }}>
             <div
               style={{
@@ -116,63 +130,49 @@ export default function LoginPage() {
                 boxShadow: "0 0 20px rgba(0, 212, 255, 0.3)",
               }}
             >
-              <ThunderboltOutlined style={{ fontSize: 28, color: "#00d4ff" }} />
+              <SafetyOutlined style={{ fontSize: 28, color: "#00d4ff" }} />
             </div>
             <Title level={3} style={{ 
               margin: 0,
               color: "#e8f4ff",
               textShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
             }}>
-              Dorm Power
+              修改密码
             </Title>
             <Text style={{ color: "#8ba3c7", fontSize: 14 }}>
-              智能能源管理系统
+              更新您的 Dorm Power 账户密码
             </Text>
           </div>
           
-          {/* 登录提示信息 */}
           <div
             style={{
               padding: "12px 16px",
-              background: "rgba(0, 212, 255, 0.05)",
-              border: "1px solid rgba(0, 212, 255, 0.15)",
+              background: "rgba(255, 184, 0, 0.05)",
+              border: "1px solid rgba(255, 184, 0, 0.15)",
               borderRadius: 8,
               display: "flex",
               alignItems: "center",
               gap: 8,
             }}
           >
-            <SafetyOutlined style={{ color: "#00d4ff" }} />
+            <SafetyOutlined style={{ color: "#ffb800" }} />
             <Text style={{ color: "#8ba3c7", fontSize: 13 }}>
-              默认管理员账户: admin / admin123
+              请输入您的账户信息和旧密码以修改密码
             </Text>
           </div>
           
-          {/* 登录表单 */}
           <Form
             form={form}
             layout="vertical"
-            onFinish={async (values) => {
-              try {
-                // 调用登录函数验证凭据
-                await login(values.account, values.password);
-                // 登录成功提示
-                message.success("登录成功");
-                // 跳转到仪表板
-                router.replace("/dashboard");
-              } catch (error) {
-                // 登录失败提示
-                message.error(error instanceof Error ? error.message : "登录失败");
-              }
-            }}
+            onFinish={handleChangePassword}
           >
-            {/* 账户输入框 */}
             <Form.Item 
               label={<span style={{ color: "#e8f4ff" }}>账户</span>} 
               name="account" 
-              rules={[{ required: true, message: "请输入账户" }]}
+              rules={[{ required: true, message: "请输入用户名或邮箱" }]}
             >
               <Input 
+                prefix={<UserOutlined style={{ color: "#8ba3c7" }} />}
                 placeholder="用户名或邮箱"
                 style={{
                   background: "rgba(16, 24, 40, 0.6)",
@@ -183,14 +183,14 @@ export default function LoginPage() {
               />
             </Form.Item>
             
-            {/* 密码输入框 */}
             <Form.Item 
-              label={<span style={{ color: "#e8f4ff" }}>密码</span>} 
-              name="password" 
-              rules={[{ required: true, message: "请输入密码" }]}
+              label={<span style={{ color: "#e8f4ff" }}>旧密码</span>} 
+              name="oldPassword" 
+              rules={[{ required: true, message: "请输入旧密码" }]}
             >
               <Input.Password 
-                placeholder="请输入密码"
+                prefix={<LockOutlined style={{ color: "#8ba3c7" }} />}
+                placeholder="请输入旧密码"
                 style={{
                   background: "rgba(16, 24, 40, 0.6)",
                   border: "1px solid rgba(0, 212, 255, 0.2)",
@@ -200,11 +200,59 @@ export default function LoginPage() {
               />
             </Form.Item>
             
-            {/* 登录按钮 */}
+            <Form.Item 
+              label={<span style={{ color: "#e8f4ff" }}>新密码</span>} 
+              name="newPassword" 
+              rules={[
+                { required: true, message: "请输入新密码" },
+                { min: 6, message: "密码至少6个字符" },
+              ]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined style={{ color: "#8ba3c7" }} />}
+                placeholder="请输入新密码"
+                style={{
+                  background: "rgba(16, 24, 40, 0.6)",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  color: "#e8f4ff",
+                  height: 44,
+                }}
+              />
+            </Form.Item>
+            
+            <Form.Item 
+              label={<span style={{ color: "#e8f4ff" }}>确认新密码</span>} 
+              name="confirmNewPassword" 
+              dependencies={["newPassword"]}
+              rules={[
+                { required: true, message: "请确认新密码" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("newPassword") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("两次输入的密码不一致"));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined style={{ color: "#8ba3c7" }} />}
+                placeholder="请再次输入新密码"
+                style={{
+                  background: "rgba(16, 24, 40, 0.6)",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  color: "#e8f4ff",
+                  height: 44,
+                }}
+              />
+            </Form.Item>
+            
             <Button 
               htmlType="submit" 
               type="primary" 
               block
+              loading={loading}
               style={{
                 height: 44,
                 background: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)",
@@ -214,30 +262,22 @@ export default function LoginPage() {
                 boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
               }}
             >
-              登录
+              确认修改
             </Button>
           </Form>
           
-          {/* 注册和修改密码链接 */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
+          <div style={{ textAlign: "center", marginTop: 16 }}>
             <Button 
               type="link" 
-              onClick={() => router.push("/register")}
-              style={{ color: "#00d4ff", padding: 0 }}
+              onClick={() => router.push("/login")}
+              style={{ color: "#00d4ff" }}
+              icon={<ArrowLeftOutlined />}
             >
-              注册新账户
-            </Button>
-            <Button 
-              type="link" 
-              onClick={() => router.push("/change-password")}
-              style={{ color: "#8ba3c7", padding: 0 }}
-            >
-              修改密码
+              返回登录
             </Button>
           </div>
           
-          {/* 底部版权信息 */}
-          <div style={{ textAlign: "center", marginTop: 16 }}>
+          <div style={{ textAlign: "center", marginTop: 8 }}>
             <Text style={{ color: "#5a6a7a", fontSize: 12 }}>
               Dorm Power Console v1.0.3
             </Text>

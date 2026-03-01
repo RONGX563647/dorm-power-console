@@ -97,8 +97,9 @@ export function createUser(
   db.usernameIndex.set(user.username, user.id);
   db.emailIndex.set(user.email, user.id);
   
-  const { password: _, ...userWithoutPassword } = user;
-  return { success: true, user: userWithoutPassword as User };
+  const userWithoutPassword = { ...user };
+  delete userWithoutPassword.password;
+  return { success: true, user: userWithoutPassword };
 }
 
 export function authenticateUser(
@@ -131,10 +132,11 @@ export function authenticateUser(
   
   const token = `token_${user.id}_${Date.now()}_${Math.random().toString(36).substring(2)}`;
   
-  const { password: _, ...userWithoutPassword } = user;
+  const userWithoutPassword = { ...user };
+  delete userWithoutPassword.password;
   return { 
     success: true, 
-    user: userWithoutPassword as User, 
+    user: userWithoutPassword, 
     token 
   };
 }
@@ -169,7 +171,7 @@ export function getUserById(userId: string): User | undefined {
   const db = getStore();
   const user = db.users.get(userId);
   if (user) {
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
     return userWithoutPassword as User;
   }
   return undefined;
@@ -181,7 +183,7 @@ export function getUserByUsername(username: string): User | undefined {
   if (userId) {
     const user = db.users.get(userId);
     if (user) {
-      const { password: _, ...userWithoutPassword } = user;
+      const { password: _password, ...userWithoutPassword } = user;
       return userWithoutPassword as User;
     }
   }
@@ -194,7 +196,7 @@ export function getUserByEmail(email: string): User | undefined {
   if (userId) {
     const user = db.users.get(userId);
     if (user) {
-      const { password: _, ...userWithoutPassword } = user;
+      const { password: _password, ...userWithoutPassword } = user;
       return userWithoutPassword as User;
     }
   }

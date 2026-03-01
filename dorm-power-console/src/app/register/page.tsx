@@ -1,38 +1,55 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, Form, Input, Space, Typography, message } from "antd";
-import { ThunderboltOutlined, SafetyOutlined } from "@ant-design/icons";
-import { useAuth } from "@/components/AuthProvider";
+import { ThunderboltOutlined, UserOutlined, MailOutlined, LockOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-/**
- * 登录页面组件 - 科技风深蓝配色
- * 
- * 提供用户登录界面，验证用户凭据并跳转到仪表板。
- * 使用Ant Design的Form组件处理表单验证和提交。
- */
-export default function LoginPage() {
-  // Next.js路由钩子，用于页面导航
+type RegisterFormValues = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+async function postJSON<T>(url: string, body: Record<string, unknown>): Promise<T> {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = typeof data?.message === "string" ? data.message : "request failed";
+    throw new Error(msg);
+  }
+  return data as T;
+}
+
+export default function RegisterPage() {
   const router = useRouter();
-  // 从认证上下文获取登录函数和认证状态
-  const { login, isAuthenticated, ready } = useAuth();
-  // 创建表单实例，用于管理表单状态和验证
-  const [form] = Form.useForm<{ account: string; password: string }>();
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm<RegisterFormValues>();
 
-  // 当认证状态就绪且已认证时，自动跳转到仪表板
-  useEffect(() => {
-    if (ready && isAuthenticated) {
-      router.replace("/dashboard");
+  const handleRegister = async (values: RegisterFormValues) => {
+    setLoading(true);
+    try {
+      await postJSON<{ ok: boolean; message: string }>("/api/auth/register", {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      });
+      message.success("注册成功，请登录");
+      router.push("/login");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "注册失败");
+    } finally {
+      setLoading(false);
     }
-  }, [ready, isAuthenticated, router]);
+  };
 
-  // 如果已认证，不渲染登录表单
-  if (ready && isAuthenticated) return null;
-
-  // 渲染登录表单
   return (
     <div 
       style={{ 
@@ -48,7 +65,6 @@ export default function LoginPage() {
         overflow: "hidden",
       }}
     >
-      {/* 背景装饰 */}
       <div
         style={{
           position: "absolute",
@@ -87,7 +103,6 @@ export default function LoginPage() {
         }}
         styles={{ body: { padding: "32px" } }}
       >
-        {/* 顶部发光线条 */}
         <div
           style={{
             position: "absolute",
@@ -100,7 +115,6 @@ export default function LoginPage() {
         />
         
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          {/* Logo和标题区域 */}
           <div style={{ textAlign: "center", marginBottom: 8 }}>
             <div
               style={{
@@ -123,57 +137,29 @@ export default function LoginPage() {
               color: "#e8f4ff",
               textShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
             }}>
-              Dorm Power
+              创建账户
             </Title>
             <Text style={{ color: "#8ba3c7", fontSize: 14 }}>
-              智能能源管理系统
+              注册新的 Dorm Power 账户
             </Text>
           </div>
           
-          {/* 登录提示信息 */}
-          <div
-            style={{
-              padding: "12px 16px",
-              background: "rgba(0, 212, 255, 0.05)",
-              border: "1px solid rgba(0, 212, 255, 0.15)",
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <SafetyOutlined style={{ color: "#00d4ff" }} />
-            <Text style={{ color: "#8ba3c7", fontSize: 13 }}>
-              默认管理员账户: admin / admin123
-            </Text>
-          </div>
-          
-          {/* 登录表单 */}
           <Form
             form={form}
             layout="vertical"
-            onFinish={async (values) => {
-              try {
-                // 调用登录函数验证凭据
-                await login(values.account, values.password);
-                // 登录成功提示
-                message.success("登录成功");
-                // 跳转到仪表板
-                router.replace("/dashboard");
-              } catch (error) {
-                // 登录失败提示
-                message.error(error instanceof Error ? error.message : "登录失败");
-              }
-            }}
+            onFinish={handleRegister}
           >
-            {/* 账户输入框 */}
             <Form.Item 
-              label={<span style={{ color: "#e8f4ff" }}>账户</span>} 
-              name="account" 
-              rules={[{ required: true, message: "请输入账户" }]}
+              label={<span style={{ color: "#e8f4ff" }}>用户名</span>} 
+              name="username" 
+              rules={[
+                { required: true, message: "请输入用户名" },
+                { min: 3, max: 20, message: "用户名长度为3-20个字符" },
+              ]}
             >
               <Input 
-                placeholder="用户名或邮箱"
+                prefix={<UserOutlined style={{ color: "#8ba3c7" }} />}
+                placeholder="请输入用户名"
                 style={{
                   background: "rgba(16, 24, 40, 0.6)",
                   border: "1px solid rgba(0, 212, 255, 0.2)",
@@ -183,13 +169,36 @@ export default function LoginPage() {
               />
             </Form.Item>
             
-            {/* 密码输入框 */}
+            <Form.Item 
+              label={<span style={{ color: "#e8f4ff" }}>邮箱</span>} 
+              name="email" 
+              rules={[
+                { required: true, message: "请输入邮箱" },
+                { type: "email", message: "请输入有效的邮箱地址" },
+              ]}
+            >
+              <Input 
+                prefix={<MailOutlined style={{ color: "#8ba3c7" }} />}
+                placeholder="请输入邮箱"
+                style={{
+                  background: "rgba(16, 24, 40, 0.6)",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  color: "#e8f4ff",
+                  height: 44,
+                }}
+              />
+            </Form.Item>
+            
             <Form.Item 
               label={<span style={{ color: "#e8f4ff" }}>密码</span>} 
               name="password" 
-              rules={[{ required: true, message: "请输入密码" }]}
+              rules={[
+                { required: true, message: "请输入密码" },
+                { min: 6, message: "密码至少6个字符" },
+              ]}
             >
               <Input.Password 
+                prefix={<LockOutlined style={{ color: "#8ba3c7" }} />}
                 placeholder="请输入密码"
                 style={{
                   background: "rgba(16, 24, 40, 0.6)",
@@ -200,11 +209,39 @@ export default function LoginPage() {
               />
             </Form.Item>
             
-            {/* 登录按钮 */}
+            <Form.Item 
+              label={<span style={{ color: "#e8f4ff" }}>确认密码</span>} 
+              name="confirmPassword" 
+              dependencies={["password"]}
+              rules={[
+                { required: true, message: "请确认密码" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("两次输入的密码不一致"));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined style={{ color: "#8ba3c7" }} />}
+                placeholder="请再次输入密码"
+                style={{
+                  background: "rgba(16, 24, 40, 0.6)",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  color: "#e8f4ff",
+                  height: 44,
+                }}
+              />
+            </Form.Item>
+            
             <Button 
               htmlType="submit" 
               type="primary" 
               block
+              loading={loading}
               style={{
                 height: 44,
                 background: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)",
@@ -214,30 +251,22 @@ export default function LoginPage() {
                 boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
               }}
             >
-              登录
+              注册
             </Button>
           </Form>
           
-          {/* 注册和修改密码链接 */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
+          <div style={{ textAlign: "center", marginTop: 16 }}>
             <Button 
               type="link" 
-              onClick={() => router.push("/register")}
-              style={{ color: "#00d4ff", padding: 0 }}
+              onClick={() => router.push("/login")}
+              style={{ color: "#00d4ff" }}
+              icon={<ArrowLeftOutlined />}
             >
-              注册新账户
-            </Button>
-            <Button 
-              type="link" 
-              onClick={() => router.push("/change-password")}
-              style={{ color: "#8ba3c7", padding: 0 }}
-            >
-              修改密码
+              返回登录
             </Button>
           </div>
           
-          {/* 底部版权信息 */}
-          <div style={{ textAlign: "center", marginTop: 16 }}>
+          <div style={{ textAlign: "center", marginTop: 8 }}>
             <Text style={{ color: "#5a6a7a", fontSize: 12 }}>
               Dorm Power Console v1.0.3
             </Text>
