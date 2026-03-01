@@ -75,3 +75,14 @@ management:
       enabled: true
     diskspace:
       enabled: true
+
+# Springdoc OpenAPI配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
