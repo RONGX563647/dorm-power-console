@@ -29,7 +29,7 @@ function statusText(s: SocketStatus) {
 }
 
 /**
- * 插孔矩阵组件
+ * 插孔矩阵组件 - 科技风深蓝配色
  * 
  * 显示智能插座的插孔状态，包括开关状态和功率消耗。
  * 支持通过开关控制插孔电源。
@@ -45,55 +45,88 @@ export default function SocketMatrix({
   const total = sockets.reduce((sum, s) => sum + s.power_w, 0);
 
   return (
-    <Card className="glass-card" title="宿舍设备聚合面板" styles={{ body: { padding: 16 } }}>
+    <Card 
+      className="glass-card" 
+      title={<span style={{ color: "#e8f4ff" }}>宿舍设备聚合面板</span>} 
+      styles={{ body: { padding: 16 } }}
+    >
       {/* 总功率显示区域 */}
       <div style={{ marginBottom: 12 }}>
-        <Text type="secondary">当前总功率</Text>
-        <div style={{ fontSize: 24, fontWeight: 700, color: "#0f7fb0" }}>{total.toFixed(1)}W</div>
+        <Text style={{ color: "#8ba3c7" }}>当前总功率</Text>
+        <div style={{ fontSize: 28, fontWeight: 700, color: "#00d4ff", textShadow: "0 0 10px rgba(0, 212, 255, 0.5)" }}>
+          {total.toFixed(1)}W
+        </div>
       </div>
       {/* 插孔网格 */}
       <Row gutter={[10, 10]}>
         {sockets.map((s) => (
           <Col xs={24} sm={12} key={s.id}>
-            <Card size="small" style={{ borderRadius: 12, borderColor: "rgba(13,108,145,0.18)" }}>
+            <Card 
+              size="small" 
+              style={{ 
+                borderRadius: 12, 
+                border: "1px solid rgba(0, 212, 255, 0.15)",
+                background: "rgba(16, 24, 40, 0.6)",
+              }}
+            >
               <Space direction="vertical" size="small" style={{ width: "100%" }}>
                 {/* 插孔标题和状态标签 */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <Text strong>插孔 {s.id}</Text>
-                  <Tag color={s.power_w >= 100 ? "error" : s.on ? "success" : "default"}>{statusText(s)}</Tag>
+                  <Text strong style={{ color: "#e8f4ff" }}>插孔 {s.id}</Text>
+                  <Tag style={{
+                    borderRadius: 999,
+                    background: s.power_w >= 100 ? "rgba(255, 71, 87, 0.15)" : s.on ? "rgba(0, 230, 118, 0.15)" : "rgba(90, 106, 122, 0.15)",
+                    border: `1px solid ${s.power_w >= 100 ? "rgba(255, 71, 87, 0.4)" : s.on ? "rgba(0, 230, 118, 0.4)" : "rgba(90, 106, 122, 0.4)"}`,
+                    color: s.power_w >= 100 ? "#ff4757" : s.on ? "#00e676" : "#8ba3c7",
+                  }}>
+                    {statusText(s)}
+                  </Tag>
                 </div>
 
                 {/* 插孔详情弹出框 */}
                 <Popover
                   trigger={["hover", "click"]}
                   content={
-                    <Space direction="vertical" size="small" style={{ minWidth: 220 }}>
-                      <Text strong>插孔 {s.id} / {s.device}</Text>
-                      <Text type="secondary">实时功率：{s.power_w.toFixed(1)}W</Text>
-                      <Text type="secondary">当前状态：{s.on ? "ON" : "OFF"}</Text>
+                    <Space direction="vertical" size="small" style={{ minWidth: 220, padding: 8 }}>
+                      <Text strong style={{ color: "#e8f4ff" }}>插孔 {s.id} / {s.device}</Text>
+                      <Text style={{ color: "#8ba3c7" }}>实时功率：{s.power_w.toFixed(1)}W</Text>
+                      <Text style={{ color: "#8ba3c7" }}>当前状态：{s.on ? "ON" : "OFF"}</Text>
                       {/* 插孔开关控制 */}
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <Text>电源控制</Text>
-                        <Switch checked={s.on} onChange={(v) => onToggle?.(s.id, v)} />
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+                        <Text style={{ color: "#e8f4ff" }}>电源控制</Text>
+                        <Switch 
+                          checked={s.on} 
+                          onChange={(v) => onToggle?.(s.id, v)}
+                          style={{
+                            background: s.on ? "#00d4ff" : "#5a6a7a",
+                          }}
+                        />
                       </div>
                     </Space>
                   }
+                  overlayStyle={{
+                    background: "rgba(16, 24, 40, 0.95)",
+                    border: "1px solid rgba(0, 212, 255, 0.2)",
+                    borderRadius: 8,
+                  }}
                 >
                   {/* 插孔卡片内容 */}
                   <div style={{
-                    border: "1px dashed rgba(15, 127, 176, 0.35)",
+                    border: "1px dashed rgba(0, 212, 255, 0.3)",
                     borderRadius: 10,
                     padding: 10,
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    background: "rgba(0, 212, 255, 0.05)",
+                    transition: "all 0.3s ease",
                   }}>
                     <span>
                       <span className={`status-dot ${statusClass(s)}`} />
-                      <Text>{s.device}</Text>
+                      <Text style={{ color: "#e8f4ff" }}>{s.device}</Text>
                     </span>
-                    <Text strong>{s.power_w.toFixed(1)}W</Text>
+                    <Text strong style={{ color: "#00d4ff" }}>{s.power_w.toFixed(1)}W</Text>
                   </div>
                 </Popover>
               </Space>

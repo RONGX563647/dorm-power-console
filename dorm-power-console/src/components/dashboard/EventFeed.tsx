@@ -19,43 +19,85 @@ type EventItem = {
 };
 
 function colorOf(type: EventItem["type"]) {
-  if (type === "ALERT") return "red";
-  if (type === "CMD") return "blue";
-  if (type === "SYSTEM") return "gold";
-  return "green";
+  if (type === "ALERT") return "#ff4757";
+  if (type === "CMD") return "#00d4ff";
+  if (type === "SYSTEM") return "#ffb800";
+  return "#00e676";
 }
 
 function iconOf(type: EventItem["type"]) {
-  if (type === "ALERT") return <WarningOutlined />;
-  if (type === "CMD") return <ToolOutlined />;
-  if (type === "SYSTEM") return <CheckCircleOutlined />;
-  return <CloudUploadOutlined />;
+  if (type === "ALERT") return <WarningOutlined style={{ color: "#ff4757" }} />;
+  if (type === "CMD") return <ToolOutlined style={{ color: "#00d4ff" }} />;
+  if (type === "SYSTEM") return <CheckCircleOutlined style={{ color: "#ffb800" }} />;
+  return <CloudUploadOutlined style={{ color: "#00e676" }} />;
 }
 
 function statusColor(status: NonNullable<EventItem["status"]>) {
-  if (status === "ok") return "green";
-  if (status === "warn") return "orange";
-  return "red";
+  if (status === "ok") return "#00e676";
+  if (status === "warn") return "#ffb800";
+  return "#ff4757";
 }
 
+function statusBg(status: NonNullable<EventItem["status"]>) {
+  if (status === "ok") return "rgba(0, 230, 118, 0.15)";
+  if (status === "warn") return "rgba(255, 184, 0, 0.15)";
+  return "rgba(255, 71, 87, 0.15)";
+}
+
+function statusBorder(status: NonNullable<EventItem["status"]>) {
+  if (status === "ok") return "rgba(0, 230, 118, 0.4)";
+  if (status === "warn") return "rgba(255, 184, 0, 0.4)";
+  return "rgba(255, 71, 87, 0.4)";
+}
+
+/**
+ * 事件流组件 - 科技风深蓝配色
+ * 
+ * 显示系统事件和异常的时间线。
+ */
 export default function EventFeed({ items }: { items: EventItem[] }) {
   return (
-    <Card className="glass-card" title="异常与事件流" styles={{ body: { padding: 14 } }}>
+    <Card 
+      className="glass-card" 
+      title={<span style={{ color: "#e8f4ff" }}>异常与事件流</span>} 
+      styles={{ body: { padding: 14 } }}
+    >
       {items.length === 0 ? (
-        <Text type="secondary">暂无事件</Text>
+        <Text style={{ color: "#8ba3c7" }}>暂无事件</Text>
       ) : (
         <Timeline
           items={items.map((item) => ({
-            icon: iconOf(item.type),
+            dot: iconOf(item.type),
             color: colorOf(item.type),
-            content: (
+            children: (
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                  <Tag color={colorOf(item.type)} style={{ marginInlineEnd: 0 }}>{item.type}</Tag>
-                  <Text>{item.detail}</Text>
-                  {item.status ? <Tag color={statusColor(item.status)}>{item.status}</Tag> : null}
+                  <Tag 
+                    style={{
+                      marginInlineEnd: 0,
+                      borderRadius: 999,
+                      background: `${colorOf(item.type)}20`,
+                      border: `1px solid ${colorOf(item.type)}60`,
+                      color: colorOf(item.type),
+                    }}
+                  >
+                    {item.type}
+                  </Tag>
+                  <Text style={{ color: "#e8f4ff" }}>{item.detail}</Text>
+                  {item.status ? (
+                    <Tag 
+                      style={{
+                        borderRadius: 999,
+                        background: statusBg(item.status),
+                        border: `1px solid ${statusBorder(item.status)}`,
+                        color: statusColor(item.status),
+                      }}
+                    >
+                      {item.status}
+                    </Tag>
+                  ) : null}
                 </div>
-                <Text type="secondary">{item.time}</Text>
+                <Text style={{ color: "#5a6a7a", fontSize: 12 }}>{item.time}</Text>
               </div>
             ),
           }))}

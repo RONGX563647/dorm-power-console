@@ -4,10 +4,24 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import type { Device, StripStatus } from "@/components/types";
 import { fetchJSON } from "@/lib/fetcher";
-import { Card, Input, Select, Space, Statistic, Table, Tag } from "antd";
+import { Card, Input, Select, Space, Statistic, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Link from "next/link";
+import { 
+  DesktopOutlined, 
+  WifiOutlined, 
+  DisconnectOutlined,
+  ThunderboltOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
+const { Text } = Typography;
+
+/**
+ * 设备页面组件 - 科技风深蓝配色
+ * 
+ * 显示所有设备的列表，包括设备状态、功率和在线情况。
+ */
 export default function DevicesPage() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [powerMap, setPowerMap] = useState<Record<string, number>>({});
@@ -55,27 +69,60 @@ export default function DevicesPage() {
 
   const columns: ColumnsType<Device> = [
     {
-      title: "设备名称",
+      title: <span style={{ color: "#8ba3c7" }}>设备名称</span>,
       dataIndex: "name",
-      render: (_, d) => <Link href={`/devices/${d.id}`}>{d.name}</Link>,
+      render: (_, d) => (
+        <Link href={`/devices/${d.id}`} style={{ color: "#00d4ff", fontWeight: 500 }}>
+          <DesktopOutlined style={{ marginRight: 8, color: "#8ba3c7" }} />
+          {d.name}
+        </Link>
+      ),
     },
-    { title: "设备ID", dataIndex: "id" },
-    { title: "房间", dataIndex: "room" },
+    { 
+      title: <span style={{ color: "#8ba3c7" }}>设备ID</span>, 
+      dataIndex: "id",
+      render: (v) => <span style={{ color: "#e8f4ff" }}>{v}</span>,
+    },
+    { 
+      title: <span style={{ color: "#8ba3c7" }}>房间</span>, 
+      dataIndex: "room",
+      render: (v) => <span style={{ color: "#e8f4ff" }}>{v}</span>,
+    },
     {
-      title: "在线",
+      title: <span style={{ color: "#8ba3c7" }}>在线状态</span>,
       dataIndex: "online",
-      render: (v) => <Tag color={v ? "green" : "default"}>{v ? "Online" : "Offline"}</Tag>,
+      render: (v) => (
+        <Tag style={{
+          borderRadius: 999,
+          background: v ? "rgba(0, 230, 118, 0.15)" : "rgba(90, 106, 122, 0.15)",
+          border: `1px solid ${v ? "rgba(0, 230, 118, 0.4)" : "rgba(90, 106, 122, 0.4)"}`,
+          color: v ? "#00e676" : "#8ba3c7",
+        }}>
+          {v ? <WifiOutlined style={{ marginRight: 4 }} /> : <DisconnectOutlined style={{ marginRight: 4 }} />}
+          {v ? "Online" : "Offline"}
+        </Tag>
+      ),
     },
     {
-      title: "当前功率",
-      render: (_, d) => <span>{d.online ? `${(powerMap[d.id] ?? 0).toFixed(1)} W` : "--"}</span>,
+      title: <span style={{ color: "#8ba3c7" }}>当前功率</span>,
+      render: (_, d) => (
+        <span style={{ color: d.online ? "#00d4ff" : "#5a6a7a", fontWeight: 600 }}>
+          {d.online ? (
+            <><ThunderboltOutlined style={{ marginRight: 4 }} />{(powerMap[d.id] ?? 0).toFixed(1)} W</>
+          ) : "--"}
+        </span>
+      ),
     },
-    { title: "固件版本", render: () => <span>v1.0.3</span> },
+    { 
+      title: <span style={{ color: "#8ba3c7" }}>固件版本</span>, 
+      render: () => <span style={{ color: "#8ba3c7" }}>v1.0.3</span>,
+    },
     {
-      title: "最近上报",
+      title: <span style={{ color: "#8ba3c7" }}>最近上报</span>,
       dataIndex: "lastSeen",
       sorter: (a, b) => new Date(a.lastSeen).getTime() - new Date(b.lastSeen).getTime(),
       defaultSortOrder: "descend",
+      render: (v) => <span style={{ color: "#8ba3c7" }}>{v}</span>,
     },
   ];
 
@@ -83,13 +130,36 @@ export default function DevicesPage() {
 
   return (
     <AppLayout title="设备 Devices">
-      <Card styles={{ body: { padding: 16 } }}>
+      <Card 
+        styles={{ body: { padding: 16 } }}
+        style={{
+          background: "rgba(16, 24, 40, 0.6)",
+          border: "1px solid rgba(0, 212, 255, 0.15)",
+        }}
+      >
         <Space wrap style={{ width: "100%", justifyContent: "space-between" }}>
           <Space size={24}>
-            <Statistic title="总设备" value={devices.length} />
-            <Statistic title="在线" value={onlineCount} />
-            <Statistic title="离线" value={devices.length - onlineCount} />
-            <Statistic title="在线率" value={devices.length ? ((onlineCount / devices.length) * 100).toFixed(1) : 0} suffix="%" />
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7" }}>总设备</span>} 
+              value={devices.length}
+              valueStyle={{ color: "#e8f4ff", fontWeight: 700, fontSize: 24 }}
+            />
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7" }}>在线</span>} 
+              value={onlineCount}
+              valueStyle={{ color: "#00e676", fontWeight: 700, fontSize: 24 }}
+            />
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7" }}>离线</span>} 
+              value={devices.length - onlineCount}
+              valueStyle={{ color: "#ff4757", fontWeight: 700, fontSize: 24 }}
+            />
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7" }}>在线率</span>} 
+              value={devices.length ? ((onlineCount / devices.length) * 100).toFixed(1) : 0} 
+              suffix="%"
+              valueStyle={{ color: "#00d4ff", fontWeight: 700, fontSize: 24 }}
+            />
           </Space>
           <Space wrap>
             <Select
@@ -100,15 +170,24 @@ export default function DevicesPage() {
                 { value: "online", label: "仅在线" },
                 { value: "offline", label: "仅离线" },
               ]}
-              style={{ width: 130 }}
+              style={{ 
+                width: 130,
+                background: "rgba(16, 24, 40, 0.6)",
+              }}
             />
-            <Select value={roomFilter} onChange={setRoomFilter} options={roomOptions} style={{ width: 140 }} />
+            <Select 
+              value={roomFilter} 
+              onChange={setRoomFilter} 
+              options={roomOptions} 
+              style={{ width: 140 }}
+            />
             <Input.Search
               allowClear
               placeholder="搜索设备名称 / 房间 / ID"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               style={{ width: 280 }}
+              prefix={<SearchOutlined style={{ color: "#8ba3c7" }} />}
             />
           </Space>
         </Space>
@@ -126,4 +205,3 @@ export default function DevicesPage() {
     </AppLayout>
   );
 }
-

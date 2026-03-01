@@ -443,7 +443,7 @@ export default function DashboardPage() {
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Text>待机自动断电</Text>
+                <Text style={{ color: "#e8f4ff" }}>待机自动断电</Text>
                 <Switch
                   checked={autoCutoff}
                   disabled={!canGlobalPolicy}
@@ -474,14 +474,14 @@ export default function DashboardPage() {
                 />
               </div>
               <div>
-                <Text strong>策略规则</Text>
+                <Text strong style={{ color: "#e8f4ff" }}>策略规则</Text>
                 <Space direction="vertical" size="small" style={{ width: "100%", marginTop: 6 }}>
                   {rules.map((r) => (
-                    <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: 8, border: "1px solid rgba(0,0,0,0.06)" }}>
+                    <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: 8, border: "1px solid rgba(0, 212, 255, 0.15)", background: "rgba(0, 212, 255, 0.05)" }}>
                       <div>
-                        <Text>{r.name}</Text>
+                        <Text style={{ color: "#e8f4ff" }}>{r.name}</Text>
                         <br />
-                        <Text type="secondary" style={{ fontSize: 12 }}>{r.scope}</Text>
+                        <Text style={{ fontSize: 12, color: "#8ba3c7" }}>{r.scope}</Text>
                       </div>
                       <Switch
                         size="small"
@@ -494,8 +494,26 @@ export default function DashboardPage() {
                 </Space>
               </div>
               <Space wrap>
-                <Button onClick={() => { addSimEvent("ALERT", "模拟告警：插孔2 高功率", "warn"); message.warning("已触发模拟告警"); }}>模拟告警</Button>
-                <Button onClick={() => { addSimEvent("SYSTEM", "模拟离线：设备临时断连", "fail"); message.error("已触发模拟离线"); }}>模拟离线</Button>
+                <Button 
+                  onClick={() => { addSimEvent("ALERT", "模拟告警：插孔2 高功率", "warn"); message.warning("已触发模拟告警"); }}
+                  style={{
+                    background: "rgba(255, 184, 0, 0.1)",
+                    border: "1px solid rgba(255, 184, 0, 0.3)",
+                    color: "#ffb800",
+                  }}
+                >
+                  模拟告警
+                </Button>
+                <Button 
+                  onClick={() => { addSimEvent("SYSTEM", "模拟离线：设备临时断连", "fail"); message.error("已触发模拟离线"); }}
+                  style={{
+                    background: "rgba(255, 71, 87, 0.1)",
+                    border: "1px solid rgba(255, 71, 87, 0.3)",
+                    color: "#ff4757",
+                  }}
+                >
+                  模拟离线
+                </Button>
               </Space>
             </Space>
           </Card>
@@ -557,7 +575,7 @@ export default function DashboardPage() {
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24}>
-          <Card className="glass-card" title="楼层拓扑图（态势）" styles={{ body: { padding: 16 } }}>
+          <Card className="glass-card" title={<span style={{ color: "#e8f4ff" }}>楼层拓扑图（态势）</span>} styles={{ body: { padding: 16 } }}>
             <Row gutter={[12, 12]}>
               {floorMap.map((f) => (
                 <Col xs={24} sm={12} md={8} lg={6} key={f.room}>
@@ -565,14 +583,20 @@ export default function DashboardPage() {
                     style={{
                       borderRadius: 12,
                       padding: 12,
-                      border: "1px solid rgba(0,0,0,0.08)",
-                      background: f.roomRisk ? "rgba(214,69,69,0.12)" : f.roomOffline > 0 ? "rgba(221,107,32,0.12)" : "rgba(47,158,68,0.12)",
+                      border: `1px solid ${f.roomRisk ? "rgba(255, 71, 87, 0.3)" : f.roomOffline > 0 ? "rgba(255, 184, 0, 0.3)" : "rgba(0, 230, 118, 0.3)"}`,
+                      background: f.roomRisk ? "rgba(255, 71, 87, 0.1)" : f.roomOffline > 0 ? "rgba(255, 184, 0, 0.1)" : "rgba(0, 230, 118, 0.1)",
                     }}
                   >
-                    <Text strong>{f.room}</Text>
-                    <div><Text type="secondary">总功率：{f.roomPower.toFixed(1)}W</Text></div>
-                    <div><Text type="secondary">在线：{f.total - f.roomOffline}/{f.total}</Text></div>
-                    <Tag color={f.roomRisk ? "red" : f.roomOffline > 0 ? "orange" : "green"} style={{ marginTop: 6 }}>
+                    <Text strong style={{ color: "#e8f4ff" }}>{f.room}</Text>
+                    <div><Text style={{ color: "#8ba3c7" }}>总功率：{f.roomPower.toFixed(1)}W</Text></div>
+                    <div><Text style={{ color: "#8ba3c7" }}>在线：{f.total - f.roomOffline}/{f.total}</Text></div>
+                    <Tag style={{
+                      marginTop: 6,
+                      borderRadius: 999,
+                      background: f.roomRisk ? "rgba(255, 71, 87, 0.15)" : f.roomOffline > 0 ? "rgba(255, 184, 0, 0.15)" : "rgba(0, 230, 118, 0.15)",
+                      border: `1px solid ${f.roomRisk ? "rgba(255, 71, 87, 0.4)" : f.roomOffline > 0 ? "rgba(255, 184, 0, 0.4)" : "rgba(0, 230, 118, 0.4)"}`,
+                      color: f.roomRisk ? "#ff4757" : f.roomOffline > 0 ? "#ffb800" : "#00e676",
+                    }}>
                       {f.roomRisk ? "高危" : f.roomOffline > 0 ? "注意" : "正常"}
                     </Tag>
                   </div>
