@@ -454,9 +454,10 @@ export default function LivePage() {
 
   const cmdAlert = useMemo(() => {
     if (!dispatcher.last) return null;
+    const alertType = dispatcher.last.state === "success" ? "success" : dispatcher.last.state === "failed" ? "error" : dispatcher.last.state === "timeout" ? "warning" : "info";
     return (
       <Alert
-        type={dispatcher.last.state === "success" ? "success" : dispatcher.last.state === "failed" ? "error" : dispatcher.last.state === "timeout" ? "warning" : "info"
+        type={alertType}
         showIcon
         title={`最近命令：${dispatcher.last.action}`}
         description={`${new Date(dispatcher.last.at).toLocaleTimeString()} · ${dispatcher.last.state}${dispatcher.last.durationMs ? ` · ${dispatcher.last.durationMs}ms` : ""}`}

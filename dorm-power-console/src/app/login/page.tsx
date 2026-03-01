@@ -85,7 +85,7 @@ export default function LoginPage() {
           position: "relative",
           overflow: "hidden",
         }}
-        bodyStyle={{ padding: "32px" }}
+        styles={{ body: { padding: "32px" } }}
       >
         {/* 顶部发光线条 */}
         <div
