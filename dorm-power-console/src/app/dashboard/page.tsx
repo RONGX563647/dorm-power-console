@@ -11,6 +11,8 @@ import {
   ClockCircleOutlined,
   ApartmentOutlined,
   SafetyOutlined,
+  WarningFilled,
+  CheckCircleFilled,
 } from "@ant-design/icons";
 import AppLayout from "@/components/AppLayout";
 import KPIGrid from "@/components/KPIGrid";
@@ -321,36 +323,76 @@ export default function DashboardPage() {
               <Space direction="vertical" size="small" style={{ width: "100%" }}>
                 <Space wrap style={{ justifyContent: "space-between", width: "100%" }}>
                   <Space>
-                    <ApartmentOutlined style={{ color: "#0f7fb0" }} />
-                    <Text strong style={{ fontSize: 16 }}>{currentRoom} 宿舍聚合视图</Text>
+                    <ApartmentOutlined style={{ color: "#00d4ff", fontSize: 18 }} />
+                    <Text strong style={{ fontSize: 16, color: "#e8f4ff" }}>{currentRoom} 宿舍聚合视图</Text>
                   </Space>
-                  <Tag color={alertCount ? "red" : "green"}>{alertCount ? `${alertCount} 条异常` : "运行稳定"}</Tag>
+                  <Tag style={{
+                    borderRadius: 999,
+                    background: alertCount ? "rgba(255, 71, 87, 0.15)" : "rgba(0, 230, 118, 0.15)",
+                    border: `1px solid ${alertCount ? "rgba(255, 71, 87, 0.4)" : "rgba(0, 230, 118, 0.4)"}`,
+                    color: alertCount ? "#ff4757" : "#00e676",
+                  }}>
+                    {alertCount ? `${alertCount} 条异常` : "运行稳定"}
+                  </Tag>
                 </Space>
                 <Alert
                   type={alertCount ? "warning" : "success"}
                   showIcon
-                  title={alertCount ? "检测到高功率或离线风险，请优先处理告警" : "暂无高风险异常，系统处于稳定状态"}
+                  icon={alertCount ? <WarningFilled style={{ color: "#ffb800" }} /> : <CheckCircleFilled style={{ color: "#00e676" }} />}
+                  message={alertCount ? "检测到高功率或离线风险，请优先处理告警" : "暂无高风险异常，系统处于稳定状态"}
+                  style={{
+                    background: alertCount ? "rgba(255, 184, 0, 0.1)" : "rgba(0, 230, 118, 0.1)",
+                    border: `1px solid ${alertCount ? "rgba(255, 184, 0, 0.2)" : "rgba(0, 230, 118, 0.2)"}`,
+                  }}
                 />
-                <Row gutter={12}>
-                  <Col xs={24} sm={8}><Statistic title="宿舍总功率" value={roomPower.toFixed(1)} suffix="W" /></Col>
-                  <Col xs={24} sm={8}><Statistic title="在线设备" value={`${roomOnline}/${roomDevices.length || 1}`} /></Col>
-                  <Col xs={24} sm={8}><Statistic title="当前设备" value={device} /></Col>
+                <Row gutter={12} style={{ marginTop: 8 }}>
+                  <Col xs={24} sm={8}>
+                    <Statistic 
+                      title={<span style={{ color: "#8ba3c7" }}>宿舍总功率</span>} 
+                      value={roomPower.toFixed(1)} 
+                      suffix="W"
+                      valueStyle={{ color: "#00d4ff", fontWeight: 700 }}
+                    />
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    <Statistic 
+                      title={<span style={{ color: "#8ba3c7" }}>在线设备</span>} 
+                      value={`${roomOnline}/${roomDevices.length || 1}`}
+                      valueStyle={{ color: "#e8f4ff", fontWeight: 700 }}
+                    />
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    <Statistic 
+                      title={<span style={{ color: "#8ba3c7" }}>当前设备</span>} 
+                      value={device}
+                      valueStyle={{ color: "#e8f4ff", fontWeight: 700 }}
+                    />
+                  </Col>
                 </Row>
               </Space>
             </Card>
 
-            <Card className="glass-card" title="宿舍负载分布" styles={{ body: { padding: 16 } }}>
+            <Card 
+              className="glass-card" 
+              title={<span style={{ color: "#e8f4ff" }}>宿舍负载分布</span>} 
+              styles={{ body: { padding: 16 } }}
+            >
               <Space direction="vertical" style={{ width: "100%" }}>
                 {roomLoadDistribution.length === 0 ? (
-                  <Text type="secondary">暂无设备负载数据</Text>
+                  <Text style={{ color: "#8ba3c7" }}>暂无设备负载数据</Text>
                 ) : (
                   roomLoadDistribution.map((item) => (
                     <div key={item.id}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                        <Text>{item.label}</Text>
-                        <Text strong>{item.power.toFixed(1)}W</Text>
+                        <Text style={{ color: "#e8f4ff" }}>{item.label}</Text>
+                        <Text strong style={{ color: "#00d4ff" }}>{item.power.toFixed(1)}W</Text>
                       </div>
-                      <Progress percent={item.percent} showInfo={false} strokeColor="#0f7fb0" />
+                      <Progress 
+                        percent={item.percent} 
+                        showInfo={false} 
+                        strokeColor={{ from: "#00d4ff", to: "#0099ff" }}
+                        trailColor="rgba(0, 212, 255, 0.1)"
+                      />
                     </div>
                   ))
                 )}
@@ -359,18 +401,18 @@ export default function DashboardPage() {
           </Space>
         </Col>
         <Col xs={24} lg={8}>
-          <Card className="glass-card" title={<Space><SafetyOutlined />安全与策略</Space>} styles={{ body: { padding: 12 } }}>
+          <Card className="glass-card" title={<Space><SafetyOutlined style={{ color: "#00d4ff" }} /><span style={{ color: "#e8f4ff" }}>安全与策略</span></Space>} styles={{ body: { padding: 12 } }}>
             {!canControl ? (
               <Alert
                 type="warning"
                 showIcon
-                style={{ marginBottom: 10 }}
-                title="当前账号仅支持管理员能力，安全策略可配置"
+                style={{ marginBottom: 10, background: "rgba(255, 184, 0, 0.1)", border: "1px solid rgba(255, 184, 0, 0.2)" }}
+                message="当前账号仅支持管理员能力，安全策略可配置"
               />
             ) : null}
             <Space direction="vertical" style={{ width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Text>违规负载检测</Text>
+                <Text style={{ color: "#e8f4ff" }}>违规负载检测</Text>
                 <Switch
                   checked={illegalDetect}
                   disabled={!canGlobalPolicy}

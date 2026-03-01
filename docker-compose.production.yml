@@ -18,28 +18,12 @@ services:
       - ./backup/postgres:/backup
     ports:
       - "127.0.0.1:5432:5432"
-    command: >
-      postgres
-      -c max_connections=50
-      -c shared_buffers=128MB
-      -c effective_cache_size=512MB
-      -c maintenance_work_mem=64MB
-      -c checkpoint_completion_target=0.9
-      -c wal_buffers=16MB
-      -c default_statistics_target=100
-      -c random_page_cost=1.1
-      -c effective_io_concurrency=200
-      -c work_mem=4MB
-      -c min_wal_size=1GB
-      -c max_wal_size=4GB
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d ${DB_NAME:-dorm_power}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-    mem_limit: ${POSTGRES_MEMORY_LIMIT:-400M}
-    memswap_limit: ${POSTGRES_MEMORY_LIMIT:-400M}
     restart: unless-stopped
     networks:
       - dorm-power-network
@@ -115,8 +99,6 @@ services:
         condition: service_healthy
       mosquitto:
         condition: service_started
-    mem_limit: ${BACKEND_MEMORY_LIMIT:-600M}
-    memswap_limit: ${BACKEND_MEMORY_LIMIT:-600M}
     restart: unless-stopped
     networks:
       - dorm-power-network
@@ -144,8 +126,6 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-    mem_limit: ${FRONTEND_MEMORY_LIMIT:-300M}
-    memswap_limit: ${FRONTEND_MEMORY_LIMIT:-300M}
     restart: unless-stopped
     networks:
       - dorm-power-network
@@ -170,8 +150,6 @@ services:
     depends_on:
       - frontend
       - backend
-    mem_limit: 128M
-    memswap_limit: 128M
     restart: unless-stopped
     networks:
       - dorm-power-network

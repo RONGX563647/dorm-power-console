@@ -3,12 +3,13 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, Form, Input, Space, Typography, message } from "antd";
+import { ThunderboltOutlined, SafetyOutlined } from "@ant-design/icons";
 import { useAuth } from "@/components/AuthProvider";
 
 const { Title, Text } = Typography;
 
 /**
- * 登录页面组件
+ * 登录页面组件 - 科技风深蓝配色
  * 
  * 提供用户登录界面，验证用户凭据并跳转到仪表板。
  * 使用Ant Design的Form组件处理表单验证和提交。
@@ -33,13 +34,120 @@ export default function LoginPage() {
 
   // 渲染登录表单
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "linear-gradient(135deg, #eaf6ff 0%, #f8fbff 100%)" }}>
-      <Card style={{ width: 400, borderRadius: 14 }}>
-        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-          {/* 登录表单标题 */}
-          <Title level={3} style={{ margin: 0 }}>Dorm Power Login</Title>
+    <div 
+      style={{ 
+        minHeight: "100vh", 
+        display: "grid", 
+        placeItems: "center", 
+        background: `
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 153, 255, 0.15), transparent),
+          radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0, 212, 255, 0.08), transparent),
+          linear-gradient(180deg, #0a0f1a 0%, #0d1525 50%, #0a0f1a 100%)
+        `,
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* 背景装饰 */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "10%",
+          width: "300px",
+          height: "300px",
+          background: "radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "blur(40px)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          right: "10%",
+          width: "400px",
+          height: "400px",
+          background: "radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "blur(60px)",
+        }}
+      />
+      
+      <Card 
+        style={{ 
+          width: 420, 
+          borderRadius: 16,
+          background: "rgba(16, 24, 40, 0.9)",
+          border: "1px solid rgba(0, 212, 255, 0.2)",
+          boxShadow: "0 0 40px rgba(0, 212, 255, 0.15), 0 20px 50px rgba(0, 0, 0, 0.4)",
+          backdropFilter: "blur(10px)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+        bodyStyle={{ padding: "32px" }}
+      >
+        {/* 顶部发光线条 */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "2px",
+            background: "linear-gradient(90deg, transparent, #00d4ff, #0099ff, #00d4ff, transparent)",
+          }}
+        />
+        
+        <Space direction="vertical" size="large" style={{ width: "100%" }}>
+          {/* Logo和标题区域 */}
+          <div style={{ textAlign: "center", marginBottom: 8 }}>
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 153, 255, 0.2) 100%)",
+                border: "1px solid rgba(0, 212, 255, 0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+                boxShadow: "0 0 20px rgba(0, 212, 255, 0.3)",
+              }}
+            >
+              <ThunderboltOutlined style={{ fontSize: 28, color: "#00d4ff" }} />
+            </div>
+            <Title level={3} style={{ 
+              margin: 0,
+              color: "#e8f4ff",
+              textShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
+            }}>
+              Dorm Power
+            </Title>
+            <Text style={{ color: "#8ba3c7", fontSize: 14 }}>
+              Smart Energy Management System
+            </Text>
+          </div>
+          
           {/* 登录提示信息 */}
-          <Text type="secondary">Only one administrator account is enabled.</Text>
+          <div
+            style={{
+              padding: "12px 16px",
+              background: "rgba(0, 212, 255, 0.05)",
+              border: "1px solid rgba(0, 212, 255, 0.15)",
+              borderRadius: 8,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <SafetyOutlined style={{ color: "#00d4ff" }} />
+            <Text style={{ color: "#8ba3c7", fontSize: 13 }}>
+              Only one administrator account is enabled.
+            </Text>
+          </div>
+          
           {/* 登录表单 */}
           <Form
             form={form}
@@ -59,19 +167,65 @@ export default function LoginPage() {
             }}
           >
             {/* 账户输入框 */}
-            <Form.Item label="Account (username or email)" name="account" rules={[{ required: true }]}>
-              <Input placeholder="admin or admin@dorm.local" />
+            <Form.Item 
+              label={<span style={{ color: "#e8f4ff" }}>Account</span>} 
+              name="account" 
+              rules={[{ required: true, message: "Please enter account" }]}
+            >
+              <Input 
+                placeholder="admin or admin@dorm.local"
+                style={{
+                  background: "rgba(16, 24, 40, 0.6)",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  color: "#e8f4ff",
+                  height: 44,
+                }}
+              />
             </Form.Item>
+            
             {/* 密码输入框 */}
-            <Form.Item label="Password" name="password" rules={[{ required: true }]}>
-              <Input.Password placeholder="Enter password" />
+            <Form.Item 
+              label={<span style={{ color: "#e8f4ff" }}>Password</span>} 
+              name="password" 
+              rules={[{ required: true, message: "Please enter password" }]}
+            >
+              <Input.Password 
+                placeholder="Enter password"
+                style={{
+                  background: "rgba(16, 24, 40, 0.6)",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  color: "#e8f4ff",
+                  height: 44,
+                }}
+              />
             </Form.Item>
+            
             {/* 登录按钮 */}
-            <Button htmlType="submit" type="primary" block>Login</Button>
+            <Button 
+              htmlType="submit" 
+              type="primary" 
+              block
+              style={{
+                height: 44,
+                background: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)",
+                border: "none",
+                fontSize: 16,
+                fontWeight: 600,
+                boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
+              }}
+            >
+              Login
+            </Button>
           </Form>
+          
+          {/* 底部版权信息 */}
+          <div style={{ textAlign: "center", marginTop: 16 }}>
+            <Text style={{ color: "#5a6a7a", fontSize: 12 }}>
+              Dorm Power Console v1.0.3
+            </Text>
+          </div>
         </Space>
       </Card>
     </div>
   );
 }
-

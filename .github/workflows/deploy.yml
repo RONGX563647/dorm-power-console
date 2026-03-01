@@ -311,13 +311,11 @@ jobs:
             echo "1. 清理系统资源..."
             docker system prune -f || true
 
-            echo "2. 停止旧服务并清理数据..."
-            docker compose -f docker-compose.production.yml --env-file .env.production down --remove-orphans --volumes || true
+            echo "2. 停止旧服务..."
+            docker compose -f docker-compose.production.yml --env-file .env.production down --remove-orphans || true
             sleep 5
 
-            # 删除数据库卷（强制重新初始化）
-            docker volume rm dorm-power_postgres_data 2>/dev/null || true
-            echo "✅ 已清理旧数据库数据"
+            echo "✅ 已停止旧服务"
 
             echo "3. 检查镜像状态..."
             docker images | grep -E "postgres|mosquitto|nginx|dorm-power" || echo "部分镜像不存在"

@@ -18,13 +18,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: "#1677FF",
-                colorSuccess: "#52C41A",
-                colorWarning: "#FAAD14",
-                colorError: "#FF4D4F",
+                colorPrimary: "#00d4ff",
+                colorSuccess: "#00e676",
+                colorWarning: "#ffb800",
+                colorError: "#ff4757",
+                colorInfo: "#0099ff",
+                colorTextBase: "#e8f4ff",
+                colorBgBase: "#0a0f1a",
+                colorBorder: "rgba(0, 212, 255, 0.2)",
                 borderRadius: 8,
-                boxShadowTertiary: "0 1px 2px rgba(0,0,0,0.05)",
+                boxShadowTertiary: "0 0 20px rgba(0, 212, 255, 0.1)",
                 fontSize: 14,
+              },
+              components: {
+                Menu: {
+                  darkItemBg: "transparent",
+                  darkItemSelectedBg: "rgba(0, 212, 255, 0.15)",
+                  darkItemSelectedColor: "#00d4ff",
+                  darkSubMenuItemBg: "transparent",
+                },
+                Card: {
+                  colorBgContainer: "rgba(16, 24, 40, 0.85)",
+                  colorBorderSecondary: "rgba(0, 212, 255, 0.1)",
+                },
+                Table: {
+                  colorBgContainer: "transparent",
+                  headerBg: "rgba(0, 212, 255, 0.05)",
+                  headerColor: "#8ba3c7",
+                },
+                Input: {
+                  colorBgContainer: "rgba(16, 24, 40, 0.6)",
+                  colorBorder: "rgba(0, 212, 255, 0.2)",
+                  activeBorderColor: "#00d4ff",
+                },
+                Select: {
+                  colorBgContainer: "rgba(16, 24, 40, 0.6)",
+                  colorBorder: "rgba(0, 212, 255, 0.2)",
+                },
+                Button: {
+                  defaultBg: "rgba(0, 212, 255, 0.1)",
+                  defaultBorderColor: "rgba(0, 212, 255, 0.3)",
+                  defaultColor: "#00d4ff",
+                },
+                Tag: {
+                  colorText: "#00d4ff",
+                },
+                Statistic: {
+                  colorTextDescription: "#8ba3c7",
+                },
               },
             }}
           >
