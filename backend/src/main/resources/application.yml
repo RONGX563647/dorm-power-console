@@ -20,7 +20,7 @@ spring:
   validation:
     enabled: true
   config:
-    import: optional:file:.env[.properties]
+    import: optional:file:.env[.properties],optional:file:.env.production[.properties]
 
 server:
   port: ${SERVER_PORT:8000}
