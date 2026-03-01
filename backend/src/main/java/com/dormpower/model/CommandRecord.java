@@ -11,7 +11,10 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "command_record", indexes = {
-        @Index(name = "idx_cmd_device_id", columnList = "deviceId")
+        @Index(name = "idx_cmd_device_id", columnList = "deviceId"),
+        @Index(name = "idx_cmd_state", columnList = "state"),
+        @Index(name = "idx_cmd_state_expires", columnList = "state, expiresAt"),
+        @Index(name = "idx_cmd_device_created", columnList = "deviceId, createdAt")
 })
 public class CommandRecord {
 

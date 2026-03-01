@@ -1,12 +1,20 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import type { Device, TelemetryPoint } from "@/components/types";
 import { fetchJSON } from "@/lib/fetcher";
-import { Button, Card, Col, Row, Statistic, Table, Tag } from "antd";
+import { Button, Card, Col, Row, Statistic, Table, Tag, Typography } from "antd";
 import PowerLineChart from "@/components/PowerLineChart";
 import PageToolbar from "@/components/common/PageToolbar";
+import { 
+  ThunderboltOutlined,
+  LineChartOutlined,
+  RiseOutlined,
+  FallOutlined,
+} from "@ant-design/icons";
+
+const { Text } = Typography;
 
 type RangeKey = "24h" | "7d" | "30d";
 
@@ -22,6 +30,11 @@ function toBillCsv(rows: Array<{ room: string; kwh: number; fee: number }>) {
   return [header, ...lines].join("\n");
 }
 
+/**
+ * 历史页面组件 - 科技风深蓝配色
+ * 
+ * 显示历史功率曲线和用电统计。
+ */
 export default function HistoryPage() {
   const [device, setDevice] = useState("strip01");
   const [range, setRange] = useState<RangeKey>("24h");
@@ -65,7 +78,7 @@ export default function HistoryPage() {
       return h >= 23 || h < 6;
     }).length;
     const yesterdayAvg = avg * 0.91;
-    const delta = yesterdayAvg ? ((avg - yesterdayAvg) / yesterdayAvg) * 100 : 0;
+    const delta = yesterdayAvg > 0 ? ((avg - yesterdayAvg) / yesterdayAvg) * 100 : 0;
     return {
       total,
       peak,
@@ -121,19 +134,91 @@ export default function HistoryPage() {
         timeRangeOptions={["24h", "7d", "30d"]}
         lastUpdated={lastUpdated}
         onRefresh={load}
-        rightExtra={<Button onClick={exportCsv}>导出曲线 CSV</Button>}
+        rightExtra={
+          <Button 
+            onClick={exportCsv}
+            style={{
+              background: "rgba(0, 212, 255, 0.1)",
+              border: "1px solid rgba(0, 212, 255, 0.3)",
+              color: "#00d4ff",
+            }}
+          >
+            导出曲线 CSV
+          </Button>
+        }
       />
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} sm={12} lg={6}><Card className="glass-card"><Statistic title="总电量" value={stats.total.toFixed(2)} suffix="kWh" /></Card></Col>
-        <Col xs={24} sm={12} lg={6}><Card className="glass-card"><Statistic title="峰值" value={stats.peak.toFixed(1)} suffix="W" /></Card></Col>
-        <Col xs={24} sm={12} lg={6}><Card className="glass-card"><Statistic title="平均功率" value={stats.avg.toFixed(1)} suffix="W" /></Card></Col>
-        <Col xs={24} sm={12} lg={6}><Card className="glass-card"><Statistic title="夜间占比" value={stats.nightRatio.toFixed(1)} suffix="%" /></Card></Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>总电量</span>}
+              value={stats.total.toFixed(2)} 
+              suffix="kWh"
+              valueStyle={{ color: "#00d4ff", fontWeight: 700, fontSize: 24 }}
+              prefix={<ThunderboltOutlined style={{ color: "#00d4ff", marginRight: 8 }} />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>峰值</span>}
+              value={stats.peak.toFixed(1)} 
+              suffix="W"
+              valueStyle={{ color: "#ff4757", fontWeight: 700, fontSize: 24 }}
+              prefix={<LineChartOutlined style={{ color: "#ff4757", marginRight: 8 }} />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>平均功率</span>}
+              value={stats.avg.toFixed(1)} 
+              suffix="W"
+              valueStyle={{ color: "#00d4ff", fontWeight: 700, fontSize: 24 }}
+              prefix={<ThunderboltOutlined style={{ color: "#00d4ff", marginRight: 8 }} />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>夜间占比</span>}
+              value={stats.nightRatio.toFixed(1)} 
+              suffix="%"
+              valueStyle={{ color: "#0099ff", fontWeight: 700, fontSize: 24 }}
+            />
+          </Card>
+        </Col>
       </Row>
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} md={12}><Card className="glass-card"><Statistic title="较昨日" value={stats.delta.toFixed(1)} suffix="%" styles={{ content: { color: stats.delta >= 0 ? "#cf1322" : "#3f8600" } }} /></Card></Col>
-        <Col xs={24} md={12}><Card className="glass-card"><Statistic title="峰值出现时间" value={stats.peakTime} /></Card></Col>
+        <Col xs={24} md={12}>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>较昨日</span>}
+              value={stats.delta.toFixed(1)} 
+              suffix="%"
+              valueStyle={{ 
+                color: stats.delta >= 0 ? "#ff4757" : "#00e676",
+                fontWeight: 700,
+                fontSize: 24,
+              }}
+              prefix={stats.delta >= 0 ? <RiseOutlined style={{ color: "#ff4757", marginRight: 8 }} /> : <FallOutlined style={{ color: "#00e676", marginRight: 8 }} />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={12}>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>峰值出现时间</span>}
+              value={stats.peakTime}
+              valueStyle={{ color: "#e8f4ff", fontWeight: 700, fontSize: 20 }}
+            />
+          </Card>
+        </Col>
       </Row>
 
       <div style={{ marginTop: 16 }}>
@@ -142,22 +227,68 @@ export default function HistoryPage() {
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={12}>
-          <Card className="glass-card" title="宿舍用电红黑榜" extra={<Tag color="red">Top/Bottom</Tag>}>
+          <Card 
+            className="glass-card" 
+            title={<span style={{ color: "#e8f4ff" }}>宿舍用电红黑榜</span>}
+            extra={
+              <Tag style={{
+                borderRadius: 999,
+                background: "rgba(255, 71, 87, 0.15)",
+                border: "1px solid rgba(255, 71, 87, 0.4)",
+                color: "#ff4757",
+              }}>
+                Top/Bottom
+              </Tag>
+            }
+          >
             <Table
               size="small"
               pagination={false}
               rowKey="room"
               dataSource={rankRows}
               columns={[
-                { title: "排名", dataIndex: "rank", width: 80 },
-                { title: "宿舍", dataIndex: "room" },
-                { title: "估算电量(kWh)", render: (_, r) => r.kwh.toFixed(2) },
+                { 
+                  title: <span style={{ color: "#8ba3c7" }}>排名</span>, 
+                  dataIndex: "rank", 
+                  width: 80,
+                  render: (v) => <span style={{ color: "#e8f4ff", fontWeight: 600 }}>#{v}</span>,
+                },
+                { 
+                  title: <span style={{ color: "#8ba3c7" }}>宿舍</span>, 
+                  dataIndex: "room",
+                  render: (v) => <span style={{ color: "#e8f4ff" }}>{v}</span>,
+                },
+                { 
+                  title: <span style={{ color: "#8ba3c7" }}>估算电量(kWh)</span>, 
+                  render: (_, r) => <span style={{ color: "#00d4ff", fontWeight: 600 }}>{r.kwh.toFixed(2)}</span>,
+                },
                 {
-                  title: "标签",
+                  title: <span style={{ color: "#8ba3c7" }}>标签</span>,
                   render: (_, r) => {
-                    if (r.rank === 1) return <Tag color="red">高耗能</Tag>;
-                    if (r.rank === rankRows.length) return <Tag color="green">节能</Tag>;
-                    return <Tag>正常</Tag>;
+                    if (r.rank === 1) return (
+                      <Tag style={{
+                        borderRadius: 999,
+                        background: "rgba(255, 71, 87, 0.15)",
+                        border: "1px solid rgba(255, 71, 87, 0.4)",
+                        color: "#ff4757",
+                      }}>高耗能</Tag>
+                    );
+                    if (r.rank === rankRows.length) return (
+                      <Tag style={{
+                        borderRadius: 999,
+                        background: "rgba(0, 230, 118, 0.15)",
+                        border: "1px solid rgba(0, 230, 118, 0.4)",
+                        color: "#00e676",
+                      }}>节能</Tag>
+                    );
+                    return (
+                      <Tag style={{
+                        borderRadius: 999,
+                        background: "rgba(0, 212, 255, 0.15)",
+                        border: "1px solid rgba(0, 212, 255, 0.4)",
+                        color: "#00d4ff",
+                      }}>正常</Tag>
+                    );
                   },
                 },
               ]}
@@ -165,16 +296,42 @@ export default function HistoryPage() {
           </Card>
         </Col>
         <Col xs={24} lg={12}>
-          <Card className="glass-card" title="电费账单（估算）" extra={<Button size="small" onClick={exportBillCsv}>导出账单 CSV</Button>}>
+          <Card 
+            className="glass-card" 
+            title={<span style={{ color: "#e8f4ff" }}>电费账单（估算）</span>}
+            extra={
+              <Button 
+                size="small" 
+                onClick={exportBillCsv}
+                style={{
+                  background: "rgba(0, 212, 255, 0.1)",
+                  border: "1px solid rgba(0, 212, 255, 0.3)",
+                  color: "#00d4ff",
+                }}
+              >
+                导出账单 CSV
+              </Button>
+            }
+          >
             <Table
               size="small"
               pagination={false}
               rowKey="room"
               dataSource={roomBills}
               columns={[
-                { title: "宿舍", dataIndex: "room" },
-                { title: "电量(kWh)", render: (_, r) => r.kwh.toFixed(2) },
-                { title: "电费(元)", render: (_, r) => r.fee.toFixed(2) },
+                { 
+                  title: <span style={{ color: "#8ba3c7" }}>宿舍</span>, 
+                  dataIndex: "room",
+                  render: (v) => <span style={{ color: "#e8f4ff" }}>{v}</span>,
+                },
+                { 
+                  title: <span style={{ color: "#8ba3c7" }}>电量(kWh)</span>, 
+                  render: (_, r) => <span style={{ color: "#00d4ff", fontWeight: 600 }}>{r.kwh.toFixed(2)}</span>,
+                },
+                { 
+                  title: <span style={{ color: "#8ba3c7" }}>电费(元)</span>, 
+                  render: (_, r) => <span style={{ color: "#00e676", fontWeight: 600 }}>{r.fee.toFixed(2)}</span>,
+                },
               ]}
             />
           </Card>

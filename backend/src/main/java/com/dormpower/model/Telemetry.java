@@ -14,7 +14,8 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "telemetry", indexes = {
         @Index(name = "idx_telemetry_device_id", columnList = "deviceId"),
-        @Index(name = "idx_telemetry_ts", columnList = "ts")
+        @Index(name = "idx_telemetry_ts", columnList = "ts"),
+        @Index(name = "idx_telemetry_device_ts", columnList = "deviceId, ts")
 })
 public class Telemetry {
 

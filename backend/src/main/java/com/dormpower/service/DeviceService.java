@@ -3,7 +3,11 @@ package com.dormpower.service;
 import com.dormpower.exception.ResourceNotFoundException;
 import com.dormpower.model.Device;
 import com.dormpower.repository.DeviceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import java.util.Map;
 @Service
 public class DeviceService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DeviceService.class);
+
     @Autowired
     private DeviceRepository deviceRepository;
 
@@ -24,11 +30,12 @@ public class DeviceService {
      * 获取设备列表
      * @return 设备列表
      */
+    @Cacheable(value = "devices", unless = "#result == null || #result.isEmpty()")
     public List<Map<String, Object>> getDevices() {
+        logger.debug("获取设备列表");
         List<Device> devices = deviceRepository.findAll();
         List<Map<String, Object>> result = new ArrayList<>();
         
-        // 转换为响应格式
         for (Device device : devices) {
             Map<String, Object> deviceMap = new HashMap<>();
             deviceMap.put("id", device.getId());
@@ -39,25 +46,7 @@ public class DeviceService {
             result.add(deviceMap);
         }
         
-        // 如果没有数据，返回模拟数据
-        if (result.isEmpty()) {
-            Map<String, Object> device1 = new HashMap<>();
-            device1.put("id", "device-001");
-            device1.put("name", "宿舍101插座");
-            device1.put("room", "101");
-            device1.put("online", true);
-            device1.put("lastSeen", System.currentTimeMillis());
-            result.add(device1);
-
-            Map<String, Object> device2 = new HashMap<>();
-            device2.put("id", "device-002");
-            device2.put("name", "宿舍102插座");
-            device2.put("room", "102");
-            device2.put("online", false);
-            device2.put("lastSeen", System.currentTimeMillis() - 3600000);
-            result.add(device2);
-        }
-        
+        logger.info("获取设备列表成功，共{}个设备", result.size());
         return result;
     }
 
@@ -66,8 +55,9 @@ public class DeviceService {
      * @param deviceId 设备ID
      * @return 设备状态
      */
+    @Cacheable(value = "deviceStatus", key = "#deviceId")
     public Map<String, Object> getDeviceStatus(String deviceId) {
-        // 查询设备
+        logger.debug("获取设备状态: {}", deviceId);
         Device device = deviceRepository.findById(deviceId).orElse(null);
         
         Map<String, Object> status = new HashMap<>();
@@ -76,20 +66,13 @@ public class DeviceService {
         if (device != null) {
             status.put("online", device.isOnline());
             status.put("lastSeen", device.getLastSeenTs());
+            status.put("name", device.getName());
+            status.put("room", device.getRoom());
         } else {
             status.put("online", false);
             status.put("lastSeen", 0L);
+            logger.warn("设备不存在: {}", deviceId);
         }
-        
-        // 返回模拟的详细状态
-        status.put("totalPowerW", 120.5);
-        status.put("voltageV", 220.0);
-        status.put("currentA", 0.55);
-        status.put("sockets", List.of(
-                Map.of("id", 1, "status", "on", "powerW", 60.2),
-                Map.of("id", 2, "status", "off", "powerW", 0.0),
-                Map.of("id", 3, "status", "on", "powerW", 60.3)
-        ));
         
         return status;
     }
@@ -100,6 +83,7 @@ public class DeviceService {
      * @return 设备详情
      */
     public Map<String, Object> getDeviceDetail(String deviceId) {
+        logger.debug("获取设备详情: {}", deviceId);
         Device device = deviceRepository.findById(deviceId)
                 .orElseThrow(() -> new ResourceNotFoundException("设备不存在: " + deviceId));
         
@@ -119,12 +103,17 @@ public class DeviceService {
      * @param deviceId 设备ID
      * @param online 在线状态
      */
+    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
     public void updateDeviceStatus(String deviceId, boolean online) {
+        logger.debug("更新设备状态: {} -> {}", deviceId, online);
         Device device = deviceRepository.findById(deviceId).orElse(null);
         if (device != null) {
             device.setOnline(online);
             device.setLastSeenTs(System.currentTimeMillis());
             deviceRepository.save(device);
+            logger.info("设备状态已更新: {} -> {}", deviceId, online);
+        } else {
+            logger.warn("设备不存在，无法更新状态: {}", deviceId);
         }
     }
 
@@ -133,21 +122,28 @@ public class DeviceService {
      * @param device 设备
      * @return 添加的设备
      */
+    @CacheEvict(value = "devices", allEntries = true)
     public Device addDevice(Device device) {
+        logger.debug("添加设备: {}", device.getId());
         device.setCreatedAt(System.currentTimeMillis());
         device.setLastSeenTs(System.currentTimeMillis());
-        return deviceRepository.save(device);
+        Device savedDevice = deviceRepository.save(device);
+        logger.info("设备添加成功: {}", savedDevice.getId());
+        return savedDevice;
     }
 
     /**
      * 删除设备
      * @param deviceId 设备ID
      */
+    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
     public void deleteDevice(String deviceId) {
+        logger.debug("删除设备: {}", deviceId);
         if (!deviceRepository.existsById(deviceId)) {
             throw new ResourceNotFoundException("设备不存在: " + deviceId);
         }
         deviceRepository.deleteById(deviceId);
+        logger.info("设备删除成功: {}", deviceId);
     }
 
 }

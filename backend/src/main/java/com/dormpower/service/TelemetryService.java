@@ -2,7 +2,10 @@ package com.dormpower.service;
 
 import com.dormpower.model.Telemetry;
 import com.dormpower.repository.TelemetryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ import java.util.Map;
  */
 @Service
 public class TelemetryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TelemetryService.class);
 
     @Autowired
     private TelemetryRepository telemetryRepository;
@@ -32,9 +37,13 @@ public class TelemetryService {
      * @param range 时间范围
      * @return 遥测数据列表
      */
+    @Cacheable(value = "telemetry", key = "#deviceId + '_' + #range")
     public List<Map<String, Object>> getTelemetry(String deviceId, String range) {
+        logger.debug("获取遥测数据: device={}, range={}", deviceId, range);
+        
         RangeConfig config = RANGE_CONFIG.get(range);
         if (config == null) {
+            logger.warn("无效的时间范围: {}", range);
             throw new IllegalArgumentException("Invalid range: " + range);
         }
 
@@ -47,8 +56,11 @@ public class TelemetryService {
             deviceId, startTs, nowTs
         );
 
+        logger.debug("查询到{}条遥测数据", rows.size());
+
         if (!range.equals("60s")) {
             if (rows.isEmpty()) {
+                logger.info("设备{}在{}范围内无遥测数据", deviceId, range);
                 return new ArrayList<>();
             }
             
@@ -60,6 +72,7 @@ public class TelemetryService {
                     data.put("power_w", Math.round(r.getPowerW() * 1000.0) / 1000.0);
                     result.add(data);
                 }
+                logger.info("返回{}条遥测数据点", result.size());
                 return result;
             }
 
@@ -73,6 +86,7 @@ public class TelemetryService {
                 data.put("power_w", Math.round(r.getPowerW() * 1000.0) / 1000.0);
                 result.add(data);
             }
+            logger.info("降采样后返回{}条遥测数据点", result.size());
             return result;
         }
 
@@ -102,6 +116,7 @@ public class TelemetryService {
             result.add(data);
         }
 
+        logger.info("返回{}条遥测数据点(60s范围)", result.size());
         return result;
     }
 
@@ -114,6 +129,7 @@ public class TelemetryService {
      * @param currentA 电流
      */
     public void saveTelemetry(String deviceId, long ts, double powerW, double voltageV, double currentA) {
+        logger.debug("保存遥测数据: device={}, ts={}, power={}W", deviceId, ts, powerW);
         Telemetry telemetry = new Telemetry();
         telemetry.setDeviceId(deviceId);
         telemetry.setTs(ts);
