@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Menu: {
                   darkItemBg: "transparent",
                   darkItemSelectedBg: "rgba(0, 212, 255, 0.15)",
-                  darkItemSelectedColor: "#00d4ff",
+                  darkItemSelectedColor: "#ffffff",
                   darkSubMenuItemBg: "transparent",
                 },
                 Card: {
@@ -45,6 +45,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   colorBgContainer: "transparent",
                   headerBg: "rgba(0, 212, 255, 0.05)",
                   headerColor: "#8ba3c7",
+                  rowSelectedBg: "rgba(0, 212, 255, 0.15)",
+                  rowSelectedColor: "#ffffff",
                 },
                 Input: {
                   colorBgContainer: "rgba(16, 24, 40, 0.6)",
@@ -54,17 +56,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Select: {
                   colorBgContainer: "rgba(16, 24, 40, 0.6)",
                   colorBorder: "rgba(0, 212, 255, 0.2)",
+                  optionSelectedBg: "rgba(0, 212, 255, 0.15)",
+                  optionSelectedColor: "#ffffff",
+                },
+                Segmented: {
+                  colorText: "#8ba3c7",
+                  colorTextHover: "#e8f4ff",
+                  colorTextSelected: "#ffffff",
+                  colorBgSelected: "rgba(0, 212, 255, 0.15)",
+                  colorBorder: "rgba(0, 212, 255, 0.2)",
+                  colorBorderSelected: "#00d4ff",
                 },
                 Button: {
                   defaultBg: "rgba(0, 212, 255, 0.1)",
                   defaultBorderColor: "rgba(0, 212, 255, 0.3)",
                   defaultColor: "#00d4ff",
+                  primaryColor: "#00d4ff",
+                  primaryHoverColor: "#0099ff",
                 },
                 Tag: {
                   colorText: "#00d4ff",
                 },
                 Statistic: {
                   colorTextDescription: "#8ba3c7",
+                },
+                Cascader: {
+                  colorBgContainer: "rgba(16, 24, 40, 0.6)",
+                  colorBorder: "rgba(0, 212, 255, 0.2)",
+                  optionSelectedBg: "rgba(0, 212, 255, 0.15)",
+                  optionSelectedColor: "#ffffff",
                 },
               },
             }}

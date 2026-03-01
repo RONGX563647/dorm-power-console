@@ -108,27 +108,27 @@ export default function Sidebar() {
           { 
             key: "/dashboard", 
             icon: <DashboardOutlined style={{ color: selectedKey === "/dashboard" ? "#00d4ff" : "#8ba3c7" }} />, 
-            label: <Link href="/dashboard" style={{ color: selectedKey === "/dashboard" ? "#00d4ff" : "#e8f4ff" }}>总览</Link> 
+            label: <Link href="/dashboard" style={{ color: selectedKey === "/dashboard" ? "#ffffff" : "#e8f4ff" }}>总览</Link> 
           },
           { 
             key: "/devices", 
             icon: <AppstoreOutlined style={{ color: selectedKey === "/devices" ? "#00d4ff" : "#8ba3c7" }} />, 
-            label: <Link href="/devices" style={{ color: selectedKey === "/devices" ? "#00d4ff" : "#e8f4ff" }}>设备</Link> 
+            label: <Link href="/devices" style={{ color: selectedKey === "/devices" ? "#ffffff" : "#e8f4ff" }}>设备</Link> 
           },
           { 
             key: "/live", 
             icon: <ThunderboltOutlined style={{ color: selectedKey === "/live" ? "#00d4ff" : "#8ba3c7" }} />, 
-            label: <Link href="/live" style={{ color: selectedKey === "/live" ? "#00d4ff" : "#e8f4ff" }}>实时</Link> 
+            label: <Link href="/live" style={{ color: selectedKey === "/live" ? "#ffffff" : "#e8f4ff" }}>实时</Link> 
           },
           { 
             key: "/history", 
             icon: <LineChartOutlined style={{ color: selectedKey === "/history" ? "#00d4ff" : "#8ba3c7" }} />, 
-            label: <Link href="/history" style={{ color: selectedKey === "/history" ? "#00d4ff" : "#e8f4ff" }}>历史</Link> 
+            label: <Link href="/history" style={{ color: selectedKey === "/history" ? "#ffffff" : "#e8f4ff" }}>历史</Link> 
           },
           { 
             key: "/ai", 
             icon: <RobotOutlined style={{ color: selectedKey === "/ai" ? "#00d4ff" : "#8ba3c7" }} />, 
-            label: <Link href="/ai" style={{ color: selectedKey === "/ai" ? "#00d4ff" : "#e8f4ff" }}>AI 分析</Link> 
+            label: <Link href="/ai" style={{ color: selectedKey === "/ai" ? "#ffffff" : "#e8f4ff" }}>AI 分析</Link> 
           },
         ]}
       />

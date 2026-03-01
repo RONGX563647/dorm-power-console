@@ -6,6 +6,14 @@ spring:
     username: ${DB_USERNAME:rongx}
     password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      idle-timeout: 30000
+      pool-name: DormPowerHikariPool
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      leak-detection-threshold: 60000
   jpa:
     hibernate:
       ddl-auto: update
@@ -54,9 +62,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics
       base-path: /actuator
   endpoint:
     health:
       show-details: always
+      enabled: true
+    metrics:
+      enabled: true
+  health:
+    db:
+      enabled: true
+    diskspace:
       enabled: true

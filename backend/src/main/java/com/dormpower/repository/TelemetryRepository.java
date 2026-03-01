@@ -1,6 +1,8 @@
 package com.dormpower.repository;
 
 import com.dormpower.model.Telemetry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +21,23 @@ public interface TelemetryRepository extends JpaRepository<Telemetry, Long> {
     Telemetry findFirstByDeviceIdAndTsLessThanOrderByTsDesc(String deviceId, long ts);
 
     List<Telemetry> findByDeviceIdOrderByTsDesc(String deviceId);
+
+    /**
+     * 分页查询设备遥测数据
+     * @param deviceId 设备ID
+     * @param pageable 分页参数
+     * @return 分页结果
+     */
+    Page<Telemetry> findByDeviceIdOrderByTsDesc(String deviceId, Pageable pageable);
+
+    /**
+     * 分页查询时间范围内的遥测数据
+     * @param deviceId 设备ID
+     * @param startTs 开始时间戳
+     * @param endTs 结束时间戳
+     * @param pageable 分页参数
+     * @return 分页结果
+     */
+    Page<Telemetry> findByDeviceIdAndTsBetweenOrderByTsAsc(String deviceId, long startTs, long endTs, Pageable pageable);
 
 }

@@ -59,7 +59,7 @@ export default function LivePage() {
     let alive = true;
 
     async function load() {
-      const devs = await fetchJSON<Device[]>("/api/devices");
+      const devs = await fetchJSON<Device[]>('/api/devices');
       const target = devs.some((d) => d.id === device) ? device : (devs[0]?.id ?? "");
       if (!target) {
         if (!alive) return;
@@ -168,9 +168,42 @@ export default function LivePage() {
   };
 
   const powerTag = useMemo(() => {
-    if (powerState === "on") return <Tag color="green">已开启</Tag>;
-    if (powerState === "off") return <Tag color="red">已关闭</Tag>;
-    return <Tag>未设置</Tag>;
+    if (powerState === "on") return (
+      <Tag 
+        style={{
+          borderRadius: 999,
+          background: "rgba(0, 230, 118, 0.15)",
+          border: "1px solid rgba(0, 230, 118, 0.4)",
+          color: "#00e676",
+        }}
+      >
+        已开启
+      </Tag>
+    );
+    if (powerState === "off") return (
+      <Tag 
+        style={{
+          borderRadius: 999,
+          background: "rgba(255, 71, 87, 0.15)",
+          border: "1px solid rgba(255, 71, 87, 0.4)",
+          color: "#ff4757",
+        }}
+      >
+        已关闭
+      </Tag>
+    );
+    return (
+      <Tag 
+        style={{
+          borderRadius: 999,
+          background: "rgba(139, 163, 199, 0.15)",
+          border: "1px solid rgba(139, 163, 199, 0.4)",
+          color: "#8ba3c7",
+        }}
+      >
+        未设置
+      </Tag>
+    );
   }, [powerState]);
 
   const modeText =
@@ -180,10 +213,14 @@ export default function LivePage() {
 
   const cmdAlert = dispatcher.last ? (
     <Alert
-      type={dispatcher.last.state === "success" ? "success" : dispatcher.last.state === "failed" ? "error" : dispatcher.last.state === "timeout" ? "warning" : "info"}
+      type={dispatcher.last.state === "success" ? "success" : dispatcher.last.state === "failed" ? "error" : dispatcher.last.state === "timeout" ? "warning" : "info"
       showIcon
       title={`最近命令：${dispatcher.last.action}`}
       description={`${new Date(dispatcher.last.at).toLocaleTimeString()} · ${dispatcher.last.state}${dispatcher.last.durationMs ? ` · ${dispatcher.last.durationMs}ms` : ""}`}
+      style={{
+        background: "rgba(16, 24, 40, 0.85)",
+        border: "1px solid rgba(0, 212, 255, 0.1)",
+      }}
     />
   ) : null;
 
@@ -230,13 +267,34 @@ export default function LivePage() {
 
       <Row gutter={[12, 12]} style={{ marginTop: 12 }}>
         <Col xs={24} sm={12} lg={8}>
-          <Card className="glass-card"><Statistic title="Power" value={status ? status.total_power_w.toFixed(1) : "--"} suffix="W" /></Card>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>Power</span>}
+              value={status ? status.total_power_w.toFixed(1) : "--"} 
+              suffix="W"
+              valueStyle={{ color: "#00d4ff", fontWeight: 700, fontSize: 24 }}
+            />
+          </Card>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card className="glass-card"><Statistic title="Voltage" value={status ? status.voltage_v.toFixed(1) : "--"} suffix="V" /></Card>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>Voltage</span>}
+              value={status ? status.voltage_v.toFixed(1) : "--"} 
+              suffix="V"
+              valueStyle={{ color: "#00d4ff", fontWeight: 700, fontSize: 24 }}
+            />
+          </Card>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card className="glass-card"><Statistic title="Current" value={status ? status.current_a.toFixed(2) : "--"} suffix="A" /></Card>
+          <Card className="glass-card">
+            <Statistic 
+              title={<span style={{ color: "#8ba3c7", fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>Current</span>}
+              value={status ? status.current_a.toFixed(2) : "--"} 
+              suffix="A"
+              valueStyle={{ color: "#00d4ff", fontWeight: 700, fontSize: 24 }}
+            />
+          </Card>
         </Col>
       </Row>
 
@@ -253,10 +311,10 @@ export default function LivePage() {
           />
         </Col>
         <Col xs={24} lg={8}>
-          <Card className="glass-card" title="快捷控制" styles={{ body: { padding: 16 } }}>
+          <Card className="glass-card" title={<span style={{ color: "#e8f4ff" }}>快捷控制</span>} styles={{ body: { padding: 16 } }}>
             {!canControl ? (
               <Alert
-                style={{ marginBottom: 10 }}
+                style={{ marginBottom: 10, background: "rgba(16, 24, 40, 0.85)", border: "1px solid rgba(0, 212, 255, 0.1)" }}
                 type="warning"
                 showIcon
                 title="当前账号仅支持管理员能力"
@@ -265,14 +323,58 @@ export default function LivePage() {
             {cmdAlert}
 
             <div style={{ marginTop: cmdAlert ? 12 : 0 }}>
-              <Descriptions column={1} size="small" styles={{ label: { width: 90 } }}>
+              <Descriptions 
+                column={1} 
+                size="small" 
+                styles={{ 
+                  label: { width: 90, color: "#8ba3c7" },
+                  content: { color: "#e8f4ff" }
+                }}
+              >
                 <Descriptions.Item label="电源状态">{powerTag}</Descriptions.Item>
-                <Descriptions.Item label="定时关断">{timerPreset ? <Tag color="gold">{timerPreset}</Tag> : <Tag>未设置</Tag>}</Descriptions.Item>
-                <Descriptions.Item label="运行模式"><Tag color="blue">{modeText}</Tag></Descriptions.Item>
+                <Descriptions.Item label="定时关断">
+                  {timerPreset ? (
+                    <Tag 
+                      style={{
+                        borderRadius: 999,
+                        background: "rgba(255, 184, 0, 0.15)",
+                        border: "1px solid rgba(255, 184, 0, 0.4)",
+                        color: "#ffb800",
+                      }}
+                    >
+                      {timerPreset}
+                    </Tag>
+                  ) : (
+                    <Tag 
+                      style={{
+                        borderRadius: 999,
+                        background: "rgba(139, 163, 199, 0.15)",
+                        border: "1px solid rgba(139, 163, 199, 0.4)",
+                        color: "#8ba3c7",
+                      }}
+                    >
+                      未设置
+                    </Tag>
+                  )}
+                </Descriptions.Item>
+                <Descriptions.Item label="运行模式">
+                  <Tag 
+                    style={{
+                      borderRadius: 999,
+                      background: "rgba(0, 212, 255, 0.15)",
+                      border: "1px solid rgba(0, 212, 255, 0.4)",
+                      color: "#00d4ff",
+                    }}
+                  >
+                    {modeText}
+                  </Tag>
+                </Descriptions.Item>
               </Descriptions>
             </div>
 
-            <Divider style={{ margin: "12px 0" }}>电源</Divider>
+            <Divider style={{ margin: "12px 0", borderColor: "rgba(0, 212, 255, 0.1)" }}>
+              <span style={{ color: "#8ba3c7" }}>电源</span>
+            </Divider>
             <Button
               block
               size="large"
@@ -281,11 +383,18 @@ export default function LivePage() {
               loading={dispatcher.isBusy}
               disabled={!canControl}
               onClick={togglePower}
+              style={{
+                background: powerState === "on" ? "rgba(0, 212, 255, 0.15)" : "rgba(255, 71, 87, 0.15)",
+                border: powerState === "on" ? "1px solid rgba(0, 212, 255, 0.4)" : "1px solid rgba(255, 71, 87, 0.4)",
+                color: powerState === "on" ? "#00d4ff" : "#ff4757",
+              }}
             >
               {powerState === "on" ? "关闭电源" : "开启电源"}
             </Button>
 
-            <Divider style={{ margin: "12px 0" }}>定时关断</Divider>
+            <Divider style={{ margin: "12px 0", borderColor: "rgba(0, 212, 255, 0.1)" }}>
+              <span style={{ color: "#8ba3c7" }}>定时关断</span>
+            </Divider>
             <Flex gap={8} wrap>
               {(["10m", "30m", "1h"] as const).map((x) => (
                 <Button
@@ -294,26 +403,78 @@ export default function LivePage() {
                   loading={dispatcher.isBusy}
                   disabled={!canControl}
                   onClick={() => toggleTimer(x)}
+                  style={{
+                    background: timerPreset === x ? "rgba(255, 184, 0, 0.15)" : "rgba(0, 212, 255, 0.1)",
+                    border: timerPreset === x ? "1px solid rgba(255, 184, 0, 0.4)" : "1px solid rgba(0, 212, 255, 0.3)",
+                    color: timerPreset === x ? "#ffb800" : "#00d4ff",
+                  }}
                 >
                   {x}
                 </Button>
               ))}
             </Flex>
 
-            <Divider style={{ margin: "12px 0" }}>模式</Divider>
+            <Divider style={{ margin: "12px 0", borderColor: "rgba(0, 212, 255, 0.1)" }}>
+              <span style={{ color: "#8ba3c7" }}>模式</span>
+            </Divider>
             <Flex gap={8} wrap>
-              <Button type={mode === "learn" ? "primary" : "default"} loading={dispatcher.isBusy} disabled={!canControl} onClick={() => toggleMode("learn")}>学习模式</Button>
-              <Button type={mode === "eco" ? "primary" : "default"} loading={dispatcher.isBusy} disabled={!canControl} onClick={() => toggleMode("eco")}>节能模式</Button>
-              <Button type={mode === "away" ? "primary" : "default"} loading={dispatcher.isBusy} disabled={!canControl} onClick={() => toggleMode("away")}>离家模式</Button>
+              <Button 
+                type={mode === "learn" ? "primary" : "default"} 
+                loading={dispatcher.isBusy} 
+                disabled={!canControl} 
+                onClick={() => toggleMode("learn")}
+                style={{
+                  background: mode === "learn" ? "rgba(0, 212, 255, 0.15)" : "rgba(0, 212, 255, 0.1)",
+                  border: mode === "learn" ? "1px solid rgba(0, 212, 255, 0.4)" : "1px solid rgba(0, 212, 255, 0.3)",
+                  color: mode === "learn" ? "#00d4ff" : "#00d4ff",
+                }}
+              >
+                学习模式
+              </Button>
+              <Button 
+                type={mode === "eco" ? "primary" : "default"} 
+                loading={dispatcher.isBusy} 
+                disabled={!canControl} 
+                onClick={() => toggleMode("eco")}
+                style={{
+                  background: mode === "eco" ? "rgba(0, 230, 118, 0.15)" : "rgba(0, 212, 255, 0.1)",
+                  border: mode === "eco" ? "1px solid rgba(0, 230, 118, 0.4)" : "1px solid rgba(0, 212, 255, 0.3)",
+                  color: mode === "eco" ? "#00e676" : "#00d4ff",
+                }}
+              >
+                节能模式
+              </Button>
+              <Button 
+                type={mode === "away" ? "primary" : "default"} 
+                loading={dispatcher.isBusy} 
+                disabled={!canControl} 
+                onClick={() => toggleMode("away")}
+                style={{
+                  background: mode === "away" ? "rgba(255, 184, 0, 0.15)" : "rgba(0, 212, 255, 0.1)",
+                  border: mode === "away" ? "1px solid rgba(255, 184, 0, 0.4)" : "1px solid rgba(0, 212, 255, 0.3)",
+                  color: mode === "away" ? "#ffb800" : "#00d4ff",
+                }}
+              >
+                离家模式
+              </Button>
             </Flex>
 
             <div style={{ marginTop: 12 }}>
-              <Tag>最近操作</Tag>
+              <Tag 
+                style={{
+                  borderRadius: 999,
+                  background: "rgba(0, 212, 255, 0.15)",
+                  border: "1px solid rgba(0, 212, 255, 0.4)",
+                  color: "#00d4ff",
+                }}
+              >
+                最近操作
+              </Tag>
               <Timeline
                 style={{ marginTop: 8 }}
                 items={dispatcher.records.map((log) => ({
-                  color: log.state === "success" ? "green" : log.state === "failed" ? "red" : log.state === "timeout" ? "orange" : "blue",
-                  content: `${new Date(log.at).toLocaleTimeString()} · ${log.action} · ${log.state}${log.durationMs ? ` (${log.durationMs}ms)` : ""}`,
+                  color: log.state === "success" ? "#00e676" : log.state === "failed" ? "#ff4757" : log.state === "timeout" ? "#ffb800" : "#00d4ff",
+                  content: <span style={{ color: "#e8f4ff" }}>{new Date(log.at).toLocaleTimeString()} · {log.action} · {log.state}{log.durationMs ? ` (${log.durationMs}ms)` : ""}</span>,
                 }))}
               />
             </div>
