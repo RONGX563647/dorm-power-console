@@ -48,3 +48,15 @@ logging:
   level:
     root: ${LOG_LEVEL_ROOT:info}
     com.dormpower: ${LOG_LEVEL_APP:debug}
+
+# Actuator配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
