@@ -1,4 +1,41 @@
+# ========== 核心：修复Actuator 500错误 ==========
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
+    enabled-by-default: true
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
+      security:
+        enabled: false
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+# ========== Spring配置 ==========
 spring:
+  jpa:
+    open-in-view: false
+  security:
+    user:
+      name: ""
+      password: ""
+    web:
+      ignoring:
+        - /actuator/**
+        - /actuator/health
+        - /actuator/info
+    autoconfigure:
+      exclude:
+        - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+        - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:dorm_power}
     username: ${DB_USERNAME}
@@ -7,6 +44,7 @@ spring:
       maximum-pool-size: 20
       minimum-idle: 5
       connection-timeout: 20000
+
   jpa:
     hibernate:
       ddl-auto: update
