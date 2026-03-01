@@ -303,34 +303,34 @@ jobs:
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} << 'ENDSSH'
             set -e
             cd /opt/dorm-power
-            
+
             echo "=========================================="
             echo "  开始部署 - 适配京东云（无CPU限制）"
             echo "=========================================="
-            
+
             echo "1. 清理系统资源..."
             docker system prune -f || true
-            
+
             echo "2. 停止旧服务并清理数据..."
-            docker compose -f docker-compose.production.yml down --remove-orphans --volumes || true
+            docker compose -f docker-compose.production.yml --env-file .env.production down --remove-orphans --volumes || true
             sleep 5
-            
+
             # 删除数据库卷（强制重新初始化）
             docker volume rm dorm-power_postgres_data 2>/dev/null || true
             echo "✅ 已清理旧数据库数据"
-            
+
             echo "3. 检查镜像状态..."
             docker images | grep -E "postgres|mosquitto|nginx|dorm-power" || echo "部分镜像不存在"
-            
+
             echo "4. 分步启动服务..."
-            
+
             echo "  4.1 启动数据库和MQTT..."
-            docker compose -f docker-compose.production.yml up -d postgres mosquitto || {
+            docker compose -f docker-compose.production.yml --env-file .env.production up -d postgres mosquitto || {
               echo "错误: 数据库或MQTT启动失败"
-              docker compose -f docker-compose.production.yml logs postgres mosquitto
+              docker compose -f docker-compose.production.yml --env-file .env.production logs postgres mosquitto
               exit 1
             }
-            
+
             echo "  4.2 等待数据库完全启动..."
             for i in {1..30}; do
               if docker exec dorm-power-postgres pg_isready -U postgres; then
@@ -340,7 +340,7 @@ jobs:
               echo "等待数据库启动... (\$i/30)"
               sleep 2
             done
-            
+
             echo "  4.3 验证数据库连接..."
             if docker exec dorm-power-postgres psql -U postgres -d dorm_power -c "SELECT 1;" > /dev/null 2>&1; then
               echo "✅ 数据库连接验证成功"
@@ -350,46 +350,46 @@ jobs:
               docker exec dorm-power-postgres psql -U postgres -c "\l"
               exit 1
             fi
-            
+
             echo "  4.4 启动后端服务..."
             # 清理旧的后端容器（避免名称冲突）
             docker stop dorm-power-backend 2>/dev/null || true
             docker rm dorm-power-backend 2>/dev/null || true
-            docker compose -f docker-compose.production.yml up -d --build backend || {
+            docker compose -f docker-compose.production.yml --env-file .env.production up -d --build backend || {
               echo "错误: 后端服务启动失败"
-              docker compose -f docker-compose.production.yml logs backend
+              docker compose -f docker-compose.production.yml --env-file .env.production logs backend
               exit 1
             }
             sleep 20
-            
+
             echo "  4.5 启动前端服务..."
             # 清理旧的前端容器（避免名称冲突）
             docker stop dorm-power-frontend 2>/dev/null || true
             docker rm dorm-power-frontend 2>/dev/null || true
-            docker compose -f docker-compose.production.yml up -d --build frontend || {
+            docker compose -f docker-compose.production.yml --env-file .env.production up -d --build frontend || {
               echo "错误: 前端服务启动失败"
-              docker compose -f docker-compose.production.yml logs frontend
+              docker compose -f docker-compose.production.yml --env-file .env.production logs frontend
               exit 1
             }
-            
+
             echo "  4.6 启动Nginx..."
             # 停止并删除旧的Nginx容器
             docker stop dorm-power-nginx 2>/dev/null || true
             docker rm dorm-power-nginx 2>/dev/null || true
             sleep 2
-            
+
             # 启动新的Nginx容器
-            docker compose -f docker-compose.production.yml up -d nginx || {
+            docker compose -f docker-compose.production.yml --env-file .env.production up -d nginx || {
               echo "警告: Nginx启动失败，检查日志..."
               docker logs dorm-power-nginx 2>&1 || true
             }
-            
+
             echo "5. 等待服务稳定..."
             sleep 10
-            
+
             echo "6. 检查容器状态..."
             docker ps
-            
+
             echo "=========================================="
             echo "  部署完成！"
             echo "=========================================="
@@ -398,40 +398,40 @@ jobs:
         run: |
           echo "等待服务启动..."
           sleep 30
-          
+
           echo "开始健康检查..."
           MAX_RETRIES=5
           RETRY_COUNT=0
-          
+
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             echo "尝试 $((RETRY_COUNT + 1))/$MAX_RETRIES..."
-            
-            # 检查后端健康端点（直接访问后端，绕过Nginx重定向）
-            response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://${{ env.SERVER_IP }}:8000/actuator/health 2>&1) || response="000"
-            
-            # 接受200或301（HTTP重定向到HTTPS）
-            if [ "$response" = "200" ] || [ "$response" = "301" ]; then
+
+            # 检查Nginx健康端点（通过Nginx访问）
+            response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://${{ env.SERVER_IP }}:80/actuator/health 2>&1) || response="000"
+
+            # 接受200
+            if [ "$response" = "200" ]; then
               echo "✅ 健康检查通过！响应码: $response"
-              echo "前端: https://dorm.rongx.top"
+              echo "前端: http://${{ env.SERVER_IP }}:80"
               echo "后端: http://${{ env.SERVER_IP }}:8000"
-              echo "Nginx: https://dorm.rongx.top"
+              echo "Nginx: http://${{ env.SERVER_IP }}:80"
               exit 0
             else
               echo "响应码: $response"
               RETRY_COUNT=$((RETRY_COUNT + 1))
-              
+
               if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
                 echo "等待 10 秒后重试..."
-                sleep 10
+                  sleep 10
               fi
             fi
           done
-          
+
           echo "❌ 健康检查失败！"
           echo "检查服务状态..."
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }} \
-            "docker ps -a && docker compose -f /opt/dorm-power/docker-compose.production.yml logs --tail=50"
+            "docker ps -a && docker compose -f /opt/dorm-power/docker-compose.production.yml --env-file .env.production logs --tail=50"
           exit 1
       - name: Cleanup SSH key
         if: always()
