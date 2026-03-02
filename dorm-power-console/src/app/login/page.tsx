@@ -126,7 +126,7 @@ export default function LoginPage() {
               Dorm Power
             </Title>
             <Text style={{ color: "#8ba3c7", fontSize: 14 }}>
-              智能能源管理系统
+              Smart Energy Management System
             </Text>
           </div>
           
@@ -144,7 +144,7 @@ export default function LoginPage() {
           >
             <SafetyOutlined style={{ color: "#00d4ff" }} />
             <Text style={{ color: "#8ba3c7", fontSize: 13 }}>
-              默认管理员账户: admin / admin123
+              Only one administrator account is enabled.
             </Text>
           </div>
           
@@ -157,23 +157,23 @@ export default function LoginPage() {
                 // 调用登录函数验证凭据
                 await login(values.account, values.password);
                 // 登录成功提示
-                message.success("登录成功");
+                message.success("Login success");
                 // 跳转到仪表板
                 router.replace("/dashboard");
               } catch (error) {
                 // 登录失败提示
-                message.error(error instanceof Error ? error.message : "登录失败");
+                message.error(error instanceof Error ? error.message : "Login failed");
               }
             }}
           >
             {/* 账户输入框 */}
             <Form.Item 
-              label={<span style={{ color: "#e8f4ff" }}>账户</span>} 
+              label={<span style={{ color: "#e8f4ff" }}>Account</span>} 
               name="account" 
-              rules={[{ required: true, message: "请输入账户" }]}
+              rules={[{ required: true, message: "Please enter account" }]}
             >
               <Input 
-                placeholder="用户名或邮箱"
+                placeholder="admin or admin@dorm.local"
                 style={{
                   background: "rgba(16, 24, 40, 0.6)",
                   border: "1px solid rgba(0, 212, 255, 0.2)",
@@ -185,12 +185,12 @@ export default function LoginPage() {
             
             {/* 密码输入框 */}
             <Form.Item 
-              label={<span style={{ color: "#e8f4ff" }}>密码</span>} 
+              label={<span style={{ color: "#e8f4ff" }}>Password</span>} 
               name="password" 
-              rules={[{ required: true, message: "请输入密码" }]}
+              rules={[{ required: true, message: "Please enter password" }]}
             >
               <Input.Password 
-                placeholder="请输入密码"
+                placeholder="Enter password"
                 style={{
                   background: "rgba(16, 24, 40, 0.6)",
                   border: "1px solid rgba(0, 212, 255, 0.2)",
@@ -214,27 +214,9 @@ export default function LoginPage() {
                 boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
               }}
             >
-              登录
+              Login
             </Button>
           </Form>
-          
-          {/* 注册和修改密码链接 */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
-            <Button 
-              type="link" 
-              onClick={() => router.push("/register")}
-              style={{ color: "#00d4ff", padding: 0 }}
-            >
-              注册新账户
-            </Button>
-            <Button 
-              type="link" 
-              onClick={() => router.push("/change-password")}
-              style={{ color: "#8ba3c7", padding: 0 }}
-            >
-              修改密码
-            </Button>
-          </div>
           
           {/* 底部版权信息 */}
           <div style={{ textAlign: "center", marginTop: 16 }}>
