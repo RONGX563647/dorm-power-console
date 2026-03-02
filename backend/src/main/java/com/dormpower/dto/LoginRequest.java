@@ -9,7 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 @Schema(description = "登录请求")
 public class LoginRequest {
 
-    @Schema(description = "账号", example = "admin")
+    @NotBlank(message = "账号不能为空")
+    @Schema(description = "账号", example = "admin", required = true)
     private String account;
 
     @NotBlank(message = "密码不能为空")

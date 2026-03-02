@@ -1,5 +1,7 @@
 package com.dormpower.service;
 
+import com.dormpower.exception.BusinessException;
+import com.dormpower.exception.ResourceNotFoundException;
 import com.dormpower.model.CommandRecord;
 import com.dormpower.model.Device;
 import com.dormpower.repository.CommandRecordRepository;
@@ -15,25 +17,54 @@ import java.util.Map;
 
 /**
  * 命令服务
+ * 
+ * 提供设备控制命令的管理功能，包括：
+ * - 命令记录创建
+ * - 命令冲突检测
+ * - 命令状态更新
+ * - 超时命令标记
+ * - 批量命令下发
+ * 
+ * 命令状态流转：
+ * pending -> success/failed/timeout
+ * 
+ * @author dormpower team
+ * @version 1.0
  */
 @Service
 public class CommandService {
 
+    // 命令超时时间（秒）
     private static final int CMD_TIMEOUT_SECONDS = 30;
+    // 命令状态常量
     private static final String STATE_PENDING = "pending";
     private static final String STATE_SUCCESS = "success";
     private static final String STATE_FAILED = "failed";
     private static final String STATE_TIMEOUT = "timeout";
 
+    // 命令记录数据访问对象
     @Autowired
     private CommandRecordRepository commandRecordRepository;
 
+    // 设备数据访问对象
     @Autowired
     private DeviceRepository deviceRepository;
 
+    // JSON序列化工具
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * 创建命令记录
+     * 
+     * 创建新的命令记录并保存到数据库。
+     * 命令ID使用时间戳生成，保证唯一性。
+     * 初始状态为pending，设置超时时间为当前时间+30秒。
+     * 
+     * @param deviceId 设备ID
+     * @param request 命令请求，包含action、socket等字段
+     * @return 创建的命令记录
+     */
     public CommandRecord createCommandRecord(String deviceId, Map<String, Object> request) {
         final long now = System.currentTimeMillis();
         final String cmdId = "cmd-" + now;
@@ -110,14 +141,14 @@ public class CommandService {
     public Map<String, Object> sendCommand(String deviceId, Map<String, Object> request) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
         if (device == null) {
-            throw new RuntimeException("Device not found");
+            throw new ResourceNotFoundException("Device not found");
         }
 
         Object socketObj = request.get("socket");
         Integer socket = socketObj != null ? ((Number) socketObj).intValue() : null;
         
         if (hasPendingConflict(deviceId, socket)) {
-            throw new RuntimeException("Pending command exists for target");
+            throw new BusinessException("Pending command exists for target");
         }
 
         CommandRecord commandRecord = createCommandRecord(deviceId, request);
@@ -166,6 +197,40 @@ public class CommandService {
 
     public List<CommandRecord> getCommandsByDeviceId(String deviceId) {
         return commandRecordRepository.findByDeviceIdOrderByCreatedAtDesc(deviceId);
+    }
+
+    /**
+     * 批量下发命令
+     */
+    public Map<String, Object> sendBatchCommand(List<String> deviceIds, Map<String, Object> command) {
+        Map<String, Object> response = new HashMap<>();
+        Map<String, String> commandIds = new HashMap<>();
+        long now = System.currentTimeMillis();
+        
+        for (String deviceId : deviceIds) {
+            // 检查设备是否存在
+            Device device = deviceRepository.findById(deviceId).orElse(null);
+            if (device == null) {
+                continue;
+            }
+            
+            // 检查是否有冲突的待处理命令
+            Object socketObj = command.get("socket");
+            Integer socket = socketObj != null ? ((Number) socketObj).intValue() : null;
+            
+            if (!hasPendingConflict(deviceId, socket)) {
+                CommandRecord commandRecord = createCommandRecord(deviceId, command);
+                commandIds.put(deviceId, commandRecord.getCmdId());
+            }
+        }
+        
+        response.put("ok", true);
+        response.put("message", "Batch command sent successfully");
+        response.put("deviceCount", deviceIds.size());
+        response.put("successCount", commandIds.size());
+        response.put("commandIds", commandIds);
+        
+        return response;
     }
 
 }

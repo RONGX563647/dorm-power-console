@@ -17,18 +17,38 @@ import java.util.Map;
 
 /**
  * 设备服务
+ * 
+ * 提供设备管理的业务逻辑，包括：
+ * - 设备列表查询（带缓存）
+ * - 设备状态查询（带缓存）
+ * - 设备详情查询
+ * - 设备状态更新
+ * - 设备添加和删除
+ * 
+ * 使用Spring Cache进行缓存管理，提高查询性能。
+ * 所有操作都记录日志，便于问题排查。
+ * 
+ * @author dormpower team
+ * @version 1.0
  */
 @Service
 public class DeviceService {
 
+    // 日志记录器
     private static final Logger logger = LoggerFactory.getLogger(DeviceService.class);
 
+    // 设备数据访问对象
     @Autowired
     private DeviceRepository deviceRepository;
 
     /**
      * 获取设备列表
-     * @return 设备列表
+     * 
+     * 查询所有注册的设备信息，包括设备ID、名称、房间号和在线状态。
+     * 使用Spring Cache进行缓存，当结果为null或空列表时不缓存。
+     * 缓存key为"all"，在设备添加或删除时会清除缓存。
+     * 
+     * @return 设备列表，每个设备包含id、name、room、online和lastSeen字段
      */
     @Cacheable(value = "devices", unless = "#result == null || #result.isEmpty()")
     public List<Map<String, Object>> getDevices() {

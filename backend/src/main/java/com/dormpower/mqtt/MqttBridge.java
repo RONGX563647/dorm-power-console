@@ -5,12 +5,15 @@ import com.dormpower.model.CommandRecord;
 import com.dormpower.model.Device;
 import com.dormpower.model.StripStatus;
 import com.dormpower.model.Telemetry;
+import com.dormpower.model.DeviceStatusHistory;
 import com.dormpower.repository.CommandRecordRepository;
 import com.dormpower.repository.DeviceRepository;
 import com.dormpower.repository.StripStatusRepository;
 import com.dormpower.repository.TelemetryRepository;
+import com.dormpower.repository.DeviceStatusHistoryRepository;
 import com.dormpower.service.CommandService;
 import com.dormpower.service.WebSocketNotificationService;
+import com.dormpower.service.AlertService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.paho.client.mqttv3.*;
@@ -53,6 +56,12 @@ public class MqttBridge {
 
     @Autowired
     private CommandService commandService;
+
+    @Autowired
+    private DeviceStatusHistoryRepository deviceStatusHistoryRepository;
+
+    @Autowired
+    private AlertService alertService;
 
     private MqttClient mqttClient;
     private boolean connected = false;
@@ -197,6 +206,19 @@ public class MqttBridge {
         status.setSocketsJson(payload.has("sockets") ? payload.get("sockets").toString() : "[]");
         stripStatusRepository.save(status);
 
+        // 记录设备状态历史
+        DeviceStatusHistory history = new DeviceStatusHistory();
+        history.setId("history_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000));
+        history.setDeviceId(deviceId);
+        history.setOnline(status.isOnline());
+        history.setTotalPowerW(status.getTotalPowerW());
+        history.setVoltageV(status.getVoltageV());
+        history.setCurrentA(status.getCurrentA());
+        history.setSocketsJson(status.getSocketsJson());
+        history.setTs(now);
+        history.setCreatedAt(now);
+        deviceStatusHistoryRepository.save(history);
+
         webSocketNotificationService.broadcastDeviceStatus(deviceId, payload);
     }
 
@@ -205,13 +227,22 @@ public class MqttBridge {
         
         long now = System.currentTimeMillis() / 1000;
         
+        double powerW = payload.has("power_w") ? payload.get("power_w").asDouble() : 0.0;
+        double voltageV = payload.has("voltage_v") ? payload.get("voltage_v").asDouble() : 220.0;
+        double currentA = payload.has("current_a") ? payload.get("current_a").asDouble() : 0.0;
+
         Telemetry telemetry = new Telemetry();
         telemetry.setDeviceId(deviceId);
         telemetry.setTs(payload.has("ts") ? payload.get("ts").asLong() : now);
-        telemetry.setPowerW(payload.has("power_w") ? payload.get("power_w").asDouble() : 0.0);
-        telemetry.setVoltageV(payload.has("voltage_v") ? payload.get("voltage_v").asDouble() : 220.0);
-        telemetry.setCurrentA(payload.has("current_a") ? payload.get("current_a").asDouble() : 0.0);
+        telemetry.setPowerW(powerW);
+        telemetry.setVoltageV(voltageV);
+        telemetry.setCurrentA(currentA);
         telemetryRepository.save(telemetry);
+
+        // 检查告警
+        alertService.checkAndGenerateAlert(deviceId, "power", powerW);
+        alertService.checkAndGenerateAlert(deviceId, "voltage", voltageV);
+        alertService.checkAndGenerateAlert(deviceId, "current", currentA);
 
         deviceRepository.findById(deviceId).ifPresent(device -> {
             device.setLastSeenTs(now);

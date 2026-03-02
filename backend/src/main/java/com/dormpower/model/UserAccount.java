@@ -1,9 +1,6 @@
 package com.dormpower.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -38,6 +35,13 @@ public class UserAccount {
 
     @NotNull
     private long updatedAt;
+    
+    @NotNull
+    private boolean enabled;
+
+    public UserAccount() {
+        this.enabled = true;
+    }
 
     // Getters and setters
     public String getUsername() {
@@ -102,6 +106,14 @@ public class UserAccount {
 
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }

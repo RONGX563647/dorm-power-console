@@ -1,0 +1,280 @@
+{
+    "pages": [
+        {
+            "path": "pages/dorm/auth/login",
+            "style": {
+                "navigationBarTitleText": "登录",
+                "navigationStyle": "custom"
+            }
+        },
+        {
+            "path": "pages/dorm/index/index",
+            "style": {
+                "navigationBarTitleText": "首页",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/dorm/control/index",
+            "style": {
+                "navigationBarTitleText": "设备控制",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/dorm/device/list",
+            "style": {
+                "navigationBarTitleText": "设备列表",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/dorm/device/detail",
+            "style": {
+                "navigationBarTitleText": "设备详情",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/dorm/profile/index",
+            "style": {
+                "navigationBarTitleText": "个人中心",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white"
+            }
+        },
+        {
+            "path": "pages/dorm/settings/index",
+            "style": {
+                "navigationBarTitleText": "设置",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white"
+            }
+        },
+        {
+            "path": "pages/dorm/about/index",
+            "style": {
+                "navigationBarTitleText": "关于",
+                "navigationBarBackgroundColor": "#2A7965",
+                "navigationBarTextStyle": "white"
+            }
+        }
+    ],
+    "subPackages": [
+        {
+            "root": "pages/dorm/auth",
+            "pages": [
+                {
+                    "path": "register",
+                    "style": {
+                        "navigationBarTitleText": "注册",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                },
+                {
+                    "path": "forgot-password",
+                    "style": {
+                        "navigationBarTitleText": "忘记密码",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/telemetry",
+            "pages": [
+                {
+                    "path": "index",
+                    "style": {
+                        "navigationBarTitleText": "用电数据",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white",
+                        "enablePullDownRefresh": true
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/ai-report",
+            "pages": [
+                {
+                    "path": "index",
+                    "style": {
+                        "navigationBarTitleText": "AI报告",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/notification",
+            "pages": [
+                {
+                    "path": "list",
+                    "style": {
+                        "navigationBarTitleText": "通知中心",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white",
+                        "enablePullDownRefresh": true
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/alert",
+            "pages": [
+                {
+                    "path": "list",
+                    "style": {
+                        "navigationBarTitleText": "告警管理",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white",
+                        "enablePullDownRefresh": true
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/user",
+            "pages": [
+                {
+                    "path": "list",
+                    "style": {
+                        "navigationBarTitleText": "用户管理",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white",
+                        "enablePullDownRefresh": true
+                    }
+                },
+                {
+                    "path": "detail",
+                    "style": {
+                        "navigationBarTitleText": "用户详情",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                },
+                {
+                    "path": "add",
+                    "style": {
+                        "navigationBarTitleText": "添加用户",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/dorm",
+            "pages": [
+                {
+                    "path": "list",
+                    "style": {
+                        "navigationBarTitleText": "宿舍管理",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white",
+                        "enablePullDownRefresh": true
+                    }
+                },
+                {
+                    "path": "room-detail",
+                    "style": {
+                        "navigationBarTitleText": "房间详情",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                }
+            ]
+        },
+        {
+            "root": "pages/dorm/profile",
+            "pages": [
+                {
+                    "path": "edit",
+                    "style": {
+                        "navigationBarTitleText": "编辑资料",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                },
+                {
+                    "path": "password",
+                    "style": {
+                        "navigationBarTitleText": "修改密码",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                },
+                {
+                    "path": "notification-settings",
+                    "style": {
+                        "navigationBarTitleText": "通知设置",
+                        "navigationBarBackgroundColor": "#2A7965",
+                        "navigationBarTextStyle": "white"
+                    }
+                }
+            ]
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "宿舍用电管理系统",
+        "navigationBarBackgroundColor": "#2A7965",
+        "backgroundColor": "#F2F7F5"
+    },
+    "tabBar": {
+        "color": "#999999",
+        "selectedColor": "#2A7965",
+        "borderStyle": "white",
+        "backgroundColor": "#ffffff",
+        "height": "50px",
+        "list": [
+            {
+                "pagePath": "pages/dorm/index/index",
+                "iconPath": "static/home.png",
+                "selectedIconPath": "static/home-active.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/dorm/control/index",
+                "iconPath": "static/image.png",
+                "selectedIconPath": "static/image-active.png",
+                "text": "控制"
+            },
+            {
+                "pagePath": "pages/dorm/profile/index",
+                "iconPath": "static/star.png",
+                "selectedIconPath": "static/star-active.png",
+                "text": "我的"
+            }
+        ]
+    },
+    "condition": {
+        "current": 0,
+        "list": [
+            {
+                "name": "登录",
+                "path": "pages/dorm/auth/login"
+            },
+            {
+                "name": "首页",
+                "path": "pages/dorm/index/index"
+            },
+            {
+                "name": "设备控制",
+                "path": "pages/dorm/control/index"
+            }
+        ]
+    }
+}

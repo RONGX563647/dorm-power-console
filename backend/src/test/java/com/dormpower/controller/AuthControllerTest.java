@@ -20,7 +20,7 @@ public class AuthControllerTest {
 
     @Test
     public void testLoginSuccess() throws Exception {
-        String loginJson = "{\"username\": \"admin\", \"password\": \"admin123\"}";
+        String loginJson = "{\"account\": \"admin\", \"password\": \"admin123\"}";
         mockMvc.perform(post("/api/auth/login")
                         .contentType("application/json")
                         .content(loginJson))
@@ -32,7 +32,7 @@ public class AuthControllerTest {
 
     @Test
     public void testLoginFailure() throws Exception {
-        String loginJson = "{\"username\": \"admin\", \"password\": \"wrongpassword\"}";
+        String loginJson = "{\"account\": \"admin\", \"password\": \"wrongpassword\"}";
         mockMvc.perform(post("/api/auth/login")
                         .contentType("application/json")
                         .content(loginJson))
@@ -40,12 +40,42 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void testGetCurrentUser() throws Exception {
-        mockMvc.perform(get("/api/auth/me"))
+    public void testRegister() throws Exception {
+        String registerJson = "{\"username\": \"testuser\", \"email\": \"test@example.com\", \"password\": \"password123\"}";
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType("application/json")
+                        .content(registerJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("admin"))
-                .andExpect(jsonPath("$.role").value("admin"))
-                .andExpect(jsonPath("$.email").value("admin@example.com"));
+                .andExpect(jsonPath("$.user.username").value("testuser"))
+                .andExpect(jsonPath("$.user.role").value("user"))
+                .andExpect(jsonPath("$.token").exists());
+    }
+
+    @Test
+    public void testForgotPassword() throws Exception {
+        String forgotPasswordJson = "{\"email\": \"admin@dorm.local\"}";
+        mockMvc.perform(post("/api/auth/forgot-password")
+                        .contentType("application/json")
+                        .content(forgotPasswordJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Password reset email sent"));
+    }
+
+    @Test
+    public void testLogout() throws Exception {
+        // 先登录获取token
+        String loginJson = "{\"account\": \"admin\", \"password\": \"admin123\"}";
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType("application/json")
+                        .content(loginJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").exists());
+
+        // 登出（这里简化测试，实际应该提取token并在请求头中发送）
+        mockMvc.perform(post("/api/auth/logout")
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Logged out successfully"));
     }
 
 }

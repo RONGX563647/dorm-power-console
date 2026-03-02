@@ -10,12 +10,25 @@ import java.util.Map;
 
 /**
  * WebSocket通知服务
- * 用于在业务逻辑中发送WebSocket通知
+ * 
+ * 用于在业务逻辑中发送WebSocket通知，支持以下类型的通知：
+ * - 设备状态更新通知
+ * - 遥测数据更新通知
+ * - 命令执行结果通知
+ * - 异常告警通知
+ * - 系统广播通知
+ * 
+ * 所有通知方法都包含异常处理，确保通知失败不影响主业务流程。
+ * 
+ * @author dormpower team
+ * @version 1.0
  */
 @Service
 public class WebSocketNotificationService {
 
+    // WebSocket管理器，用于管理WebSocket连接和消息发送
     private final WebSocketManager webSocketManager = WebSocketManager.getInstance();
+    // JSON序列化工具
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -186,6 +199,26 @@ public class WebSocketNotificationService {
      * @param alert 告警信息
      */
     public void broadcastAlert(String deviceId, JsonNode alert) {
+        try {
+            Map<String, Object> message = new HashMap<>();
+            message.put("type", "ALERT");
+            message.put("deviceId", deviceId);
+            message.put("payload", alert);
+            message.put("timestamp", System.currentTimeMillis());
+            
+            String jsonMessage = objectMapper.writeValueAsString(message);
+            webSocketManager.sendToDeviceSubscribers(deviceId, jsonMessage);
+        } catch (Exception e) {
+            System.err.println("Failed to broadcast alert: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 广播告警（支持Map）
+     * @param deviceId 设备ID
+     * @param alert 告警信息
+     */
+    public void broadcastAlert(String deviceId, Map<String, Object> alert) {
         try {
             Map<String, Object> message = new HashMap<>();
             message.put("type", "ALERT");

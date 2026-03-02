@@ -1,0 +1,345 @@
+/**
+ * 未来主义风格 - 全局样式变量
+ * Futuristic Style - Global Style Variables
+ */
+
+/* 色彩系统 */
+$cyber-primary: #00F5FF;
+$cyber-secondary: #00D4FF;
+$cyber-accent: #FF00FF;
+$cyber-warning: #FF6B35;
+$cyber-success: #00FF88;
+$cyber-danger: #FF0055;
+
+$bg-dark-primary: #0A0E27;
+$bg-dark-secondary: #0F1629;
+$bg-dark-tertiary: #1A1F3A;
+
+$text-primary: #00F5FF;
+$text-secondary: rgba(0, 245, 255, 0.7);
+$text-muted: rgba(0, 245, 255, 0.5);
+
+/* 透明度层级 */
+$alpha-low: 0.03;
+$alpha-medium: 0.08;
+$alpha-high: 0.15;
+$alpha-ultra: 0.25;
+
+/* 发光效果 */
+$glow-sm: 0 0 10rpx rgba(0, 245, 255, 0.3);
+$glow-md: 0 0 20rpx rgba(0, 245, 255, 0.5);
+$glow-lg: 0 0 30rpx rgba(0, 245, 255, 0.7);
+$glow-xl: 0 0 40rpx rgba(0, 245, 255, 0.9);
+
+/* 动画时长 */
+$duration-fast: 0.2s;
+$duration-normal: 0.3s;
+$duration-slow: 0.5s;
+$duration-ultra: 1s;
+
+/* 全息投影效果 */
+@mixin hologram-bg {
+    position: relative;
+    background: linear-gradient(180deg, $bg-dark-primary 0%, $bg-dark-secondary 50%, $bg-dark-primary 100%);
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            linear-gradient(rgba($cyber-primary, $alpha-low) 1px, transparent 1px),
+            linear-gradient(90deg, rgba($cyber-primary, $alpha-low) 1px, transparent 1px);
+        background-size: 40rpx 40rpx;
+        animation: gridMove 20s linear infinite;
+        pointer-events: none;
+    }
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: -200rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800rpx;
+        height: 800rpx;
+        background: radial-gradient(circle, rgba($cyber-primary, $alpha-high) 0%, transparent 70%);
+        pointer-events: none;
+    }
+}
+
+/* 全息卡片效果 */
+@mixin hologram-card {
+    background: rgba($cyber-primary, $alpha-low);
+    border: 1rpx solid rgba($cyber-primary, 0.2);
+    border-radius: 20rpx;
+    box-shadow: $glow-sm;
+    backdrop-filter: blur(10px);
+    transition: all $duration-normal ease;
+    
+    &:active {
+        background: rgba($cyber-primary, $alpha-medium);
+        box-shadow: $glow-md;
+        transform: scale(0.98);
+    }
+}
+
+/* 全息按钮效果 */
+@mixin hologram-button {
+    background: rgba($cyber-primary, $alpha-medium);
+    border: 1rpx solid rgba($cyber-primary, 0.3);
+    border-radius: 12rpx;
+    color: $cyber-primary;
+    font-weight: 600;
+    letter-spacing: 2rpx;
+    box-shadow: $glow-sm;
+    transition: all $duration-normal ease;
+    
+    &:active:not([disabled]) {
+        background: rgba($cyber-primary, $alpha-high);
+        box-shadow: $glow-md;
+        transform: scale(0.95);
+    }
+    
+    &[disabled] {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}
+
+/* 发光文字效果 */
+@mixin glow-text {
+    color: $cyber-primary;
+    text-shadow: $glow-md;
+}
+
+/* 脉冲动画 */
+@mixin pulse-animation {
+    animation: pulse 2s ease-out infinite;
+}
+
+/* 旋转动画 */
+@mixin rotate-animation {
+    animation: rotate 3s linear infinite;
+}
+
+/* 扫描动画 */
+@mixin scan-animation {
+    animation: scan 2s ease-in-out infinite;
+}
+
+/* 故障艺术效果 */
+@mixin glitch-effect {
+    position: relative;
+    
+    &::before,
+    &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    &::before {
+        color: $cyber-accent;
+        animation: glitch-1 2s infinite linear alternate-reverse;
+        clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+    
+    &::after {
+        color: $cyber-secondary;
+        animation: glitch-2 3s infinite linear alternate-reverse;
+        clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+}
+
+/* 数据流动画 */
+@mixin data-flow {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba($cyber-primary, $alpha-high) 50%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: dataFlow 2s linear infinite;
+}
+
+/* 3D卡片效果 */
+@mixin card-3d {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    
+    &:hover {
+        transform: rotateY(5deg) rotateX(5deg);
+    }
+}
+
+/* 全息边框效果 */
+@mixin holo-border {
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: -2rpx;
+        left: -2rpx;
+        right: -2rpx;
+        bottom: -2rpx;
+        background: linear-gradient(
+            45deg,
+            $cyber-primary,
+            $cyber-secondary,
+            $cyber-accent,
+            $cyber-primary
+        );
+        background-size: 400% 400%;
+        border-radius: inherit;
+        animation: borderGlow 3s ease infinite;
+        z-index: -1;
+    }
+}
+
+/* 关键帧动画 */
+@keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(40rpx); }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes scan {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.2;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.4;
+    }
+}
+
+@keyframes glitch-1 {
+    0% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(-2rpx);
+    }
+    40% {
+        transform: translateX(2rpx);
+    }
+    60% {
+        transform: translateX(-2rpx);
+    }
+    80% {
+        transform: translateX(2rpx);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes glitch-2 {
+    0% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(2rpx);
+    }
+    40% {
+        transform: translateX(-2rpx);
+    }
+    60% {
+        transform: translateX(2rpx);
+    }
+    80% {
+        transform: translateX(-2rpx);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes dataFlow {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes borderGlow {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* 全局类 */
+.cyber-container {
+    @include hologram-bg;
+    min-height: 100vh;
+    color: $text-primary;
+}
+
+.cyber-card {
+    @include hologram-card;
+}
+
+.cyber-button {
+    @include hologram-button;
+}
+
+.cyber-text {
+    @include glow-text;
+}
+
+.cyber-pulse {
+    @include pulse-animation;
+}
+
+.cyber-rotate {
+    @include rotate-animation;
+}
+
+.cyber-scan {
+    @include scan-animation;
+}
+
+.cyber-glitch {
+    @include glitch-effect;
+}
+
+.cyber-flow {
+    @include data-flow;
+}
+
+.cyber-3d {
+    @include card-3d;
+}
+
+.cyber-border {
+    @include holo-border;
+}

@@ -37,13 +37,25 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .description("宿舍电源管理系统API文档\n\n" +
                                 "## 功能模块\n" +
-                                "- **认证模块**: 用户登录、登出、令牌刷新\n" +
-                                "- **设备模块**: 设备列表、设备状态查询\n" +
-                                "- **遥测模块**: 功率数据查询\n" +
-                                "- **命令模块**: 设备控制命令\n" +
+                                "- **认证模块**: 用户登录、登出、令牌刷新、密码修改\n" +
+                                "- **设备模块**: 设备CRUD操作、设备分组管理、设备状态历史\n" +
+                                "- **遥测模块**: 功率数据查询、用电统计报表、数据导出\n" +
+                                "- **命令模块**: 设备控制命令、批量命令、命令历史记录\n" +
+                                "- **告警模块**: 异常告警、告警配置\n" +
+                                "- **定时任务**: 定时开关设备、任务管理\n" +
                                 "- **AI报告**: 智能用电分析报告\n\n" +
                                 "## 认证方式\n" +
-                                "使用JWT Bearer Token认证，在请求头中添加: `Authorization: Bearer <token>`")
+                                "使用JWT Bearer Token认证，在请求头中添加: `Authorization: Bearer <token>`\n\n" +
+                                "## API端点\n" +
+                                "- **认证**: /api/auth/**\n" +
+                                "- **用户**: /api/users/**\n" +
+                                "- **设备**: /api/devices/**\n" +
+                                "- **分组**: /api/groups/**\n" +
+                                "- **遥测**: /api/telemetry/**\n" +
+                                "- **命令**: /api/commands/**\n" +
+                                "- **告警**: /api/alerts/**\n" +
+                                "- **任务**: /api/tasks/**\n" +
+                                "- **AI报告**: /api/ai/**")
                         .contact(new Contact()
                                 .name("Dorm Power Team")
                                 .email("admin@dorm.local")
