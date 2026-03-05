@@ -223,15 +223,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     data() {
         return {
             currentPower: 1234,
             powerHistory: [20, 35, 45, 30, 50, 40, 60, 55, 45, 65, 50, 40],
-            todayEnergy: '29.6',
-            unreadCount: 0
+            todayEnergy: '29.6'
         }
     },
     
@@ -239,7 +238,8 @@ export default {
         ...mapState({
             user: state => state.user,
             devices: state => state.devices || [],
-            alerts: state => state.alerts || []
+            alerts: state => state.alerts || [],
+            unreadCount: state => state.unreadCount || 0
         }),
         
         onlineDevices() {
@@ -256,6 +256,8 @@ export default {
     },
     
     methods: {
+        ...mapActions(['fetchDevices', 'fetchAlerts', 'fetchUnreadCount']),
+        
         getGreeting() {
             const hour = new Date().getHours()
             if (hour < 6) return 'GOOD NIGHT'
@@ -270,12 +272,17 @@ export default {
         
         async refreshData() {
             try {
-                const res = await this.$http.get('/dashboard/summary')
-                if (res.data) {
-                    this.currentPower = res.data.current_power || 0
-                    this.todayEnergy = res.data.today_energy || '0'
-                    this.updatePowerHistory(res.data.current_power || 0)
-                }
+                // 并行获取数据
+                await Promise.all([
+                    this.fetchDevices(),
+                    this.fetchAlerts(),
+                    this.fetchUnreadCount()
+                ])
+                
+                // 模拟当前功率数据
+                this.currentPower = Math.floor(Math.random() * 1500) + 500
+                this.todayEnergy = (Math.random() * 30 + 10).toFixed(1)
+                this.updatePowerHistory(this.currentPower)
             } catch (e) {
                 console.error('Load data failed:', e)
             }

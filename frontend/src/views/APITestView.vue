@@ -79,7 +79,7 @@
 import { ref, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlayCircleOutlined, ClearOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue'
-import { authApi, deviceApi, commandApi, aiReportApi, deviceGroupApi, userApi, alertApi, taskApi } from '@/api'
+import { authApi, deviceApi, commandApi, aiReportApi, deviceGroupApi, userApi, alertApi, taskApi, dormApi, monitorApi } from '@/api'
 
 interface TestResult {
   name: string
@@ -234,10 +234,21 @@ const runAllTests = async () => {
       }
     })
 
+    // 宿舍管理模块测试
+    await runTest('获取房间列表', '/api/dorm/rooms', async () => {
+      const result = await dormApi.getAllRooms()
+      if (!Array.isArray(result)) throw new Error('Invalid response')
+    })
+
     // AI报告模块测试
-    await runTest('生成AI报告', '/api/ai/report', async () => {
-      const result = await aiReportApi.getReport('101')
-      if (!(result as any).summary) throw new Error('Missing summary')
+    await runTest('生成AI报告', '/api/rooms/{roomId}/ai_report', async () => {
+      const rooms = await dormApi.getAllRooms()
+      if (rooms.length > 0) {
+        const result = await aiReportApi.getReport(rooms[0].id)
+        if (!(result as any).summary) throw new Error('Missing summary')
+      } else {
+        throw new Error('No rooms available')
+      }
     })
 
     // 设备分组模块测试
@@ -262,6 +273,12 @@ const runAllTests = async () => {
     await runTest('获取所有任务', '/api/tasks', async () => {
       const result = await taskApi.getAllTasks()
       if (!Array.isArray(result)) throw new Error('Invalid response')
+    })
+
+    // 系统监控模块测试
+    await runTest('获取系统状态', '/api/admin/monitor/system', async () => {
+      const result = await monitorApi.getSystemStatus()
+      if (!result) throw new Error('Invalid response')
     })
 
     message.success('所有测试完成')

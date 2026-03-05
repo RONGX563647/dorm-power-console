@@ -665,7 +665,7 @@ export const dormApi = {
   /**
    * 获取房间列表
    */
-  getRooms: () => get<DormRoom[]>('/api/dorm/rooms'),
+  getAllRooms: () => get<DormRoom[]>('/api/dorm/rooms'),
 
   /**
    * 获取楼栋房间
@@ -1549,3 +1549,120 @@ export const telemetryApi = {
    */
   getStatistics: (deviceId: string) => get('/api/telemetry/statistics', { params: { deviceId } })
 }
+
+/**
+ * AI智能客服 API
+ */
+export const aiChatApi = {
+  /**
+   * 智能对话
+   */
+  chat: (message: string, userId?: string) => {
+    const headers: Record<string, string> = {}
+    if (userId) {
+      headers['X-User-Id'] = userId
+    }
+    return post<{ success: boolean; response: string; userId: string }>('/api/agent/chat', { message }, { headers })
+  },
+  
+  /**
+   * 意图识别
+   */
+  recognizeIntent: (message: string) => 
+    post<{ success: boolean; intent: string; confidence: number; entities: any; needLLM: boolean; apiEndpoint?: string }>('/api/agent/intent', { message }),
+  
+  /**
+   * 快速问答
+   */
+  quickReply: (message: string) => 
+    post<{ success: boolean; matched: boolean; response: string }>('/api/agent/quick', { message }),
+  
+  /**
+   * 健康检查
+   */
+  health: () => get<{ status: string; service: string; features: any }>('/api/agent/health')
+}
+
+/**
+ * 智能节能 API
+ */
+export const autoSavingApi = {
+  /**
+   * 预测用电量
+   */
+  predictPower: (roomId: string, days: number = 7) => 
+    get<any>('/api/saving/predict/' + roomId, { params: { days } }),
+  
+  /**
+   * 获取小时预测
+   */
+  getHourlyPrediction: (roomId: string) => 
+    get<any[]>('/api/saving/predict/' + roomId + '/hourly'),
+  
+  /**
+   * 生成节能策略
+   */
+  getStrategies: (roomId: string) => 
+    get<any[]>('/api/saving/strategies/' + roomId),
+  
+  /**
+   * 执行节能策略
+   */
+  executeStrategy: (roomId: string, strategyId: string) => 
+    post<{ success: boolean; roomId: string; strategyId: string; message: string }>('/api/saving/strategies/' + roomId + '/execute/' + strategyId),
+  
+  /**
+   * 获取自动节能状态
+   */
+  getAutoSavingStatus: () => 
+    get<{ enabled: boolean; message: string }>('/api/saving/auto/status'),
+  
+  /**
+   * 开启/关闭自动节能
+   */
+  toggleAutoSaving: (enabled: boolean) => 
+    post<{ success: boolean; enabled: boolean; message: string }>('/api/saving/auto/toggle', null, { params: { enabled } }),
+  
+  /**
+   * 设置用电阈值
+   */
+  setThreshold: (threshold: number) => 
+    post<{ success: boolean; threshold: number; message: string }>('/api/saving/auto/threshold', null, { params: { threshold } }),
+  
+  /**
+   * 获取节能统计
+   */
+  getSavingStats: (roomId: string) => 
+    get<any>('/api/saving/stats/' + roomId),
+  
+  /**
+   * 获取所有房间节能统计
+   */
+  getAllSavingStats: () => 
+    get<{ rooms: any; summary: any }>('/api/saving/stats/all'),
+  
+  /**
+   * 节能分析报告
+   */
+  generateReport: (roomId: string, days: number = 7) => 
+    get<{ roomId: string; prediction: any; strategies: any[]; stats: any; recommendations: string[] }>('/api/saving/report/' + roomId, { params: { days } })
+}
+
+/**
+ * 命令历史 API
+ */
+export const commandHistoryApi = {
+  /**
+   * 获取设备命令历史
+   */
+  getDeviceCommands: (deviceId: string) => 
+    get<any[]>('/api/commands/device/' + deviceId),
+  
+  /**
+   * 获取命令详情
+   */
+  getCommandDetails: (cmdId: string) => 
+    get<any>('/api/commands/' + cmdId)
+}
+
+

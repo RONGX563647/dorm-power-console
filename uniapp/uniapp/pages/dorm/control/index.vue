@@ -137,7 +137,7 @@
                 <view 
                     class="socket-card" 
                     :class="{ active: status, disabled: !deviceStatus.online }"
-                    v-for="(status, index) in deviceStatus.socket_status || [false, false, false, false]" 
+                    v-for="(status, index) in socket_status || [false, false, false, false]" 
                     :key="index"
                 >
                     <view class="socket-hologram">
@@ -262,7 +262,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import api from '@/api'
 
 export default {
     data() {
@@ -271,7 +272,7 @@ export default {
             deviceStatus: {
                 online: false,
                 total_power_w: 0,
-                socket_status: [false, false, false, false]
+                sockets: []
             },
             controlling: false,
             powerHistory: [20, 35, 45, 30, 50, 40, 60, 55, 45, 65, 50, 40]
@@ -288,17 +289,21 @@ export default {
         },
         
         activeSocketsCount() {
-            return (this.deviceStatus.socket_status || []).filter(s => s).length
+            return (this.deviceStatus.sockets || []).filter(s => s.on).length
         },
         
         totalSocketsCount() {
-            return (this.deviceStatus.socket_status || []).length
+            return (this.deviceStatus.sockets || []).length
         },
         
         estimatedDailyEnergy() {
             const hours = 24
             const power = this.deviceStatus.total_power_w || 0
             return ((power * hours) / 1000).toFixed(2)
+        },
+        
+        socket_status() {
+            return (this.deviceStatus.sockets || []).map(s => s.on)
         }
     },
     
@@ -313,14 +318,13 @@ export default {
     },
     
     methods: {
+        ...mapActions(['fetchDevices']),
+        
         async loadDevices() {
             try {
-                const res = await this.$http.get('/devices')
-                if (res.data && res.data.devices) {
-                    this.$store.commit('setDevices', res.data.devices)
-                    if (res.data.devices.length > 0) {
-                        this.selectDevice(res.data.devices[0])
-                    }
+                await this.fetchDevices()
+                if (this.devices.length > 0) {
+                    this.selectDevice(this.devices[0])
                 }
             } catch (e) {
                 console.error('Load devices failed:', e)
@@ -340,10 +344,10 @@ export default {
             if (!this.currentDevice) return
             
             try {
-                const res = await this.$http.get(`/devices/${this.currentDevice.id}/status`)
-                this.deviceStatus = res.data
+                const res = await api.device.getDeviceStatus(this.currentDevice.id)
+                this.deviceStatus = res
                 
-                const power = res.data.total_power_w || 0
+                const power = res.total_power_w || 0
                 this.updatePowerHistory(power)
             } catch (e) {
                 console.error('Refresh status failed:', e)
@@ -362,9 +366,8 @@ export default {
         },
         
         getSocketPower(index) {
-            const basePower = this.deviceStatus.total_power_w || 0
-            const activeCount = this.activeSocketsCount || 1
-            return Math.round(basePower / activeCount)
+            const socket = (this.deviceStatus.sockets || [])[index]
+            return socket ? socket.power_w || 0 : 0
         },
         
         async toggleSocket(socketIndex, targetStatus) {
@@ -380,7 +383,11 @@ export default {
             
             this.controlling = true
             try {
-                await this.$http.post(`/devices/${this.currentDevice.id}/socket/${socketIndex}/on`)
+                await api.command.sendCommand(this.currentDevice.id, {
+                    action: 'toggle',
+                    socket: socketIndex,
+                    value: true
+                })
                 await this.refreshStatus()
                 uni.showToast({
                     title: '开启成功',
@@ -402,7 +409,11 @@ export default {
             
             this.controlling = true
             try {
-                await this.$http.post(`/devices/${this.currentDevice.id}/socket/${socketIndex}/off`)
+                await api.command.sendCommand(this.currentDevice.id, {
+                    action: 'toggle',
+                    socket: socketIndex,
+                    value: false
+                })
                 await this.refreshStatus()
                 uni.showToast({
                     title: '关闭成功',
@@ -424,7 +435,15 @@ export default {
             
             this.controlling = true
             try {
-                await this.$http.post(`/devices/${this.currentDevice.id}/all/on`)
+                // 批量开启所有插座
+                const sockets = this.deviceStatus.sockets || []
+                for (let i = 0; i < sockets.length; i++) {
+                    await api.command.sendCommand(this.currentDevice.id, {
+                        action: 'toggle',
+                        socket: i + 1,
+                        value: true
+                    })
+                }
                 await this.refreshStatus()
                 uni.showToast({
                     title: '全部开启成功',
@@ -446,7 +465,15 @@ export default {
             
             this.controlling = true
             try {
-                await this.$http.post(`/devices/${this.currentDevice.id}/all/off`)
+                // 批量关闭所有插座
+                const sockets = this.deviceStatus.sockets || []
+                for (let i = 0; i < sockets.length; i++) {
+                    await api.command.sendCommand(this.currentDevice.id, {
+                        action: 'toggle',
+                        socket: i + 1,
+                        value: false
+                    })
+                }
                 await this.refreshStatus()
                 uni.showToast({
                     title: '全部关闭成功',

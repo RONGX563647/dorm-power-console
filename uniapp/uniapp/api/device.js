@@ -4,6 +4,10 @@ function getDeviceList() {
     return request.get('/api/devices')
 }
 
+function getDeviceDetail(deviceId) {
+    return request.get(`/api/devices/${deviceId}`)
+}
+
 function getDeviceStatus(deviceId) {
     return request.get(`/api/devices/${deviceId}/status`)
 }
@@ -16,14 +20,20 @@ function createDevice(data) {
     return request.post('/api/devices', data)
 }
 
-function getDeviceHistory(deviceId, params) {
-    return request.get(`/api/devices/${deviceId}/history`, params)
+function updateDevice(deviceId, data) {
+    return request.put(`/api/devices/${deviceId}`, data)
+}
+
+function deleteDevice(deviceId) {
+    return request.del(`/api/devices/${deviceId}`)
 }
 
 export default {
     getDeviceList,
+    getDeviceDetail,
     getDeviceStatus,
     getDevicesByRoom,
     createDevice,
-    getDeviceHistory
+    updateDevice,
+    deleteDevice
 }

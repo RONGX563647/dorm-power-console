@@ -8,6 +8,9 @@ import notification from './notification'
 import alert from './alert'
 import dorm from './dorm'
 import rbac from './rbac'
+import powerControl from './power-control'
+import billing from './billing'
+import monitor from './monitor'
 
 export default {
     auth,
@@ -19,5 +22,8 @@ export default {
     notification,
     alert,
     dorm,
-    rbac
+    rbac,
+    powerControl,
+    billing,
+    monitor
 }

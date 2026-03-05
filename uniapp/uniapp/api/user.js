@@ -4,30 +4,35 @@ function getUserList(params) {
     return request.get('/api/users', params)
 }
 
-function getUserDetail(userId) {
-    return request.get(`/api/users/${userId}`)
+function getUserDetail(username) {
+    return request.get(`/api/users/${username}`)
 }
 
-function updateUser(userId, data) {
-    return request.put(`/api/users/${userId}`, data)
+function updateUser(username, data) {
+    return request.put(`/api/users/${username}`, data)
 }
 
-function changePassword(userId, data) {
-    return request.post(`/api/users/${userId}/password`, data)
+function updateProfile(username, data) {
+    return request.patch(`/api/users/${username}/profile`, data)
+}
+
+function changePassword(username, data) {
+    return request.post(`/api/users/${username}/password`, data)
 }
 
 function createUser(data) {
-    return request.post('/api/auth/register', data)
+    return request.post('/api/users', data)
 }
 
-function deleteUser(userId) {
-    return request.del(`/api/users/${userId}`)
+function deleteUser(username) {
+    return request.del(`/api/users/${username}`)
 }
 
 export default {
     getUserList,
     getUserDetail,
     updateUser,
+    updateProfile,
     changePassword,
     createUser,
     deleteUser

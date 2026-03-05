@@ -201,6 +201,21 @@ const router = createRouter({
           path: 'telemetry',
           name: 'telemetry',
           component: () => import('@/views/TelemetryView.vue')
+        },
+        {
+          path: 'ai-chat',
+          name: 'ai-chat',
+          component: () => import('@/views/AIChatView.vue')
+        },
+        {
+          path: 'auto-saving',
+          name: 'auto-saving',
+          component: () => import('@/views/AutoSavingView.vue')
+        },
+        {
+          path: 'command-history',
+          name: 'command-history',
+          component: () => import('@/views/CommandHistoryView.vue')
         }
       ]
     }

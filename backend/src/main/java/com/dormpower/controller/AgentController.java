@@ -31,7 +31,7 @@ public class AgentController {
         this.conversationHistory = new ConcurrentHashMap<>();
     }
 
-    @Operation(summary = "智能对话", description = "与AI客服进行对话", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "智能对话", description = "与AI客服进行对话")
     @PostMapping("/chat")
     public ResponseEntity<Map<String, Object>> chat(
             @RequestHeader(value = "X-User-Id", required = false) String userId,
@@ -56,7 +56,7 @@ public class AgentController {
         ));
     }
 
-    @Operation(summary = "意图识别", description = "识别用户消息意图", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "意图识别", description = "识别用户消息意图")
     @PostMapping("/intent")
     public ResponseEntity<Map<String, Object>> recognizeIntent(@RequestBody Map<String, String> request) {
         String message = request.get("message");
@@ -82,7 +82,7 @@ public class AgentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "快速问答", description = "快速匹配常见问题", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "快速问答", description = "快速匹配常见问题")
     @PostMapping("/quick")
     public ResponseEntity<Map<String, Object>> quickReply(@RequestBody Map<String, String> request) {
         String message = request.get("message");

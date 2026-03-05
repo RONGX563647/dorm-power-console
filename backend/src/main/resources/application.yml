@@ -2,9 +2,9 @@ spring:
   application:
     name: dorm-power-backend
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:dorm_power}
-    username: ${DB_USERNAME:rongx}
-    password: ${DB_PASSWORD:}
+    url: jdbc:postgresql://localhost:5432/dorm_power
+    username: rongx
+    password:
     driver-class-name: org.postgresql.Driver
     hikari:
       minimum-idle: 1

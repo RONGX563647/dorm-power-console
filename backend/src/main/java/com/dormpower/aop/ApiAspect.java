@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -56,19 +59,22 @@ public class ApiAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method targetMethod = signature.getMethod();
         
-        // 限流检查
-        RateLimit rateLimit = targetMethod.getAnnotation(RateLimit.class);
-        if (rateLimit != null) {
-            RateLimiter limiter = getRateLimiter(rateLimit);
-            if (!limiter.tryAcquire()) {
-                logger.warn("请求被限流: {} {} from {}", method, uri, ip);
-                throw new RuntimeException("请求过于频繁，请稍后再试");
-            }
-        } else {
-            // 默认API限流
-            if (!apiRateLimiter.tryAcquire()) {
-                logger.warn("API请求被限流: {} {} from {}", method, uri, ip);
-                throw new RuntimeException("请求过于频繁，请稍后再试");
+        // 检查是否为管理员用户，如果是则跳过限流
+        if (!isAdminUser()) {
+            // 限流检查
+            RateLimit rateLimit = targetMethod.getAnnotation(RateLimit.class);
+            if (rateLimit != null) {
+                RateLimiter limiter = getRateLimiter(rateLimit);
+                if (!limiter.tryAcquire()) {
+                    logger.warn("请求被限流: {} {} from {}", method, uri, ip);
+                    throw new RuntimeException("请求过于频繁，请稍后再试");
+                }
+            } else {
+                // 默认API限流
+                if (!apiRateLimiter.tryAcquire()) {
+                    logger.warn("API请求被限流: {} {} from {}", method, uri, ip);
+                    throw new RuntimeException("请求过于频繁，请稍后再试");
+                }
             }
         }
         
@@ -148,6 +154,19 @@ public class ApiAspect {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    /**
+     * 检查当前用户是否为管理员
+     */
+    private boolean isAdminUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            // 检查用户是否具有ROLE_ADMIN权限
+            return authentication.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        }
+        return false;
     }
 
 }

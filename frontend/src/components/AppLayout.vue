@@ -34,6 +34,17 @@
         </div>
       </div>
 
+      <!-- 搜索框 -->
+      <div class="menu-search">
+        <a-input
+          v-model:value="searchValue"
+          placeholder="搜索功能..."
+          size="small"
+          prefix="🔍"
+          @input="handleSearch"
+        />
+      </div>
+
       <a-menu
         v-model:selectedKeys="selectedKeys"
         v-model:openKeys="openKeys"
@@ -42,6 +53,7 @@
         class="cyber-menu"
         @select="handleMenuSelect"
       >
+        <!-- 常用功能 -->
         <a-menu-item key="/app/dashboard">
           <template #icon>
             <DashboardOutlined />
@@ -50,35 +62,75 @@
           <div class="menu-glitch"></div>
         </a-menu-item>
 
-        <a-sub-menu key="device-management">
+        <a-menu-item key="/app/devices">
           <template #icon>
             <DesktopOutlined />
           </template>
-          <template #title>设备管理</template>
-          <a-menu-item key="/app/devices">设备列表</a-menu-item>
-          <a-menu-item key="/app/groups">设备分组</a-menu-item>
-          <a-menu-item key="/app/aggregate">聚合视图</a-menu-item>
-        </a-sub-menu>
+          <span>设备列表</span>
+          <div class="menu-glitch"></div>
+        </a-menu-item>
 
-        <a-sub-menu key="data-monitoring">
+        <a-menu-item key="/app/live">
           <template #icon>
             <LineChartOutlined />
           </template>
+          <span>实时监控</span>
+          <div class="menu-glitch"></div>
+        </a-menu-item>
+
+        <a-menu-item key="/app/alerts">
+          <template #icon>
+            <AlertOutlined />
+          </template>
+          <span>告警管理</span>
+          <div class="menu-glitch"></div>
+        </a-menu-item>
+
+        <!-- 设备管理 -->
+        <a-sub-menu key="device-management">
+          <template #icon>
+            <PartitionOutlined />
+          </template>
+          <template #title>设备管理</template>
+          <a-menu-item key="/app/groups">设备分组</a-menu-item>
+          <a-menu-item key="/app/aggregate">聚合视图</a-menu-item>
+          <a-menu-item key="/app/command-history">命令历史</a-menu-item>
+        </a-sub-menu>
+
+        <!-- 数据监控 -->
+        <a-sub-menu key="data-monitoring">
+          <template #icon>
+            <HistoryOutlined />
+          </template>
           <template #title>数据监控</template>
-          <a-menu-item key="/app/live">实时监控</a-menu-item>
           <a-menu-item key="/app/history">历史数据</a-menu-item>
           <a-menu-item key="/app/ai">AI 报告</a-menu-item>
         </a-sub-menu>
 
-        <a-sub-menu key="alerts-tasks">
+        <!-- 宿舍管理 -->
+        <a-sub-menu key="dorm-management">
           <template #icon>
-            <AlertOutlined />
+            <HomeOutlined />
           </template>
-          <template #title>告警与任务</template>
-          <a-menu-item key="/app/alerts">告警管理</a-menu-item>
-          <a-menu-item key="/app/tasks">定时任务</a-menu-item>
+          <template #title>宿舍管理</template>
+          <a-menu-item key="/app/dorm">楼栋房间</a-menu-item>
+          <a-menu-item key="/app/students">学生管理</a-menu-item>
+          <a-menu-item key="/app/billing">计费管理</a-menu-item>
+          <a-menu-item key="/app/power-control">电源控制</a-menu-item>
         </a-sub-menu>
 
+        <!-- AI智能功能 -->
+        <a-sub-menu key="ai-features">
+          <template #icon>
+            <RobotOutlined />
+          </template>
+          <template #title>AI智能功能</template>
+          <a-menu-item key="/app/agent">AI智能代理</a-menu-item>
+          <a-menu-item key="/app/ai-chat">AI智能客服</a-menu-item>
+          <a-menu-item key="/app/auto-saving">智能节能</a-menu-item>
+        </a-sub-menu>
+
+        <!-- 系统管理 -->
         <a-sub-menu key="system-management">
           <template #icon>
             <SettingOutlined />
@@ -91,6 +143,7 @@
           <a-menu-item key="/app/api-test">API 测试</a-menu-item>
         </a-sub-menu>
 
+        <!-- 系统监控 -->
         <a-sub-menu key="system-monitor">
           <template #icon>
             <MonitorOutlined />
@@ -100,43 +153,7 @@
           <a-menu-item key="/app/notifications">通知中心</a-menu-item>
         </a-sub-menu>
 
-        <a-sub-menu key="dorm-management">
-          <template #icon>
-            <HomeOutlined />
-          </template>
-          <template #title>宿舍管理</template>
-          <a-menu-item key="/app/dorm">楼栋房间</a-menu-item>
-          <a-menu-item key="/app/students">学生管理</a-menu-item>
-          <a-menu-item key="/app/billing">计费管理</a-menu-item>
-          <a-menu-item key="/app/power-control">电源控制</a-menu-item>
-        </a-sub-menu>
-
-        <a-menu-item key="/app/agent">
-          <template #icon>
-            <RobotOutlined />
-          </template>
-          <span>AI智能代理</span>
-          <div class="menu-glitch"></div>
-        </a-menu-item>
-
-        <a-sub-menu key="rbac-management">
-          <template #icon>
-            <SafetyOutlined />
-          </template>
-          <template #title>权限管理</template>
-          <a-menu-item key="/app/rbac">角色权限</a-menu-item>
-          <a-menu-item key="/app/ip-control">IP访问控制</a-menu-item>
-        </a-sub-menu>
-
-        <a-sub-menu key="log-audit">
-          <template #icon>
-            <FileTextOutlined />
-          </template>
-          <template #title>日志审计</template>
-          <a-menu-item key="/app/login-logs">登录日志</a-menu-item>
-          <a-menu-item key="/app/audit-logs">审计日志</a-menu-item>
-        </a-sub-menu>
-
+        <!-- 高级功能 -->
         <a-sub-menu key="advanced-features">
           <template #icon>
             <ApiOutlined />
@@ -273,6 +290,7 @@ const authStore = useAuthStore()
 const collapsed = ref(false)
 const selectedKeys = ref<string[]>([])
 const openKeys = ref<string[]>(['device-management', 'data-monitoring'])
+const searchValue = ref('')
 
 const breadcrumbItems = computed(() => {
   const items = [
@@ -281,14 +299,16 @@ const breadcrumbItems = computed(() => {
   
   if (route.path !== '/app/dashboard') {
     const categoryMap: Record<string, string> = {
+      'dashboard': '首页',
       'devices': '设备管理',
       'groups': '设备管理',
       'aggregate': '设备管理',
+      'command-history': '设备管理',
       'live': '数据监控',
       'history': '数据监控',
       'ai': '数据监控',
-      'alerts': '告警与任务',
-      'tasks': '告警与任务',
+      'alerts': '系统管理',
+      'tasks': '系统管理',
       'users': '系统管理',
       'api-test': '系统管理',
       'system-config': '系统管理',
@@ -298,10 +318,21 @@ const breadcrumbItems = computed(() => {
       'notifications': '系统监控',
       'dorm': '宿舍管理',
       'students': '宿舍管理',
-      'billing': '宿舍管理'
+      'billing': '宿舍管理',
+      'power-control': '宿舍管理',
+      'agent': 'AI智能功能',
+      'ai-chat': 'AI智能功能',
+      'auto-saving': 'AI智能功能',
+      'firmware': '高级功能',
+      'telemetry': '高级功能',
+      'import': '高级功能',
+      'message-templates': '高级功能',
+      'data-dict': '高级功能',
+      'collections': '高级功能'
     }
     
     const titleMap: Record<string, string> = {
+      '/app/dashboard': '仪表盘',
       '/app/devices': '设备列表',
       '/app/history': '历史数据',
       '/app/live': '实时监控',
@@ -320,8 +351,19 @@ const breadcrumbItems = computed(() => {
       '/app/dorm': '楼栋房间',
       '/app/students': '学生管理',
       '/app/billing': '计费管理',
+      '/app/power-control': '电源控制',
       '/app/profile': '个人信息',
-      '/app/notification-settings': '通知设置'
+      '/app/notification-settings': '通知设置',
+      '/app/agent': 'AI智能代理',
+      '/app/ai-chat': 'AI智能客服',
+      '/app/auto-saving': '智能节能',
+      '/app/command-history': '命令历史',
+      '/app/firmware': '固件管理',
+      '/app/telemetry': '遥测数据',
+      '/app/import': '数据导入',
+      '/app/message-templates': '消息模板',
+      '/app/data-dict': '数据字典',
+      '/app/collections': '收款管理'
     }
     
     const path = route.path.split('/')[2]
@@ -375,6 +417,51 @@ const handleUserMenuClick = ({ key }: { key: string }) => {
   }
 }
 
+const handleSearch = (value: string) => {
+  if (!value) return
+  
+  // 搜索功能映射
+  const searchMap: Record<string, string> = {
+    '仪表盘': '/app/dashboard',
+    '设备': '/app/devices',
+    '监控': '/app/live',
+    '告警': '/app/alerts',
+    '分组': '/app/groups',
+    '聚合': '/app/aggregate',
+    '历史': '/app/history',
+    '报告': '/app/ai',
+    '楼栋': '/app/dorm',
+    '学生': '/app/students',
+    '计费': '/app/billing',
+    '电源': '/app/power-control',
+    '代理': '/app/agent',
+    '客服': '/app/ai-chat',
+    '节能': '/app/auto-saving',
+    '命令': '/app/command-history',
+    '用户': '/app/users',
+    '配置': '/app/system-config',
+    '日志': '/app/logs',
+    '备份': '/app/backup',
+    '测试': '/app/api-test',
+    '状态': '/app/monitor',
+    '通知': '/app/notifications',
+    '固件': '/app/firmware',
+    '遥测': '/app/telemetry',
+    '导入': '/app/import',
+    '模板': '/app/message-templates',
+    '字典': '/app/data-dict',
+    '收款': '/app/collections'
+  }
+  
+  for (const [keyword, path] of Object.entries(searchMap)) {
+    if (keyword.includes(value)) {
+      router.push(path)
+      searchValue.value = ''
+      break
+    }
+  }
+}
+
 watch(
   () => route.path,
   (newPath) => {
@@ -382,22 +469,36 @@ watch(
     if (path) {
       selectedKeys.value = [`/app/${path}`]
       const categoryMap: Record<string, string> = {
-        'devices': 'device-management',
-        'groups': 'device-management',
-        'aggregate': 'device-management',
-        'live': 'data-monitoring',
-        'history': 'data-monitoring',
-        'ai': 'data-monitoring',
-        'alerts': 'alerts-tasks',
-        'tasks': 'alerts-tasks',
-        'users': 'system-management',
-        'api-test': 'system-management',
-        'system-config': 'system-management',
-        'logs': 'system-management',
-        'backup': 'system-management',
-        'monitor': 'system-monitor',
-        'notifications': 'system-monitor'
-      }
+      'devices': 'device-management',
+      'groups': 'device-management',
+      'aggregate': 'device-management',
+      'command-history': 'device-management',
+      'live': 'data-monitoring',
+      'history': 'data-monitoring',
+      'ai': 'data-monitoring',
+      'alerts': 'system-management',
+      'tasks': 'system-management',
+      'users': 'system-management',
+      'api-test': 'system-management',
+      'system-config': 'system-management',
+      'logs': 'system-management',
+      'backup': 'system-management',
+      'monitor': 'system-monitor',
+      'notifications': 'system-monitor',
+      'dorm': 'dorm-management',
+      'students': 'dorm-management',
+      'billing': 'dorm-management',
+      'power-control': 'dorm-management',
+      'agent': 'ai-features',
+      'ai-chat': 'ai-features',
+      'auto-saving': 'ai-features',
+      'firmware': 'advanced-features',
+      'telemetry': 'advanced-features',
+      'import': 'advanced-features',
+      'message-templates': 'advanced-features',
+      'data-dict': 'advanced-features',
+      'collections': 'advanced-features'
+    }
       const category = categoryMap[path]
       if (category && !openKeys.value.includes(category)) {
         openKeys.value.push(category)
@@ -514,6 +615,29 @@ watch(
     var(--color-primary-bg) 0%, 
     transparent 100%
   );
+}
+
+.menu-search {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.menu-search :deep(.ant-input) {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-primary-border);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.menu-search :deep(.ant-input:focus) {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 20px var(--color-primary-bg);
+}
+
+.menu-search :deep(.ant-input::placeholder) {
+  color: var(--color-text-tertiary);
 }
 
 .logo-hologram {
