@@ -354,7 +354,7 @@
           <ThunderboltOutlined class="footer-icon" />
           <span>Dorm Power</span>
         </div>
-        <p>© 2024 Built with ❤️ by Tech Enthusiasts. Powered by Cutting-Edge Technology.</p>
+        <p>© 2024 Built with <img src="@/assets/icons/heart.svg" alt="Love" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block;" /> by Tech Enthusiasts. Powered by Cutting-Edge Technology.</p>
         <div class="footer-links">
           <a href="#">技术博客</a>
           <a href="#">开发文档</a>
@@ -400,7 +400,7 @@ const commands = [
   'loading modules...',
   'connecting to database...',
   'starting AI engine...',
-  'system ready ✓'
+  'system ready'
 ]
 
 const heroTechs = [

@@ -1,5 +1,8 @@
 package com.dormpower.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.dormpower.agent.IntentRecognizer;
 import com.dormpower.agent.LLMService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,18 +19,48 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * 提供智能对话接口
  */
+/**
+ * AI客服控制器
+ * 提供智能对话、意图识别、快速问答等功能接口
+ */
 @RestController
 @RequestMapping("/api/agent")
 @Tag(name = "AI客服", description = "智能客服对话接口")
 public class AgentController {
 
+    /**
+     * 大语言模型服务
+     * 用于生成回复内容
+     */
     private final LLMService llmService;
+    /**
+     * 意图识别器
+     * 用于识别用户输入的意图
+     */
     private final IntentRecognizer intentRecognizer;
+    /**
+     * 对话历史记录
+     * 使用ConcurrentHashMap保证线程安全
+     * todo: 后续可以替换为分布式存储（如Redis）以支持多实例部署和持久化对话历史
+     */
     private final Map<String, StringBuilder> conversationHistory;
 
+    /**
+     * 构造函数
+     * @param llmService 大语言模型服务
+     * @param intentRecognizer 意图识别器
+     */
+/**
+ * AgentController类的构造函数，用于初始化AgentController实例
+ * @param llmService LLM服务接口，用于处理与语言模型相关的操作
+ * @param intentRecognizer 意图识别器，用于识别用户输入的意图
+ */
     public AgentController(LLMService llmService, IntentRecognizer intentRecognizer) {
+    // 初始化LLM服务
         this.llmService = llmService;
+    // 初始化意图识别器
         this.intentRecognizer = intentRecognizer;
+    // 初始化对话历史记录，使用ConcurrentHashMap保证线程安全
         this.conversationHistory = new ConcurrentHashMap<>();
     }
 
@@ -45,8 +78,17 @@ public class AgentController {
             ));
         }
 
-        String actualUserId = userId != null ? userId : "anonymous";
-        
+        // 优先使用认证用户ID，没有则用请求头，没有则 anonymous
+        String actualUserId = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getName() != null) {
+            actualUserId = authentication.getName();
+        } else if (userId != null) {
+            actualUserId = userId;
+        } else {
+            actualUserId = "anonymous";
+        }
+
         String response = llmService.chat(actualUserId, message);
 
         return ResponseEntity.ok(Map.of(

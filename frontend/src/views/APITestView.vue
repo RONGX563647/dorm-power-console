@@ -53,7 +53,10 @@
                     <a-list-item-meta>
                       <template #title>
                         <span :style="{ color: item.status === 'success' ? '#52c41a' : item.status === 'error' ? '#ff4d4f' : '#faad14' }">
-                          {{ item.status === 'success' ? '✓' : item.status === 'error' ? '✗' : '⚠' }} {{ item.name }}
+                          <img v-if="item.status === 'success'" src="@/assets/icons/check.svg" alt="Success" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block; margin-right: 4px;" />
+                          <img v-else-if="item.status === 'error'" src="@/assets/icons/close.svg" alt="Error" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block; margin-right: 4px;" />
+                          <img v-else src="@/assets/icons/warning.svg" alt="Warning" style="width: 16px; height: 16px; vertical-align: middle; display: inline-block; margin-right: 4px;" />
+                          {{ item.name }}
                         </span>
                       </template>
                       <template #description>

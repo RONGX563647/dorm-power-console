@@ -2,10 +2,24 @@
   <div class="devices-view">
     <div class="page-header">
       <h1>设备管理</h1>
-      <a-button type="primary" @click="loadDevices">
-        <template #icon><ReloadOutlined /></template>
-        刷新
-      </a-button>
+      <div>
+        <a-button type="primary" @click="addModalVisible = true" style="margin-right: 10px">
+          <template #icon><PlusOutlined /></template>
+          添加设备
+        </a-button>
+        <a-button 
+          type="danger" 
+          @click="state.deleteModalVisible = true"
+          :disabled="state.selectedRowKeys.length === 0"
+        >
+          <template #icon><DeleteOutlined /></template>
+          批量删除
+        </a-button>
+        <a-button type="primary" @click="loadDevices" style="margin-left: 10px">
+          <template #icon><ReloadOutlined /></template>
+          刷新
+        </a-button>
+      </div>
     </div>
 
     <a-card class="stats-card">
@@ -54,6 +68,12 @@
         :loading="loading"
         :pagination="{ pageSize: 10, showSizeChanger: true, pageSizeOptions: ['5', '10', '15'] }"
         :row-key="(record: Device) => record.id"
+        :row-selection="{
+          selectedRowKeys: state.selectedRowKeys,
+          onChange: (keys: any[]) => {
+            state.selectedRowKeys = keys
+          }
+        }"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'name'">
@@ -93,15 +113,72 @@
             <router-link :to="`/devices/${record.id}`">
               <a-button type="link" size="small">查看详情</a-button>
             </router-link>
+            <a-button 
+              type="link" 
+              size="small" 
+              danger
+              @click="handleDelete(record)"
+            >
+              <template #icon><DeleteOutlined /></template>
+              删除
+            </a-button>
           </template>
         </template>
       </a-table>
     </div>
+
+    <!-- 添加设备模态框 -->
+    <a-modal
+      v-model:visible="addModalVisible"
+      title="添加设备"
+      ok-text="确认"
+      cancel-text="取消"
+      @ok="handleAddDevice"
+      @cancel="addModalVisible = false"
+    >
+      <a-form :model="addForm" layout="vertical">
+        <a-form-item label="设备ID">
+          <a-input v-model:value="addForm.id" placeholder="请输入设备ID" />
+        </a-form-item>
+        <a-form-item label="设备名称">
+          <a-input v-model:value="addForm.name" placeholder="请输入设备名称" />
+        </a-form-item>
+        <a-form-item label="房间">
+          <a-input v-model:value="addForm.room" placeholder="请输入房间号" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+    <!-- 批量删除确认模态框 -->
+    <a-modal
+      v-model:visible="state.deleteModalVisible"
+      title="确认删除"
+      ok-text="删除"
+      cancel-text="取消"
+      okType="danger"
+      @ok="handleBatchDelete"
+      @cancel="state.deleteModalVisible = false"
+    >
+      <p>确定要删除选中的 {{ state.selectedRowKeys.length }} 个设备吗？</p>
+    </a-modal>
+
+    <!-- 单个删除确认模态框 -->
+    <a-modal
+      v-model:visible="singleDeleteModalVisible"
+      title="确认删除"
+      ok-text="删除"
+      cancel-text="取消"
+      okType="danger"
+      @ok="handleSingleDeleteConfirm"
+      @cancel="singleDeleteModalVisible = false"
+    >
+      <p>确定要删除设备 {{ deviceToDelete?.name }} 吗？</p>
+    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import type { TableProps } from 'ant-design-vue'
 import {
@@ -109,7 +186,10 @@ import {
   DesktopOutlined,
   WifiOutlined,
   DisconnectOutlined,
-  ThunderboltOutlined
+  ThunderboltOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons-vue'
 import { deviceApi } from '@/api'
 import { deviceStatusService, createPollingManager } from '@/services/deviceStatusService'
@@ -121,6 +201,24 @@ const powerMap = ref<Record<string, number>>({})
 const keyword = ref('')
 const statusFilter = ref<'all' | 'online' | 'offline'>('all')
 const roomFilter = ref('all')
+
+// 添加设备相关
+const addModalVisible = ref(false)
+const addForm = ref({
+  name: '',
+  room: '',
+  id: ''
+})
+
+// 批量删除相关
+const state = reactive({
+  selectedRowKeys: [] as string[],
+  deleteModalVisible: false
+})
+
+// 单个删除相关
+const singleDeleteModalVisible = ref(false)
+const deviceToDelete = ref<Device | null>(null)
 
 const onlineCount = computed(() => devices.value.filter(d => d.online).length)
 const offlineCount = computed(() => devices.value.filter(d => !d.online).length)
@@ -217,6 +315,69 @@ onMounted(() => {
 onUnmounted(() => {
   pollingManager.stop()
 })
+
+// 处理添加设备
+const handleAddDevice = async () => {
+  try {
+    if (!addForm.value.id || !addForm.value.name || !addForm.value.room) {
+      message.error('请填写完整的设备信息')
+      return
+    }
+    
+    loading.value = true
+    await deviceApi.createDevice(addForm.value)
+    message.success('设备添加成功')
+    addModalVisible.value = false
+    addForm.value = { name: '', room: '', id: '' }
+    await loadDevices()
+  } catch (error: any) {
+    message.error('添加设备失败: ' + (error.message || '未知错误'))
+  } finally {
+    loading.value = false
+  }
+}
+
+// 处理单个设备删除
+const handleDelete = (device: Device) => {
+  deviceToDelete.value = device
+  singleDeleteModalVisible.value = true
+}
+
+// 确认单个设备删除
+const handleSingleDeleteConfirm = async () => {
+  if (!deviceToDelete.value) return
+  
+  try {
+    loading.value = true
+    await deviceApi.deleteDevice(deviceToDelete.value.id)
+    message.success('设备删除成功')
+    singleDeleteModalVisible.value = false
+    deviceToDelete.value = null
+    await loadDevices()
+  } catch (error: any) {
+    message.error('删除设备失败: ' + (error.message || '未知错误'))
+  } finally {
+    loading.value = false
+  }
+}
+
+// 处理批量删除
+const handleBatchDelete = async () => {
+  if (state.selectedRowKeys.length === 0) return
+  
+  try {
+    loading.value = true
+    await deviceApi.batchDeleteDevices(state.selectedRowKeys)
+    message.success(`成功删除 ${state.selectedRowKeys.length} 个设备`)
+    state.deleteModalVisible = false
+    state.selectedRowKeys = []
+    await loadDevices()
+  } catch (error: any) {
+    message.error('批量删除失败: ' + (error.message || '未知错误'))
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>

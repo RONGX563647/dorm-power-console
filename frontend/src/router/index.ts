@@ -216,6 +216,11 @@ const router = createRouter({
           path: 'command-history',
           name: 'command-history',
           component: () => import('@/views/CommandHistoryView.vue')
+        },
+        {
+          path: 'mqtt-simulator',
+          name: 'mqtt-simulator',
+          component: () => import('@/views/MqttSimulatorView.vue')
         }
       ]
     }

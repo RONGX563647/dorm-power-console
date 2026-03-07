@@ -3,13 +3,15 @@
     <!-- 顶部工具栏 -->
     <div class="top-toolbar">
       <div class="toolbar-left">
-        <a-select placeholder="选择楼栋/房间/设备" style="width: 200px">
-          <a-select-option value="A-302">A-302</a-select-option>
-          <a-select-option value="A-303">A-303</a-select-option>
-          <a-select-option value="B-201">B-201</a-select-option>
-        </a-select>
-        <a-select style="width: 150px">
-          <a-select-option value="A-302/Dorm302">A-302 / Dorm302</a-select-option>
+        <a-select 
+          v-model:value="currentDevice" 
+          placeholder="选择设备" 
+          style="width: 200px"
+          @change="refreshData"
+        >
+          <a-select-option v-for="device in devices" :key="device.id" :value="device.id">
+            {{ device.name }} ({{ device.room }})
+          </a-select-option>
         </a-select>
         <a-space>
           <a-button :type="timeRange === '60s' ? 'primary' : 'default'" @click="setTimeRange('60s')">60s</a-button>
@@ -46,7 +48,7 @@
       </div>
       <div class="info-item">
         <span class="info-label">当前设备</span>
-        <span class="info-value">{{ currentDevice }}</span>
+        <span class="info-value">{{ currentDevice ? devices.find(d => d.id === currentDevice)?.name : '-' }}</span>
       </div>
     </div>
 
@@ -57,12 +59,12 @@
         <!-- 宿舍负载分布 -->
         <a-card title="宿舍负载分布">
           <div class="load-distribution">
-            <div class="load-item">
-              <span class="load-name">Dorm302-Strip01</span>
+            <div class="load-item" v-for="device in devices" :key="device.id">
+              <span class="load-name">{{ device.name }}</span>
               <div class="load-bar">
-                <div class="load-fill" :style="{ width: loadPercentage + '%' }"></div>
+                <div class="load-fill" :style="{ width: device.id === currentDevice ? loadPercentage + '%' : '0%' }"></div>
               </div>
-              <span class="load-value">{{ currentPower.toFixed(1) }} W</span>
+              <span class="load-value">{{ device.id === currentDevice ? currentPower.toFixed(1) : '0.0' }} W</span>
             </div>
           </div>
         </a-card>
@@ -203,7 +205,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { message } from 'ant-design-vue'
 import {
   ReloadOutlined,
@@ -215,6 +217,8 @@ import {
   FireOutlined,
   DisconnectOutlined
 } from '@ant-design/icons-vue'
+import { deviceApi, alertApi } from '@/api'
+import type { Device } from '@/types'
 
 // 响应式数据
 const timeRange = ref('60s')
@@ -223,13 +227,17 @@ const lastUpdateTime = ref('')
 const totalPower = ref(0.0)
 const currentPower = ref(0.0)
 const onlineCount = ref(0)
-const totalDevices = ref(1)
-const currentDevice = ref('strip01')
+const totalDevices = ref(0)
+const currentDevice = ref('')
 const loadPercentage = ref(0)
 const todayEnergy = ref(0.0)
 const alertCount = ref(0)
 const highPowerSockets = ref(0)
-const offlineDuration = ref('12 min')
+const offlineDuration = ref('0 min')
+
+// 设备数据
+const devices = ref<Device[]>([])
+const deviceOptions = ref<any[]>([])
 
 // 安全规则
 const securityRules = ref({
@@ -246,23 +254,59 @@ const setTimeRange = (range: string) => {
   refreshData()
 }
 
-const refreshData = () => {
-  // 模拟刷新数据
-  totalPower.value = 0.0
-  currentPower.value = 0.0
-  loadPercentage.value = 0
-  lastUpdateTime.value = new Date().toLocaleTimeString()
-  message.success('数据已刷新')
+const loadDevices = async () => {
+  try {
+    const data = await deviceApi.getDevices()
+    devices.value = Array.isArray(data) ? data : []
+    deviceOptions.value = devices.value.map(d => ({
+      label: `${d.name} (${d.room})`,
+      value: d.id
+    }))
+    
+    if (devices.value.length > 0) {
+      currentDevice.value = devices.value[0].id
+      totalDevices.value = devices.value.length
+      await refreshData()
+    }
+  } catch (error: any) {
+    message.error('加载设备失败')
+    console.error(error)
+  }
+}
+
+const refreshData = async () => {
+  if (!currentDevice.value) return
+  
+  try {
+    // 获取设备状态
+    const status = await deviceApi.getDeviceStatus(currentDevice.value)
+    currentPower.value = status.total_power_w || 0
+    onlineCount.value = devices.value.filter(d => d.online).length
+    
+    // 计算负载百分比
+    loadPercentage.value = Math.min(100, (currentPower.value / 2000) * 100)
+    
+    // 计算总功率
+    totalPower.value = devices.value.reduce((sum, d) => {
+      const deviceStatus = d.id === currentDevice.value ? status : null
+      return sum + (deviceStatus?.total_power_w || 0)
+    }, 0)
+    
+    // 更新时间
+    lastUpdateTime.value = new Date().toLocaleTimeString()
+  } catch (error: any) {
+    console.error('刷新数据失败:', error)
+  }
 }
 
 const simulateAlarm = async () => {
   try {
-    const { alertApi } = await import('@/api')
     await alertApi.simulateAlarm(currentDevice.value, 'power', 1500)
     message.success('模拟告警已触发')
     alertCount.value++
   } catch (error: any) {
     message.error('模拟告警失败')
+    console.error(error)
   }
 }
 
@@ -273,7 +317,7 @@ const simulateOffline = () => {
 
 // 生命周期
 onMounted(() => {
-  refreshData()
+  loadDevices()
   
   const interval = setInterval(() => {
     if (autoRefresh.value) {

@@ -334,6 +334,47 @@ public class DeviceController {
     }
 
     /**
+   * 批量删除设备
+   */
+  @Operation(summary = "批量删除设备", description = "批量删除指定的多个设备", security = @SecurityRequirement(name = "bearerAuth"))
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "批量删除成功"),
+          @ApiResponse(responseCode = "400", description = "删除失败")
+  })
+  @AuditLog(value = "批量删除设备", type = "DEVICE")
+  @DeleteMapping("/devices/batch")
+  public ResponseEntity<?> batchDeleteDevices(
+          @Parameter(description = "设备ID列表", required = true, example = "[\"device_001\", \"device_002\"]")
+          @RequestBody List<String> deviceIds) {
+        try {
+            if (deviceIds == null || deviceIds.isEmpty()) {
+                Map<String, Object> error = new HashMap<>();
+                error.put("message", "Device ID list cannot be empty");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+            
+            // 批量删除设备，只删除存在的设备
+            List<Device> existingDevices = deviceRepository.findAllById(deviceIds);
+            List<String> existingDeviceIds = existingDevices.stream()
+                    .map(Device::getId)
+                    .toList();
+            
+            if (!existingDeviceIds.isEmpty()) {
+                deviceRepository.deleteAllById(existingDeviceIds);
+            }
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Devices deleted successfully");
+            response.put("count", existingDeviceIds.size());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("message", "Failed to delete devices: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
+    /**
      * 获取指定房间的设备列表
      */
     @Operation(summary = "获取房间设备列表", description = "获取指定房间的设备列表", security = @SecurityRequirement(name = "bearerAuth"))

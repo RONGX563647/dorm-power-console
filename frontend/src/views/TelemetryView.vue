@@ -19,12 +19,9 @@
         </a-select>
         <a-select v-model:value="timeRange" placeholder="时间范围" style="width: 150px">
           <a-select-option value="60s">最近1分钟</a-select-option>
-          <a-select-option value="5m">最近5分钟</a-select-option>
-          <a-select-option value="15m">最近15分钟</a-select-option>
-          <a-select-option value="1h">最近1小时</a-select-option>
-          <a-select-option value="6h">最近6小时</a-select-option>
-          <a-select-option value="12h">最近12小时</a-select-option>
           <a-select-option value="24h">最近24小时</a-select-option>
+          <a-select-option value="7d">最近7天</a-select-option>
+          <a-select-option value="30d">最近30天</a-select-option>
         </a-select>
         <a-button type="primary" @click="loadTelemetry" :loading="loading">
           查询
@@ -39,7 +36,7 @@
           <a-card size="small">
             <a-statistic
               title="平均功率"
-              :value="statistics.avgPower || 0"
+              :value="statistics.averagePowerW || 0"
               suffix="W"
               :precision="2"
             />
@@ -49,7 +46,7 @@
           <a-card size="small">
             <a-statistic
               title="最大功率"
-              :value="statistics.maxPower || 0"
+              :value="statistics.maxPowerW || 0"
               suffix="W"
               :precision="2"
             />
@@ -59,7 +56,7 @@
           <a-card size="small">
             <a-statistic
               title="最小功率"
-              :value="statistics.minPower || 0"
+              :value="statistics.minPowerW || 0"
               suffix="W"
               :precision="2"
             />
@@ -76,9 +73,12 @@
         size="small"
       >
         <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'power'">
-            <span :style="{ color: record.power > 1000 ? 'red' : 'green' }">
-              {{ record.power.toFixed(2) }}
+          <template v-if="column.key === 'ts'">
+            {{ new Date(record.ts * 1000).toLocaleString() }}
+          </template>
+          <template v-if="column.key === 'power_w'">
+            <span :style="{ color: record.power_w > 1000 ? 'red' : 'green' }">
+              {{ record.power_w.toFixed(2) }}
             </span>
           </template>
         </template>
@@ -134,7 +134,7 @@ const exporting = ref(false)
 
 const devices = ref<any[]>([])
 const selectedDevice = ref<string>()
-const timeRange = ref('1h')
+const timeRange = ref('24h')
 const telemetryData = ref<any[]>([])
 const statistics = ref<any>({})
 
@@ -146,12 +146,12 @@ const exportForm = ref({
 })
 
 const telemetryColumns = [
-  { title: '时间戳', dataIndex: 'timestamp', key: 'timestamp', width: 180 },
-  { title: '功率(W)', dataIndex: 'power', key: 'power', width: 120 },
-  { title: '电压(V)', dataIndex: 'voltage', key: 'voltage', width: 120 },
-  { title: '电流(A)', dataIndex: 'current', key: 'current', width: 120 },
+  { title: '时间戳', dataIndex: 'ts', key: 'ts', width: 180 },
+  { title: '功率(W)', dataIndex: 'power_w', key: 'power_w', width: 120 },
+  { title: '电压(V)', dataIndex: 'voltage_v', key: 'voltage_v', width: 120 },
+  { title: '电流(A)', dataIndex: 'current_a', key: 'current_a', width: 120 },
   { title: '频率(Hz)', dataIndex: 'frequency', key: 'frequency', width: 120 },
-  { title: '功率因数', dataIndex: 'powerFactor', key: 'powerFactor', width: 120 },
+  { title: '功率因数', dataIndex: 'power_factor', key: 'power_factor', width: 120 },
   { title: '温度(℃)', dataIndex: 'temperature', key: 'temperature', width: 120 }
 ]
 

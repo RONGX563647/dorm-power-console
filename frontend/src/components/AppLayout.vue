@@ -40,9 +40,12 @@
           v-model:value="searchValue"
           placeholder="搜索功能..."
           size="small"
-          prefix="🔍"
           @input="handleSearch"
-        />
+        >
+          <template #prefix>
+            <img src="@/assets/icons/search.svg" alt="Search" style="width: 16px; height: 16px;" />
+          </template>
+        </a-input>
       </div>
 
       <a-menu
@@ -97,14 +100,16 @@
           <a-menu-item key="/app/command-history">命令历史</a-menu-item>
         </a-sub-menu>
 
-        <!-- 数据监控 -->
-        <a-sub-menu key="data-monitoring">
+        <!-- 数据管理 -->
+        <a-sub-menu key="data-management">
           <template #icon>
-            <HistoryOutlined />
+            <DatabaseOutlined />
           </template>
-          <template #title>数据监控</template>
+          <template #title>数据管理</template>
           <a-menu-item key="/app/history">历史数据</a-menu-item>
-          <a-menu-item key="/app/ai">AI 报告</a-menu-item>
+          <a-menu-item key="/app/telemetry">遥测数据</a-menu-item>
+          <a-menu-item key="/app/import">数据导入</a-menu-item>
+          <a-menu-item key="/app/data-dict">数据字典</a-menu-item>
         </a-sub-menu>
 
         <!-- 宿舍管理 -->
@@ -116,18 +121,20 @@
           <a-menu-item key="/app/dorm">楼栋房间</a-menu-item>
           <a-menu-item key="/app/students">学生管理</a-menu-item>
           <a-menu-item key="/app/billing">计费管理</a-menu-item>
+          <a-menu-item key="/app/collections">收款管理</a-menu-item>
           <a-menu-item key="/app/power-control">电源控制</a-menu-item>
         </a-sub-menu>
 
-        <!-- AI智能功能 -->
+        <!-- AI智能 -->
         <a-sub-menu key="ai-features">
           <template #icon>
             <RobotOutlined />
           </template>
-          <template #title>AI智能功能</template>
+          <template #title>AI智能</template>
           <a-menu-item key="/app/agent">AI智能代理</a-menu-item>
           <a-menu-item key="/app/ai-chat">AI智能客服</a-menu-item>
           <a-menu-item key="/app/auto-saving">智能节能</a-menu-item>
+          <a-menu-item key="/app/ai">AI 报告</a-menu-item>
         </a-sub-menu>
 
         <!-- 系统管理 -->
@@ -160,11 +167,8 @@
           </template>
           <template #title>高级功能</template>
           <a-menu-item key="/app/firmware">固件管理</a-menu-item>
-          <a-menu-item key="/app/telemetry">遥测数据</a-menu-item>
-          <a-menu-item key="/app/import">数据导入</a-menu-item>
           <a-menu-item key="/app/message-templates">消息模板</a-menu-item>
-          <a-menu-item key="/app/data-dict">数据字典</a-menu-item>
-          <a-menu-item key="/app/collections">收款管理</a-menu-item>
+          <a-menu-item key="/app/mqtt-simulator">MQTT模拟器</a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -289,7 +293,7 @@ const authStore = useAuthStore()
 
 const collapsed = ref(false)
 const selectedKeys = ref<string[]>([])
-const openKeys = ref<string[]>(['device-management', 'data-monitoring'])
+const openKeys = ref<string[]>(['device-management', 'data-management'])
 const searchValue = ref('')
 
 const breadcrumbItems = computed(() => {
@@ -304,9 +308,12 @@ const breadcrumbItems = computed(() => {
       'groups': '设备管理',
       'aggregate': '设备管理',
       'command-history': '设备管理',
-      'live': '数据监控',
-      'history': '数据监控',
-      'ai': '数据监控',
+      'live': '数据管理',
+      'history': '数据管理',
+      'telemetry': '数据管理',
+      'import': '数据管理',
+      'data-dict': '数据管理',
+      'ai': 'AI智能',
       'alerts': '系统管理',
       'tasks': '系统管理',
       'users': '系统管理',
@@ -319,16 +326,14 @@ const breadcrumbItems = computed(() => {
       'dorm': '宿舍管理',
       'students': '宿舍管理',
       'billing': '宿舍管理',
+      'collections': '宿舍管理',
       'power-control': '宿舍管理',
-      'agent': 'AI智能功能',
-      'ai-chat': 'AI智能功能',
-      'auto-saving': 'AI智能功能',
+      'agent': 'AI智能',
+      'ai-chat': 'AI智能',
+      'auto-saving': 'AI智能',
       'firmware': '高级功能',
-      'telemetry': '高级功能',
-      'import': '高级功能',
       'message-templates': '高级功能',
-      'data-dict': '高级功能',
-      'collections': '高级功能'
+      'mqtt-simulator': '高级功能'
     }
     
     const titleMap: Record<string, string> = {
@@ -363,7 +368,8 @@ const breadcrumbItems = computed(() => {
       '/app/import': '数据导入',
       '/app/message-templates': '消息模板',
       '/app/data-dict': '数据字典',
-      '/app/collections': '收款管理'
+      '/app/collections': '收款管理',
+      '/app/mqtt-simulator': 'MQTT模拟器'
     }
     
     const path = route.path.split('/')[2]
@@ -450,7 +456,9 @@ const handleSearch = (value: string) => {
     '导入': '/app/import',
     '模板': '/app/message-templates',
     '字典': '/app/data-dict',
-    '收款': '/app/collections'
+    '收款': '/app/collections',
+    'MQTT': '/app/mqtt-simulator',
+    '模拟器': '/app/mqtt-simulator'
   }
   
   for (const [keyword, path] of Object.entries(searchMap)) {
@@ -473,9 +481,12 @@ watch(
       'groups': 'device-management',
       'aggregate': 'device-management',
       'command-history': 'device-management',
-      'live': 'data-monitoring',
-      'history': 'data-monitoring',
-      'ai': 'data-monitoring',
+      'live': 'data-management',
+      'history': 'data-management',
+      'telemetry': 'data-management',
+      'import': 'data-management',
+      'data-dict': 'data-management',
+      'ai': 'ai-features',
       'alerts': 'system-management',
       'tasks': 'system-management',
       'users': 'system-management',
@@ -488,16 +499,14 @@ watch(
       'dorm': 'dorm-management',
       'students': 'dorm-management',
       'billing': 'dorm-management',
+      'collections': 'dorm-management',
       'power-control': 'dorm-management',
       'agent': 'ai-features',
       'ai-chat': 'ai-features',
       'auto-saving': 'ai-features',
       'firmware': 'advanced-features',
-      'telemetry': 'advanced-features',
-      'import': 'advanced-features',
       'message-templates': 'advanced-features',
-      'data-dict': 'advanced-features',
-      'collections': 'advanced-features'
+      'mqtt-simulator': 'advanced-features'
     }
       const category = categoryMap[path]
       if (category && !openKeys.value.includes(category)) {

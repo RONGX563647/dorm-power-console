@@ -17,14 +17,19 @@ import java.util.List;
 /**
  * OpenAPI配置类
  */
+/**
+ * OpenAPI配置类
+ * 用于配置和管理OpenAPI文档的生成和展示
+ */
 @Configuration
 public class OpenApiConfig {
 
+    // 从配置文件中获取服务器端口，默认值为8000
     @Value("${server.port:8000}")
     private int serverPort;
 
     /**
-     * 配置OpenAPI
+     * 配置OpenAPI Bean
      * @return OpenAPI
      */
     @Bean

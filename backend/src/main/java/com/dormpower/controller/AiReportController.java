@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.dormpower.validation.PeriodValid;
 
 /**
  * AI分析报告控制器
@@ -50,11 +51,7 @@ public class AiReportController {
                        required = false, 
                        example = "7d",
                        schema = @Schema(allowableValues = {"7d", "30d"}))
-            @RequestParam(defaultValue = "7d") String period) {
-        if (!period.equals("7d") && !period.equals("30d")) {
-            throw new com.dormpower.exception.BusinessException("period is invalid, must be one of: 7d, 30d");
-        }
-
+            @RequestParam(defaultValue = "7d") @PeriodValid String period) {
         Map<String, Object> report = aiReportService.getAiReport(roomId, period);
         return ResponseEntity.ok(report);
     }

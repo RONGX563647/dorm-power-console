@@ -116,6 +116,11 @@ export const deviceApi = {
   deleteDevice: (deviceId: string) => del(`/api/devices/${deviceId}`),
   
   /**
+   * 批量删除设备
+   */
+  batchDeleteDevices: (deviceIds: string[]) => del(`/api/devices/batch`, { data: deviceIds }),
+  
+  /**
    * 获取设备遥测数据
    */
   getTelemetry: (device: string, range: string = '24h') => 
@@ -513,13 +518,38 @@ export const notificationApi = {
 }
 
 /**
+ * MQTT模拟器 API
+ */
+export const simulatorApi = {
+  /**
+   * 启动MQTT模拟器
+   */
+  startSimulator: (data: any) => post<any>('/api/simulator/start', data),
+  
+  /**
+   * 停止MQTT模拟器
+   */
+  stopSimulator: (taskId: string) => post<any>(`/api/simulator/stop/${taskId}`),
+  
+  /**
+   * 获取模拟器状态
+   */
+  getSimulatorStatus: (taskId: string) => get<any>(`/api/simulator/status/${taskId}`),
+  
+  /**
+   * 获取所有模拟器任务
+   */
+  getAllSimulatorTasks: () => get<any[]>('/api/simulator/tasks')
+}
+
+/**
  * 系统监控 API
  */
 export const monitorApi = {
   /**
    * 获取系统状态
    */
-  getSystemStatus: () => get<SystemMonitorStatus>('/api/admin/monitor/system'),
+  getSystemStatus: () => get<any>('/api/admin/monitor/system'),
   
   /**
    * 获取设备监控状态
@@ -1536,18 +1566,24 @@ export const telemetryApi = {
    * 获取遥测数据
    */
   getTelemetry: (deviceId: string, range: string = '60s') => 
-    get('/api/telemetry', { params: { deviceId, range } }),
+    get('/api/telemetry', { params: { device: deviceId, range } }),
   
   /**
    * 导出遥测数据
    */
   exportTelemetry: (deviceId: string, startTime: string, endTime: string, format: string = 'csv') => 
-    get('/api/telemetry/export', { params: { deviceId, startTime, endTime, format }, responseType: 'blob' }),
+    get('/api/telemetry/export', { params: { device: deviceId, startTime, endTime, format }, responseType: 'blob' }),
   
   /**
    * 获取遥测统计
    */
-  getStatistics: (deviceId: string) => get('/api/telemetry/statistics', { params: { deviceId } })
+  getStatistics: (deviceId: string) => {
+    // 计算默认时间范围（最近24小时）
+    const now = Date.now() / 1000;
+    const start = Math.floor(now - 24 * 60 * 60);
+    const end = Math.floor(now);
+    return get('/api/telemetry/statistics', { params: { device: deviceId, period: 'day', start, end } });
+  }
 }
 
 /**

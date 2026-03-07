@@ -31,17 +31,25 @@ import java.util.Set;
 /**
  * JWT认证过滤器
  */
+/**
+ * JWT认证过滤器，用于处理HTTP请求中的JWT认证信息
+ * 继承自OncePerRequestFilter确保每个请求只过滤一次
+ */
+/**
+ * JWT认证过滤器，用于处理HTTP请求中的JWT令牌并进行身份验证
+ * 该类继承自OncePerRequestFilter，确保每个请求只过滤一次
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil;  // JWT工具类，用于处理JWT令牌的解析和验证
     
     @Autowired
-    private RbacService rbacService;
+    private RbacService rbacService;  // RBAC服务，用于获取用户的角色和权限信息
 
     @Value("${security.jwt.secret}")
-    private String secret;
+    private String secret;  // JWT密钥，用于验证令牌的签名
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -77,11 +85,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 从HTTP请求中获取Bearer Token
+     * @param request HttpServletRequest对象，包含HTTP请求信息
+     * @return 提取到的Token字符串，如果没有找到则返回null
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
+        // 从请求头中获取Authorization字段的值
         String bearerToken = request.getHeader("Authorization");
+        // 检查Authorization头是否存在且以"Bearer "开头
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            // 返回去掉"Bearer "前缀后的Token字符串
             return bearerToken.substring(7);
         }
+        // 如果没有找到有效的Token，返回null
         return null;
     }
 

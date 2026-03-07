@@ -12,22 +12,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfigurationSource;
 
 /**
- * 安全配置类
+ * Spring Security安全配置类
  * 
- * 配置Spring Security的安全策略，包括：
- * - CORS跨域配置
- * - CSRF禁用
- * - 请求路径权限控制
- * - JWT认证过滤器
- * - 方法级安全控制
+ * 该类负责配置整个应用的安全策略，包括认证、授权、跨域处理等核心安全功能。
+ * 基于JWT令牌进行无状态认证，支持细粒度的权限控制和方法级安全。
  * 
- * 权限说明：
- * - 公开路径：无需认证，如登录、注册、健康检查
- * - 认证路径：需要Bearer Token，如设备管理、命令控制
- * - 管理员路径：需要ADMIN角色，如RBAC、系统管理
+ * 核心功能：
+ * 1. CORS跨域配置：允许前端应用跨域访问API
+ * 2. CSRF防护：禁用CSRF保护（JWT无状态应用不需要）
+ * 3. 请求路径权限控制：基于URL路径的细粒度访问控制
+ * 4. JWT认证过滤器：拦截请求并验证JWT令牌
+ * 5. 方法级安全控制：支持@PreAuthorize等注解进行方法级权限控制
  * 
- * @author dormpower team
+ * 权限分级：
+ * 1. 公开路径(PERMIT_ALL)：无需任何认证，如登录、注册、健康检查
+ * 2. 认证路径(AUTHENTICATED)：需要有效的JWT令牌，如设备管理、数据查询
+ * 3. 管理员路径(ADMIN)：需要ADMIN角色，如RBAC管理、系统配置
+ * 
+ * 安全特性：
+ * - 无状态认证：基于JWT令牌，不依赖Session
+ * - 细粒度授权：支持URL路径和方法级双重权限控制
+ * - 跨域支持：通过CORS配置允许指定来源的跨域请求
+ * - 预检请求支持：自动处理OPTIONS预检请求
+ * 
+ * @author DormPower Team
  * @version 1.0
+ * @since 2023-01-01
+ */
+
+/**
+ * 安全配置类
+ * 用于配置Spring Security的安全策略，包括认证、授权和CORS等
  */
 @Configuration
 @EnableWebSecurity
@@ -44,7 +59,9 @@ public class SecurityConfig {
 
     /**
      * 配置安全过滤器链
-     * @param http HttpSecurity
+
+     * 定义了哪些URL需要认证，哪些URL可以公开访问，以及基于角色的访问控制
+     * @param http HttpSecurity 配置好的安全过滤器链对象，用于构建安全过滤器链
      * @return SecurityFilterChain
      * @throws Exception 异常
      */
@@ -62,6 +79,7 @@ public class SecurityConfig {
                     "/actuator/**", 
                     "/api/auth/**",
                     "/api/agent/**",
+                    "/api/simulator/**",
                     "/ws",
                     "/swagger-ui/**",
                     "/swagger-ui.html",

@@ -96,13 +96,10 @@ let chartInstance: ECharts | null = null
 
 const deviceOptions = ref<any[]>([])
 const rangeOptions = [
-  { label: '1分钟', value: '60s' },
-  { label: '5分钟', value: '5m' },
-  { label: '30分钟', value: '30m' },
-  { label: '1小时', value: '1h' },
-  { label: '24小时', value: '24h' },
-  { label: '7天', value: '7d' },
-  { label: '30天', value: '30d' }
+  { label: '最近1分钟', value: '60s' },
+  { label: '最近24小时', value: '24h' },
+  { label: '最近7天', value: '7d' },
+  { label: '最近30天', value: '30d' }
 ]
 
 // 统计数据计算
