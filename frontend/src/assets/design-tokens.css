@@ -1,0 +1,209 @@
+:root {
+  /* 主色系 - 森系节能风 */
+  --color-primary: #2A7965;
+  --color-primary-light: #3A9985;
+  --color-primary-dark: #1A5945;
+  --color-primary-bg: rgba(42, 121, 101, 0.08);
+  --color-primary-border: rgba(42, 121, 101, 0.2);
+
+  /* 科技辅色 */
+  --color-secondary: #337ECC;
+  --color-secondary-light: #4A9AE8;
+  --color-secondary-dark: #1A5FA8;
+  --color-secondary-bg: rgba(51, 126, 204, 0.08);
+  --color-secondary-border: rgba(51, 126, 204, 0.2);
+
+  /* 警示色 */
+  --color-warning: #E86F50;
+  --color-warning-light: #F08970;
+  --color-warning-dark: #C85030;
+  --color-warning-bg: rgba(232, 111, 80, 0.08);
+  --color-warning-border: rgba(232, 111, 80, 0.2);
+
+  /* 成功色 */
+  --color-success: #52C41A;
+  --color-success-light: #6FD43A;
+  --color-success-dark: #32A400;
+  --color-success-bg: rgba(82, 196, 26, 0.08);
+  --color-success-border: rgba(82, 196, 26, 0.2);
+
+  /* 错误色 */
+  --color-error: #FF4D4F;
+  --color-error-light: #FF6D6F;
+  --color-error-dark: #DF2D2F;
+  --color-error-bg: rgba(255, 77, 79, 0.08);
+  --color-error-border: rgba(255, 77, 79, 0.2);
+
+  /* 基底色 */
+  --color-bg-base: #F2F7F5;
+  --color-bg-container: #FFFFFF;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-spotlight: rgba(42, 121, 101, 0.04);
+
+  /* 文字色 */
+  --color-text-primary: #1A3A32;
+  --color-text-secondary: #4A6A5A;
+  --color-text-tertiary: #7A9A8A;
+  --color-text-disabled: #AACABA;
+  --color-text-inverse: #FFFFFF;
+
+  /* 边框色 */
+  --color-border: #D4E5DD;
+  --color-border-light: #E4F5ED;
+  --color-border-dark: #B4D5C5;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(26, 58, 50, 0.05);
+  --shadow-md: 0 4px 12px rgba(26, 58, 50, 0.08);
+  --shadow-lg: 0 8px 24px rgba(26, 58, 50, 0.12);
+  --shadow-xl: 0 16px 48px rgba(26, 58, 50, 0.16);
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+
+  /* 字体大小 */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-xxl: 24px;
+  --font-size-xxxl: 32px;
+
+  /* 字重 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* 行高 */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* 动画时长 */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+
+  /* 动画缓动 */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* 渐变 */
+  --gradient-primary: linear-gradient(135deg, #2A7965 0%, #337ECC 100%);
+  --gradient-primary-light: linear-gradient(135deg, rgba(42, 121, 101, 0.1) 0%, rgba(51, 126, 204, 0.1) 100%);
+  --gradient-bg: linear-gradient(180deg, #F2F7F5 0%, #E8F5EE 100%);
+
+  /* 卡片样式 */
+  --card-bg: #FFFFFF;
+  --card-border: 1px solid var(--color-border-light);
+  --card-shadow: var(--shadow-md);
+  --card-radius: var(--radius-lg);
+  --card-padding: var(--spacing-lg);
+
+  /* 按钮样式 */
+  --button-height-sm: 32px;
+  --button-height-md: 40px;
+  --button-height-lg: 48px;
+  --button-padding-sm: var(--spacing-sm) var(--spacing-md);
+  --button-padding-md: var(--spacing-md) var(--spacing-lg);
+  --button-padding-lg: var(--spacing-lg) var(--spacing-xl);
+  --button-radius: var(--radius-md);
+
+  /* 输入框样式 */
+  --input-height-sm: 32px;
+  --input-height-md: 40px;
+  --input-height-lg: 48px;
+  --input-padding: var(--spacing-sm) var(--spacing-md);
+  --input-radius: var(--radius-md);
+  --input-border: 1px solid var(--color-border);
+  --input-focus-border: 1px solid var(--color-primary);
+  --input-focus-shadow: 0 0 0 2px var(--color-primary-bg);
+
+  /* 侧边栏样式 */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 80px;
+  --sidebar-bg: linear-gradient(180deg, #1A3A32 0%, #0F2A22 100%);
+  --sidebar-text: #AACABA;
+  --sidebar-text-active: #FFFFFF;
+  --sidebar-active-bg: rgba(42, 121, 101, 0.2);
+  --sidebar-hover-bg: rgba(42, 121, 101, 0.1);
+
+  /* 头部样式 */
+  --header-height: 64px;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --header-border: 1px solid var(--color-border-light);
+  --header-shadow: var(--shadow-sm);
+
+  /* 内容区域 */
+  --content-bg: var(--color-bg-base);
+  --content-padding: var(--spacing-lg);
+  --content-radius: var(--radius-lg);
+
+  /* 表格样式 */
+  --table-header-bg: var(--color-primary-bg);
+  --table-row-hover-bg: var(--color-bg-spotlight);
+  --table-border: 1px solid var(--color-border-light);
+
+  /* 标签样式 */
+  --tag-radius: var(--radius-sm);
+  --tag-padding: 2px 8px;
+
+  /* 徽章样式 */
+  --badge-dot-size: 8px;
+  --badge-count-min-width: 18px;
+  --badge-count-height: 18px;
+}
+
+/* 深色模式变量（可选） */
+[data-theme='dark'] {
+  --color-bg-base: #0F2A22;
+  --color-bg-container: #1A3A32;
+  --color-bg-elevated: #234A3F;
+  --color-bg-spotlight: rgba(42, 121, 101, 0.12);
+
+  --color-text-primary: #E8F5EE;
+  --color-text-secondary: #AACABA;
+  --color-text-tertiary: #7A9A8A;
+  --color-text-disabled: #4A6A5A;
+
+  --color-border: #2A5A4A;
+  --color-border-light: #1A4A3A;
+  --color-border-dark: #3A6A5A;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+
+  --card-bg: #1A3A32;
+  --card-border: 1px solid var(--color-border);
+
+  --sidebar-bg: linear-gradient(180deg, #0A1F18 0%, #051510 100%);
+  --sidebar-text: #7A9A8A;
+  --sidebar-text-active: #E8F5EE;
+  --sidebar-active-bg: rgba(42, 121, 101, 0.3);
+  --sidebar-hover-bg: rgba(42, 121, 101, 0.15);
+
+  --header-bg: rgba(26, 58, 50, 0.95);
+  --header-border: 1px solid var(--color-border);
+
+  --content-bg: #0F2A22;
+
+  --table-header-bg: rgba(42, 121, 101, 0.15);
+  --table-row-hover-bg: rgba(42, 121, 101, 0.08);
+  --table-border: 1px solid var(--color-border);
+}
