@@ -1,0 +1,16 @@
+# Dorm Power Prometheus Configuration
+# Server: 2-core 2GB (JD Cloud)
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'dorm-power-backend'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['backend:8000']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'dorm-power-backend'
