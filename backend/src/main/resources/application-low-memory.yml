@@ -1,0 +1,99 @@
+server:
+  port: 8000
+  tomcat:
+    max-threads: 50
+    min-spare-threads: 5
+    max-connections: 200
+    accept-count: 20
+    connection-timeout: 20000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dorm_power
+    username: rongx
+    password: ""
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          batch_size: 50
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
+        generate_statistics: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+    default-property-inclusion: non_null
+
+  mvc:
+    async:
+      request-timeout: 30000
+
+logging:
+  level:
+    root: INFO
+    com.dormpower: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql: WARN
+  file:
+    name: logs/application.log
+    max-size: 10MB
+    max-history: 7
+
+jwt:
+  secret: your-secret-key-change-in-production
+  expiration: 86400000
+
+mqtt:
+  enabled: false
+  broker: tcp://localhost:1883
+  clientId: dorm-power-backend
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+app:
+  cache:
+    max-size: 100
+    expire-minutes: 30
+  agent:
+    enabled: true
+    prediction:
+      enabled: true
+      history-days: 7
+    auto-saving:
+      enabled: true
+      threshold-kwh: 2.0
+
+llm:
+  provider: deepseek
+  api-key: sk-9ae959c6e2f14426a593478848f5a60f
+  api-url: https://api.deepseek.com/v1/chat/completions
+  model: deepseek-chat
+  max-tokens: 500
+  temperature: 0.7
+  timeout: 30
