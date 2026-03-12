@@ -1,0 +1,14 @@
+# JVM参数（适合2核2G服务器）
+JAVA_OPTS=-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs
+
+# GC日志
+JAVA_OPTS=-Xlog:gc*:file=/app/logs/gc.log:time,uptime:filecount=5,filesize=10m
+
+# 内存限制
+JAVA_OPTS=-XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=64m
+
+# 优化选项
+JAVA_OPTS=-XX:+UseStringDeduplication -XX:+OptimizeStringConcat
+
+# 关闭不必要的功能
+JAVA_OPTS=-XX:-UseLargePages -XX:-UseBiasedLocking
