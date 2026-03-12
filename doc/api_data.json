@@ -1,0 +1,2545 @@
+{
+  "apis": [
+    {
+      "controller": "DeviceController",
+      "method": "GET",
+      "path": "/api/devices"
+    },
+    {
+      "controller": "DeviceController",
+      "method": "GET",
+      "path": "/api/devices/{deviceId}/status"
+    },
+    {
+      "controller": "DeviceController",
+      "method": "GET",
+      "path": "/api/devices/room/{room}"
+    },
+    {
+      "controller": "DeviceController",
+      "method": "POST",
+      "path": "/api/devices"
+    },
+    {
+      "controller": "DeviceController",
+      "method": "PUT",
+      "path": "/api/devices/{deviceId}"
+    },
+    {
+      "controller": "DeviceController",
+      "method": "DELETE",
+      "path": "/api/devices/{deviceId}"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "GET",
+      "path": "/api/firmware/device/{deviceId}"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "GET",
+      "path": "/api/firmware/device/{deviceId}/current"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "GET",
+      "path": "/api/firmware/pending"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "GET",
+      "path": "/api/firmware/active"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "GET",
+      "path": "/api/firmware/{firmwareId}"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "POST",
+      "path": "/api/firmware/upgrade"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "POST",
+      "path": "/api/firmware/{firmwareId}/send"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "POST",
+      "path": "/api/firmware/{firmwareId}/complete"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "POST",
+      "path": "/api/firmware/{firmwareId}/cancel"
+    },
+    {
+      "controller": "DeviceFirmwareController",
+      "method": "PUT",
+      "path": "/api/firmware/{firmwareId}/progress"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "GET",
+      "path": "/api/dorm/buildings"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "GET",
+      "path": "/api/dorm/rooms"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "GET",
+      "path": "/api/dorm/buildings/{buildingId}/rooms"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "GET",
+      "path": "/api/dorm/buildings/{buildingId}/floors/{floor}/rooms"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "GET",
+      "path": "/api/dorm/rooms/statistics"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "POST",
+      "path": "/api/dorm/buildings"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "POST",
+      "path": "/api/dorm/rooms"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "POST",
+      "path": "/api/dorm/rooms/{roomId}/check-in"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "POST",
+      "path": "/api/dorm/rooms/{roomId}/check-out"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "PUT",
+      "path": "/api/dorm/buildings/{id}"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "PUT",
+      "path": "/api/dorm/rooms/{id}"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "DELETE",
+      "path": "/api/dorm/buildings/{id}"
+    },
+    {
+      "controller": "DormRoomController",
+      "method": "DELETE",
+      "path": "/api/dorm/rooms/{id}"
+    },
+    {
+      "controller": "ScheduledTaskController",
+      "method": "GET",
+      "path": "/api/tasks/device/{deviceId}"
+    },
+    {
+      "controller": "ScheduledTaskController",
+      "method": "PUT",
+      "path": "/api/tasks/{taskId}"
+    },
+    {
+      "controller": "ScheduledTaskController",
+      "method": "PUT",
+      "path": "/api/tasks/{taskId}/toggle"
+    },
+    {
+      "controller": "ScheduledTaskController",
+      "method": "DELETE",
+      "path": "/api/tasks/{taskId}"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "GET",
+      "path": "/api/notifications/unread"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "GET",
+      "path": "/api/notifications/unread/count"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "GET",
+      "path": "/api/notifications/statistics"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "GET",
+      "path": "/api/notifications/preferences"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "GET",
+      "path": "/api/notifications/preferences/enabled"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "GET",
+      "path": "/api/notifications/preferences/quiet-hours"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "POST",
+      "path": "/api/notifications/email/test"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "POST",
+      "path": "/api/notifications/preferences/reset"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "PUT",
+      "path": "/api/notifications/{id}/read"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "PUT",
+      "path": "/api/notifications/read-all"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "PUT",
+      "path": "/api/notifications/preferences"
+    },
+    {
+      "controller": "NotificationController",
+      "method": "DELETE",
+      "path": "/api/notifications/{id}"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/{id}"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/number/{studentNumber}"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/room/{roomId}"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/{studentId}/history"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/search"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/unassigned"
+    },
+    {
+      "controller": "StudentController",
+      "method": "GET",
+      "path": "/api/students/statistics"
+    },
+    {
+      "controller": "StudentController",
+      "method": "POST",
+      "path": "/api/students/{studentId}/check-in"
+    },
+    {
+      "controller": "StudentController",
+      "method": "POST",
+      "path": "/api/students/{studentId}/check-out"
+    },
+    {
+      "controller": "StudentController",
+      "method": "POST",
+      "path": "/api/students/{studentId}/swap-room"
+    },
+    {
+      "controller": "StudentController",
+      "method": "POST",
+      "path": "/api/students/batch/graduate"
+    },
+    {
+      "controller": "StudentController",
+      "method": "PUT",
+      "path": "/api/students/{id}"
+    },
+    {
+      "controller": "StudentController",
+      "method": "DELETE",
+      "path": "/api/students/{id}"
+    },
+    {
+      "controller": "DeviceStatusHistoryController",
+      "method": "GET",
+      "path": "/api/devices/{deviceId}/history"
+    },
+    {
+      "controller": "DeviceStatusHistoryController",
+      "method": "GET",
+      "path": "/api/devices/history/{historyId}"
+    },
+    {
+      "controller": "CollectionController",
+      "method": "GET",
+      "path": "/api/collections/room/{roomId}"
+    },
+    {
+      "controller": "CollectionController",
+      "method": "GET",
+      "path": "/api/collections/bill/{billId}"
+    },
+    {
+      "controller": "CollectionController",
+      "method": "DELETE",
+      "path": "/api/collections/cleanup"
+    },
+    {
+      "controller": "SystemLogController",
+      "method": "GET",
+      "path": "/api/admin/logs/level/{level}"
+    },
+    {
+      "controller": "SystemLogController",
+      "method": "GET",
+      "path": "/api/admin/logs/type/{type}"
+    },
+    {
+      "controller": "SystemLogController",
+      "method": "GET",
+      "path": "/api/admin/logs/user/{username}"
+    },
+    {
+      "controller": "SystemLogController",
+      "method": "GET",
+      "path": "/api/admin/logs/search"
+    },
+    {
+      "controller": "SystemLogController",
+      "method": "GET",
+      "path": "/api/admin/logs/statistics"
+    },
+    {
+      "controller": "SystemLogController",
+      "method": "DELETE",
+      "path": "/api/admin/logs/cleanup"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/behavior/learn/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/behavior/suggestions/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/behavior/predict/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/behavior/compare/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/anomaly/detect/batch/{deviceId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/anomaly/predict/{deviceId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/anomaly/health/{deviceId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/anomaly/room/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/anomaly/failure/{deviceId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/scene/room/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/scene/statistics/{sceneId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/scene/history/{sceneId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "GET",
+      "path": "/api/agent/analyze/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/data/generate/{deviceId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/data/generate-room/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/data/generate-all"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/anomaly/detect/realtime/{deviceId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/scene/auto-generate/{roomId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/scene/execute/{sceneId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "POST",
+      "path": "/api/agent/scene/optimize/{sceneId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "PUT",
+      "path": "/api/agent/scene/toggle/{sceneId}"
+    },
+    {
+      "controller": "AgentController",
+      "method": "DELETE",
+      "path": "/api/agent/scene/{sceneId}"
+    },
+    {
+      "controller": "TelemetryController",
+      "method": "GET",
+      "path": "/api/telemetry"
+    },
+    {
+      "controller": "TelemetryController",
+      "method": "GET",
+      "path": "/api/telemetry/statistics"
+    },
+    {
+      "controller": "TelemetryController",
+      "method": "GET",
+      "path": "/api/telemetry/export"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/user/{username}"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/range"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/statistics"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/locked/{username}"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/blocked-ip/{ipAddress}"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/last-login/{username}"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "GET",
+      "path": "/api/login-logs/active-sessions"
+    },
+    {
+      "controller": "LoginLogController",
+      "method": "DELETE",
+      "path": "/api/login-logs/cleanup"
+    },
+    {
+      "controller": "DataBackupController",
+      "method": "GET",
+      "path": "/api/admin/backup/recent"
+    },
+    {
+      "controller": "DataBackupController",
+      "method": "GET",
+      "path": "/api/admin/backup/statistics"
+    },
+    {
+      "controller": "DataBackupController",
+      "method": "POST",
+      "path": "/api/admin/backup/database"
+    },
+    {
+      "controller": "DataBackupController",
+      "method": "POST",
+      "path": "/api/admin/backup/export"
+    },
+    {
+      "controller": "DataBackupController",
+      "method": "DELETE",
+      "path": "/api/admin/backup/{id}"
+    },
+    {
+      "controller": "DataBackupController",
+      "method": "DELETE",
+      "path": "/api/admin/backup/cleanup"
+    },
+    {
+      "controller": "MonitoringController",
+      "method": "GET",
+      "path": "/api/admin/monitor/system"
+    },
+    {
+      "controller": "MonitoringController",
+      "method": "GET",
+      "path": "/api/admin/monitor/devices"
+    },
+    {
+      "controller": "MonitoringController",
+      "method": "GET",
+      "path": "/api/admin/monitor/api-performance"
+    },
+    {
+      "controller": "MonitoringController",
+      "method": "GET",
+      "path": "/api/admin/monitor/metrics"
+    },
+    {
+      "controller": "MonitoringController",
+      "method": "POST",
+      "path": "/api/admin/monitor/collect"
+    },
+    {
+      "controller": "MonitoringController",
+      "method": "DELETE",
+      "path": "/api/admin/monitor/cleanup"
+    },
+    {
+      "controller": "PowerControlController",
+      "method": "GET",
+      "path": "/api/power-control/status/{roomId}"
+    },
+    {
+      "controller": "PowerControlController",
+      "method": "GET",
+      "path": "/api/power-control/cutoff-rooms"
+    },
+    {
+      "controller": "PowerControlController",
+      "method": "GET",
+      "path": "/api/power-control/overdue-rooms"
+    },
+    {
+      "controller": "PowerControlController",
+      "method": "POST",
+      "path": "/api/power-control/cutoff/{roomId}"
+    },
+    {
+      "controller": "PowerControlController",
+      "method": "POST",
+      "path": "/api/power-control/restore/{roomId}"
+    },
+    {
+      "controller": "SystemConfigController",
+      "method": "GET",
+      "path": "/api/admin/config/category/{category}"
+    },
+    {
+      "controller": "SystemConfigController",
+      "method": "GET",
+      "path": "/api/admin/config/{key}"
+    },
+    {
+      "controller": "SystemConfigController",
+      "method": "POST",
+      "path": "/api/admin/config/init"
+    },
+    {
+      "controller": "SystemConfigController",
+      "method": "PUT",
+      "path": "/api/admin/config/{key}"
+    },
+    {
+      "controller": "SystemConfigController",
+      "method": "PUT",
+      "path": "/api/admin/config/batch"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "GET",
+      "path": "/api/message-templates/code/{templateCode}"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "GET",
+      "path": "/api/message-templates/type/{type}"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "GET",
+      "path": "/api/message-templates/channel/{channel}"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "GET",
+      "path": "/api/message-templates/enabled"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "POST",
+      "path": "/api/message-templates/render/{templateCode}"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "POST",
+      "path": "/api/message-templates/extract-variables"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "POST",
+      "path": "/api/message-templates/init"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "PUT",
+      "path": "/api/message-templates/{id}"
+    },
+    {
+      "controller": "MessageTemplateController",
+      "method": "DELETE",
+      "path": "/api/message-templates/{id}"
+    },
+    {
+      "controller": "AuthController",
+      "method": "GET",
+      "path": "/api/auth/me"
+    },
+    {
+      "controller": "AuthController",
+      "method": "POST",
+      "path": "/api/auth/login"
+    },
+    {
+      "controller": "AuthController",
+      "method": "POST",
+      "path": "/api/auth/register"
+    },
+    {
+      "controller": "AuthController",
+      "method": "POST",
+      "path": "/api/auth/forgot-password"
+    },
+    {
+      "controller": "AuthController",
+      "method": "POST",
+      "path": "/api/auth/reset-password"
+    },
+    {
+      "controller": "AuthController",
+      "method": "POST",
+      "path": "/api/auth/logout"
+    },
+    {
+      "controller": "AuthController",
+      "method": "POST",
+      "path": "/api/auth/refresh"
+    },
+    {
+      "controller": "BillingController",
+      "method": "GET",
+      "path": "/api/billing/price-rules"
+    },
+    {
+      "controller": "BillingController",
+      "method": "GET",
+      "path": "/api/billing/bills"
+    },
+    {
+      "controller": "BillingController",
+      "method": "GET",
+      "path": "/api/billing/bills/pending"
+    },
+    {
+      "controller": "BillingController",
+      "method": "GET",
+      "path": "/api/billing/recharge-records"
+    },
+    {
+      "controller": "BillingController",
+      "method": "GET",
+      "path": "/api/billing/balance/{roomId}"
+    },
+    {
+      "controller": "BillingController",
+      "method": "GET",
+      "path": "/api/billing/low-balance"
+    },
+    {
+      "controller": "BillingController",
+      "method": "POST",
+      "path": "/api/billing/price-rules"
+    },
+    {
+      "controller": "BillingController",
+      "method": "POST",
+      "path": "/api/billing/bills/generate"
+    },
+    {
+      "controller": "BillingController",
+      "method": "POST",
+      "path": "/api/billing/bills/{billId}/pay"
+    },
+    {
+      "controller": "BillingController",
+      "method": "POST",
+      "path": "/api/billing/recharge"
+    },
+    {
+      "controller": "BillingController",
+      "method": "PUT",
+      "path": "/api/billing/price-rules/{id}"
+    },
+    {
+      "controller": "BillingController",
+      "method": "DELETE",
+      "path": "/api/billing/price-rules/{id}"
+    },
+    {
+      "controller": "CommandQueryController",
+      "method": "GET",
+      "path": "/api/cmd/{cmdId}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/whitelist"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/blacklist"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/active"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/check/{ipAddress}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/blocked/{ipAddress}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/whitelisted/{ipAddress}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "GET",
+      "path": "/api/ip-control/{ipAddress}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "POST",
+      "path": "/api/ip-control/whitelist"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "POST",
+      "path": "/api/ip-control/blacklist"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "PUT",
+      "path": "/api/ip-control/{ipAddress}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "DELETE",
+      "path": "/api/ip-control/{ipAddress}"
+    },
+    {
+      "controller": "IpAccessControlController",
+      "method": "DELETE",
+      "path": "/api/ip-control/cleanup"
+    },
+    {
+      "controller": "CommandController",
+      "method": "GET",
+      "path": "/api/commands/device/{deviceId}"
+    },
+    {
+      "controller": "CommandController",
+      "method": "GET",
+      "path": "/api/commands/{cmdId}"
+    },
+    {
+      "controller": "CommandController",
+      "method": "POST",
+      "path": "/api/strips/{deviceId}/cmd"
+    },
+    {
+      "controller": "CommandController",
+      "method": "POST",
+      "path": "/api/commands/batch"
+    },
+    {
+      "controller": "AiReportController",
+      "method": "GET",
+      "path": "/api/rooms/{roomId}/ai_report"
+    },
+    {
+      "controller": "AlertController",
+      "method": "GET",
+      "path": "/api/alerts/device/{deviceId}"
+    },
+    {
+      "controller": "AlertController",
+      "method": "GET",
+      "path": "/api/alerts/unresolved"
+    },
+    {
+      "controller": "AlertController",
+      "method": "GET",
+      "path": "/api/alerts/config/{deviceId}"
+    },
+    {
+      "controller": "AlertController",
+      "method": "POST",
+      "path": "/api/alerts/simulate/{deviceId}"
+    },
+    {
+      "controller": "AlertController",
+      "method": "PUT",
+      "path": "/api/alerts/{alertId}/resolve"
+    },
+    {
+      "controller": "AlertController",
+      "method": "PUT",
+      "path": "/api/alerts/config/{deviceId}"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "GET",
+      "path": "/api/groups/{groupId}"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "GET",
+      "path": "/api/groups/{groupId}/devices"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "GET",
+      "path": "/api/groups/device/{deviceId}"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "POST",
+      "path": "/api/groups/{groupId}/devices"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "PUT",
+      "path": "/api/groups/{groupId}"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "DELETE",
+      "path": "/api/groups/{groupId}"
+    },
+    {
+      "controller": "DeviceGroupController",
+      "method": "DELETE",
+      "path": "/api/groups/{groupId}/devices/{deviceId}"
+    },
+    {
+      "controller": "AuditLogController",
+      "method": "GET",
+      "path": "/api/audit-logs/user/{username}"
+    },
+    {
+      "controller": "AuditLogController",
+      "method": "GET",
+      "path": "/api/audit-logs/module/{module}"
+    },
+    {
+      "controller": "AuditLogController",
+      "method": "GET",
+      "path": "/api/audit-logs/range"
+    },
+    {
+      "controller": "AuditLogController",
+      "method": "GET",
+      "path": "/api/audit-logs/user/{username}/range"
+    },
+    {
+      "controller": "AuditLogController",
+      "method": "GET",
+      "path": "/api/audit-logs/statistics"
+    },
+    {
+      "controller": "AuditLogController",
+      "method": "DELETE",
+      "path": "/api/audit-logs/cleanup"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/roles"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/roles/enabled"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/roles/{roleId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/roles/{roleId}/permissions"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/roles/{roleId}/user-count"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/permissions"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/permissions/{permissionId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/resources"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/resources/tree"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/resources/{resourceId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/users/{username}/roles"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/users/{username}/permissions"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/users/{username}/has-permission"
+    },
+    {
+      "controller": "RbacController",
+      "method": "GET",
+      "path": "/api/rbac/users/{username}/has-role"
+    },
+    {
+      "controller": "RbacController",
+      "method": "POST",
+      "path": "/api/rbac/roles"
+    },
+    {
+      "controller": "RbacController",
+      "method": "POST",
+      "path": "/api/rbac/roles/{roleId}/permissions"
+    },
+    {
+      "controller": "RbacController",
+      "method": "POST",
+      "path": "/api/rbac/permissions"
+    },
+    {
+      "controller": "RbacController",
+      "method": "POST",
+      "path": "/api/rbac/resources"
+    },
+    {
+      "controller": "RbacController",
+      "method": "POST",
+      "path": "/api/rbac/users/{username}/roles"
+    },
+    {
+      "controller": "RbacController",
+      "method": "POST",
+      "path": "/api/rbac/init"
+    },
+    {
+      "controller": "RbacController",
+      "method": "PUT",
+      "path": "/api/rbac/roles/{roleId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "PUT",
+      "path": "/api/rbac/permissions/{permissionId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "PUT",
+      "path": "/api/rbac/resources/{resourceId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "PUT",
+      "path": "/api/rbac/users/{username}/roles"
+    },
+    {
+      "controller": "RbacController",
+      "method": "DELETE",
+      "path": "/api/rbac/roles/{roleId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "DELETE",
+      "path": "/api/rbac/permissions/{permissionId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "DELETE",
+      "path": "/api/rbac/resources/{resourceId}"
+    },
+    {
+      "controller": "RbacController",
+      "method": "DELETE",
+      "path": "/api/rbac/users/{username}/roles"
+    },
+    {
+      "controller": "ImportController",
+      "method": "GET",
+      "path": "/api/import/template/{type}"
+    },
+    {
+      "controller": "ImportController",
+      "method": "POST",
+      "path": "/api/import/students"
+    },
+    {
+      "controller": "ImportController",
+      "method": "POST",
+      "path": "/api/import/rooms"
+    },
+    {
+      "controller": "ImportController",
+      "method": "POST",
+      "path": "/api/import/devices"
+    },
+    {
+      "controller": "ImportController",
+      "method": "POST",
+      "path": "/api/import/json"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/predict/{roomId}"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/predict/{roomId}/hourly"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/strategies/{roomId}"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/auto/status"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/stats/{roomId}"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/stats/all"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "GET",
+      "path": "/api/saving/report/{roomId}"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "POST",
+      "path": "/api/saving/strategies/{roomId}/execute/{strategyId}"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "POST",
+      "path": "/api/saving/auto/toggle"
+    },
+    {
+      "controller": "AutoSavingController",
+      "method": "POST",
+      "path": "/api/saving/auto/threshold"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "GET",
+      "path": "/api/dict/types"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "GET",
+      "path": "/api/dict/type/{dictType}"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "GET",
+      "path": "/api/dict/tree/{dictType}"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "GET",
+      "path": "/api/dict/page"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "GET",
+      "path": "/api/dict/code/{dictCode}"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "GET",
+      "path": "/api/dict/label"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "POST",
+      "path": "/api/dict/batch"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "POST",
+      "path": "/api/dict/init"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "PUT",
+      "path": "/api/dict/{id}"
+    },
+    {
+      "controller": "DataDictController",
+      "method": "DELETE",
+      "path": "/api/dict/{id}"
+    },
+    {
+      "controller": "UserController",
+      "method": "GET",
+      "path": "/api/users/{username}"
+    },
+    {
+      "controller": "UserController",
+      "method": "POST",
+      "path": "/api/users/{username}/password"
+    },
+    {
+      "controller": "UserController",
+      "method": "PUT",
+      "path": "/api/users/{username}"
+    },
+    {
+      "controller": "UserController",
+      "method": "DELETE",
+      "path": "/api/users/{username}"
+    },
+    {
+      "controller": "UserController",
+      "method": "PATCH",
+      "path": "/api/users/{username}/profile"
+    }
+  ],
+  "by_controller": {
+    "DeviceController": [
+      {
+        "controller": "DeviceController",
+        "method": "GET",
+        "path": "/api/devices"
+      },
+      {
+        "controller": "DeviceController",
+        "method": "GET",
+        "path": "/api/devices/{deviceId}/status"
+      },
+      {
+        "controller": "DeviceController",
+        "method": "GET",
+        "path": "/api/devices/room/{room}"
+      },
+      {
+        "controller": "DeviceController",
+        "method": "POST",
+        "path": "/api/devices"
+      },
+      {
+        "controller": "DeviceController",
+        "method": "PUT",
+        "path": "/api/devices/{deviceId}"
+      },
+      {
+        "controller": "DeviceController",
+        "method": "DELETE",
+        "path": "/api/devices/{deviceId}"
+      }
+    ],
+    "DeviceFirmwareController": [
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "GET",
+        "path": "/api/firmware/device/{deviceId}"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "GET",
+        "path": "/api/firmware/device/{deviceId}/current"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "GET",
+        "path": "/api/firmware/pending"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "GET",
+        "path": "/api/firmware/active"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "GET",
+        "path": "/api/firmware/{firmwareId}"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "POST",
+        "path": "/api/firmware/upgrade"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "POST",
+        "path": "/api/firmware/{firmwareId}/send"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "POST",
+        "path": "/api/firmware/{firmwareId}/complete"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "POST",
+        "path": "/api/firmware/{firmwareId}/cancel"
+      },
+      {
+        "controller": "DeviceFirmwareController",
+        "method": "PUT",
+        "path": "/api/firmware/{firmwareId}/progress"
+      }
+    ],
+    "DormRoomController": [
+      {
+        "controller": "DormRoomController",
+        "method": "GET",
+        "path": "/api/dorm/buildings"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "GET",
+        "path": "/api/dorm/rooms"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "GET",
+        "path": "/api/dorm/buildings/{buildingId}/rooms"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "GET",
+        "path": "/api/dorm/buildings/{buildingId}/floors/{floor}/rooms"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "GET",
+        "path": "/api/dorm/rooms/statistics"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "POST",
+        "path": "/api/dorm/buildings"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "POST",
+        "path": "/api/dorm/rooms"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "POST",
+        "path": "/api/dorm/rooms/{roomId}/check-in"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "POST",
+        "path": "/api/dorm/rooms/{roomId}/check-out"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "PUT",
+        "path": "/api/dorm/buildings/{id}"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "PUT",
+        "path": "/api/dorm/rooms/{id}"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "DELETE",
+        "path": "/api/dorm/buildings/{id}"
+      },
+      {
+        "controller": "DormRoomController",
+        "method": "DELETE",
+        "path": "/api/dorm/rooms/{id}"
+      }
+    ],
+    "ScheduledTaskController": [
+      {
+        "controller": "ScheduledTaskController",
+        "method": "GET",
+        "path": "/api/tasks/device/{deviceId}"
+      },
+      {
+        "controller": "ScheduledTaskController",
+        "method": "PUT",
+        "path": "/api/tasks/{taskId}"
+      },
+      {
+        "controller": "ScheduledTaskController",
+        "method": "PUT",
+        "path": "/api/tasks/{taskId}/toggle"
+      },
+      {
+        "controller": "ScheduledTaskController",
+        "method": "DELETE",
+        "path": "/api/tasks/{taskId}"
+      }
+    ],
+    "NotificationController": [
+      {
+        "controller": "NotificationController",
+        "method": "GET",
+        "path": "/api/notifications/unread"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "GET",
+        "path": "/api/notifications/unread/count"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "GET",
+        "path": "/api/notifications/statistics"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "GET",
+        "path": "/api/notifications/preferences"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "GET",
+        "path": "/api/notifications/preferences/enabled"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "GET",
+        "path": "/api/notifications/preferences/quiet-hours"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "POST",
+        "path": "/api/notifications/email/test"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "POST",
+        "path": "/api/notifications/preferences/reset"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "PUT",
+        "path": "/api/notifications/{id}/read"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "PUT",
+        "path": "/api/notifications/read-all"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "PUT",
+        "path": "/api/notifications/preferences"
+      },
+      {
+        "controller": "NotificationController",
+        "method": "DELETE",
+        "path": "/api/notifications/{id}"
+      }
+    ],
+    "StudentController": [
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/{id}"
+      },
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/number/{studentNumber}"
+      },
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/room/{roomId}"
+      },
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/{studentId}/history"
+      },
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/search"
+      },
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/unassigned"
+      },
+      {
+        "controller": "StudentController",
+        "method": "GET",
+        "path": "/api/students/statistics"
+      },
+      {
+        "controller": "StudentController",
+        "method": "POST",
+        "path": "/api/students/{studentId}/check-in"
+      },
+      {
+        "controller": "StudentController",
+        "method": "POST",
+        "path": "/api/students/{studentId}/check-out"
+      },
+      {
+        "controller": "StudentController",
+        "method": "POST",
+        "path": "/api/students/{studentId}/swap-room"
+      },
+      {
+        "controller": "StudentController",
+        "method": "POST",
+        "path": "/api/students/batch/graduate"
+      },
+      {
+        "controller": "StudentController",
+        "method": "PUT",
+        "path": "/api/students/{id}"
+      },
+      {
+        "controller": "StudentController",
+        "method": "DELETE",
+        "path": "/api/students/{id}"
+      }
+    ],
+    "DeviceStatusHistoryController": [
+      {
+        "controller": "DeviceStatusHistoryController",
+        "method": "GET",
+        "path": "/api/devices/{deviceId}/history"
+      },
+      {
+        "controller": "DeviceStatusHistoryController",
+        "method": "GET",
+        "path": "/api/devices/history/{historyId}"
+      }
+    ],
+    "CollectionController": [
+      {
+        "controller": "CollectionController",
+        "method": "GET",
+        "path": "/api/collections/room/{roomId}"
+      },
+      {
+        "controller": "CollectionController",
+        "method": "GET",
+        "path": "/api/collections/bill/{billId}"
+      },
+      {
+        "controller": "CollectionController",
+        "method": "DELETE",
+        "path": "/api/collections/cleanup"
+      }
+    ],
+    "SystemLogController": [
+      {
+        "controller": "SystemLogController",
+        "method": "GET",
+        "path": "/api/admin/logs/level/{level}"
+      },
+      {
+        "controller": "SystemLogController",
+        "method": "GET",
+        "path": "/api/admin/logs/type/{type}"
+      },
+      {
+        "controller": "SystemLogController",
+        "method": "GET",
+        "path": "/api/admin/logs/user/{username}"
+      },
+      {
+        "controller": "SystemLogController",
+        "method": "GET",
+        "path": "/api/admin/logs/search"
+      },
+      {
+        "controller": "SystemLogController",
+        "method": "GET",
+        "path": "/api/admin/logs/statistics"
+      },
+      {
+        "controller": "SystemLogController",
+        "method": "DELETE",
+        "path": "/api/admin/logs/cleanup"
+      }
+    ],
+    "AgentController": [
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/behavior/learn/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/behavior/suggestions/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/behavior/predict/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/behavior/compare/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/anomaly/detect/batch/{deviceId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/anomaly/predict/{deviceId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/anomaly/health/{deviceId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/anomaly/room/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/anomaly/failure/{deviceId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/scene/room/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/scene/statistics/{sceneId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/scene/history/{sceneId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "GET",
+        "path": "/api/agent/analyze/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/data/generate/{deviceId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/data/generate-room/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/data/generate-all"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/anomaly/detect/realtime/{deviceId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/scene/auto-generate/{roomId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/scene/execute/{sceneId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "POST",
+        "path": "/api/agent/scene/optimize/{sceneId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "PUT",
+        "path": "/api/agent/scene/toggle/{sceneId}"
+      },
+      {
+        "controller": "AgentController",
+        "method": "DELETE",
+        "path": "/api/agent/scene/{sceneId}"
+      }
+    ],
+    "TelemetryController": [
+      {
+        "controller": "TelemetryController",
+        "method": "GET",
+        "path": "/api/telemetry"
+      },
+      {
+        "controller": "TelemetryController",
+        "method": "GET",
+        "path": "/api/telemetry/statistics"
+      },
+      {
+        "controller": "TelemetryController",
+        "method": "GET",
+        "path": "/api/telemetry/export"
+      }
+    ],
+    "LoginLogController": [
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/user/{username}"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/range"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/statistics"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/locked/{username}"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/blocked-ip/{ipAddress}"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/last-login/{username}"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "GET",
+        "path": "/api/login-logs/active-sessions"
+      },
+      {
+        "controller": "LoginLogController",
+        "method": "DELETE",
+        "path": "/api/login-logs/cleanup"
+      }
+    ],
+    "DataBackupController": [
+      {
+        "controller": "DataBackupController",
+        "method": "GET",
+        "path": "/api/admin/backup/recent"
+      },
+      {
+        "controller": "DataBackupController",
+        "method": "GET",
+        "path": "/api/admin/backup/statistics"
+      },
+      {
+        "controller": "DataBackupController",
+        "method": "POST",
+        "path": "/api/admin/backup/database"
+      },
+      {
+        "controller": "DataBackupController",
+        "method": "POST",
+        "path": "/api/admin/backup/export"
+      },
+      {
+        "controller": "DataBackupController",
+        "method": "DELETE",
+        "path": "/api/admin/backup/{id}"
+      },
+      {
+        "controller": "DataBackupController",
+        "method": "DELETE",
+        "path": "/api/admin/backup/cleanup"
+      }
+    ],
+    "MonitoringController": [
+      {
+        "controller": "MonitoringController",
+        "method": "GET",
+        "path": "/api/admin/monitor/system"
+      },
+      {
+        "controller": "MonitoringController",
+        "method": "GET",
+        "path": "/api/admin/monitor/devices"
+      },
+      {
+        "controller": "MonitoringController",
+        "method": "GET",
+        "path": "/api/admin/monitor/api-performance"
+      },
+      {
+        "controller": "MonitoringController",
+        "method": "GET",
+        "path": "/api/admin/monitor/metrics"
+      },
+      {
+        "controller": "MonitoringController",
+        "method": "POST",
+        "path": "/api/admin/monitor/collect"
+      },
+      {
+        "controller": "MonitoringController",
+        "method": "DELETE",
+        "path": "/api/admin/monitor/cleanup"
+      }
+    ],
+    "PowerControlController": [
+      {
+        "controller": "PowerControlController",
+        "method": "GET",
+        "path": "/api/power-control/status/{roomId}"
+      },
+      {
+        "controller": "PowerControlController",
+        "method": "GET",
+        "path": "/api/power-control/cutoff-rooms"
+      },
+      {
+        "controller": "PowerControlController",
+        "method": "GET",
+        "path": "/api/power-control/overdue-rooms"
+      },
+      {
+        "controller": "PowerControlController",
+        "method": "POST",
+        "path": "/api/power-control/cutoff/{roomId}"
+      },
+      {
+        "controller": "PowerControlController",
+        "method": "POST",
+        "path": "/api/power-control/restore/{roomId}"
+      }
+    ],
+    "SystemConfigController": [
+      {
+        "controller": "SystemConfigController",
+        "method": "GET",
+        "path": "/api/admin/config/category/{category}"
+      },
+      {
+        "controller": "SystemConfigController",
+        "method": "GET",
+        "path": "/api/admin/config/{key}"
+      },
+      {
+        "controller": "SystemConfigController",
+        "method": "POST",
+        "path": "/api/admin/config/init"
+      },
+      {
+        "controller": "SystemConfigController",
+        "method": "PUT",
+        "path": "/api/admin/config/{key}"
+      },
+      {
+        "controller": "SystemConfigController",
+        "method": "PUT",
+        "path": "/api/admin/config/batch"
+      }
+    ],
+    "MessageTemplateController": [
+      {
+        "controller": "MessageTemplateController",
+        "method": "GET",
+        "path": "/api/message-templates/code/{templateCode}"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "GET",
+        "path": "/api/message-templates/type/{type}"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "GET",
+        "path": "/api/message-templates/channel/{channel}"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "GET",
+        "path": "/api/message-templates/enabled"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "POST",
+        "path": "/api/message-templates/render/{templateCode}"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "POST",
+        "path": "/api/message-templates/extract-variables"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "POST",
+        "path": "/api/message-templates/init"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "PUT",
+        "path": "/api/message-templates/{id}"
+      },
+      {
+        "controller": "MessageTemplateController",
+        "method": "DELETE",
+        "path": "/api/message-templates/{id}"
+      }
+    ],
+    "AuthController": [
+      {
+        "controller": "AuthController",
+        "method": "GET",
+        "path": "/api/auth/me"
+      },
+      {
+        "controller": "AuthController",
+        "method": "POST",
+        "path": "/api/auth/login"
+      },
+      {
+        "controller": "AuthController",
+        "method": "POST",
+        "path": "/api/auth/register"
+      },
+      {
+        "controller": "AuthController",
+        "method": "POST",
+        "path": "/api/auth/forgot-password"
+      },
+      {
+        "controller": "AuthController",
+        "method": "POST",
+        "path": "/api/auth/reset-password"
+      },
+      {
+        "controller": "AuthController",
+        "method": "POST",
+        "path": "/api/auth/logout"
+      },
+      {
+        "controller": "AuthController",
+        "method": "POST",
+        "path": "/api/auth/refresh"
+      }
+    ],
+    "BillingController": [
+      {
+        "controller": "BillingController",
+        "method": "GET",
+        "path": "/api/billing/price-rules"
+      },
+      {
+        "controller": "BillingController",
+        "method": "GET",
+        "path": "/api/billing/bills"
+      },
+      {
+        "controller": "BillingController",
+        "method": "GET",
+        "path": "/api/billing/bills/pending"
+      },
+      {
+        "controller": "BillingController",
+        "method": "GET",
+        "path": "/api/billing/recharge-records"
+      },
+      {
+        "controller": "BillingController",
+        "method": "GET",
+        "path": "/api/billing/balance/{roomId}"
+      },
+      {
+        "controller": "BillingController",
+        "method": "GET",
+        "path": "/api/billing/low-balance"
+      },
+      {
+        "controller": "BillingController",
+        "method": "POST",
+        "path": "/api/billing/price-rules"
+      },
+      {
+        "controller": "BillingController",
+        "method": "POST",
+        "path": "/api/billing/bills/generate"
+      },
+      {
+        "controller": "BillingController",
+        "method": "POST",
+        "path": "/api/billing/bills/{billId}/pay"
+      },
+      {
+        "controller": "BillingController",
+        "method": "POST",
+        "path": "/api/billing/recharge"
+      },
+      {
+        "controller": "BillingController",
+        "method": "PUT",
+        "path": "/api/billing/price-rules/{id}"
+      },
+      {
+        "controller": "BillingController",
+        "method": "DELETE",
+        "path": "/api/billing/price-rules/{id}"
+      }
+    ],
+    "CommandQueryController": [
+      {
+        "controller": "CommandQueryController",
+        "method": "GET",
+        "path": "/api/cmd/{cmdId}"
+      }
+    ],
+    "IpAccessControlController": [
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/whitelist"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/blacklist"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/active"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/check/{ipAddress}"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/blocked/{ipAddress}"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/whitelisted/{ipAddress}"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "GET",
+        "path": "/api/ip-control/{ipAddress}"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "POST",
+        "path": "/api/ip-control/whitelist"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "POST",
+        "path": "/api/ip-control/blacklist"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "PUT",
+        "path": "/api/ip-control/{ipAddress}"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "DELETE",
+        "path": "/api/ip-control/{ipAddress}"
+      },
+      {
+        "controller": "IpAccessControlController",
+        "method": "DELETE",
+        "path": "/api/ip-control/cleanup"
+      }
+    ],
+    "CommandController": [
+      {
+        "controller": "CommandController",
+        "method": "GET",
+        "path": "/api/commands/device/{deviceId}"
+      },
+      {
+        "controller": "CommandController",
+        "method": "GET",
+        "path": "/api/commands/{cmdId}"
+      },
+      {
+        "controller": "CommandController",
+        "method": "POST",
+        "path": "/api/strips/{deviceId}/cmd"
+      },
+      {
+        "controller": "CommandController",
+        "method": "POST",
+        "path": "/api/commands/batch"
+      }
+    ],
+    "AiReportController": [
+      {
+        "controller": "AiReportController",
+        "method": "GET",
+        "path": "/api/rooms/{roomId}/ai_report"
+      }
+    ],
+    "AlertController": [
+      {
+        "controller": "AlertController",
+        "method": "GET",
+        "path": "/api/alerts/device/{deviceId}"
+      },
+      {
+        "controller": "AlertController",
+        "method": "GET",
+        "path": "/api/alerts/unresolved"
+      },
+      {
+        "controller": "AlertController",
+        "method": "GET",
+        "path": "/api/alerts/config/{deviceId}"
+      },
+      {
+        "controller": "AlertController",
+        "method": "POST",
+        "path": "/api/alerts/simulate/{deviceId}"
+      },
+      {
+        "controller": "AlertController",
+        "method": "PUT",
+        "path": "/api/alerts/{alertId}/resolve"
+      },
+      {
+        "controller": "AlertController",
+        "method": "PUT",
+        "path": "/api/alerts/config/{deviceId}"
+      }
+    ],
+    "DeviceGroupController": [
+      {
+        "controller": "DeviceGroupController",
+        "method": "GET",
+        "path": "/api/groups/{groupId}"
+      },
+      {
+        "controller": "DeviceGroupController",
+        "method": "GET",
+        "path": "/api/groups/{groupId}/devices"
+      },
+      {
+        "controller": "DeviceGroupController",
+        "method": "GET",
+        "path": "/api/groups/device/{deviceId}"
+      },
+      {
+        "controller": "DeviceGroupController",
+        "method": "POST",
+        "path": "/api/groups/{groupId}/devices"
+      },
+      {
+        "controller": "DeviceGroupController",
+        "method": "PUT",
+        "path": "/api/groups/{groupId}"
+      },
+      {
+        "controller": "DeviceGroupController",
+        "method": "DELETE",
+        "path": "/api/groups/{groupId}"
+      },
+      {
+        "controller": "DeviceGroupController",
+        "method": "DELETE",
+        "path": "/api/groups/{groupId}/devices/{deviceId}"
+      }
+    ],
+    "AuditLogController": [
+      {
+        "controller": "AuditLogController",
+        "method": "GET",
+        "path": "/api/audit-logs/user/{username}"
+      },
+      {
+        "controller": "AuditLogController",
+        "method": "GET",
+        "path": "/api/audit-logs/module/{module}"
+      },
+      {
+        "controller": "AuditLogController",
+        "method": "GET",
+        "path": "/api/audit-logs/range"
+      },
+      {
+        "controller": "AuditLogController",
+        "method": "GET",
+        "path": "/api/audit-logs/user/{username}/range"
+      },
+      {
+        "controller": "AuditLogController",
+        "method": "GET",
+        "path": "/api/audit-logs/statistics"
+      },
+      {
+        "controller": "AuditLogController",
+        "method": "DELETE",
+        "path": "/api/audit-logs/cleanup"
+      }
+    ],
+    "RbacController": [
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/roles"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/roles/enabled"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/roles/{roleId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/roles/{roleId}/permissions"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/roles/{roleId}/user-count"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/permissions"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/permissions/{permissionId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/resources"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/resources/tree"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/resources/{resourceId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/users/{username}/roles"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/users/{username}/permissions"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/users/{username}/has-permission"
+      },
+      {
+        "controller": "RbacController",
+        "method": "GET",
+        "path": "/api/rbac/users/{username}/has-role"
+      },
+      {
+        "controller": "RbacController",
+        "method": "POST",
+        "path": "/api/rbac/roles"
+      },
+      {
+        "controller": "RbacController",
+        "method": "POST",
+        "path": "/api/rbac/roles/{roleId}/permissions"
+      },
+      {
+        "controller": "RbacController",
+        "method": "POST",
+        "path": "/api/rbac/permissions"
+      },
+      {
+        "controller": "RbacController",
+        "method": "POST",
+        "path": "/api/rbac/resources"
+      },
+      {
+        "controller": "RbacController",
+        "method": "POST",
+        "path": "/api/rbac/users/{username}/roles"
+      },
+      {
+        "controller": "RbacController",
+        "method": "POST",
+        "path": "/api/rbac/init"
+      },
+      {
+        "controller": "RbacController",
+        "method": "PUT",
+        "path": "/api/rbac/roles/{roleId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "PUT",
+        "path": "/api/rbac/permissions/{permissionId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "PUT",
+        "path": "/api/rbac/resources/{resourceId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "PUT",
+        "path": "/api/rbac/users/{username}/roles"
+      },
+      {
+        "controller": "RbacController",
+        "method": "DELETE",
+        "path": "/api/rbac/roles/{roleId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "DELETE",
+        "path": "/api/rbac/permissions/{permissionId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "DELETE",
+        "path": "/api/rbac/resources/{resourceId}"
+      },
+      {
+        "controller": "RbacController",
+        "method": "DELETE",
+        "path": "/api/rbac/users/{username}/roles"
+      }
+    ],
+    "ImportController": [
+      {
+        "controller": "ImportController",
+        "method": "GET",
+        "path": "/api/import/template/{type}"
+      },
+      {
+        "controller": "ImportController",
+        "method": "POST",
+        "path": "/api/import/students"
+      },
+      {
+        "controller": "ImportController",
+        "method": "POST",
+        "path": "/api/import/rooms"
+      },
+      {
+        "controller": "ImportController",
+        "method": "POST",
+        "path": "/api/import/devices"
+      },
+      {
+        "controller": "ImportController",
+        "method": "POST",
+        "path": "/api/import/json"
+      }
+    ],
+    "AutoSavingController": [
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/predict/{roomId}"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/predict/{roomId}/hourly"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/strategies/{roomId}"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/auto/status"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/stats/{roomId}"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/stats/all"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "GET",
+        "path": "/api/saving/report/{roomId}"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "POST",
+        "path": "/api/saving/strategies/{roomId}/execute/{strategyId}"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "POST",
+        "path": "/api/saving/auto/toggle"
+      },
+      {
+        "controller": "AutoSavingController",
+        "method": "POST",
+        "path": "/api/saving/auto/threshold"
+      }
+    ],
+    "DataDictController": [
+      {
+        "controller": "DataDictController",
+        "method": "GET",
+        "path": "/api/dict/types"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "GET",
+        "path": "/api/dict/type/{dictType}"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "GET",
+        "path": "/api/dict/tree/{dictType}"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "GET",
+        "path": "/api/dict/page"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "GET",
+        "path": "/api/dict/code/{dictCode}"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "GET",
+        "path": "/api/dict/label"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "POST",
+        "path": "/api/dict/batch"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "POST",
+        "path": "/api/dict/init"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "PUT",
+        "path": "/api/dict/{id}"
+      },
+      {
+        "controller": "DataDictController",
+        "method": "DELETE",
+        "path": "/api/dict/{id}"
+      }
+    ],
+    "UserController": [
+      {
+        "controller": "UserController",
+        "method": "GET",
+        "path": "/api/users/{username}"
+      },
+      {
+        "controller": "UserController",
+        "method": "POST",
+        "path": "/api/users/{username}/password"
+      },
+      {
+        "controller": "UserController",
+        "method": "PUT",
+        "path": "/api/users/{username}"
+      },
+      {
+        "controller": "UserController",
+        "method": "DELETE",
+        "path": "/api/users/{username}"
+      },
+      {
+        "controller": "UserController",
+        "method": "PATCH",
+        "path": "/api/users/{username}/profile"
+      }
+    ]
+  },
+  "by_method": {
+    "GET": 132,
+    "POST": 63,
+    "PUT": 25,
+    "DELETE": 26,
+    "PATCH": 1
+  }
+}
