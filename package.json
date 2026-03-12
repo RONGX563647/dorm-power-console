@@ -1,0 +1,10 @@
+{
+  "name": "dorm-power",
+  "version": "1.0.0",
+  "private": true,
+  "description": "宿舍用电管理系统",
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0"
+  }
+}
