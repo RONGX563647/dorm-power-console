@@ -25,7 +25,7 @@ public class DeviceStatusMonitorScheduler {
     @Autowired
     private SystemLogService systemLogService;
 
-    private static final long OFFLINE_THRESHOLD_SECONDS = 120; // 2分钟无响应视为离线
+    private static final long OFFLINE_THRESHOLD_SECONDS = 60; // 60秒无心跳视为离线
 
     /**
      * 每30秒检查一次设备在线状态

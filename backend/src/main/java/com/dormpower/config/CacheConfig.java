@@ -1,11 +1,12 @@
 package com.dormpower.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 /**
  * 缓存配置类（本地缓存）
@@ -18,7 +19,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
  */
 @Configuration
 @EnableCaching
-@ConditionalOnProperty(name = "spring.data.redis.host", matchIfMissing = true)
+@ConditionalOnMissingBean(RedisConnectionFactory.class)
 public class CacheConfig {
 
     /**

@@ -153,6 +153,42 @@ public class DeviceService {
     }
 
     /**
+     * 注册设备
+     *
+     * 设备首次连接时自动注册，检查设备是否已存在。
+     * 新注册设备默认为离线状态。
+     *
+     * @param id 设备ID
+     * @param name 设备名称
+     * @param room 所在房间号
+     * @return 注册成功的设备
+     * @throws BusinessException 当设备ID已存在时抛出
+     */
+    @CacheEvict(value = "devices", allEntries = true)
+    public Device registerDevice(String id, String name, String room) {
+        logger.debug("注册设备: {}", id);
+
+        // 检查设备是否已存在
+        if (deviceRepository.existsById(id)) {
+            logger.warn("设备已存在: {}", id);
+            throw new com.dormpower.exception.BusinessException("设备ID已存在: " + id);
+        }
+
+        // 创建设备实体
+        Device device = new Device();
+        device.setId(id);
+        device.setName(name);
+        device.setRoom(room);
+        device.setOnline(false);
+        device.setCreatedAt(System.currentTimeMillis() / 1000);
+        device.setLastSeenTs(System.currentTimeMillis() / 1000);
+
+        Device savedDevice = deviceRepository.save(device);
+        logger.info("设备注册成功: {}", savedDevice.getId());
+        return savedDevice;
+    }
+
+    /**
      * 删除设备
      * @param deviceId 设备ID
      */
@@ -164,6 +200,105 @@ public class DeviceService {
         }
         deviceRepository.deleteById(deviceId);
         logger.info("设备删除成功: {}", deviceId);
+    }
+
+    // ==================== 设备在线状态管理 ====================
+
+    /** 设备离线阈值（秒）- 超过此时间无心跳则视为离线 */
+    public static final long OFFLINE_THRESHOLD_SECONDS = 60;
+
+    /**
+     * 处理设备心跳
+     *
+     * 更新设备的最后心跳时间，并将设备标记为在线。
+     * 心跳消息表示设备正常工作。
+     *
+     * @param deviceId 设备ID
+     * @return 更新后的设备，如果设备不存在返回null
+     */
+    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    public Device processHeartbeat(String deviceId) {
+        logger.debug("处理设备心跳: {}", deviceId);
+        Device device = deviceRepository.findById(deviceId).orElse(null);
+        if (device == null) {
+            logger.warn("设备不存在，无法处理心跳: {}", deviceId);
+            return null;
+        }
+
+        long now = System.currentTimeMillis() / 1000;
+        device.setLastSeenTs(now);
+        device.setOnline(true);
+        Device savedDevice = deviceRepository.save(device);
+        logger.info("设备心跳处理成功: {} -> 在线", deviceId);
+        return savedDevice;
+    }
+
+    /**
+     * 标记设备离线
+     *
+     * 用于处理LWT（Last Will and Testament）消息，设备断开连接时立即标记为离线。
+     *
+     * @param deviceId 设备ID
+     * @return 是否成功标记离线
+     */
+    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    public boolean markDeviceOffline(String deviceId) {
+        logger.debug("标记设备离线: {}", deviceId);
+        Device device = deviceRepository.findById(deviceId).orElse(null);
+        if (device == null) {
+            logger.warn("设备不存在，无法标记离线: {}", deviceId);
+            return false;
+        }
+
+        device.setOnline(false);
+        deviceRepository.save(device);
+        logger.info("设备已标记离线: {}", deviceId);
+        return true;
+    }
+
+    /**
+     * 检查并更新设备在线状态
+     *
+     * 根据最后心跳时间判断设备是否在线。
+     * 如果超过 OFFLINE_THRESHOLD_SECONDS 秒无心跳，则标记为离线。
+     *
+     * @param deviceId 设备ID
+     * @return 设备当前是否在线
+     */
+    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    public boolean checkAndUpdateOnlineStatus(String deviceId) {
+        Device device = deviceRepository.findById(deviceId).orElse(null);
+        if (device == null) {
+            return false;
+        }
+
+        long now = System.currentTimeMillis() / 1000;
+        long lastSeenTs = device.getLastSeenTs();
+        boolean shouldBeOnline = (now - lastSeenTs) < OFFLINE_THRESHOLD_SECONDS;
+
+        if (device.isOnline() != shouldBeOnline) {
+            device.setOnline(shouldBeOnline);
+            deviceRepository.save(device);
+            logger.info("设备在线状态更新: {} -> {}", deviceId, shouldBeOnline ? "在线" : "离线");
+        }
+
+        return shouldBeOnline;
+    }
+
+    /**
+     * 检查设备是否在线（基于心跳时间）
+     *
+     * @param deviceId 设备ID
+     * @return 设备是否在线
+     */
+    public boolean isDeviceOnline(String deviceId) {
+        Device device = deviceRepository.findById(deviceId).orElse(null);
+        if (device == null) {
+            return false;
+        }
+
+        long now = System.currentTimeMillis() / 1000;
+        return device.isOnline() && (now - device.getLastSeenTs()) < OFFLINE_THRESHOLD_SECONDS;
     }
 
 }
