@@ -22,6 +22,10 @@ import org.springframework.stereotype.Component;
  * 6. 楼栋列表 - 前端下拉框
  * 7. 设备告警配置 - 遥测数据处理
  * 8. RBAC资源树 - 菜单渲染
+ * 9. 学生统计 - 统计数据
+ * 10. 房间统计 - 统计数据
+ * 11. 待缴费账单 - 账单数据
+ * 12. 未解决告警 - 告警数据
  *
  * @author dormpower team
  * @version 1.0
@@ -56,6 +60,9 @@ public class CacheWarmupRunner implements ApplicationRunner {
     @Autowired
     private RbacService rbacService;
 
+    @Autowired
+    private StudentService studentService;
+
     @Override
     public void run(ApplicationArguments args) {
         long startTime = System.currentTimeMillis();
@@ -67,10 +74,10 @@ public class CacheWarmupRunner implements ApplicationRunner {
         // 1. 系统配置
         try {
             systemConfigService.getAllConfigs();
-            logger.info("[1/8] 系统配置缓存预热完成");
+            logger.info("[1/12] 系统配置缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[1/8] 系统配置缓存预热失败: {}", e.getMessage());
+            logger.warn("[1/12] 系统配置缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
@@ -80,10 +87,10 @@ public class CacheWarmupRunner implements ApplicationRunner {
             dataDictService.getDictsByType("DEVICE_STATUS");
             dataDictService.getDictsByType("ALERT_LEVEL");
             dataDictService.getDictsByType("ALERT_STATUS");
-            logger.info("[2/8] 数据字典缓存预热完成");
+            logger.info("[2/12] 数据字典缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[2/8] 数据字典缓存预热失败: {}", e.getMessage());
+            logger.warn("[2/12] 数据字典缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
@@ -91,60 +98,100 @@ public class CacheWarmupRunner implements ApplicationRunner {
         try {
             ipAccessControlService.getWhitelist();
             ipAccessControlService.getBlacklist();
-            logger.info("[3/8] IP黑白名单缓存预热完成");
+            logger.info("[3/12] IP黑白名单缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[3/8] IP黑白名单缓存预热失败: {}", e.getMessage());
+            logger.warn("[3/12] IP黑白名单缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
         // 4. 电价规则
         try {
             billingService.getEnabledPriceRules();
-            logger.info("[4/8] 电价规则缓存预热完成");
+            logger.info("[4/12] 电价规则缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[4/8] 电价规则缓存预热失败: {}", e.getMessage());
+            logger.warn("[4/12] 电价规则缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
         // 5. 消息模板
         try {
             messageTemplateService.getAllEnabledTemplates();
-            logger.info("[5/8] 消息模板缓存预热完成");
+            logger.info("[5/12] 消息模板缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[5/8] 消息模板缓存预热失败: {}", e.getMessage());
+            logger.warn("[5/12] 消息模板缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
         // 6. 楼栋列表
         try {
             dormRoomService.getEnabledBuildings();
-            logger.info("[6/8] 楼栋列表缓存预热完成");
+            logger.info("[6/12] 楼栋列表缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[6/8] 楼栋列表缓存预热失败: {}", e.getMessage());
+            logger.warn("[6/12] 楼栋列表缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
         // 7. 设备告警配置
         try {
             alertService.getAllAlertConfigs();
-            logger.info("[7/8] 设备告警配置缓存预热完成");
+            logger.info("[7/12] 设备告警配置缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[7/8] 设备告警配置缓存预热失败: {}", e.getMessage());
+            logger.warn("[7/12] 设备告警配置缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
         // 8. RBAC资源树
         try {
             rbacService.getResourceTree();
-            logger.info("[8/8] RBAC资源树缓存预热完成");
+            logger.info("[8/12] RBAC资源树缓存预热完成");
             successCount++;
         } catch (Exception e) {
-            logger.warn("[8/8] RBAC资源树缓存预热失败: {}", e.getMessage());
+            logger.warn("[8/12] RBAC资源树缓存预热失败: {}", e.getMessage());
+            failCount++;
+        }
+
+        // 9. 学生统计
+        try {
+            studentService.getStudentStatistics();
+            logger.info("[9/12] 学生统计缓存预热完成");
+            successCount++;
+        } catch (Exception e) {
+            logger.warn("[9/12] 学生统计缓存预热失败: {}", e.getMessage());
+            failCount++;
+        }
+
+        // 10. 房间统计
+        try {
+            dormRoomService.getRoomStatistics();
+            logger.info("[10/12] 房间统计缓存预热完成");
+            successCount++;
+        } catch (Exception e) {
+            logger.warn("[10/12] 房间统计缓存预热失败: {}", e.getMessage());
+            failCount++;
+        }
+
+        // 11. 待缴费账单
+        try {
+            billingService.getPendingBills();
+            logger.info("[11/12] 待缴费账单缓存预热完成");
+            successCount++;
+        } catch (Exception e) {
+            logger.warn("[11/12] 待缴费账单缓存预热失败: {}", e.getMessage());
+            failCount++;
+        }
+
+        // 12. 未解决告警
+        try {
+            alertService.getUnresolvedAlerts();
+            logger.info("[12/12] 未解决告警缓存预热完成");
+            successCount++;
+        } catch (Exception e) {
+            logger.warn("[12/12] 未解决告警缓存预热失败: {}", e.getMessage());
             failCount++;
         }
 
