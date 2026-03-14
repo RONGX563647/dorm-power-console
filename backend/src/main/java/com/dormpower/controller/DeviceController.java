@@ -2,10 +2,12 @@ package com.dormpower.controller;
 
 import com.dormpower.annotation.AuditLog;
 import com.dormpower.annotation.RateLimit;
+import com.dormpower.dto.DeviceRegistrationRequest;
 import com.dormpower.model.Device;
 import com.dormpower.model.StripStatus;
 import com.dormpower.repository.DeviceRepository;
 import com.dormpower.repository.StripStatusRepository;
+import com.dormpower.service.DeviceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,6 +45,9 @@ public class DeviceController {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private DeviceService deviceService;
 
     private static final long ONLINE_TIMEOUT_SECONDS = 60;
 
@@ -179,16 +184,16 @@ public class DeviceController {
 
     /**
      * 创建设备
-     * 
+     *
      * 创建新的设备记录，包括设备ID、名称和房间号等信息。
      * 新创建的设备初始状态为离线，创建时间和最后心跳时间设置为当前时间。
-     * 
+     *
      * 该接口有速率限制，每秒最多允许2次请求。
      * 所有创建操作都会被记录到审计日志。
-     * 
-     * @param device 设备信息，包含id、name和room字段
+     *
+     * @param request 设备注册信息，包含id、name和room字段
      * @return 创建成功的设备信息
-     * @throws RuntimeException 当设备创建失败时抛出
+     * @throws BusinessException 当设备ID已存在时抛出
      */
     @Operation(
         summary = "创建设备",
@@ -197,20 +202,20 @@ public class DeviceController {
     )
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "200", 
+            responseCode = "200",
             description = "创建成功",
             content = @Content(schema = @Schema(implementation = Device.class))
         ),
         @ApiResponse(
-            responseCode = "400", 
+            responseCode = "400",
             description = "创建失败，设备ID已存在或参数错误"
         ),
         @ApiResponse(
-            responseCode = "401", 
+            responseCode = "401",
             description = "未授权，需要提供有效的Bearer Token"
         ),
         @ApiResponse(
-            responseCode = "429", 
+            responseCode = "429",
             description = "请求过于频繁，超过速率限制"
         )
     })
@@ -218,21 +223,14 @@ public class DeviceController {
     @AuditLog(value = "创建设备", type = "DEVICE")
     @PostMapping("/devices")
     public ResponseEntity<?> createDevice(
-            @Parameter(description = "设备信息", required = true)
-            @Valid @RequestBody Device device) {
-        try {
-            // 设置创建时间和默认值
-            device.setCreatedAt(System.currentTimeMillis() / 1000);
-            device.setLastSeenTs(System.currentTimeMillis() / 1000);
-            device.setOnline(false);
-            
-            Device savedDevice = deviceRepository.save(device);
-            return ResponseEntity.ok(savedDevice);
-        } catch (Exception e) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Failed to create device: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-        }
+            @Parameter(description = "设备注册信息", required = true)
+            @Valid @RequestBody DeviceRegistrationRequest request) {
+        Device savedDevice = deviceService.registerDevice(
+                request.getId(),
+                request.getName(),
+                request.getRoom()
+        );
+        return ResponseEntity.ok(savedDevice);
     }
 
     /**

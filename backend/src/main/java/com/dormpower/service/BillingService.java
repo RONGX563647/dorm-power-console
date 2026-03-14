@@ -1,5 +1,7 @@
 package com.dormpower.service;
 
+import com.dormpower.exception.BusinessException;
+import com.dormpower.exception.ResourceNotFoundException;
 import com.dormpower.model.*;
 import com.dormpower.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,12 +240,30 @@ public class BillingService {
     }
 
     /**
+     * 充值金额最小值（元）
+     */
+    private static final double MIN_RECHARGE_AMOUNT = 1.0;
+
+    /**
+     * 充值金额最大值（元）
+     */
+    private static final double MAX_RECHARGE_AMOUNT = 10000.0;
+
+    /**
      * 充值
      */
     @Transactional
     public RechargeRecord recharge(String roomId, double amount, String paymentMethod, String operator) {
         DormRoom room = dormRoomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
+
+        // 验证充值金额
+        if (amount < MIN_RECHARGE_AMOUNT) {
+            throw new BusinessException("充值金额不能小于" + MIN_RECHARGE_AMOUNT + "元");
+        }
+        if (amount > MAX_RECHARGE_AMOUNT) {
+            throw new BusinessException("充值金额不能超过" + MAX_RECHARGE_AMOUNT + "元");
+        }
 
         // 获取或创建余额记录
         RoomBalance balance = roomBalanceRepository.findByRoomId(roomId)
