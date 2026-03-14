@@ -67,7 +67,7 @@ mqtt:
     device-event: event
 
 kafka:
-  enabled: false
+  enabled: true
 
 security:
   jwt:
