@@ -7,6 +7,8 @@ import com.dormpower.repository.DormRoomRepository;
 import com.dormpower.repository.StudentRepository;
 import com.dormpower.repository.StudentRoomHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,9 @@ public class StudentService {
     private DormRoomRepository dormRoomRepository;
 
     /**
-     * 创建学生
+     * 创建学生（清除统计缓存）
      */
+    @CacheEvict(value = "studentStats", allEntries = true)
     public Student createStudent(Student student) {
         // 检查学号是否已存在
         if (studentRepository.findByStudentNumber(student.getStudentNumber()).isPresent()) {
@@ -70,8 +73,9 @@ public class StudentService {
     }
 
     /**
-     * 更新学生信息
+     * 更新学生信息（清除统计缓存）
      */
+    @CacheEvict(value = "studentStats", allEntries = true)
     public Student updateStudent(String id, Student student) {
         Student existing = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -105,9 +109,10 @@ public class StudentService {
     }
 
     /**
-     * 删除学生
+     * 删除学生（清除统计缓存）
      */
     @Transactional
+    @CacheEvict(value = {"studentStats", "roomStats"}, allEntries = true)
     public void deleteStudent(String id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -121,9 +126,10 @@ public class StudentService {
     }
 
     /**
-     * 学生入住
+     * 学生入住（清除统计缓存）
      */
     @Transactional
+    @CacheEvict(value = {"studentStats", "roomStats"}, allEntries = true)
     public Student checkInStudent(String studentId, String roomId, String reason, String operator) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -169,9 +175,10 @@ public class StudentService {
     }
 
     /**
-     * 学生退宿
+     * 学生退宿（清除统计缓存）
      */
     @Transactional
+    @CacheEvict(value = {"studentStats", "roomStats"}, allEntries = true)
     public Student checkOutStudent(String studentId, String reason, String operator) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -213,9 +220,10 @@ public class StudentService {
     }
 
     /**
-     * 批量毕业处理
+     * 批量毕业处理（清除统计缓存）
      */
     @Transactional
+    @CacheEvict(value = {"studentStats", "roomStats"}, allEntries = true)
     public int batchGraduate(int graduationYear, String operator) {
         List<Student> graduatingStudents = studentRepository.findByStatusAndEnabledTrue("ACTIVE");
         int count = 0;
@@ -284,8 +292,9 @@ public class StudentService {
     }
 
     /**
-     * 获取学生统计
+     * 获取学生统计（带缓存）
      */
+    @Cacheable(value = "studentStats", key = "'stats'")
     public Map<String, Object> getStudentStatistics() {
         Map<String, Object> stats = new HashMap<>();
 
@@ -305,9 +314,10 @@ public class StudentService {
     }
 
     /**
-     * 调换宿舍
+     * 调换宿舍（清除统计缓存）
      */
     @Transactional
+    @CacheEvict(value = {"studentStats", "roomStats"}, allEntries = true)
     public Student swapRoom(String studentId, String newRoomId, String reason, String operator) {
         // 先退宿
         checkOutStudent(studentId, "调换宿舍 - 退宿: " + reason, operator);

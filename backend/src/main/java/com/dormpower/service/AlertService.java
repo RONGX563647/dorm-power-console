@@ -115,8 +115,9 @@ public class AlertService {
     }
 
     /**
-     * 获取设备的告警列表
+     * 获取设备的告警列表（带缓存）
      */
+    @Cacheable(value = "deviceAlerts", key = "#deviceId + '_' + #onlyUnresolved")
     public List<DeviceAlert> getDeviceAlerts(String deviceId, boolean onlyUnresolved) {
         if (onlyUnresolved) {
             return deviceAlertRepository.findByDeviceIdAndResolvedFalseOrderByTsDesc(deviceId);
@@ -126,8 +127,9 @@ public class AlertService {
     }
 
     /**
-     * 获取所有未解决的告警
+     * 获取所有未解决的告警（带缓存）
      */
+    @Cacheable(value = "unresolvedAlerts", key = "'all'")
     public List<DeviceAlert> getUnresolvedAlerts() {
         return deviceAlertRepository.findByResolvedFalseOrderByTsDesc();
     }
@@ -144,8 +146,9 @@ public class AlertService {
     }
 
     /**
-     * 解决告警
+     * 解决告警（清除告警缓存）
      */
+    @CacheEvict(value = {"deviceAlerts", "unresolvedAlerts"}, allEntries = true)
     public void resolveAlert(String alertId) {
         DeviceAlert alert = deviceAlertRepository.findById(alertId).orElse(null);
         if (alert != null && !alert.isResolved()) {
