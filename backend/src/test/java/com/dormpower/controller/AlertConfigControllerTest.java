@@ -1,6 +1,5 @@
 package com.dormpower.controller;
 
-import com.dormpower.config.TestCacheConfig;
 import com.dormpower.config.TestSecurityConfig;
 import com.dormpower.model.DeviceAlertConfig;
 import com.dormpower.repository.DeviceAlertConfigRepository;
@@ -46,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Import({TestSecurityConfig.class, TestCacheConfig.class})
+@Import({TestSecurityConfig.class})
 public class AlertConfigControllerTest {
 
     @Autowired
