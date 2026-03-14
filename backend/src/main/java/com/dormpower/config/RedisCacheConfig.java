@@ -103,6 +103,61 @@ public class RedisCacheConfig {
     private static final Duration RESOURCE_TREE_TTL = Duration.ofMinutes(30);
 
     /**
+     * 用户权限缓存过期时间（15分钟）- 权限变更需及时生效
+     */
+    private static final Duration USER_PERMISSIONS_TTL = Duration.ofMinutes(15);
+
+    /**
+     * 用户角色缓存过期时间（15分钟）
+     */
+    private static final Duration USER_ROLES_TTL = Duration.ofMinutes(15);
+
+    /**
+     * 房间余额缓存过期时间（2分钟）- 余额变化需及时更新
+     */
+    private static final Duration ROOM_BALANCE_TTL = Duration.ofMinutes(2);
+
+    /**
+     * 设备在线状态缓存过期时间（1分钟）- 实时性要求高
+     */
+    private static final Duration DEVICE_ONLINE_TTL = Duration.ofMinutes(1);
+
+    /**
+     * 未读消息计数缓存过期时间（1分钟）
+     */
+    private static final Duration UNREAD_COUNT_TTL = Duration.ofMinutes(1);
+
+    /**
+     * 统计数据缓存过期时间（5分钟）- 统计数据可延迟
+     */
+    private static final Duration STATISTICS_TTL = Duration.ofMinutes(5);
+
+    /**
+     * AI报告缓存过期时间（30分钟）- 分析结果可缓存
+     */
+    private static final Duration AI_REPORT_TTL = Duration.ofMinutes(30);
+
+    /**
+     * 告警列表缓存过期时间（2分钟）
+     */
+    private static final Duration DEVICE_ALERTS_TTL = Duration.ofMinutes(2);
+
+    /**
+     * 未解决告警缓存过期时间（1分钟）
+     */
+    private static final Duration UNRESOLVED_ALERTS_TTL = Duration.ofMinutes(1);
+
+    /**
+     * 待缴费账单缓存过期时间（5分钟）
+     */
+    private static final Duration PENDING_BILLS_TTL = Duration.ofMinutes(5);
+
+    /**
+     * 用电统计缓存过期时间（10分钟）
+     */
+    private static final Duration ELECTRICITY_STATS_TTL = Duration.ofMinutes(10);
+
+    /**
      * StringRedisTemplate Bean
      *
      * 用于 Redis 基础操作，如限流器、分布式锁等
@@ -176,6 +231,40 @@ public class RedisCacheConfig {
 
         // 资源树缓存
         cacheConfigurations.put("resourceTree", defaultConfig.entryTtl(RESOURCE_TREE_TTL));
+
+        // 用户权限缓存 - 权限变更需及时生效
+        cacheConfigurations.put("userPermissions", defaultConfig.entryTtl(USER_PERMISSIONS_TTL));
+
+        // 用户角色缓存
+        cacheConfigurations.put("userRoles", defaultConfig.entryTtl(USER_ROLES_TTL));
+
+        // 房间余额缓存 - 余额变化需及时更新
+        cacheConfigurations.put("roomBalance", defaultConfig.entryTtl(ROOM_BALANCE_TTL));
+
+        // 设备在线状态缓存 - 实时性要求高
+        cacheConfigurations.put("deviceOnline", defaultConfig.entryTtl(DEVICE_ONLINE_TTL));
+
+        // 未读消息计数缓存
+        cacheConfigurations.put("unreadCount", defaultConfig.entryTtl(UNREAD_COUNT_TTL));
+
+        // 统计数据缓存 - 统计数据可延迟
+        cacheConfigurations.put("studentStats", defaultConfig.entryTtl(STATISTICS_TTL));
+        cacheConfigurations.put("roomStats", defaultConfig.entryTtl(STATISTICS_TTL));
+        cacheConfigurations.put("loginStats", defaultConfig.entryTtl(STATISTICS_TTL));
+        cacheConfigurations.put("auditStats", defaultConfig.entryTtl(STATISTICS_TTL));
+
+        // AI报告缓存 - 分析结果可缓存
+        cacheConfigurations.put("aiReport", defaultConfig.entryTtl(AI_REPORT_TTL));
+
+        // 告警列表缓存
+        cacheConfigurations.put("deviceAlerts", defaultConfig.entryTtl(DEVICE_ALERTS_TTL));
+        cacheConfigurations.put("unresolvedAlerts", defaultConfig.entryTtl(UNRESOLVED_ALERTS_TTL));
+
+        // 待缴费账单缓存
+        cacheConfigurations.put("pendingBills", defaultConfig.entryTtl(PENDING_BILLS_TTL));
+
+        // 用电统计缓存
+        cacheConfigurations.put("electricityStats", defaultConfig.entryTtl(ELECTRICITY_STATS_TTL));
 
         return RedisCacheManager.builder(connectionFactory)
             .cacheDefaults(defaultConfig)
