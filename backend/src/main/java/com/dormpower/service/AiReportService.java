@@ -5,6 +5,7 @@ import com.dormpower.model.Telemetry;
 import com.dormpower.repository.DeviceRepository;
 import com.dormpower.repository.TelemetryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,6 +35,10 @@ public class AiReportService {
     @Autowired
     private TelemetryRepository telemetryRepository;
 
+    /**
+     * 获取AI分析报告（带缓存）
+     */
+    @Cacheable(value = "aiReport", key = "#roomId + '_' + #period")
     public Map<String, Object> getAiReport(String roomId, String period) {
         List<Device> devices = deviceRepository.findByRoom(roomId);
         

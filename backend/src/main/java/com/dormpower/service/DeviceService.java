@@ -98,10 +98,11 @@ public class DeviceService {
     }
 
     /**
-     * 获取设备详情
+     * 获取设备详情（带缓存）
      * @param deviceId 设备ID
      * @return 设备详情
      */
+    @Cacheable(value = "deviceDetail", key = "#deviceId")
     public Map<String, Object> getDeviceDetail(String deviceId) {
         logger.debug("获取设备详情: {}", deviceId);
         Device device = deviceRepository.findById(deviceId)
@@ -119,11 +120,11 @@ public class DeviceService {
     }
 
     /**
-     * 更新设备状态
+     * 更新设备状态（清除设备相关缓存）
      * @param deviceId 设备ID
      * @param online 在线状态
      */
-    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
     public void updateDeviceStatus(String deviceId, boolean online) {
         logger.debug("更新设备状态: {} -> {}", deviceId, online);
         Device device = deviceRepository.findById(deviceId).orElse(null);
@@ -208,7 +209,7 @@ public class DeviceService {
     public static final long OFFLINE_THRESHOLD_SECONDS = 60;
 
     /**
-     * 处理设备心跳
+     * 处理设备心跳（清除设备相关缓存）
      *
      * 更新设备的最后心跳时间，并将设备标记为在线。
      * 心跳消息表示设备正常工作。
@@ -216,7 +217,7 @@ public class DeviceService {
      * @param deviceId 设备ID
      * @return 更新后的设备，如果设备不存在返回null
      */
-    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
     public Device processHeartbeat(String deviceId) {
         logger.debug("处理设备心跳: {}", deviceId);
         Device device = deviceRepository.findById(deviceId).orElse(null);
@@ -234,14 +235,14 @@ public class DeviceService {
     }
 
     /**
-     * 标记设备离线
+     * 标记设备离线（清除设备相关缓存）
      *
      * 用于处理LWT（Last Will and Testament）消息，设备断开连接时立即标记为离线。
      *
      * @param deviceId 设备ID
      * @return 是否成功标记离线
      */
-    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
     public boolean markDeviceOffline(String deviceId) {
         logger.debug("标记设备离线: {}", deviceId);
         Device device = deviceRepository.findById(deviceId).orElse(null);
@@ -257,7 +258,7 @@ public class DeviceService {
     }
 
     /**
-     * 检查并更新设备在线状态
+     * 检查并更新设备在线状态（清除设备相关缓存）
      *
      * 根据最后心跳时间判断设备是否在线。
      * 如果超过 OFFLINE_THRESHOLD_SECONDS 秒无心跳，则标记为离线。
@@ -265,7 +266,7 @@ public class DeviceService {
      * @param deviceId 设备ID
      * @return 设备当前是否在线
      */
-    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
     public boolean checkAndUpdateOnlineStatus(String deviceId) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
         if (device == null) {
@@ -286,11 +287,12 @@ public class DeviceService {
     }
 
     /**
-     * 检查设备是否在线（基于心跳时间）
+     * 检查设备是否在线（基于心跳时间，带缓存）
      *
      * @param deviceId 设备ID
      * @return 设备是否在线
      */
+    @Cacheable(value = "deviceOnline", key = "#deviceId")
     public boolean isDeviceOnline(String deviceId) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
         if (device == null) {
