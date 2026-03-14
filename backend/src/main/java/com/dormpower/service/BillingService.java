@@ -212,16 +212,18 @@ public class BillingService {
     }
 
     /**
-     * 获取所有待缴费账单
+     * 获取所有待缴费账单（带缓存）
      */
+    @Cacheable(value = "pendingBills", key = "'all'")
     public List<ElectricityBill> getPendingBills() {
         return billRepository.findByStatusOrderByPeriodDesc("PENDING");
     }
-
+    
     /**
-     * 缴费
+     * 缴费（清除待缴费账单缓存）
      */
     @Transactional
+    @CacheEvict(value = "pendingBills", allEntries = true)
     public ElectricityBill payBill(String billId, String paymentMethod, String operator) {
         ElectricityBill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Bill not found"));
@@ -250,9 +252,10 @@ public class BillingService {
     private static final double MAX_RECHARGE_AMOUNT = 10000.0;
 
     /**
-     * 充值
+     * 充值（清除余额缓存）
      */
     @Transactional
+    @CacheEvict(value = "roomBalance", key = "#roomId")
     public RechargeRecord recharge(String roomId, double amount, String paymentMethod, String operator) {
         DormRoom room = dormRoomRepository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
@@ -313,8 +316,9 @@ public class BillingService {
     }
 
     /**
-     * 获取房间余额
+     * 获取房间余额（带缓存）
      */
+    @Cacheable(value = "roomBalance", key = "#roomId")
     public RoomBalance getRoomBalance(String roomId) {
         return roomBalanceRepository.findByRoomId(roomId)
                 .orElseGet(() -> createRoomBalance(roomId));
@@ -328,9 +332,10 @@ public class BillingService {
     }
 
     /**
-     * 扣除电费
+     * 扣除电费（清除余额缓存）
      */
     @Transactional
+    @CacheEvict(value = "roomBalance", key = "#roomId")
     public boolean deductElectricityFee(String roomId, double amount) {
         RoomBalance balance = roomBalanceRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RuntimeException("Room balance not found"));

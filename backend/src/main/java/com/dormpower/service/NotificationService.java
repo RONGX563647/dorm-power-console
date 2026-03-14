@@ -5,6 +5,8 @@ import com.dormpower.model.NotificationPreference;
 import com.dormpower.repository.NotificationPreferenceRepository;
 import com.dormpower.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +32,9 @@ public class NotificationService {
     private NotificationPreferenceRepository preferenceRepository;
 
     /**
-     * 创建通知
+     * 创建通知（清除未读计数缓存）
      */
+    @CacheEvict(value = "unreadCount", key = "#notification.username")
     public Notification createNotification(Notification notification) {
         return notificationRepository.save(notification);
     }
@@ -50,8 +53,9 @@ public class NotificationService {
     }
 
     /**
-     * 创建告警通知
+     * 创建告警通知（清除未读计数缓存）
      */
+    @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createAlertNotification(String title, String content, String username, String sourceId) {
         Notification notification = new Notification();
         notification.setTitle(title);
@@ -65,8 +69,9 @@ public class NotificationService {
     }
 
     /**
-     * 创建邮件通知
+     * 创建邮件通知（清除未读计数缓存）
      */
+    @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createEmailNotification(String title, String content, String username) {
         Notification notification = new Notification();
         notification.setTitle(title);
@@ -94,22 +99,27 @@ public class NotificationService {
     }
 
     /**
-     * 获取用户未读通知数量
+     * 获取用户未读通知数量（带缓存）
      */
+    @Cacheable(value = "unreadCount", key = "#username")
     public long getUserUnreadCount(String username) {
         return notificationRepository.countByUsernameAndRead(username, false);
     }
 
     /**
-     * 标记通知为已读
+     * 标记通知为已读（清除未读计数缓存）
      */
+    @Transactional
+    @CacheEvict(value = "unreadCount", allEntries = true)
     public void markAsRead(Long notificationId) {
         notificationRepository.markAsRead(notificationId, LocalDateTime.now());
     }
 
     /**
-     * 标记所有通知为已读
+     * 标记所有通知为已读（清除未读计数缓存）
      */
+    @Transactional
+    @CacheEvict(value = "unreadCount", key = "#username")
     public void markAllAsRead(String username) {
         notificationRepository.markAllAsRead(username, LocalDateTime.now());
     }

@@ -79,8 +79,9 @@ public class DormRoomService {
     }
 
     /**
-     * 创建房间
+     * 创建房间（清除统计缓存）
      */
+    @CacheEvict(value = "roomStats", allEntries = true)
     public DormRoom createRoom(DormRoom room) {
         room.setId("room_" + UUID.randomUUID().toString().substring(0, 8));
         room.setCreatedAt(System.currentTimeMillis() / 1000);
@@ -112,8 +113,9 @@ public class DormRoomService {
     }
 
     /**
-     * 更新房间
+     * 更新房间（清除统计缓存）
      */
+    @CacheEvict(value = "roomStats", allEntries = true)
     public DormRoom updateRoom(String id, DormRoom room) {
         DormRoom existing = dormRoomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -135,15 +137,17 @@ public class DormRoomService {
     }
 
     /**
-     * 删除房间
+     * 删除房间（清除统计缓存）
      */
+    @CacheEvict(value = "roomStats", allEntries = true)
     public void deleteRoom(String id) {
         dormRoomRepository.deleteById(id);
     }
 
     /**
-     * 入住
+     * 入住（清除统计缓存）
      */
+    @CacheEvict(value = "roomStats", allEntries = true)
     public DormRoom checkIn(String roomId, int occupantCount) {
         DormRoom room = dormRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -160,8 +164,9 @@ public class DormRoomService {
     }
 
     /**
-     * 退宿
+     * 退宿（清除统计缓存）
      */
+    @CacheEvict(value = "roomStats", allEntries = true)
     public DormRoom checkOut(String roomId) {
         DormRoom room = dormRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -174,8 +179,9 @@ public class DormRoomService {
     }
 
     /**
-     * 获取房间统计
+     * 获取房间统计（带缓存）
      */
+    @Cacheable(value = "roomStats", key = "'stats'")
     public Map<String, Object> getRoomStatistics() {
         Map<String, Object> stats = new HashMap<>();
 

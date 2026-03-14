@@ -123,9 +123,10 @@ public class RbacService {
     }
     
     /**
-     * 为角色分配权限
+     * 为角色分配权限（清除权限缓存）
      */
     @Transactional
+    @CacheEvict(value = "userPermissions", allEntries = true)
     public Role assignPermissions(String roleId, List<String> permissionIds) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found: " + roleId));
@@ -138,9 +139,10 @@ public class RbacService {
     }
     
     /**
-     * 移除角色权限
+     * 移除角色权限（清除权限缓存）
      */
     @Transactional
+    @CacheEvict(value = "userPermissions", allEntries = true)
     public Role removePermissions(String roleId, List<String> permissionIds) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found: " + roleId));
@@ -379,9 +381,10 @@ public class RbacService {
     // ==================== 用户角色管理 ====================
     
     /**
-     * 为用户分配角色
+     * 为用户分配角色（清除角色和权限缓存）
      */
     @Transactional
+    @CacheEvict(value = {"userRoles", "userPermissions"}, allEntries = true)
     public void assignRolesToUser(String username, List<String> roleIds, String assignedBy) {
         for (String roleId : roleIds) {
             if (!userRoleRepository.existsByUsernameAndRoleId(username, roleId)) {
@@ -393,9 +396,10 @@ public class RbacService {
     }
     
     /**
-     * 移除用户角色
+     * 移除用户角色（清除角色和权限缓存）
      */
     @Transactional
+    @CacheEvict(value = {"userRoles", "userPermissions"}, allEntries = true)
     public void removeRolesFromUser(String username, List<String> roleIds) {
         for (String roleId : roleIds) {
             userRoleRepository.deleteByUsernameAndRoleId(username, roleId);
@@ -403,9 +407,10 @@ public class RbacService {
     }
     
     /**
-     * 设置用户角色（替换原有角色）
+     * 设置用户角色（替换原有角色，清除缓存）
      */
     @Transactional
+    @CacheEvict(value = {"userRoles", "userPermissions"}, allEntries = true)
     public void setUserRoles(String username, List<String> roleIds, String assignedBy) {
         // 删除原有角色
         userRoleRepository.deleteByUsername(username);
@@ -415,8 +420,9 @@ public class RbacService {
     }
     
     /**
-     * 获取用户的角色
+     * 获取用户的角色（带缓存）
      */
+    @Cacheable(value = "userRoles", key = "#username")
     public List<Role> getUserRoles(String username) {
         List<String> roleIds = userRoleRepository.findRoleIdsByUsername(username);
         if (roleIds.isEmpty()) {
@@ -426,8 +432,9 @@ public class RbacService {
     }
     
     /**
-     * 获取用户的所有权限
+     * 获取用户的所有权限（带缓存）
      */
+    @Cacheable(value = "userPermissions", key = "#username")
     public Set<Permission> getUserPermissions(String username) {
         List<Role> roles = getUserRoles(username);
         Set<Permission> permissions = new HashSet<>();
