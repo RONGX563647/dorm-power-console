@@ -255,6 +255,29 @@ Authorization: Bearer {token}
 
 - **需要认证**：是
 
+#### 2.3.7 批量删除设备
+
+- **接口路径**：`DELETE /api/devices/batch`
+
+- **功能描述**：批量删除指定的多个设备
+
+- **需要认证**：是
+
+- **请求体**：
+
+```json
+["device_001", "device_002", "device_003"]
+```
+
+- **响应**：
+
+```json
+{
+  "message": "Devices deleted successfully",
+  "count": 3
+}
+```
+
 ### 2.4 设备分组
 
 #### 2.4.1 获取分组详情
@@ -2302,6 +2325,143 @@ Authorization: Bearer {token}
 - **查询参数**：
   - `retentionDays`：保留天数（默认：7）
 
+### 2.33 MQTT模拟器
+
+#### 2.33.1 启动MQTT模拟器
+
+- **接口路径**：`POST /api/simulator/start`
+
+- **功能描述**：启动MQTT设备模拟器，模拟多个设备发送消息
+
+- **需要认证**：是
+
+- **请求体**：
+
+```json
+{
+  "deviceNamePrefix": "sim_simulator_",
+  "devices": 10,
+  "duration": 300,
+  "interval": 1.0,
+  "minPower": 50.0,
+  "maxPower": 200.0,
+  "messageType": "MIXED",
+  "enableDetailedMonitoring": false,
+  "onlineRate": 0.95,
+  "roomStart": 301,
+  "roomEnd": 310,
+  "enableHeartbeat": true,
+  "heartbeatInterval": 30,
+  "brokerUrl": "tcp://localhost:1883",
+  "username": "",
+  "password": "",
+  "topicPrefix": "dorm",
+  "minVoltage": 210.0,
+  "maxVoltage": 230.0
+}
+```
+
+- **响应**：
+
+```json
+{
+  "taskId": "task_1234567890",
+  "status": "RUNNING",
+  "message": "MQTT模拟器已启动，正在模拟10个设备"
+}
+```
+
+#### 2.33.2 停止MQTT模拟器
+
+- **接口路径**：`POST /api/simulator/stop/{taskId}`
+
+- **功能描述**：停止指定的MQTT设备模拟器任务
+
+- **需要认证**：是
+
+- **路径参数**：
+  - `taskId`：任务ID
+
+- **响应**：
+
+```json
+{
+  "taskId": "task_1234567890",
+  "status": "STOPPED",
+  "message": "MQTT模拟器已停止"
+}
+```
+
+#### 2.33.3 获取模拟器状态
+
+- **接口路径**：`GET /api/simulator/status/{taskId}`
+
+- **功能描述**：获取指定MQTT设备模拟器任务的状态
+
+- **需要认证**：是
+
+- **路径参数**：
+  - `taskId`：任务ID
+
+- **响应**：
+
+```json
+{
+  "taskId": "task_1234567890",
+  "status": "RUNNING",
+  "devices": 10,
+  "duration": 300,
+  "interval": 1.0,
+  "totalMessages": 1500,
+  "errorMessages": 5,
+  "successMessages": 1495,
+  "messageType": "MIXED",
+  "successRate": 0.997,
+  "avgSendInterval": 1.02,
+  "maxSendInterval": 1.5,
+  "minSendInterval": 0.8,
+  "runtime": 150,
+  "startTime": 1234567890000,
+  "endTime": 0,
+  "onlineRate": 0.95,
+  "avgPower": 125.5,
+  "maxPower": 198.3,
+  "minPower": 52.1,
+  "cpuUsage": 15.2,
+  "memoryUsage": 52428800,
+  "message": "模拟器运行正常",
+  "lastUpdateTime": 1234568040000,
+  "enableDetailedMonitoring": false,
+  "devicesPerCycle": 10,
+  "monitoringMode": "SUMMARY",
+  "recommendedPollingIntervalMs": 5000,
+  "summaryOnly": true
+}
+```
+
+#### 2.33.4 获取所有模拟器任务
+
+- **接口路径**：`GET /api/simulator/tasks`
+
+- **功能描述**：获取所有正在运行的MQTT设备模拟器任务
+
+- **需要认证**：是
+
+- **响应**：
+
+```json
+[
+  {
+    "taskId": "task_1234567890",
+    "status": "RUNNING",
+    "devices": 10,
+    "duration": 300,
+    "totalMessages": 1500,
+    "successRate": 0.997
+  }
+]
+```
+
 ## 3. WebSocket接口
 
 ### 3.1 WebSocket连接
@@ -2450,12 +2610,12 @@ Authorization: Bearer {token}
 
 | 统计项 | 数量 |
 |--------|------|
-| 控制器数量 | 38个 |
-| API端点总数 | 247个 |
-| GET请求 | 143个 |
-| POST请求 | 70个 |
+| 控制器数量 | 34个 |
+| API端点总数 | 251个 |
+| GET请求 | 145个 |
+| POST请求 | 72个 |
 | PUT请求 | 26个 |
-| DELETE请求 | 8个 |
+| DELETE请求 | 9个 |
 
 ### 5.2 控制器列表
 
@@ -2491,6 +2651,7 @@ Authorization: Bearer {token}
 30. SystemLogController - 系统日志
 31. DataBackupController - 数据备份
 32. MonitoringController - 系统监控
+33. MqttSimulatorController - MQTT模拟器
 
 ## 6. 接口使用示例
 
@@ -2566,11 +2727,33 @@ Content-Type: application/json
 
 ## 更新说明
 
-本文档最后更新时间：2026年2月21日
+本文档最后更新时间：2026年3月14日
 
 文档包含了宿舍电源管理系统的全部API接口，覆盖：
-- 38个控制器
-- 247个API端点
+- 34个控制器
+- 251个API端点
 - 完整的数据模型定义
 - WebSocket实时通信接口
 - 详细的接口使用示例
+
+### 本次更新内容（2026年3月14日）
+
+1. **新增接口**
+   - 新增批量删除设备接口（DELETE /api/devices/batch）
+   - 新增MQTT模拟器模块（4个接口）
+     - 启动MQTT模拟器（POST /api/simulator/start）
+     - 停止MQTT模拟器（POST /api/simulator/stop/{taskId}）
+     - 获取模拟器状态（GET /api/simulator/status/{taskId}）
+     - 获取所有模拟器任务（GET /api/simulator/tasks）
+
+2. **接口统计更新**
+   - 控制器数量：38个 → 34个（修正统计错误）
+   - API端点总数：247个 → 251个
+   - GET请求：143个 → 145个
+   - POST请求：70个 → 72个
+   - DELETE请求：8个 → 9个
+
+3. **文档优化**
+   - 所有接口文档与后端代码保持同步
+   - 添加完整的请求和响应示例
+   - 完善接口参数说明

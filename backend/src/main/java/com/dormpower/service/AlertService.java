@@ -1,10 +1,12 @@
 package com.dormpower.service;
 
+import com.dormpower.exception.BusinessException;
+import com.dormpower.exception.ResourceNotFoundException;
 import com.dormpower.model.DeviceAlert;
 import com.dormpower.model.DeviceAlertConfig;
 import com.dormpower.repository.DeviceAlertRepository;
 import com.dormpower.repository.DeviceAlertConfigRepository;
-import com.dormpower.service.WebSocketNotificationService;
+import com.dormpower.repository.DeviceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class AlertService {
     private DeviceAlertConfigRepository deviceAlertConfigRepository;
 
     @Autowired
+    private DeviceRepository deviceRepository;
+
+    @Autowired
     private WebSocketNotificationService webSocketNotificationService;
 
     /**
@@ -39,6 +44,14 @@ public class AlertService {
     public void checkAndGenerateAlert(String deviceId, String type, double value) {
         DeviceAlertConfig config = deviceAlertConfigRepository.findByDeviceIdAndType(deviceId, type);
         if (config == null || !config.isEnabled()) {
+            return;
+        }
+
+        // TC-TRIG-005: 检查是否存在未解决的相同类型告警，避免重复生成
+        List<DeviceAlert> existingAlerts = deviceAlertRepository
+                .findByDeviceIdAndTypeAndResolvedFalseOrderByTsDesc(deviceId, type);
+        if (!existingAlerts.isEmpty()) {
+            logger.debug("Alert already exists for device {} type {}, skipping", deviceId, type);
             return;
         }
 
@@ -120,6 +133,17 @@ public class AlertService {
     }
 
     /**
+     * 获取时间范围内的告警
+     *
+     * @param startTs 开始时间戳（秒）
+     * @param endTs   结束时间戳（秒）
+     * @return 告警列表
+     */
+    public List<DeviceAlert> getAlertsByTimeRange(long startTs, long endTs) {
+        return deviceAlertRepository.findByTsBetweenOrderByTsDesc(startTs, endTs);
+    }
+
+    /**
      * 解决告警
      */
     public void resolveAlert(String alertId) {
@@ -134,8 +158,16 @@ public class AlertService {
 
     /**
      * 获取设备的告警配置
+     *
+     * @param deviceId 设备ID
+     * @return 告警配置列表
+     * @throws ResourceNotFoundException 设备不存在时抛出
      */
     public List<DeviceAlertConfig> getDeviceAlertConfigs(String deviceId) {
+        // 验证设备是否存在
+        if (!deviceRepository.existsById(deviceId)) {
+            throw new ResourceNotFoundException("Device not found: " + deviceId);
+        }
         return deviceAlertConfigRepository.findByDeviceId(deviceId);
     }
 
@@ -149,12 +181,31 @@ public class AlertService {
 
     /**
      * 更新设备的告警配置
+     *
+     * @param deviceId 设备ID
+     * @param type 告警类型
+     * @param minThreshold 最小阈值
+     * @param maxThreshold 最大阈值
+     * @param enabled 是否启用
+     * @return 更新后的告警配置
+     * @throws ResourceNotFoundException 设备不存在时抛出
+     * @throws BusinessException 阈值范围无效时抛出
      */
     @CacheEvict(value = "alertConfigs", allEntries = true)
     public DeviceAlertConfig updateAlertConfig(String deviceId, String type, double minThreshold, double maxThreshold, boolean enabled) {
+        // 验证设备是否存在
+        if (!deviceRepository.existsById(deviceId)) {
+            throw new ResourceNotFoundException("Device not found: " + deviceId);
+        }
+
+        // 验证阈值范围
+        if (minThreshold > maxThreshold) {
+            throw new BusinessException("Invalid threshold range: minThreshold (" + minThreshold + ") cannot be greater than maxThreshold (" + maxThreshold + ")");
+        }
+
         DeviceAlertConfig config = deviceAlertConfigRepository.findByDeviceIdAndType(deviceId, type);
         long now = System.currentTimeMillis() / 1000;
-        
+
         if (config == null) {
             config = new DeviceAlertConfig();
             config.setId("config_" + UUID.randomUUID().toString().substring(0, 8));
@@ -162,12 +213,12 @@ public class AlertService {
             config.setType(type);
             config.setCreatedAt(now);
         }
-        
+
         config.setThresholdMin(minThreshold);
         config.setThresholdMax(maxThreshold);
         config.setEnabled(enabled);
         config.setUpdatedAt(now);
-        
+
         return deviceAlertConfigRepository.save(config);
     }
 

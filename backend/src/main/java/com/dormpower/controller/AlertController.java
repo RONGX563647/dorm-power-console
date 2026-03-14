@@ -101,10 +101,14 @@ public class AlertController {
 
     /**
      * 获取设备告警配置
+     *
+     * @param deviceId 设备ID
+     * @return 告警配置列表
      */
     @Operation(summary = "获取设备告警配置", description = "获取指定设备的告警配置", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "获取成功")
+            @ApiResponse(responseCode = "200", description = "获取成功"),
+            @ApiResponse(responseCode = "404", description = "设备不存在")
     })
     @GetMapping("/config/{deviceId}")
     public ResponseEntity<?> getDeviceAlertConfigs(
@@ -116,11 +120,16 @@ public class AlertController {
 
     /**
      * 更新设备告警配置
+     *
+     * @param deviceId 设备ID
+     * @param request 告警配置请求
+     * @return 更新后的配置
      */
     @Operation(summary = "更新告警配置", description = "更新设备的告警阈值配置", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "更新成功"),
-            @ApiResponse(responseCode = "400", description = "更新失败")
+            @ApiResponse(responseCode = "400", description = "阈值范围无效"),
+            @ApiResponse(responseCode = "404", description = "设备不存在")
     })
     @AuditLog(value = "更新告警配置", type = "ALERT")
     @PutMapping("/config/{deviceId}")
@@ -129,20 +138,14 @@ public class AlertController {
             @PathVariable String deviceId,
             @Parameter(description = "告警配置", required = true)
             @RequestBody AlertConfigRequest request) {
-        try {
-            DeviceAlertConfig config = alertService.updateAlertConfig(
-                    deviceId,
-                    request.getType(),
-                    request.getThresholdMin(),
-                    request.getThresholdMax(),
-                    request.isEnabled()
-            );
-            return ResponseEntity.ok(config);
-        } catch (Exception e) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Failed to update alert config: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-        }
+        DeviceAlertConfig config = alertService.updateAlertConfig(
+                deviceId,
+                request.getType(),
+                request.getThresholdMin(),
+                request.getThresholdMax(),
+                request.isEnabled()
+        );
+        return ResponseEntity.ok(config);
     }
 
     /**

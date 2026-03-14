@@ -20,4 +20,9 @@ public interface DeviceAlertRepository extends JpaRepository<DeviceAlert, String
 
     List<DeviceAlert> findByTsBetweenOrderByTsDesc(long startTs, long endTs);
 
+    /**
+     * 根据设备ID和告警类型查询未解决的告警
+     */
+    List<DeviceAlert> findByDeviceIdAndTypeAndResolvedFalseOrderByTsDesc(String deviceId, String type);
+
 }

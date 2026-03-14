@@ -152,6 +152,75 @@ public class TelemetryService {
         telemetryRepository.save(telemetry);
     }
 
+    // ==================== 遥测数据采集 ====================
+
+    /** 默认电压值（V） */
+    public static final double DEFAULT_VOLTAGE_V = 220.0;
+    /** 默认电流值（A） */
+    public static final double DEFAULT_CURRENT_A = 0.0;
+    /** 默认功率值（W） */
+    public static final double DEFAULT_POWER_W = 0.0;
+
+    /**
+     * 采集遥测数据
+     *
+     * 处理遥测数据采集，支持字段缺失时使用默认值。
+     * 电压缺失时默认220V，电流缺失时默认0A，功率缺失时默认0W。
+     *
+     * @param deviceId 设备ID
+     * @param ts 时间戳（秒）
+     * @param powerW 功率（W），可为null
+     * @param voltageV 电压（V），可为null
+     * @param currentA 电流（A），可为null
+     * @return 保存的遥测数据
+     */
+    public Telemetry collectTelemetry(String deviceId, Long ts, Double powerW, Double voltageV, Double currentA) {
+        logger.debug("采集遥测数据: deviceId={}, powerW={}, voltageV={}, currentA={}",
+                deviceId, powerW, voltageV, currentA);
+
+        // 处理默认值
+        long finalTs = ts != null ? ts : System.currentTimeMillis() / 1000;
+        double finalPowerW = powerW != null ? powerW : DEFAULT_POWER_W;
+        double finalVoltageV = voltageV != null ? voltageV : DEFAULT_VOLTAGE_V;
+        double finalCurrentA = currentA != null ? currentA : DEFAULT_CURRENT_A;
+
+        Telemetry telemetry = new Telemetry();
+        telemetry.setDeviceId(deviceId);
+        telemetry.setTs(finalTs);
+        telemetry.setPowerW(finalPowerW);
+        telemetry.setVoltageV(finalVoltageV);
+        telemetry.setCurrentA(finalCurrentA);
+
+        Telemetry saved = telemetryRepository.save(telemetry);
+        logger.info("遥测数据采集成功: deviceId={}, id={}", deviceId, saved.getId());
+        return saved;
+    }
+
+    /**
+     * 批量采集遥测数据
+     *
+     * 支持高频数据采集场景，批量保存提高性能。
+     *
+     * @param telemetryList 遥测数据列表
+     * @return 保存的数据数量
+     */
+    public int collectTelemetryBatch(List<Telemetry> telemetryList) {
+        if (telemetryList == null || telemetryList.isEmpty()) {
+            return 0;
+        }
+
+        // 为缺失字段设置默认值
+        for (Telemetry t : telemetryList) {
+            if (t.getVoltageV() == 0) {
+                t.setVoltageV(DEFAULT_VOLTAGE_V);
+            }
+        }
+
+        List<Telemetry> saved = telemetryRepository.saveAll(telemetryList);
+        logger.info("批量遥测数据采集成功: count={}", saved.size());
+        return saved.size();
+    }
+
     /**
      * 获取用电统计报表
      */

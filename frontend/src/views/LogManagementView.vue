@@ -425,21 +425,15 @@ const getLevelColor = (level: string) => {
   return colors[level] || 'default'
 }
 
-// 级别图标
+// 级别图标名称
 const getLevelIcon = (level: string) => {
-  // 使用Ant Design的图标组件代替emoji
-  switch (level) {
-    case 'DEBUG':
-      return <BugOutlined />;
-    case 'INFO':
-      return <InfoCircleOutlined />;
-    case 'WARN':
-      return <ExclamationCircleOutlined />;
-    case 'ERROR':
-      return <CloseCircleOutlined />;
-    default:
-      return <FileTextOutlined />;
+  const icons: Record<string, string> = {
+    DEBUG: '🐛',
+    INFO: 'ℹ️',
+    WARN: '⚠️',
+    ERROR: '❌'
   }
+  return icons[level] || '📄'
 }
 
 // 格式化日期
