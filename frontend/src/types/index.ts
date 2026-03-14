@@ -6,7 +6,6 @@ export interface Device {
   name: string
   room: string
   online: boolean
-  type: 'strip' | 'socket'
   lastSeen: string
 }
 
@@ -419,11 +418,15 @@ export interface RoomBalance {
 export interface Building {
   id: string
   name: string
-  floors: number
-  roomsPerFloor: number
+  code: string
   description?: string
-  createdAt?: string
-  updatedAt?: string
+  totalFloors: number
+  address?: string
+  manager?: string
+  contact?: string
+  enabled: boolean
+  createdAt?: number
+  updatedAt?: number
 }
 
 /**
@@ -435,12 +438,17 @@ export interface DormRoom {
   buildingName?: string
   roomNumber: string
   floor: number
+  roomType?: string
   capacity: number
-  occupantCount: number
-  status: 'OCCUPIED' | 'VACANT' | 'MAINTENANCE'
+  currentOccupants: number
+  electricityQuota?: number
   deviceId?: string
-  createdAt?: string
-  updatedAt?: string
+  priceRuleId?: string
+  status: 'OCCUPIED' | 'VACANT' | 'MAINTENANCE'
+  remark?: string
+  enabled: boolean
+  createdAt?: number
+  updatedAt?: number
 }
 
 /**

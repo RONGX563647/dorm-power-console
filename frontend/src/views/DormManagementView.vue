@@ -116,7 +116,7 @@
                 </a-tag>
               </template>
               <template v-if="column.key === 'occupancy'">
-                {{ record.occupantCount }} / {{ record.capacity }}
+                {{ record.currentOccupants }} / {{ record.capacity }}
               </template>
               <template v-if="column.key === 'action'">
                 <a-space>
@@ -157,11 +157,14 @@
         <a-form-item label="楼栋名称" name="name">
           <a-input v-model:value="buildingForm.name" placeholder="请输入楼栋名称" />
         </a-form-item>
-        <a-form-item label="楼层数" name="floors">
-          <a-input-number v-model:value="buildingForm.floors" :min="1" style="width: 100%" />
+        <a-form-item label="楼栋编号" name="code">
+          <a-input v-model:value="buildingForm.code" placeholder="请输入楼栋编号" />
         </a-form-item>
-        <a-form-item label="每层房间数" name="roomsPerFloor">
-          <a-input-number v-model:value="buildingForm.roomsPerFloor" :min="1" style="width: 100%" />
+        <a-form-item label="楼层数" name="totalFloors">
+          <a-input-number v-model:value="buildingForm.totalFloors" :min="1" style="width: 100%" />
+        </a-form-item>
+        <a-form-item label="地址" name="address">
+          <a-input v-model:value="buildingForm.address" placeholder="请输入地址" />
         </a-form-item>
         <a-form-item label="描述" name="description">
           <a-textarea v-model:value="buildingForm.description" :rows="3" placeholder="请输入描述" />
@@ -208,7 +211,7 @@
     >
       <a-form :model="checkInForm" layout="vertical">
         <a-form-item label="入住人数" required>
-          <a-input-number v-model:value="checkInForm.occupantCount" :min="1" :max="checkInForm.maxCapacity" style="width: 100%" />
+          <a-input-number v-model:value="checkInForm.currentOccupants" :min="1" :max="checkInForm.maxCapacity" style="width: 100%" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -235,9 +238,9 @@ const roomFilter = ref<{ buildingId?: string; status?: string }>({})
 const buildingColumns = [
   { title: '楼栋ID', dataIndex: 'id', key: 'id' },
   { title: '楼栋名称', dataIndex: 'name', key: 'name' },
-  { title: '楼层数', dataIndex: 'floors', key: 'floors' },
-  { title: '每层房间数', dataIndex: 'roomsPerFloor', key: 'roomsPerFloor' },
-  { title: '描述', dataIndex: 'description', key: 'description' },
+  { title: '楼栋编号', dataIndex: 'code', key: 'code' },
+  { title: '楼层数', dataIndex: 'totalFloors', key: 'totalFloors' },
+  { title: '地址', dataIndex: 'address', key: 'address' },
   { title: '操作', key: 'action', width: 200 }
 ]
 
@@ -267,14 +270,15 @@ const editingBuilding = ref<Building | null>(null)
 const buildingFormRef = ref()
 const buildingForm = ref<Partial<Building>>({
   name: '',
-  floors: 6,
-  roomsPerFloor: 20,
+  code: '',
+  totalFloors: 6,
+  address: '',
   description: ''
 })
 const buildingRules = {
   name: [{ required: true, message: '请输入楼栋名称' }],
-  floors: [{ required: true, message: '请输入楼层数' }],
-  roomsPerFloor: [{ required: true, message: '请输入每层房间数' }]
+  code: [{ required: true, message: '请输入楼栋编号' }],
+  totalFloors: [{ required: true, message: '请输入楼层数' }]
 }
 
 const roomModalVisible = ref(false)
@@ -295,7 +299,7 @@ const roomRules = {
 }
 
 const checkInModalVisible = ref(false)
-const checkInForm = ref({ roomId: '', occupantCount: 1, maxCapacity: 4 })
+const checkInForm = ref({ roomId: '', currentOccupants: 1, maxCapacity: 4 })
 
 const loadBuildings = async () => {
   buildingsLoading.value = true
@@ -311,7 +315,7 @@ const loadBuildings = async () => {
 const loadRooms = async () => {
   roomsLoading.value = true
   try {
-    rooms.value = await dormApi.getRooms()
+    rooms.value = await dormApi.getAllRooms()
   } catch (error: any) {
     message.error('加载房间失败')
   } finally {
@@ -347,7 +351,7 @@ const handleRoomFilter = () => {
 
 const showBuildingModal = (building?: Building) => {
   editingBuilding.value = building || null
-  buildingForm.value = building ? { ...building } : { name: '', floors: 6, roomsPerFloor: 20, description: '' }
+  buildingForm.value = building ? { ...building } : { name: '', code: '', totalFloors: 6, address: '', description: '' }
   buildingModalVisible.value = true
 }
 
@@ -422,13 +426,13 @@ const deleteRoom = async (id: string) => {
 }
 
 const showCheckInModal = (room: DormRoom) => {
-  checkInForm.value = { roomId: room.id, occupantCount: 1, maxCapacity: room.capacity }
+  checkInForm.value = { roomId: room.id, currentOccupants: 1, maxCapacity: room.capacity }
   checkInModalVisible.value = true
 }
 
 const handleCheckIn = async () => {
   try {
-    await dormApi.checkIn(checkInForm.value.roomId, checkInForm.value.occupantCount)
+    await dormApi.checkIn(checkInForm.value.roomId, checkInForm.value.currentOccupants)
     message.success('入住成功')
     checkInModalVisible.value = false
     loadRooms()
