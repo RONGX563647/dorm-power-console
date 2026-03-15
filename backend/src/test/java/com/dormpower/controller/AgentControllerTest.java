@@ -1,9 +1,11 @@
 package com.dormpower.controller;
 
+import com.dormpower.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -14,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 public class AgentControllerTest {
 
     @Autowired
@@ -22,7 +25,7 @@ public class AgentControllerTest {
     @Test
     public void testQuickReply() throws Exception {
         String requestJson = "{\"message\": \"你好\"}";
-        mockMvc.perform(post("/api/agent/quick-reply")
+        mockMvc.perform(post("/api/agent/quick")
                         .contentType("application/json")
                         .content(requestJson))
                 .andExpect(status().isOk())
@@ -33,7 +36,7 @@ public class AgentControllerTest {
     @Test
     public void testRecognizeIntent() throws Exception {
         String requestJson = "{\"message\": \"我的房间用电情况如何\"}";
-        mockMvc.perform(post("/api/agent/recognize-intent")
+        mockMvc.perform(post("/api/agent/intent")
                         .contentType("application/json")
                         .content(requestJson))
                 .andExpect(status().isOk())
