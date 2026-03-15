@@ -11,7 +11,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * AOP切面类：统一处理API请求日志、限流和审计日志。
@@ -37,9 +38,9 @@ public class ApiAspect {
     @Autowired(required = false)
     private RedisRateLimiter redisRateLimiter;
 
-    // 当前激活的 profile
-    @Value("${spring.profiles.active:}")
-    private String activeProfile;
+    // Spring Environment 用于检查 active profiles
+    @Autowired
+    private Environment environment;
 
     /**
      * API请求日志和限流处理
@@ -57,8 +58,8 @@ public class ApiAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method targetMethod = signature.getMethod();
 
-        // 测试环境跳过限流
-        boolean isTestProfile = activeProfile != null && activeProfile.contains("test");
+        // 测试环境跳过限流（使用 Environment 检查，支持 @ActiveProfiles 注解）
+        boolean isTestProfile = Arrays.asList(environment.getActiveProfiles()).contains("test");
 
         // 检查是否为管理员用户，如果是则跳过限流
         if (!isTestProfile && !isAdminUser()) {

@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 /**
@@ -83,7 +84,8 @@ class BillingServiceBillTest {
             when(dormRoomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
             when(telemetryRepository.findByDeviceIdAndTsBetween(eq(DEVICE_ID), anyLong(), anyLong()))
                     .thenReturn(telemetryList);
-            when(priceRuleRepository.findById(PRICE_RULE_ID)).thenReturn(Optional.of(priceRule));
+            when(priceRuleRepository.findById(any())).thenReturn(Optional.of(priceRule));
+            when(priceRuleRepository.findFirstByEnabledTrueOrderByCreatedAtAsc()).thenReturn(Optional.of(priceRule));
             when(billRepository.save(any(ElectricityBill.class))).thenAnswer(inv -> inv.getArgument(0));
 
             // When
@@ -112,7 +114,8 @@ class BillingServiceBillTest {
             when(dormRoomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
             when(telemetryRepository.findByDeviceIdAndTsBetween(eq(DEVICE_ID), anyLong(), anyLong()))
                     .thenReturn(telemetryList);
-            when(priceRuleRepository.findById(PRICE_RULE_ID)).thenReturn(Optional.of(priceRule));
+            when(priceRuleRepository.findById(any())).thenReturn(Optional.of(priceRule));
+            when(priceRuleRepository.findFirstByEnabledTrueOrderByCreatedAtAsc()).thenReturn(Optional.of(priceRule));
             when(billRepository.save(any(ElectricityBill.class))).thenAnswer(inv -> inv.getArgument(0));
 
             // When
@@ -135,7 +138,8 @@ class BillingServiceBillTest {
             when(dormRoomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
             when(telemetryRepository.findByDeviceIdAndTsBetween(eq(DEVICE_ID), anyLong(), anyLong()))
                     .thenReturn(Collections.emptyList());
-            when(priceRuleRepository.findById(PRICE_RULE_ID)).thenReturn(Optional.of(priceRule));
+            when(priceRuleRepository.findById(any())).thenReturn(Optional.of(priceRule));
+            when(priceRuleRepository.findFirstByEnabledTrueOrderByCreatedAtAsc()).thenReturn(Optional.of(priceRule));
             when(billRepository.save(any(ElectricityBill.class))).thenAnswer(inv -> inv.getArgument(0));
 
             // When
@@ -156,14 +160,15 @@ class BillingServiceBillTest {
 
             ElectricityPriceRule customRule = createPriceRule();
             customRule.setId(customRuleId);
-            customRule.setBasePrice(0.6); // 自定义电价
+            customRule.setTier1Price(0.6); // 自定义电价（阶梯电价第一档）
 
             List<Telemetry> telemetryList = createMockTelemetryWithPower(DEVICE_ID, 10, 1000.0);
 
             when(dormRoomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
             when(telemetryRepository.findByDeviceIdAndTsBetween(eq(DEVICE_ID), anyLong(), anyLong()))
                     .thenReturn(telemetryList);
-            when(priceRuleRepository.findById(customRuleId)).thenReturn(Optional.of(customRule));
+            when(priceRuleRepository.findById(any())).thenReturn(Optional.of(customRule));
+            when(priceRuleRepository.findFirstByEnabledTrueOrderByCreatedAtAsc()).thenReturn(Optional.of(customRule));
             when(billRepository.save(any(ElectricityBill.class))).thenAnswer(inv -> inv.getArgument(0));
 
             // When
@@ -188,8 +193,8 @@ class BillingServiceBillTest {
             when(dormRoomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
             when(telemetryRepository.findByDeviceIdAndTsBetween(eq(DEVICE_ID), anyLong(), anyLong()))
                     .thenReturn(telemetryList);
-            // 当 priceRuleId 为 null 时，findById(null) 返回 empty
-            when(priceRuleRepository.findById(null)).thenReturn(Optional.empty());
+            // 当 priceRuleId 为 null 时，findById 返回 empty
+            when(priceRuleRepository.findById(isNull())).thenReturn(Optional.empty());
             when(priceRuleRepository.findFirstByEnabledTrueOrderByCreatedAtAsc())
                     .thenReturn(Optional.of(defaultRule));
             when(billRepository.save(any(ElectricityBill.class))).thenAnswer(inv -> inv.getArgument(0));
