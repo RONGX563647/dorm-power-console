@@ -535,3 +535,68 @@ llm:
 - **部署方式** - 服务器端Docker容器，客户端systemd服务
 - **认证方式** - token认证
 - **网络测试** - 端口7000连接测试通过
+
+---
+
+## 2026-03-15: Redis缓存架构改进 ✅
+
+### 24. Redis缓存架构问题改进 ✅
+
+#### 阶段一：多节点一致性（优先级：高）
+- ✅ **扩展CacheUpdateMessage** - 添加nodeId和broadcast字段
+- ✅ **修改CacheUpdateProducer** - 发送时包含节点标识
+- ✅ **修改CacheUpdateConsumer** - 处理其他节点的本地缓存失效
+- ✅ **MultiLevelCache增强** - 添加evictLocal()和clearLocal()方法
+- ✅ **TTL策略调整** - L1缓存TTL从5分钟降低到30秒
+
+#### 阶段二：缓存穿透防护（优先级：中）
+- ✅ **启用空值缓存** - 移除.disableCachingNullValues()，空值缓存30秒
+- ✅ **Redis布隆过滤器** - 实现RedisBloomFilter组件
+- ✅ **布隆过滤器服务** - BloomFilterService管理设备/用户/房间/楼栋过滤器
+
+#### 阶段三：预热性能优化（优先级：中）
+- ✅ **异步预热服务** - AsyncCacheWarmupService支持异步、并行预热
+- ✅ **分层预热策略** - Tier1核心数据、Tier2重要数据、Tier3普通数据
+- ✅ **应用启动预热** - CacheWarmupInitializer应用就绪后异步预热
+
+#### 阶段四：Key压缩优化（优先级：低）
+- ✅ **Key压缩器** - CacheKeyCompressor使用SHA-256压缩超长Key
+- ✅ **压缩Key生成器** - CompressedCacheKeyGenerator自动压缩超长Key
+
+#### 核心模块
+- **MultiLevelCacheManager**: 多级缓存管理器（L1+L2）
+- **MultiLevelCache**: 多级缓存实现
+- **CacheUpdateProducer**: Kafka缓存更新生产者
+- **CacheUpdateConsumer**: Kafka缓存更新消费者
+- **RedisBloomFilter**: Redis布隆过滤器
+- **BloomFilterService**: 布隆过滤器服务
+- **AsyncCacheWarmupService**: 异步缓存预热服务
+- **CacheWarmupInitializer**: 缓存预热初始化器
+- **CacheKeyCompressor**: Key压缩器
+- **CompressedCacheKeyGenerator**: 压缩Key生成器
+
+#### 配置参数
+```yaml
+cache:
+  l1:
+    ttl-seconds: 30        # L1缓存TTL（秒）
+    max-size: 10000        # L1缓存最大容量
+  warmup:
+    on-startup:
+      enabled: true        # 启动时预热
+      tier1-enabled: true  # Tier1预热
+      tier2-enabled: true  # Tier2预热
+      tier3-enabled: false # Tier3预热（懒加载）
+    thread-pool-size: 4    # 预热线程池大小
+    timeout-seconds: 60    # 预热超时时间
+  key:
+    compression:
+      enabled: true        # 启用Key压缩
+      threshold: 100       # Key长度阈值
+```
+
+#### 测试验证
+- ✅ RedisBloomFilterTest - 5个测试通过
+- ✅ CacheKeyCompressorTest - 8个测试通过
+- ✅ MultiLevelCacheNodeConsistencyTest - 6个测试通过
+- ✅ 所有缓存相关测试通过
