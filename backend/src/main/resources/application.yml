@@ -71,9 +71,6 @@ mqtt:
 kafka:
   enabled: ${KAFKA_ENABLED:false}
   batch-size: ${KAFKA_BATCH_SIZE:100}
-  # 通知服务 Kafka 配置
-  notification:
-    enabled: ${KAFKA_NOTIFICATION_ENABLED:true}
   # 命令处理 Kafka 配置
   command:
     enabled: ${KAFKA_COMMAND_ENABLED:true}
