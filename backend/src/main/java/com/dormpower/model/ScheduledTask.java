@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 定时任务模型
@@ -11,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "scheduled_tasks")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ScheduledTask {
 
     @Id
@@ -19,22 +25,28 @@ public class ScheduledTask {
     @NotNull
     private String deviceId;
 
+    /** 任务类型：power_on, power_off, socket_on, socket_off */
     @NotNull
-    private String type; // 任务类型：power_on, power_off, socket_on, socket_off
+    private String type;
 
-    private int socketId; // 插座ID，仅在socket_*类型时有效
+    /** 插座ID，仅在socket_*类型时有效 */
+    private int socketId;
 
+    /** 计划执行时间戳 */
     @NotNull
-    private long scheduledTime; // 计划执行时间戳
+    private long scheduledTime;
 
+    /** cron表达式，用于重复任务 */
     @NotNull
-    private String cronExpression; // cron表达式，用于重复任务
+    private String cronExpression;
 
+    /** 是否启用 */
     @NotNull
-    private boolean enabled; // 是否启用
+    private boolean enabled;
 
+    /** 是否重复执行 */
     @NotNull
-    private boolean recurring; // 是否重复执行
+    private boolean recurring;
 
     @NotNull
     private long createdAt;
@@ -42,105 +54,9 @@ public class ScheduledTask {
     @NotNull
     private long updatedAt;
 
-    private long lastExecutedAt; // 最后执行时间
+    /** 最后执行时间 */
+    private long lastExecutedAt;
 
-    private String lastStatus; // 最后执行状态
-
-    // Getters and setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public int getSocketId() {
-        return socketId;
-    }
-
-    public void setSocketId(int socketId) {
-        this.socketId = socketId;
-    }
-
-    public long getScheduledTime() {
-        return scheduledTime;
-    }
-
-    public void setScheduledTime(long scheduledTime) {
-        this.scheduledTime = scheduledTime;
-    }
-
-    public String getCronExpression() {
-        return cronExpression;
-    }
-
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isRecurring() {
-        return recurring;
-    }
-
-    public void setRecurring(boolean recurring) {
-        this.recurring = recurring;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(long updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public long getLastExecutedAt() {
-        return lastExecutedAt;
-    }
-
-    public void setLastExecutedAt(long lastExecutedAt) {
-        this.lastExecutedAt = lastExecutedAt;
-    }
-
-    public String getLastStatus() {
-        return lastStatus;
-    }
-
-    public void setLastStatus(String lastStatus) {
-        this.lastStatus = lastStatus;
-    }
-
+    /** 最后执行状态 */
+    private String lastStatus;
 }

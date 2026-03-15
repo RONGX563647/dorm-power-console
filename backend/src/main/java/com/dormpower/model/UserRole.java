@@ -1,7 +1,15 @@
 package com.dormpower.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 用户角色关联实体
@@ -14,58 +22,28 @@ import jakarta.validation.constraints.NotNull;
     @UniqueConstraint(name = "uk_user_role", columnNames = {"username", "role_id"})
 })
 @IdClass(UserRoleId.class)
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserRole {
-    
+
     @Id
     private String username;
-    
+
     @Id
     private String roleId;
-    
+
     @NotNull
-    private long assignedAt;
-    
+    private long assignedAt = System.currentTimeMillis() / 1000;
+
     private String assignedBy;
-    
-    public UserRole() {
-        this.assignedAt = System.currentTimeMillis() / 1000;
-    }
-    
+
+    /**
+     * 便捷构造函数
+     */
     public UserRole(String username, String roleId) {
         this.username = username;
         this.roleId = roleId;
         this.assignedAt = System.currentTimeMillis() / 1000;
-    }
-    
-    public String getUsername() {
-        return username;
-    }
-    
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    
-    public String getRoleId() {
-        return roleId;
-    }
-    
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
-    
-    public long getAssignedAt() {
-        return assignedAt;
-    }
-    
-    public void setAssignedAt(long assignedAt) {
-        this.assignedAt = assignedAt;
-    }
-    
-    public String getAssignedBy() {
-        return assignedBy;
-    }
-    
-    public void setAssignedBy(String assignedBy) {
-        this.assignedBy = assignedBy;
     }
 }

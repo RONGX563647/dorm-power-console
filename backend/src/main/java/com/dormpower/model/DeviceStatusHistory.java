@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 设备状态历史模型
@@ -11,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "device_status_history")
+@Getter
+@Setter
+@NoArgsConstructor
 public class DeviceStatusHistory {
 
     @Id
@@ -35,78 +41,4 @@ public class DeviceStatusHistory {
 
     @NotNull
     private long createdAt;
-
-    // Getters and setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public boolean isOnline() {
-        return online;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
-
-    public double getTotalPowerW() {
-        return totalPowerW;
-    }
-
-    public void setTotalPowerW(double totalPowerW) {
-        this.totalPowerW = totalPowerW;
-    }
-
-    public double getVoltageV() {
-        return voltageV;
-    }
-
-    public void setVoltageV(double voltageV) {
-        this.voltageV = voltageV;
-    }
-
-    public double getCurrentA() {
-        return currentA;
-    }
-
-    public void setCurrentA(double currentA) {
-        this.currentA = currentA;
-    }
-
-    public String getSocketsJson() {
-        return socketsJson;
-    }
-
-    public void setSocketsJson(String socketsJson) {
-        this.socketsJson = socketsJson;
-    }
-
-    public long getTs() {
-        return ts;
-    }
-
-    public void setTs(long ts) {
-        this.ts = ts;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }

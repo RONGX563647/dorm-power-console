@@ -1,7 +1,16 @@
 package com.dormpower.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 登录日志实体
@@ -12,6 +21,9 @@ import jakarta.validation.constraints.NotBlank;
     @Index(name = "idx_login_ts", columnList = "loginTs"),
     @Index(name = "idx_login_status", columnList = "status")
 })
+@Getter
+@Setter
+@NoArgsConstructor
 public class LoginLog {
 
     @Id
@@ -50,7 +62,7 @@ public class LoginLog {
     @Column(length = 500)
     private String message;
 
-    private long loginTs;
+    private long loginTs = System.currentTimeMillis() / 1000;
 
     private Long logoutTs;
 
@@ -60,141 +72,12 @@ public class LoginLog {
 
     private String deviceId;
 
-    public LoginLog() {
-        this.loginTs = System.currentTimeMillis() / 1000;
-    }
-
+    /**
+     * 便捷构造函数
+     */
     public LoginLog(String username, String status) {
-        this();
+        this.loginTs = System.currentTimeMillis() / 1000;
         this.username = username;
         this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getLoginType() {
-        return loginType;
-    }
-
-    public void setLoginType(String loginType) {
-        this.loginType = loginType;
-    }
-
-    public String getLoginMethod() {
-        return loginMethod;
-    }
-
-    public void setLoginMethod(String loginMethod) {
-        this.loginMethod = loginMethod;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getUserAgent() {
-        return userAgent;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public long getLoginTs() {
-        return loginTs;
-    }
-
-    public void setLoginTs(long loginTs) {
-        this.loginTs = loginTs;
-    }
-
-    public Long getLogoutTs() {
-        return logoutTs;
-    }
-
-    public void setLogoutTs(Long logoutTs) {
-        this.logoutTs = logoutTs;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
     }
 }

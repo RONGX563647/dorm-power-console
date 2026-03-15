@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 学生入住历史记录模型
@@ -11,142 +14,51 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "student_room_history")
+@Getter
+@Setter
+@NoArgsConstructor
 public class StudentRoomHistory {
 
     @Id
     private String id;
 
+    /** 学生ID */
     @NotNull
-    private String studentId; // 学生ID
+    private String studentId;
 
+    /** 房间ID */
     @NotNull
-    private String roomId; // 房间ID
+    private String roomId;
 
+    /** 入住日期 */
     @NotNull
-    private long checkInDate; // 入住日期
+    private long checkInDate;
 
-    private long checkOutDate; // 退宿日期
+    /** 退宿日期 */
+    private long checkOutDate;
 
+    /** 状态：ACTIVE(在住)、CHECKED_OUT(已退宿) */
     @NotNull
-    private String status; // 状态：ACTIVE(在住)、CHECKED_OUT(已退宿)
+    private String status;
 
-    private String checkInReason; // 入住原因
+    /** 入住原因 */
+    private String checkInReason;
 
-    private String checkOutReason; // 退宿原因
+    /** 退宿原因 */
+    private String checkOutReason;
 
-    private String operator; // 操作员
+    /** 操作员 */
+    private String operator;
 
-    private double electricityUsage; // 期间用电量
+    /** 期间用电量 */
+    private double electricityUsage;
 
-    private double electricityCost; // 期间电费
+    /** 期间电费 */
+    private double electricityCost;
 
-    private String remark; // 备注
+    /** 备注 */
+    private String remark;
 
     @NotNull
     private long createdAt;
-
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public long getCheckInDate() {
-        return checkInDate;
-    }
-
-    public void setCheckInDate(long checkInDate) {
-        this.checkInDate = checkInDate;
-    }
-
-    public long getCheckOutDate() {
-        return checkOutDate;
-    }
-
-    public void setCheckOutDate(long checkOutDate) {
-        this.checkOutDate = checkOutDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCheckInReason() {
-        return checkInReason;
-    }
-
-    public void setCheckInReason(String checkInReason) {
-        this.checkInReason = checkInReason;
-    }
-
-    public String getCheckOutReason() {
-        return checkOutReason;
-    }
-
-    public void setCheckOutReason(String checkOutReason) {
-        this.checkOutReason = checkOutReason;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public double getElectricityUsage() {
-        return electricityUsage;
-    }
-
-    public void setElectricityUsage(double electricityUsage) {
-        this.electricityUsage = electricityUsage;
-    }
-
-    public double getElectricityCost() {
-        return electricityCost;
-    }
-
-    public void setElectricityCost(double electricityCost) {
-        this.electricityCost = electricityCost;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
 }

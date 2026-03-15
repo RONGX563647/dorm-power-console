@@ -1,13 +1,25 @@
 package com.dormpower.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 系统监控指标实体类
  */
 @Entity
 @Table(name = "system_metrics")
+@Getter
+@Setter
+@NoArgsConstructor
 public class SystemMetrics {
 
     @Id
@@ -35,62 +47,5 @@ public class SystemMetrics {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMetricType() {
-        return metricType;
-    }
-
-    public void setMetricType(String metricType) {
-        this.metricType = metricType;
-    }
-
-    public String getMetricName() {
-        return metricName;
-    }
-
-    public void setMetricName(String metricName) {
-        this.metricName = metricName;
-    }
-
-    public Double getMetricValue() {
-        return metricValue;
-    }
-
-    public void setMetricValue(Double metricValue) {
-        this.metricValue = metricValue;
-    }
-
-    public String getMetricUnit() {
-        return metricUnit;
-    }
-
-    public void setMetricUnit(String metricUnit) {
-        this.metricUnit = metricUnit;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
