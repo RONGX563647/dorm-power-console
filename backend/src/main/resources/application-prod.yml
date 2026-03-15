@@ -32,6 +32,9 @@ spring:
       connection-timeout: 20000
 
   # ========== Redis 配置 ==========
+  # 针对 2核2GB 小型服务器优化连接池配置
+  # Lettuce 基于 Netty NIO，单连接可多线程共享
+  # 连接池主要用于阻塞命令和故障切换
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -40,9 +43,9 @@ spring:
       timeout: 10000ms
       lettuce:
         pool:
-          max-active: 20
-          max-idle: 10
-          min-idle: 5
+          max-active: 8    # 降低最大连接数（原20），适合小型服务器
+          max-idle: 4      # 降低最大空闲连接（原10）
+          min-idle: 2      # 降低最小空闲连接（原5），减少资源占用
           max-wait: -1ms
 
   # ========== Kafka 配置 ==========

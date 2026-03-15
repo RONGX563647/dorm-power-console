@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -120,11 +121,15 @@ public class DeviceService {
     }
 
     /**
-     * 更新设备状态（清除设备相关缓存）
+     * 更新设备状态（精确清除设备相关缓存）
+     *
+     * 优化：只失效指定设备的缓存，避免 allEntries=true 导致的缓存雪崩
+     * devices 列表缓存接受短暂不一致，通过 TTL 自然过期
+     *
      * @param deviceId 设备ID
      * @param online 在线状态
      */
-    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
+    @CacheEvict(value = {"deviceStatus", "deviceDetail", "deviceOnline"}, key = "#deviceId")
     public void updateDeviceStatus(String deviceId, boolean online) {
         logger.debug("更新设备状态: {} -> {}", deviceId, online);
         Device device = deviceRepository.findById(deviceId).orElse(null);
@@ -191,9 +196,15 @@ public class DeviceService {
 
     /**
      * 删除设备
+     *
+     * 清除设备列表缓存（数量变化）和该设备的状态缓存
+     *
      * @param deviceId 设备ID
      */
-    @CacheEvict(value = {"devices", "deviceStatus"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "devices", allEntries = true),
+        @CacheEvict(value = "deviceStatus", key = "#deviceId")
+    })
     public void deleteDevice(String deviceId) {
         logger.debug("删除设备: {}", deviceId);
         if (!deviceRepository.existsById(deviceId)) {
@@ -209,15 +220,17 @@ public class DeviceService {
     public static final long OFFLINE_THRESHOLD_SECONDS = 60;
 
     /**
-     * 处理设备心跳（清除设备相关缓存）
+     * 处理设备心跳（精确清除设备相关缓存）
      *
      * 更新设备的最后心跳时间，并将设备标记为在线。
      * 心跳消息表示设备正常工作。
      *
+     * 优化：只失效指定设备的缓存，避免 allEntries=true 导致的缓存雪崩
+     *
      * @param deviceId 设备ID
      * @return 更新后的设备，如果设备不存在返回null
      */
-    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
+    @CacheEvict(value = {"deviceStatus", "deviceDetail", "deviceOnline"}, key = "#deviceId")
     public Device processHeartbeat(String deviceId) {
         logger.debug("处理设备心跳: {}", deviceId);
         Device device = deviceRepository.findById(deviceId).orElse(null);
@@ -235,14 +248,16 @@ public class DeviceService {
     }
 
     /**
-     * 标记设备离线（清除设备相关缓存）
+     * 标记设备离线（精确清除设备相关缓存）
      *
      * 用于处理LWT（Last Will and Testament）消息，设备断开连接时立即标记为离线。
+     *
+     * 优化：只失效指定设备的缓存，避免 allEntries=true 导致的缓存雪崩
      *
      * @param deviceId 设备ID
      * @return 是否成功标记离线
      */
-    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
+    @CacheEvict(value = {"deviceStatus", "deviceDetail", "deviceOnline"}, key = "#deviceId")
     public boolean markDeviceOffline(String deviceId) {
         logger.debug("标记设备离线: {}", deviceId);
         Device device = deviceRepository.findById(deviceId).orElse(null);
@@ -258,15 +273,17 @@ public class DeviceService {
     }
 
     /**
-     * 检查并更新设备在线状态（清除设备相关缓存）
+     * 检查并更新设备在线状态（精确清除设备相关缓存）
      *
      * 根据最后心跳时间判断设备是否在线。
      * 如果超过 OFFLINE_THRESHOLD_SECONDS 秒无心跳，则标记为离线。
      *
+     * 优化：只失效指定设备的缓存，避免 allEntries=true 导致的缓存雪崩
+     *
      * @param deviceId 设备ID
      * @return 设备当前是否在线
      */
-    @CacheEvict(value = {"devices", "deviceStatus", "deviceDetail", "deviceOnline"}, allEntries = true)
+    @CacheEvict(value = {"deviceStatus", "deviceDetail", "deviceOnline"}, key = "#deviceId")
     public boolean checkAndUpdateOnlineStatus(String deviceId) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
         if (device == null) {
