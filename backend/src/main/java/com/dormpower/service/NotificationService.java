@@ -24,9 +24,10 @@ import java.util.Map;
 /**
  * 通知服务类
  *
- * v2.0 优化：
+ * v2.1 优化：
  * - 支持 Kafka 异步发送通知
  * - 高并发场景下解耦通知创建与数据库写入
+ * - 告警类通知（HIGH 优先级）同步写入保证实时性
  */
 @Service
 public class NotificationService {
@@ -60,51 +61,35 @@ public class NotificationService {
      * 优化：支持 Kafka 异步发送
      */
     public Notification createSystemNotification(String title, String content, String priority) {
-        // 优先使用 Kafka 异步发送
-        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
-            notificationProducer.sendSystemNotification(title, content, priority);
-            Notification notification = new Notification();
-            notification.setTitle(title);
-            notification.setContent(content);
-            notification.setType("SYSTEM");
-            notification.setPriority(priority);
-            notification.setSource("SYSTEM");
-            return notification;
-        }
-
-        // 降级：直接写入数据库
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
         notification.setType("SYSTEM");
-        notification.setPriority(priority);
+        notification.setPriority(priority != null ? priority : "NORMAL");
         notification.setSource("SYSTEM");
+
+        // HIGH 优先级通知直接同步写入（保证实时性）
+        if ("HIGH".equals(priority)) {
+            return notificationRepository.save(notification);
+        }
+
+        // 其他优先级使用 Kafka 异步发送
+        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
+            notificationProducer.sendSystemNotification(title, content, priority);
+            return notification;
+        }
+
+        // 降级：直接写入数据库
         return notificationRepository.save(notification);
     }
 
     /**
      * 创建告警通知（清除未读计数缓存）
      *
-     * 优化：支持 Kafka 异步发送，高并发场景下解耦
+     * v2.1 优化：告警通知同步写入保证实时性
      */
     @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createAlertNotification(String title, String content, String username, String sourceId) {
-        // 优先使用 Kafka 异步发送
-        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
-            notificationProducer.sendAlertNotification(title, content, username, sourceId);
-            // 返回一个临时对象，实际数据由 Kafka 消费者写入
-            Notification notification = new Notification();
-            notification.setTitle(title);
-            notification.setContent(content);
-            notification.setType("ALERT");
-            notification.setPriority("HIGH");
-            notification.setUsername(username);
-            notification.setSource("ALERT");
-            notification.setSourceId(sourceId);
-            return notification;
-        }
-
-        // 降级：直接写入数据库
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
@@ -113,6 +98,8 @@ public class NotificationService {
         notification.setUsername(username);
         notification.setSource("ALERT");
         notification.setSourceId(sourceId);
+
+        // 告警通知直接同步写入数据库（保证实时性）
         return notificationRepository.save(notification);
     }
 
@@ -123,20 +110,6 @@ public class NotificationService {
      */
     @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createEmailNotification(String title, String content, String username) {
-        // 优先使用 Kafka 异步发送
-        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
-            notificationProducer.sendEmailNotification(title, content, username);
-            Notification notification = new Notification();
-            notification.setTitle(title);
-            notification.setContent(content);
-            notification.setType("EMAIL");
-            notification.setPriority("NORMAL");
-            notification.setUsername(username);
-            notification.setSource("EMAIL");
-            return notification;
-        }
-
-        // 降级：直接写入数据库
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
@@ -144,6 +117,14 @@ public class NotificationService {
         notification.setPriority("NORMAL");
         notification.setUsername(username);
         notification.setSource("EMAIL");
+
+        // 使用 Kafka 异步发送
+        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
+            notificationProducer.sendEmailNotification(title, content, username);
+            return notification;
+        }
+
+        // 降级：直接写入数据库
         return notificationRepository.save(notification);
     }
 
