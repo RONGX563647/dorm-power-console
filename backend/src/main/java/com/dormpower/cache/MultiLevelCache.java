@@ -20,8 +20,12 @@ import java.util.concurrent.Callable;
  * 1. 同时写入L1和L2缓存
  * 2. 保证两级缓存一致性
  * 
+ * 多节点一致性：
+ * - evictLocal(): 仅清除本地L1缓存
+ * - clearLocal(): 仅清空本地L1缓存
+ * 
  * @author dormpower team
- * @version 1.0
+ * @version 2.0
  */
 public class MultiLevelCache implements Cache {
 
@@ -157,5 +161,56 @@ public class MultiLevelCache implements Cache {
             logger.error("Cache CLEAR error - cache: {}, error: {}", 
                 name, e.getMessage());
         }
+    }
+    
+    /**
+     * 仅清除本地L1缓存
+     * 用于多节点部署下接收其他节点的失效广播
+     */
+    public void evictLocal(Object key) {
+        long startTime = System.currentTimeMillis();
+        
+        try {
+            localCache.evict(key);
+            
+            logger.debug("Cache EVICT_LOCAL (L1 only) - cache: {}, key: {}, time: {}ms", 
+                name, key, System.currentTimeMillis() - startTime);
+                
+        } catch (Exception e) {
+            logger.error("Cache EVICT_LOCAL error - cache: {}, key: {}, error: {}", 
+                name, key, e.getMessage());
+        }
+    }
+    
+    /**
+     * 仅清空本地L1缓存
+     */
+    public void clearLocal() {
+        long startTime = System.currentTimeMillis();
+        
+        try {
+            localCache.clear();
+            
+            logger.debug("Cache CLEAR_LOCAL (L1 only) - cache: {}, time: {}ms", 
+                name, System.currentTimeMillis() - startTime);
+                
+        } catch (Exception e) {
+            logger.error("Cache CLEAR_LOCAL error - cache: {}, error: {}", 
+                name, e.getMessage());
+        }
+    }
+    
+    /**
+     * 获取本地缓存实例
+     */
+    public Cache getLocalCache() {
+        return localCache;
+    }
+    
+    /**
+     * 获取远程缓存实例
+     */
+    public Cache getRemoteCache() {
+        return remoteCache;
     }
 }
