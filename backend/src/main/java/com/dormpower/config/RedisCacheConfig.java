@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -245,15 +247,15 @@ public class RedisCacheConfig {
 
         // 使用安全的类型验证器，限制允许反序列化的类型
         // 仅允许项目中使用的包路径，防止任意类反序列化攻击
-        objectMapper.activateDefaultTyping(
-            objectMapper.getPolymorphicTypeValidator()
-                .allowIfBaseType("com.dormpower.")      // 项目自身类
-                .allowIfBaseType("java.util.")          // Java集合类
-                .allowIfBaseType("java.lang.")          // Java基础类型
-                .allowIfBaseType("java.time.")          // Java时间类型
-                .allowIfBaseType("org.springframework."),
-            ObjectMapper.DefaultTyping.NON_FINAL
-        );
+        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+            .allowIfBaseType("com.dormpower.")      // 项目自身类
+            .allowIfBaseType("java.util.")          // Java集合类
+            .allowIfBaseType("java.lang.")          // Java基础类型
+            .allowIfBaseType("java.time.")          // Java时间类型
+            .allowIfBaseType("org.springframework.")
+            .build();
+
+        objectMapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
 
         return objectMapper;
     }

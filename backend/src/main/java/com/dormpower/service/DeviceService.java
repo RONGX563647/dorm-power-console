@@ -1,5 +1,7 @@
 package com.dormpower.service;
 
+import com.dormpower.cache.bloom.BloomFilterService;
+import com.dormpower.cache.protection.CacheProtectionService;
 import com.dormpower.exception.ResourceNotFoundException;
 import com.dormpower.model.Device;
 import com.dormpower.repository.DeviceRepository;
@@ -42,6 +44,14 @@ public class DeviceService {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    // 缓存防护服务
+    @Autowired(required = false)
+    private CacheProtectionService cacheProtectionService;
+
+    // 布隆过滤器服务
+    @Autowired(required = false)
+    private BloomFilterService bloomFilterService;
+
     /**
      * 获取设备列表
      * 
@@ -72,18 +82,36 @@ public class DeviceService {
     }
 
     /**
-     * 获取设备状态
+     * 获取设备状态（带缓存穿透防护）
      * @param deviceId 设备ID
      * @return 设备状态
      */
-    @Cacheable(value = "deviceStatus", key = "#deviceId")
     public Map<String, Object> getDeviceStatus(String deviceId) {
         logger.debug("获取设备状态: {}", deviceId);
+
+        // 使用缓存防护服务（布隆过滤器 + 分布式锁 + 空值缓存）
+        if (cacheProtectionService != null) {
+            return cacheProtectionService.getWithProtection(
+                "deviceStatus",
+                deviceId,
+                BloomFilterService.DEVICE_FILTER,
+                () -> loadDeviceStatus(deviceId)
+            );
+        }
+
+        // 降级：直接加载
+        return loadDeviceStatus(deviceId);
+    }
+
+    /**
+     * 加载设备状态（数据库查询）
+     */
+    private Map<String, Object> loadDeviceStatus(String deviceId) {
         Device device = deviceRepository.findById(deviceId).orElse(null);
-        
+
         Map<String, Object> status = new HashMap<>();
         status.put("deviceId", deviceId);
-        
+
         if (device != null) {
             status.put("online", device.isOnline());
             status.put("lastSeen", device.getLastSeenTs());
@@ -94,21 +122,39 @@ public class DeviceService {
             status.put("lastSeen", 0L);
             logger.warn("设备不存在: {}", deviceId);
         }
-        
+
         return status;
     }
 
     /**
-     * 获取设备详情（带缓存）
+     * 获取设备详情（带缓存穿透防护）
      * @param deviceId 设备ID
      * @return 设备详情
      */
-    @Cacheable(value = "deviceDetail", key = "#deviceId")
     public Map<String, Object> getDeviceDetail(String deviceId) {
         logger.debug("获取设备详情: {}", deviceId);
+
+        // 使用缓存防护服务
+        if (cacheProtectionService != null) {
+            return cacheProtectionService.getWithProtection(
+                "deviceDetail",
+                deviceId,
+                BloomFilterService.DEVICE_FILTER,
+                () -> loadDeviceDetail(deviceId)
+            );
+        }
+
+        // 降级：直接加载（保留原有 @Cacheable 逻辑）
+        return loadDeviceDetailWithCache(deviceId);
+    }
+
+    /**
+     * 加载设备详情（数据库查询）
+     */
+    private Map<String, Object> loadDeviceDetail(String deviceId) {
         Device device = deviceRepository.findById(deviceId)
                 .orElseThrow(() -> new ResourceNotFoundException("设备不存在: " + deviceId));
-        
+
         Map<String, Object> detail = new HashMap<>();
         detail.put("id", device.getId());
         detail.put("name", device.getName());
@@ -116,8 +162,16 @@ public class DeviceService {
         detail.put("online", device.isOnline());
         detail.put("lastSeen", device.getLastSeenTs());
         detail.put("createdAt", device.getCreatedAt());
-        
+
         return detail;
+    }
+
+    /**
+     * 加载设备详情（带缓存注解，降级路径）
+     */
+    @Cacheable(value = "deviceDetail", key = "#deviceId")
+    private Map<String, Object> loadDeviceDetailWithCache(String deviceId) {
+        return loadDeviceDetail(deviceId);
     }
 
     /**
@@ -154,6 +208,12 @@ public class DeviceService {
         device.setCreatedAt(System.currentTimeMillis());
         device.setLastSeenTs(System.currentTimeMillis());
         Device savedDevice = deviceRepository.save(device);
+
+        // 添加到布隆过滤器
+        if (bloomFilterService != null) {
+            bloomFilterService.addDevice(savedDevice.getId());
+        }
+
         logger.info("设备添加成功: {}", savedDevice.getId());
         return savedDevice;
     }
@@ -190,6 +250,12 @@ public class DeviceService {
         device.setLastSeenTs(System.currentTimeMillis() / 1000);
 
         Device savedDevice = deviceRepository.save(device);
+
+        // 添加到布隆过滤器
+        if (bloomFilterService != null) {
+            bloomFilterService.addDevice(savedDevice.getId());
+        }
+
         logger.info("设备注册成功: {}", savedDevice.getId());
         return savedDevice;
     }
