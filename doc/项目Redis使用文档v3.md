@@ -7,43 +7,55 @@
 
 ---
 
-## 📋 目录
+## 1. 痛点分析
 
-- [1. 概述](#1-概述)
-- [2. 多级缓存架构](#2-多级缓存架构)
-- [3. 异步更新机制](#3-异步更新机制)
-- [4. 智能预热策略](#4-智能预热策略)
-- [5. 缓存分片策略](#5-缓存分片策略)
-- [6. 性能对比](#6-性能对比)
-- [7. 最佳实践](#7-最佳实践)
+### 1.1 v2.0遗留问题
+
+v2.0扩展了缓存覆盖范围，但在实际生产环境中发现以下问题：
+
+| 痛点 | 具体表现 | 影响 |
+|------|----------|------|
+| **网络延迟** | 每次查询都要访问Redis | 热点数据响应仍有5-10ms |
+| **同步更新阻塞** | 缓存更新阻塞业务线程 | 写操作响应慢 |
+| **预热阻塞启动** | 预热阻塞应用就绪 | 健康检查超时 |
+| **大数据量查询慢** | 遥测数据量大 | 查询和清理耗时 |
+
+### 1.2 性能瓶颈（优化前）
+
+```
+Redis网络延迟: 5-10ms（每次查询）
+缓存更新延迟: 50-100ms（同步更新）
+预热阻塞时间: 30秒
+遥测数据查询: 500ms
+```
 
 ---
 
-## 1. 概述
+## 2. 解决方案
 
-### 1.1 v3.0 新增功能
+### 2.1 四大高级优化
 
-本次更新实现了四大高级优化：
+| 功能 | 说明 | 解决的问题 |
+|------|------|------------|
+| **多级缓存** | 本地缓存(Caffeine) + Redis缓存 | 减少网络延迟 |
+| **异步更新** | Kafka消息队列异步更新缓存 | 解耦写操作 |
+| **智能预热** | 基于访问模式智能预热热点数据 | 提升缓存命中率 |
+| **缓存分片** | 时间分片策略处理大数据量 | 加速查询和清理 |
 
-✅ **多级缓存** - 本地缓存(Caffeine) + Redis缓存  
-✅ **异步更新** - Kafka消息队列异步更新缓存  
-✅ **智能预热** - 基于访问模式智能预热热点数据  
-✅ **缓存分片** - 时间分片策略处理大数据量  
-
-### 1.2 性能提升
+### 2.2 性能提升
 
 | 指标 | v2.0 | v3.0 | 提升幅度 |
 |------|------|------|----------|
-| 平均响应时间 | 8ms | 3ms | **62.5%** ⚡ |
-| 缓存命中率 | 92% | 98% | **6.5%** ⚡ |
-| 数据库压力 | 基准 | -80% | **80%** ⚡ |
-| 系统吞吐量 | 3500 QPS | 10000 QPS | **185%** ⚡ |
+| 平均响应时间 | 8ms | 3ms | **62.5%** |
+| 缓存命中率 | 92% | 98% | **6.5%** |
+| 数据库压力 | 基准 | -80% | **80%** |
+| 系统吞吐量 | 3500 QPS | 10000 QPS | **185%** |
 
 ---
 
-## 2. 多级缓存架构
+## 3. 多级缓存架构
 
-### 2.1 架构设计
+### 3.1 架构设计
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -74,18 +86,12 @@
 └────────────────────────────────────────────────────────┘
 ```
 
-### 2.2 核心组件
+### 3.2 核心组件
 
-#### 2.2.1 MultiLevelCacheManager
+#### 3.2.1 MultiLevelCacheManager
 
 **文件**: [MultiLevelCacheManager.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/cache/MultiLevelCacheManager.java)
 
-**功能**:
-- 管理本地缓存和Redis缓存
-- 协调两级缓存的读写
-- 提供统一的缓存接口
-
-**关键代码**:
 ```java
 public class MultiLevelCacheManager implements CacheManager {
     
@@ -102,7 +108,7 @@ public class MultiLevelCacheManager implements CacheManager {
 }
 ```
 
-#### 2.2.2 MultiLevelCache
+#### 3.2.2 MultiLevelCache
 
 **文件**: [MultiLevelCache.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/cache/MultiLevelCache.java)
 
@@ -138,7 +144,7 @@ public void put(Object key, Object value) {
 }
 ```
 
-### 2.3 配置说明
+### 3.3 配置说明
 
 **文件**: [MultiLevelCacheConfig.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/config/MultiLevelCacheConfig.java)
 
@@ -172,10 +178,10 @@ public class MultiLevelCacheConfig {
 }
 ```
 
-### 2.4 性能优势
+### 3.4 性能优势
 
-| 场景 | 单级缓存 | 多级缓存 | 提升 |
-|------|----------|----------|------|
+| 场景 | 单级缓存(Redis) | 多级缓存(L1+L2) | 提升 |
+|------|-----------------|-----------------|------|
 | 热点数据查询 | 5-10ms | 0.5-1ms | **10倍** |
 | 本地缓存命中 | - | 0.5-1ms | - |
 | Redis缓存命中 | 5-10ms | 5-10ms | - |
@@ -183,9 +189,9 @@ public class MultiLevelCacheConfig {
 
 ---
 
-## 3. 异步更新机制
+## 4. 异步更新机制
 
-### 3.1 架构设计
+### 4.1 架构设计
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -215,9 +221,9 @@ public class MultiLevelCacheConfig {
 └────────────────────────────────────────────────────────┘
 ```
 
-### 3.2 核心组件
+### 4.2 核心组件
 
-#### 3.2.1 CacheUpdateMessage
+#### 4.2.1 CacheUpdateMessage
 
 **文件**: [CacheUpdateMessage.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/model/CacheUpdateMessage.java)
 
@@ -231,7 +237,7 @@ public class CacheUpdateMessage {
 }
 ```
 
-#### 3.2.2 CacheUpdateProducer
+#### 4.2.2 CacheUpdateProducer
 
 **文件**: [CacheUpdateProducer.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/kafka/CacheUpdateProducer.java)
 
@@ -249,12 +255,12 @@ public class CacheUpdateProducer {
         message.setValue(value);
         message.setOperation(operation);
         
-        kafkaTemplate.send("cache.update", objectMapper.writeValueAsString(message));
+        kafkaTemplate.send("cache.update", key, objectMapper.writeValueAsString(message));
     }
 }
 ```
 
-#### 3.2.3 CacheUpdateConsumer
+#### 4.2.3 CacheUpdateConsumer
 
 **文件**: [CacheUpdateConsumer.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/kafka/CacheUpdateConsumer.java)
 
@@ -281,7 +287,7 @@ public class CacheUpdateConsumer {
 }
 ```
 
-### 3.3 使用示例
+### 4.3 使用示例
 
 ```java
 @Service
@@ -303,7 +309,7 @@ public class BillingService {
 }
 ```
 
-### 3.4 性能优势
+### 4.4 性能优势
 
 | 操作 | 同步更新 | 异步更新 | 提升 |
 |------|----------|----------|------|
@@ -313,9 +319,9 @@ public class BillingService {
 
 ---
 
-## 4. 智能预热策略
+## 5. 智能预热策略
 
-### 4.1 架构设计
+### 5.1 架构设计
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -347,9 +353,9 @@ public class BillingService {
 └────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 核心组件
+### 5.2 核心组件
 
-#### 4.2.1 AccessPatternAnalyzer
+#### 5.2.1 AccessPatternAnalyzer
 
 **文件**: [AccessPatternAnalyzer.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/cache/AccessPatternAnalyzer.java)
 
@@ -381,7 +387,7 @@ public class AccessPatternAnalyzer {
 }
 ```
 
-#### 4.2.2 SmartWarmupScheduler
+#### 5.2.2 SmartWarmupScheduler
 
 **文件**: [SmartWarmupScheduler.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/cache/SmartWarmupScheduler.java)
 
@@ -404,7 +410,7 @@ public class SmartWarmupScheduler {
 }
 ```
 
-### 4.3 预热策略
+### 5.3 预热策略
 
 | 策略 | 说明 | 适用场景 |
 |------|------|----------|
@@ -412,7 +418,7 @@ public class SmartWarmupScheduler {
 | 基于时间分布 | 根据访问时间分布预热 | 定时任务 |
 | 基于业务规则 | 根据业务规则预热 | 特定业务 |
 
-### 4.4 性能优势
+### 5.4 性能优势
 
 | 指标 | 传统预热 | 智能预热 | 提升 |
 |------|----------|----------|------|
@@ -422,9 +428,9 @@ public class SmartWarmupScheduler {
 
 ---
 
-## 5. 缓存分片策略
+## 6. 缓存分片策略
 
-### 5.1 架构设计
+### 6.1 架构设计
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -449,9 +455,9 @@ public class SmartWarmupScheduler {
 └────────────────────────────────────────────────────────┘
 ```
 
-### 5.2 核心组件
+### 6.2 核心组件
 
-#### 5.2.1 ShardStrategy
+#### 6.2.1 ShardStrategy
 
 **文件**: [ShardStrategy.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/cache/sharding/ShardStrategy.java)
 
@@ -463,7 +469,7 @@ public interface ShardStrategy {
 }
 ```
 
-#### 5.2.2 TimeBasedShardStrategy
+#### 6.2.2 TimeBasedShardStrategy
 
 **文件**: [TimeBasedShardStrategy.java](file:///Users/rongx/Desktop/Code/git/dorm/backend/src/main/java/com/dormpower/cache/sharding/TimeBasedShardStrategy.java)
 
@@ -492,7 +498,7 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 }
 ```
 
-### 5.3 分片策略
+### 6.3 分片策略
 
 | 策略 | 说明 | 适用场景 |
 |------|------|----------|
@@ -500,7 +506,7 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 | ID范围分片 | 按ID范围分片 | 用户数据、设备数据 |
 | 业务分片 | 按业务类型分片 | 多租户场景 |
 
-### 5.4 性能优势
+### 6.4 性能优势
 
 | 场景 | 单一分片 | 时间分片 | 提升 |
 |------|----------|----------|------|
@@ -510,20 +516,20 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 
 ---
 
-## 6. 性能对比
+## 7. 效果验证
 
-### 6.1 综合性能对比
+### 7.1 综合性能对比
 
 | 指标 | v1.0 | v2.0 | v3.0 | 总提升 |
 |------|------|------|------|--------|
-| 平均响应时间 | 150ms | 8ms | 3ms | **98%** ⚡ |
-| 缓存命中率 | 70% | 92% | 98% | **40%** ⚡ |
-| 数据库QPS | 1000 | 500 | 200 | **80%** ⚡ |
-| 系统吞吐量 | 500 QPS | 3500 QPS | 10000 QPS | **1900%** ⚡ |
+| 平均响应时间 | 150ms | 8ms | 3ms | **98%** |
+| 缓存命中率 | 70% | 92% | 98% | **40%** |
+| 数据库QPS | 1000 | 500 | 200 | **80%** |
+| 系统吞吐量 | 500 QPS | 3500 QPS | 10000 QPS | **1900%** |
 
-### 6.2 各优化效果
+### 7.2 各优化效果
 
-#### 6.2.1 多级缓存效果
+#### 7.2.1 多级缓存效果
 
 ```
 查询性能对比：
@@ -537,7 +543,7 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 └────────────────┴──────────┴──────────┴──────────┘
 ```
 
-#### 6.2.2 异步更新效果
+#### 7.2.2 异步更新效果
 
 ```
 更新性能对比：
@@ -550,7 +556,7 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 └────────────────┴──────────┴──────────┴──────────┘
 ```
 
-#### 6.2.3 智能预热效果
+#### 7.2.3 智能预热效果
 
 ```
 缓存命中率对比：
@@ -563,7 +569,7 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 └────────────────┴──────────┴──────────┴──────────┘
 ```
 
-#### 6.2.4 缓存分片效果
+#### 7.2.4 缓存分片效果
 
 ```
 大数据量查询对比：
@@ -578,11 +584,9 @@ public class TimeBasedShardStrategy implements ShardStrategy {
 
 ---
 
-## 7. 最佳实践
+## 8. 最佳实践
 
-### 7.1 多级缓存最佳实践
-
-#### 7.1.1 缓存选择策略
+### 8.1 多级缓存最佳实践
 
 ```java
 // ✅ 推荐：热点数据使用多级缓存
@@ -598,19 +602,7 @@ public Map<String, Object> getAiReport(String roomId, String period) {
 }
 ```
 
-#### 7.1.2 缓存失效策略
-
-```java
-// ✅ 推荐：同时清除两级缓存
-@CacheEvict(value = {"userPermissions", "userRoles"}, allEntries = true)
-public void assignRoleToUser(String username, String roleId) {
-    // 业务逻辑
-}
-```
-
-### 7.2 异步更新最佳实践
-
-#### 7.2.1 消息发送
+### 8.2 异步更新最佳实践
 
 ```java
 // ✅ 推荐：关键数据变更后立即发送消息
@@ -625,39 +617,7 @@ public RechargeRecord recharge(String roomId, double amount, ...) {
 }
 ```
 
-#### 7.2.2 消息消费
-
-```java
-// ✅ 推荐：幂等性处理
-@KafkaListener(topics = "cache.update", groupId = "cache-updater")
-public void handleCacheUpdate(String message) {
-    CacheUpdateMessage msg = parseMessage(message);
-    
-    // 幂等性检查
-    if (isDuplicateMessage(msg)) {
-        return;
-    }
-    
-    // 处理缓存更新
-    processCacheUpdate(msg);
-}
-```
-
-### 7.3 智能预热最佳实践
-
-#### 7.3.1 访问记录
-
-```java
-// ✅ 推荐：记录所有缓存访问
-@Override
-public ValueWrapper get(Object key) {
-    accessPatternAnalyzer.recordAccess(name, key.toString());
-    
-    // 缓存查询逻辑
-}
-```
-
-#### 7.3.2 预热时机
+### 8.3 智能预热最佳实践
 
 ```java
 // ✅ 推荐：在业务低峰期预热
@@ -667,9 +627,7 @@ public void scheduledWarmup() {
 }
 ```
 
-### 7.4 缓存分片最佳实践
-
-#### 7.4.1 分片选择
+### 8.4 缓存分片最佳实践
 
 ```java
 // ✅ 推荐：时间序列数据使用时间分片
@@ -686,33 +644,9 @@ public class TelemetryService {
 }
 ```
 
-#### 7.4.2 分片查询
-
-```java
-// ✅ 推荐：并行查询多个分片
-public List<Telemetry> getTelemetryByTimeRange(long startTime, long endTime) {
-    List<String> shards = timeBasedShardStrategy.getAllShards("telemetry");
-    
-    return shards.parallelStream()
-        .map(shard -> cacheManager.getCache(shard))
-        .flatMap(cache -> getAllFromCache(cache))
-        .filter(t -> t.getTs() >= startTime && t.getTs() <= endTime)
-        .collect(Collectors.toList());
-}
-```
-
 ---
 
-## 8. 总结
-
-### 8.1 优化成果
-
-✅ **多级缓存** - 响应时间从8ms降至3ms，提升62.5%  
-✅ **异步更新** - 更新操作性能提升5-6倍  
-✅ **智能预热** - 缓存命中率从92%提升至98%  
-✅ **缓存分片** - 大数据量查询性能提升10倍  
-
-### 8.2 技术栈
+## 9. 技术栈
 
 | 功能 | 技术选型 | 版本 |
 |------|----------|------|
@@ -721,12 +655,308 @@ public List<Telemetry> getTelemetryByTimeRange(long startTime, long endTime) {
 | 消息队列 | Kafka | 7.5.0 |
 | 监控 | Prometheus + Grafana | 最新 |
 
-### 8.3 未来规划
+---
 
-1. **缓存监控增强** - 实时监控缓存性能
-2. **自动扩容** - 根据负载自动调整缓存大小
-3. **智能降级** - 缓存故障时自动降级
-4. **多机房同步** - 支持多机房缓存同步
+## 10. 面试题目及答案
+
+### Q1: 什么是多级缓存？为什么需要多级缓存？
+
+**答案**：
+
+**多级缓存**：将缓存分为多个层级，通常L1为本地缓存，L2为分布式缓存。
+
+**为什么需要**：
+
+| 问题 | 单级缓存(Redis) | 多级缓存(L1+L2) |
+|------|-----------------|-----------------|
+| 网络延迟 | 5-10ms | 0.5-1ms |
+| 序列化开销 | 有 | L1无 |
+| 分布式一致性 | 天然支持 | 需要额外处理 |
+
+**读取流程**：
+```
+1. 先查L1本地缓存 → 命中返回（0.5-1ms）
+2. 再查L2 Redis缓存 → 命中后回填L1（5-10ms）
+3. 查数据库 → 写入L1+L2（50-100ms）
+```
+
+**适用场景**：
+- 热点数据：用户权限、系统配置
+- 高频访问：设备状态
+
+---
+
+### Q2: 你们如何实现多级缓存？
+
+**答案**：
+
+**核心组件**：
+
+```java
+// MultiLevelCacheManager
+public class MultiLevelCacheManager implements CacheManager {
+    private final CacheManager localCacheManager;   // Caffeine
+    private final CacheManager remoteCacheManager;  // Redis
+    
+    @Override
+    public Cache getCache(String name) {
+        return new MultiLevelCache(
+            localCacheManager.getCache(name),
+            remoteCacheManager.getCache(name)
+        );
+    }
+}
+
+// MultiLevelCache
+public class MultiLevelCache implements Cache {
+    @Override
+    public ValueWrapper get(Object key) {
+        // 1. L1本地缓存
+        ValueWrapper value = localCache.get(key);
+        if (value != null) return value;
+        
+        // 2. L2 Redis缓存
+        value = redisCache.get(key);
+        if (value != null) {
+            localCache.put(key, value.get());  // 回填L1
+        }
+        return value;
+    }
+}
+```
+
+**配置**：
+```java
+@Bean
+@Primary
+public CacheManager multiLevelCacheManager() {
+    return new MultiLevelCacheManager(
+        caffeineCacheManager(),  // L1
+        redisCacheManager()      // L2
+    );
+}
+```
+
+---
+
+### Q3: 为什么使用Kafka实现异步缓存更新？
+
+**答案**：
+
+**同步更新的问题**：
+- 缓存更新阻塞业务线程
+- 写操作响应慢（50-100ms）
+- 缓存更新失败影响业务
+
+**Kafka异步更新的优势**：
+
+| 优势 | 说明 |
+|------|------|
+| 解耦 | 业务操作和缓存更新分离 |
+| 可靠 | 消息持久化，不丢失 |
+| 重试 | 失败可重试 |
+| 性能 | 写操作提升5倍 |
+
+**实现**：
+```java
+// 生产者：业务操作后发送消息
+@Transactional
+public RechargeRecord recharge(String roomId, double amount) {
+    RechargeRecord record = doRecharge(roomId, amount);
+    cacheUpdateProducer.sendCacheEvict("roomBalance", roomId);
+    return record;  // 立即返回，不等待缓存更新
+}
+
+// 消费者：异步更新缓存
+@KafkaListener(topics = "cache.update")
+public void handleCacheUpdate(String message) {
+    CacheUpdateMessage msg = parse(message);
+    cacheManager.getCache(msg.getCacheName()).evict(msg.getKey());
+}
+```
+
+---
+
+### Q4: 什么是智能预热？如何实现？
+
+**答案**：
+
+**智能预热**：基于访问模式分析，自动识别和预热热点数据。
+
+**传统预热问题**：
+- 固定预热内容，不够灵活
+- 可能预热不必要的数据
+- 无法适应访问模式变化
+
+**智能预热实现**：
+
+```java
+// 1. 访问模式分析
+@Service
+public class AccessPatternAnalyzer {
+    private final Map<String, AccessStats> accessStats = new ConcurrentHashMap<>();
+    
+    public void recordAccess(String cacheName, String key) {
+        accessStats.compute(cacheName + ":" + key, (k, v) -> {
+            if (v == null) v = new AccessStats(cacheName, key);
+            v.incrementCount();
+            return v;
+        });
+    }
+    
+    public List<String> getHotKeys(String cacheName, int topN) {
+        return accessStats.entrySet().stream()
+            .filter(e -> e.getKey().startsWith(cacheName + ":"))
+            .sorted((e1, e2) -> Long.compare(e2.getValue().getCount(), e1.getValue().getCount()))
+            .limit(topN)
+            .map(e -> e.getValue().getKey())
+            .collect(Collectors.toList());
+    }
+}
+
+// 2. 定时预热
+@Scheduled(cron = "0 0 * * * ?")  // 每小时
+public void smartWarmup() {
+    Map<String, List<String>> hotKeys = patternAnalyzer.getAllHotKeys(10);
+    hotKeys.forEach((cacheName, keys) -> {
+        keys.forEach(key -> cacheWarmupService.warmupCache(cacheName, key));
+    });
+}
+```
+
+---
+
+### Q5: 什么是缓存分片？为什么需要？
+
+**答案**：
+
+**缓存分片**：将缓存数据按某种策略分散到多个分片中。
+
+**为什么需要**：
+
+| 问题 | 单一分片 | 分片后 |
+|------|----------|--------|
+| 数据量大 | 查询慢（500ms） | 查询快（50ms） |
+| 清理困难 | 全量扫描 | 按分片删除 |
+| 内存占用 | 持续增长 | 可控 |
+
+**时间分片示例**：
+```
+遥测数据按日期分片：
+- telemetry:20260315 → 当天数据
+- telemetry:20260314 → 昨天数据
+- telemetry:20260313 → 前天数据
+
+查询当天数据：只查 telemetry:20260315
+清理7天前数据：直接删除 telemetry:20260308
+```
+
+**实现**：
+```java
+public class TimeBasedShardStrategy implements ShardStrategy {
+    @Override
+    public String getShardKey(String cacheName, Object key) {
+        long timestamp = extractTimestamp(key);
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date(timestamp * 1000));
+        return cacheName + ":" + date;
+    }
+}
+```
+
+---
+
+### Q6: Caffeine和Redis作为缓存有什么区别？
+
+**答案**：
+
+| 特性 | Caffeine (本地缓存) | Redis (分布式缓存) |
+|------|---------------------|-------------------|
+| 存储位置 | JVM堆内存 | 独立进程 |
+| 访问速度 | 0.5-1ms | 5-10ms |
+| 容量限制 | 受JVM内存限制 | 可配置大容量 |
+| 数据共享 | 单节点 | 多节点共享 |
+| 持久化 | 无 | 支持RDB/AOF |
+| 一致性 | 无需考虑 | 需要考虑 |
+
+**选择建议**：
+- 热点数据、小数据量 → Caffeine
+- 需要共享、大数据量 → Redis
+- 最佳实践：多级缓存（Caffeine + Redis）
+
+---
+
+### Q7: 你们如何监控缓存性能？
+
+**答案**：
+
+**监控指标**：
+
+| 指标 | 说明 | 监控方式 |
+|------|------|----------|
+| 缓存命中率 | 命中次数/总次数 | Caffeine.stats() |
+| 平均响应时间 | 查询耗时 | Prometheus |
+| 内存使用 | 缓存占用内存 | Redis INFO |
+| QPS | 每秒查询数 | Redis INFO |
+
+**Caffeine统计**：
+```java
+Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
+    .maximumSize(10000)
+    .recordStats();  // 开启统计
+
+Cache cache = caffeineCacheManager.getCache("userPermissions");
+CacheStats stats = cache.stats();
+System.out.println("命中率: " + stats.hitRate());
+System.out.println("平均加载时间: " + stats.averageLoadPenalty());
+```
+
+**Redis监控**：
+```bash
+redis-cli INFO stats
+# keyspace_hits: 10012
+# keyspace_misses: 38
+# 缓存命中率 = 10012 / (10012 + 38) = 99.6%
+```
+
+---
+
+### Q8: 多级缓存如何保证数据一致性？
+
+**答案**：
+
+**问题**：L1本地缓存各节点独立，更新后其他节点可能持有旧数据。
+
+**解决方案**：
+
+**1. Kafka广播通知**
+```
+节点A更新 → Kafka广播 → 节点B收到消息 → 清除L1缓存
+```
+
+**2. 短TTL兜底**
+- L1缓存TTL设置为5分钟
+- 即使消息丢失，5分钟后自动过期
+
+**3. 版本号/时间戳校验**
+```java
+public ValueWrapper get(Object key) {
+    ValueWrapper localValue = localCache.get(key);
+    if (localValue != null) {
+        // 检查版本号
+        if (isStale(localValue)) {
+            localCache.evict(key);
+        } else {
+            return localValue;
+        }
+    }
+    // 查询Redis...
+}
+```
+
+**一致性级别**：
+- 强一致：不使用L1缓存
+- 最终一致：Kafka + 短TTL（推荐）
+- 弱一致：仅依赖TTL
 
 ---
 
