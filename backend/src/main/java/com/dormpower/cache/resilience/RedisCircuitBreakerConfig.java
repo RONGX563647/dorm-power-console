@@ -25,7 +25,7 @@ import java.time.Duration;
  * - HALF_OPEN: 半开状态，允许部分请求通过测试
  *
  * @author dormpower team
- * @version 1.0
+ * @version 1.1
  */
 @Configuration
 @ConditionalOnProperty(name = "spring.data.redis.host")
@@ -57,11 +57,21 @@ public class RedisCircuitBreakerConfig {
     }
 
     /**
-     * 创建熔断器注册表
+     * 创建熔断器注册表并注册指标
      */
     @Bean
-    public CircuitBreakerRegistry circuitBreakerRegistry(CircuitBreakerConfig config) {
+    public CircuitBreakerRegistry circuitBreakerRegistry(CircuitBreakerConfig config,
+            @Autowired(required = false) MeterRegistry meterRegistry) {
         CircuitBreakerRegistry registry = CircuitBreakerRegistry.of(config);
+
+        // 注册指标到 Micrometer（避免循环依赖）
+        if (meterRegistry != null) {
+            TaggedCircuitBreakerMetrics
+                .ofCircuitBreakerRegistry(registry)
+                .bindTo(meterRegistry);
+            logger.info("CircuitBreaker metrics registered to Micrometer");
+        }
+
         logger.info("CircuitBreaker registry initialized");
         return registry;
     }
@@ -90,18 +100,5 @@ public class RedisCircuitBreakerConfig {
 
         logger.info("Redis CircuitBreaker created with config: failureRateThreshold=50%, waitDuration=30s");
         return circuitBreaker;
-    }
-
-    /**
-     * 注册熔断器指标到 Micrometer
-     */
-    @Autowired(required = false)
-    public void registerMetrics(CircuitBreakerRegistry registry, MeterRegistry meterRegistry) {
-        if (meterRegistry != null) {
-            TaggedCircuitBreakerMetrics
-                .ofCircuitBreakerRegistry(registry)
-                .bindTo(meterRegistry);
-            logger.info("CircuitBreaker metrics registered to Micrometer");
-        }
     }
 }

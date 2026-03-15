@@ -1,12 +1,12 @@
 package com.dormpower.service;
 
-import com.dormpower.kafka.NotificationProducer;
 import com.dormpower.model.Notification;
 import com.dormpower.model.NotificationPreference;
 import com.dormpower.repository.NotificationPreferenceRepository;
 import com.dormpower.repository.NotificationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -24,28 +24,21 @@ import java.util.Map;
 /**
  * 通知服务类
  *
- * v2.1 优化：
- * - 支持 Kafka 异步发送通知
- * - 高并发场景下解耦通知创建与数据库写入
- * - 告警类通知（HIGH 优先级）同步写入保证实时性
+ * v3.0 优化：
+ * - 移除 Kafka 依赖，简化架构
+ * - HIGH 优先级通知（告警）同步写入保证实时性
+ * - NORMAL/LOW 优先级通知按需处理（可丢弃）
  */
 @Service
 public class NotificationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
     @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
     private NotificationPreferenceRepository preferenceRepository;
-
-    @Autowired(required = false)
-    private NotificationProducer notificationProducer;
-
-    @Value("${kafka.enabled:true}")
-    private boolean kafkaEnabled;
-
-    @Value("${kafka.notification.enabled:true}")
-    private boolean notificationKafkaEnabled;
 
     /**
      * 创建通知（清除未读计数缓存）
@@ -58,35 +51,33 @@ public class NotificationService {
     /**
      * 创建系统通知
      *
-     * 优化：支持 Kafka 异步发送
+     * 处理策略：
+     * - HIGH 优先级：同步写入数据库
+     * - NORMAL/LOW 优先级：丢弃（低优先级消息不阻塞主流程）
      */
     public Notification createSystemNotification(String title, String content, String priority) {
-        Notification notification = new Notification();
-        notification.setTitle(title);
-        notification.setContent(content);
-        notification.setType("SYSTEM");
-        notification.setPriority(priority != null ? priority : "NORMAL");
-        notification.setSource("SYSTEM");
+        String effectivePriority = priority != null ? priority : "NORMAL";
 
         // HIGH 优先级通知直接同步写入（保证实时性）
-        if ("HIGH".equals(priority)) {
+        if ("HIGH".equals(effectivePriority)) {
+            Notification notification = new Notification();
+            notification.setTitle(title);
+            notification.setContent(content);
+            notification.setType("SYSTEM");
+            notification.setPriority(effectivePriority);
+            notification.setSource("SYSTEM");
             return notificationRepository.save(notification);
         }
 
-        // 其他优先级使用 Kafka 异步发送
-        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
-            notificationProducer.sendSystemNotification(title, content, priority);
-            return notification;
-        }
-
-        // 降级：直接写入数据库
-        return notificationRepository.save(notification);
+        // NORMAL/LOW 优先级：丢弃（记录日志）
+        logger.debug("Dropping low priority system notification: title={}, priority={}", title, effectivePriority);
+        return null;
     }
 
     /**
      * 创建告警通知（清除未读计数缓存）
      *
-     * v2.1 优化：告警通知同步写入保证实时性
+     * 告警通知始终同步写入保证实时性
      */
     @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createAlertNotification(String title, String content, String username, String sourceId) {
@@ -106,26 +97,13 @@ public class NotificationService {
     /**
      * 创建邮件通知（清除未读计数缓存）
      *
-     * 优化：支持 Kafka 异步发送
+     * 邮件通知为 NORMAL 优先级，按需处理
      */
     @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createEmailNotification(String title, String content, String username) {
-        Notification notification = new Notification();
-        notification.setTitle(title);
-        notification.setContent(content);
-        notification.setType("EMAIL");
-        notification.setPriority("NORMAL");
-        notification.setUsername(username);
-        notification.setSource("EMAIL");
-
-        // 使用 Kafka 异步发送
-        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
-            notificationProducer.sendEmailNotification(title, content, username);
-            return notification;
-        }
-
-        // 降级：直接写入数据库
-        return notificationRepository.save(notification);
+        // NORMAL 优先级：丢弃（邮件通知不阻塞主流程）
+        logger.debug("Dropping low priority email notification: title={}, username={}", title, username);
+        return null;
     }
 
     /**
@@ -202,9 +180,9 @@ public class NotificationService {
 
         return stats;
     }
-    
+
     // ==================== 通知偏好设置 ====================
-    
+
     /**
      * 获取用户通知偏好设置
      */
@@ -215,7 +193,7 @@ public class NotificationService {
                     return preferenceRepository.save(pref);
                 });
     }
-    
+
     /**
      * 更新用户通知偏好设置
      */
@@ -225,7 +203,7 @@ public class NotificationService {
                     NotificationPreference newPref = new NotificationPreference(username);
                     return newPref;
                 });
-        
+
         if (preference.isEmailEnabled() != existingPref.isEmailEnabled()) {
             existingPref.setEmailEnabled(preference.isEmailEnabled());
         }
@@ -253,12 +231,12 @@ public class NotificationService {
         if (preference.getAlertLevel() != null) {
             existingPref.setAlertLevel(preference.getAlertLevel());
         }
-        
+
         existingPref.setUpdatedAt(System.currentTimeMillis() / 1000);
-        
+
         return preferenceRepository.save(existingPref);
     }
-    
+
     /**
      * 重置用户通知偏好设置为默认值
      */
@@ -266,7 +244,7 @@ public class NotificationService {
     public NotificationPreference resetUserPreference(String username) {
         NotificationPreference pref = preferenceRepository.findByUsername(username)
                 .orElseGet(() -> new NotificationPreference(username));
-        
+
         pref.setEmailEnabled(true);
         pref.setSystemEnabled(true);
         pref.setAlertEnabled(true);
@@ -277,16 +255,16 @@ public class NotificationService {
         pref.setQuietHoursEnd("08:00");
         pref.setAlertLevel("warning");
         pref.setUpdatedAt(System.currentTimeMillis() / 1000);
-        
+
         return preferenceRepository.save(pref);
     }
-    
+
     /**
      * 检查用户是否启用了特定类型的通知
      */
     public boolean isNotificationEnabled(String username, String notificationType) {
         NotificationPreference pref = getUserPreference(username);
-        
+
         switch (notificationType.toUpperCase()) {
             case "EMAIL":
                 return pref.isEmailEnabled();
@@ -302,30 +280,30 @@ public class NotificationService {
                 return true;
         }
     }
-    
+
     /**
      * 检查当前是否在用户的免打扰时段内
      */
     public boolean isInQuietHours(String username) {
         NotificationPreference pref = getUserPreference(username);
-        
+
         if (!pref.isQuietHoursEnabled()) {
             return false;
         }
-        
+
         try {
             String[] startParts = pref.getQuietHoursStart().split(":");
             String[] endParts = pref.getQuietHoursEnd().split(":");
-            
+
             int startHour = Integer.parseInt(startParts[0]);
             int startMinute = Integer.parseInt(startParts[1]);
             int endHour = Integer.parseInt(endParts[0]);
             int endMinute = Integer.parseInt(endParts[1]);
-            
+
             java.time.LocalTime now = java.time.LocalTime.now();
             java.time.LocalTime startTime = java.time.LocalTime.of(startHour, startMinute);
             java.time.LocalTime endTime = java.time.LocalTime.of(endHour, endMinute);
-            
+
             if (startTime.isAfter(endTime)) {
                 return now.isAfter(startTime) || now.isBefore(endTime);
             } else {

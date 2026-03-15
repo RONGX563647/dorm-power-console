@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -22,13 +21,10 @@ import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
-import org.springframework.kafka.topic.NewTopic;
 import org.springframework.util.backoff.FixedBackOff;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * Kafka 配置类
@@ -63,47 +59,6 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.consumer.group-id:dorm-power-consumer}")
     private String groupId;
-
-    // ========== Topic 自动创建 ==========
-
-    /**
-     * 自动创建所有业务 Topic
-     *
-     * 包含主 Topic 和对应的死信队列（.DLT）
-     */
-    @Bean
-    public NewTopic[] kafkaTopics() {
-        String[] mainTopics = {
-            "dorm.telemetry",
-            "dorm.device.status",
-            "dorm.alert",
-            "dorm.notification",
-            "dorm.command.ack",
-            "dorm.system.task",
-            "cache.update"
-        };
-
-        NewTopic[] topics = Arrays.stream(mainTopics)
-            .flatMap(topic -> Stream.of(
-                // 主 Topic：3 分区，1 副本
-                TopicBuilder.name(topic)
-                    .partitions(3)
-                    .replicas((short) 1)
-                    .compact()
-                    .build(),
-                // 死信队列 Topic：1 分区，1 副本
-                TopicBuilder.name(topic + ".DLT")
-                    .partitions(1)
-                    .replicas((short) 1)
-                    .compact()
-                    .build()
-            ))
-            .toArray(NewTopic[]::new);
-
-        logger.info("Auto-creating {} Kafka topics (including DLT)", mainTopics.length * 2);
-
-        return topics;
-    }
 
     // ========== 生产者配置 ==========
 

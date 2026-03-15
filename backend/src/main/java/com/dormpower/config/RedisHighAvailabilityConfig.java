@@ -11,7 +11,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -135,14 +134,6 @@ public class RedisHighAvailabilityConfig {
 
         logger.info("Redis Standalone connection factory created - host: {}, port: {}", host, port);
         return factory;
-    }
-
-    /**
-     * StringRedisTemplate
-     */
-    @Bean
-    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory connectionFactory) {
-        return new StringRedisTemplate(connectionFactory);
     }
 
     /**
