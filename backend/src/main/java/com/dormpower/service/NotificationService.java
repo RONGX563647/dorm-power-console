@@ -1,10 +1,12 @@
 package com.dormpower.service;
 
+import com.dormpower.kafka.NotificationProducer;
 import com.dormpower.model.Notification;
 import com.dormpower.model.NotificationPreference;
 import com.dormpower.repository.NotificationPreferenceRepository;
 import com.dormpower.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -21,15 +23,28 @@ import java.util.Map;
 
 /**
  * 通知服务类
+ *
+ * v2.0 优化：
+ * - 支持 Kafka 异步发送通知
+ * - 高并发场景下解耦通知创建与数据库写入
  */
 @Service
 public class NotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
-    
+
     @Autowired
     private NotificationPreferenceRepository preferenceRepository;
+
+    @Autowired(required = false)
+    private NotificationProducer notificationProducer;
+
+    @Value("${kafka.enabled:true}")
+    private boolean kafkaEnabled;
+
+    @Value("${kafka.notification.enabled:true}")
+    private boolean notificationKafkaEnabled;
 
     /**
      * 创建通知（清除未读计数缓存）
@@ -41,8 +56,23 @@ public class NotificationService {
 
     /**
      * 创建系统通知
+     *
+     * 优化：支持 Kafka 异步发送
      */
     public Notification createSystemNotification(String title, String content, String priority) {
+        // 优先使用 Kafka 异步发送
+        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
+            notificationProducer.sendSystemNotification(title, content, priority);
+            Notification notification = new Notification();
+            notification.setTitle(title);
+            notification.setContent(content);
+            notification.setType("SYSTEM");
+            notification.setPriority(priority);
+            notification.setSource("SYSTEM");
+            return notification;
+        }
+
+        // 降级：直接写入数据库
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
@@ -54,9 +84,27 @@ public class NotificationService {
 
     /**
      * 创建告警通知（清除未读计数缓存）
+     *
+     * 优化：支持 Kafka 异步发送，高并发场景下解耦
      */
     @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createAlertNotification(String title, String content, String username, String sourceId) {
+        // 优先使用 Kafka 异步发送
+        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
+            notificationProducer.sendAlertNotification(title, content, username, sourceId);
+            // 返回一个临时对象，实际数据由 Kafka 消费者写入
+            Notification notification = new Notification();
+            notification.setTitle(title);
+            notification.setContent(content);
+            notification.setType("ALERT");
+            notification.setPriority("HIGH");
+            notification.setUsername(username);
+            notification.setSource("ALERT");
+            notification.setSourceId(sourceId);
+            return notification;
+        }
+
+        // 降级：直接写入数据库
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
@@ -70,9 +118,25 @@ public class NotificationService {
 
     /**
      * 创建邮件通知（清除未读计数缓存）
+     *
+     * 优化：支持 Kafka 异步发送
      */
     @CacheEvict(value = "unreadCount", key = "#username")
     public Notification createEmailNotification(String title, String content, String username) {
+        // 优先使用 Kafka 异步发送
+        if (kafkaEnabled && notificationKafkaEnabled && notificationProducer != null) {
+            notificationProducer.sendEmailNotification(title, content, username);
+            Notification notification = new Notification();
+            notification.setTitle(title);
+            notification.setContent(content);
+            notification.setType("EMAIL");
+            notification.setPriority("NORMAL");
+            notification.setUsername(username);
+            notification.setSource("EMAIL");
+            return notification;
+        }
+
+        // 降级：直接写入数据库
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
