@@ -263,6 +263,11 @@ public class WebSocketManager {
             }
         }
 
+        // 清理所有会话和订阅
+        sessions.clear();
+        sessionDeviceSubscriptions.clear();
+        deviceSubscribers.clear();
+
         // 关闭线程池
         sendExecutor.shutdown();
         try {

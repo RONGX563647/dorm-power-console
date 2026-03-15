@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -178,18 +180,13 @@ public class RedisCacheConfig {
      *
      * 配置不同缓存区域的过期时间和序列化方式
      * 启用空值缓存防止缓存穿透
+     *
+     * 注意：不使用 @Primary，由 MultiLevelCacheManager 作为主缓存管理器
+     * 当 Redis 可用时，此 Bean 被 MultiLevelCacheManager 组合使用
      */
     @Bean
-    @org.springframework.context.annotation.Primary
-    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(
-            objectMapper.getPolymorphicTypeValidator(),
-            ObjectMapper.DefaultTyping.NON_FINAL
-        );
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    public CacheManager redisCacheManager(RedisConnectionFactory connectionFactory) {
+        ObjectMapper objectMapper = createSecureObjectMapper();
 
         GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
@@ -236,17 +233,40 @@ public class RedisCacheConfig {
     }
     
     /**
+     * 创建安全的 ObjectMapper
+     *
+     * 配置类型白名单，防止反序列化漏洞
+     *
+     * @return 配置好的 ObjectMapper
+     */
+    private ObjectMapper createSecureObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // 使用安全的类型验证器，限制允许反序列化的类型
+        // 仅允许项目中使用的包路径，防止任意类反序列化攻击
+        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+            .allowIfBaseType("com.dormpower.")      // 项目自身类
+            .allowIfBaseType("java.util.")          // Java集合类
+            .allowIfBaseType("java.lang.")          // Java基础类型
+            .allowIfBaseType("java.time.")          // Java时间类型
+            .allowIfBaseType("org.springframework.")
+            .build();
+
+        objectMapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
+
+        return objectMapper;
+    }
+
+    /**
      * 空值缓存配置
      * 用于防止缓存穿透
      */
     @Bean
     public RedisCacheConfiguration nullValueCacheConfiguration() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(
-            objectMapper.getPolymorphicTypeValidator(),
-            ObjectMapper.DefaultTyping.NON_FINAL
-        );
+        ObjectMapper objectMapper = createSecureObjectMapper();
         
         GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         

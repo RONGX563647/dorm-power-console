@@ -2,6 +2,8 @@ package com.dormpower.mqtt;
 
 import com.dormpower.config.MqttConfig;
 import com.dormpower.kafka.TelemetryProducer;
+import com.dormpower.kafka.CommandAckProducer;
+import com.dormpower.model.CommandAckMessage;
 import com.dormpower.model.CommandRecord;
 import com.dormpower.model.Device;
 import com.dormpower.model.StripStatus;
@@ -71,8 +73,14 @@ public class MqttBridge {
     @Autowired(required = false)
     private TelemetryProducer telemetryProducer;
 
+    @Autowired(required = false)
+    private CommandAckProducer commandAckProducer;
+
     @Value("${kafka.enabled:true}")
     private boolean kafkaEnabled;
+
+    @Value("${kafka.command.enabled:true}")
+    private boolean commandKafkaEnabled;
 
     private MqttClient mqttClient;
     private boolean connected = false;
@@ -285,17 +293,36 @@ public class MqttBridge {
 
     private void handleAckMessage(String deviceId, JsonNode payload) {
         System.out.println("Handling ack message for device: " + deviceId);
-        
+
         String cmdId = payload.has("cmdId") ? payload.get("cmdId").asText() : "";
         String status = payload.has("status") ? payload.get("status").asText() : "success";
         String message = payload.has("message") ? payload.get("message").asText() : "";
-        
+
+        // 优先使用 Kafka 异步处理命令确认
+        if (kafkaEnabled && commandKafkaEnabled && commandAckProducer != null) {
+            CommandAckMessage ackMessage = new CommandAckMessage();
+            ackMessage.setDeviceId(deviceId);
+            ackMessage.setCmdId(cmdId);
+            ackMessage.setStatus(status);
+            ackMessage.setMessage(message);
+
+            if (payload.has("socket")) {
+                ackMessage.setSocket(payload.get("socket").asInt());
+            }
+            if (payload.has("state")) {
+                ackMessage.setSocketState(payload.get("state").asText());
+            }
+
+            commandAckProducer.sendCommandAck(ackMessage);
+            return;
+        }
+
+        // 降级：直接处理
         commandService.updateCommandState(cmdId, status, message);
 
         if (payload.has("socket") && payload.has("state")) {
             int socketId = payload.get("socket").asInt();
-            boolean socketOn = "on".equals(payload.get("state").asText());
-            
+
             StripStatus stripStatus = stripStatusRepository.findByDeviceId(deviceId);
             if (stripStatus != null) {
                 try {

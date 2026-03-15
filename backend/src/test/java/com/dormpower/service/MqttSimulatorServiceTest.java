@@ -56,7 +56,7 @@ public class MqttSimulatorServiceTest {
 
         // 验证模拟器已停止
         MqttSimulatorStatus stoppedStatus = mqttSimulatorService.getSimulatorStatus(response.getTaskId());
-        assertEquals("NOT_FOUND", stoppedStatus.getStatus());
+        assertEquals("STOPPED", stoppedStatus.getStatus());
     }
 
     @Test

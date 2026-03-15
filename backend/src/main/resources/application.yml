@@ -70,6 +70,13 @@ mqtt:
 # Kafka 配置（默认禁用，生产环境启用）
 kafka:
   enabled: ${KAFKA_ENABLED:false}
+  batch-size: ${KAFKA_BATCH_SIZE:100}
+  # 命令处理 Kafka 配置
+  command:
+    enabled: ${KAFKA_COMMAND_ENABLED:true}
+  # 系统任务 Kafka 配置
+  system-task:
+    enabled: ${KAFKA_SYSTEM_TASK_ENABLED:true}
 
 security:
   jwt:

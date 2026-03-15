@@ -32,6 +32,9 @@ spring:
       connection-timeout: 20000
 
   # ========== Redis 配置 ==========
+  # 针对 2核2GB 小型服务器优化连接池配置
+  # Lettuce 基于 Netty NIO，单连接可多线程共享
+  # 连接池主要用于阻塞命令和故障切换
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -40,10 +43,39 @@ spring:
       timeout: 10000ms
       lettuce:
         pool:
-          max-active: 20
-          max-idle: 10
-          min-idle: 5
+          max-active: 8    # 降低最大连接数（原20），适合小型服务器
+          max-idle: 4      # 降低最大空闲连接（原10）
+          min-idle: 2      # 降低最小空闲连接（原5），减少资源占用
           max-wait: -1ms
+      # ========== 哨兵模式配置（可选）==========
+      # sentinel:
+      #   master: ${REDIS_SENTINEL_MASTER:mymaster}
+      #   nodes: ${REDIS_SENTINEL_NODES:}
+      # ========== 集群模式配置（可选）==========
+      # cluster:
+      #   nodes: ${REDIS_CLUSTER_NODES:}
+      #   max-redirects: 3
+
+# ========== Redis 增强配置 ==========
+redis:
+  # 慢查询监控
+  monitor:
+    slow-query-threshold-ms: 100      # 慢查询阈值（毫秒）
+    report-interval-ms: 60000         # 统计报告间隔（毫秒）
+
+  # 热点 Key 检测
+  hotkey:
+    threshold-qps: 100                # 热点阈值（QPS）
+    window-size-ms: 1000              # 滑动窗口大小
+    local-cache-seconds: 60           # 热点 Key 本地缓存时间
+    alert-threshold: 3                # 连续检测次数阈值
+    detect-interval-ms: 1000          # 检测间隔
+
+  # 容量治理
+  capacity:
+    memory-warning-percent: 80        # 内存预警阈值
+    memory-critical-percent: 90       # 内存告警阈值
+    check-interval-ms: 60000          # 检查间隔
 
   # ========== Kafka 配置 ==========
   kafka:

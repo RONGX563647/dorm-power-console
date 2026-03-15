@@ -40,11 +40,11 @@ class WebSocketHandlerTest {
 
     @BeforeEach
     void setUp() {
+        // 重置WebSocketManager实例以确保测试隔离（必须在创建 handler 之前）
+        resetWebSocketManager();
+
         handler = new WebSocketHandler();
         objectMapper = new ObjectMapper();
-
-        // 重置WebSocketManager实例以确保测试隔离
-        resetWebSocketManager();
     }
 
     /**
