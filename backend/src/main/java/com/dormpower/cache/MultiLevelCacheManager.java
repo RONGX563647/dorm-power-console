@@ -20,9 +20,10 @@ import java.util.concurrent.ConcurrentMap;
  * 2. L2缓存：分布式缓存(Redis) - 数据共享，容量大
  * 3. 自动回填：L2命中时自动回填L1
  * 4. 一致性保证：同时更新两级缓存
+ * 5. 多节点支持：支持本地缓存失效广播
  * 
  * @author dormpower team
- * @version 1.0
+ * @version 2.0
  */
 public class MultiLevelCacheManager implements CacheManager {
 
@@ -60,5 +61,57 @@ public class MultiLevelCacheManager implements CacheManager {
     @Override
     public Collection<String> getCacheNames() {
         return Collections.unmodifiableSet(cacheMap.keySet());
+    }
+    
+    /**
+     * 获取本地缓存（L1）
+     * 用于多节点缓存失效时只清除本地缓存
+     */
+    public Cache getLocalCache(String name) {
+        return localCacheManager.getCache(name);
+    }
+    
+    /**
+     * 获取远程缓存（L2）
+     */
+    public Cache getRemoteCache(String name) {
+        return remoteCacheManager.getCache(name);
+    }
+    
+    /**
+     * 获取本地缓存管理器
+     */
+    public CacheManager getLocalCacheManager() {
+        return localCacheManager;
+    }
+    
+    /**
+     * 获取远程缓存管理器
+     */
+    public CacheManager getRemoteCacheManager() {
+        return remoteCacheManager;
+    }
+    
+    /**
+     * 清除指定缓存的本地L1缓存
+     * 用于多节点部署下接收其他节点的失效广播
+     */
+    public void evictLocal(String cacheName, Object key) {
+        Cache localCache = localCacheManager.getCache(cacheName);
+        if (localCache != null) {
+            localCache.evict(key);
+            logger.debug("Evicted local cache - cache: {}, key: {}", cacheName, key);
+        }
+    }
+    
+    /**
+     * 清空指定缓存的本地L1缓存
+     */
+    public void clearLocal(String cacheName) {
+        Cache localCache = localCacheManager.getCache(cacheName);
+        if (localCache != null) {
+            localCache.clear();
+            logger.debug("Cleared local cache - cache: {}", cacheName);
+        }
     }
 }
