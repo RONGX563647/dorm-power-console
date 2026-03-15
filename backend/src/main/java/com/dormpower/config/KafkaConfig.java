@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -21,10 +22,13 @@ import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.topic.NewTopic;
 import org.springframework.util.backoff.FixedBackOff;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Kafka 配置类
@@ -34,16 +38,18 @@ import java.util.Map;
  * 2. 消费者配置（批量消费、手动提交）
  * 3. 监听器容器工厂
  * 4. 错误处理器（重试 + 死信队列）
+ * 5. Topic 自动创建（包括 DLT）
  *
- * v2.0 优化：
+ * v2.1 优化：
  * - 生产者幂等性配置，保证消息不重复
  * - 消费者错误处理，支持重试和死信队列
  * - 优化批量发送参数
+ * - 自动创建 Topic 和死信队列
  *
  * 仅在 kafka.enabled=true 时启用
  *
  * @author dormpower team
- * @version 2.0
+ * @version 2.1
  */
 @Configuration
 @EnableKafka
@@ -57,6 +63,47 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.consumer.group-id:dorm-power-consumer}")
     private String groupId;
+
+    // ========== Topic 自动创建 ==========
+
+    /**
+     * 自动创建所有业务 Topic
+     *
+     * 包含主 Topic 和对应的死信队列（.DLT）
+     */
+    @Bean
+    public NewTopic[] kafkaTopics() {
+        String[] mainTopics = {
+            "dorm.telemetry",
+            "dorm.device.status",
+            "dorm.alert",
+            "dorm.notification",
+            "dorm.command.ack",
+            "dorm.system.task",
+            "cache.update"
+        };
+
+        NewTopic[] topics = Arrays.stream(mainTopics)
+            .flatMap(topic -> Stream.of(
+                // 主 Topic：3 分区，1 副本
+                TopicBuilder.name(topic)
+                    .partitions(3)
+                    .replicas((short) 1)
+                    .compact()
+                    .build(),
+                // 死信队列 Topic：1 分区，1 副本
+                TopicBuilder.name(topic + ".DLT")
+                    .partitions(1)
+                    .replicas((short) 1)
+                    .compact()
+                    .build()
+            ))
+            .toArray(NewTopic[]::new);
+
+        logger.info("Auto-creating {} Kafka topics (including DLT)", mainTopics.length * 2);
+
+        return topics;
+    }
 
     // ========== 生产者配置 ==========
 
