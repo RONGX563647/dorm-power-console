@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 设备告警模型
@@ -11,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "device_alerts")
+@Getter
+@Setter
+@NoArgsConstructor
 public class DeviceAlert {
 
     @Id
@@ -19,11 +25,13 @@ public class DeviceAlert {
     @NotNull
     private String deviceId;
 
+    /** 告警类型：power, voltage, current, online等 */
     @NotNull
-    private String type; // 告警类型：power, voltage, current, online等
+    private String type;
 
+    /** 告警级别：info, warning, error, critical */
     @NotNull
-    private String level; // 告警级别：info, warning, error, critical
+    private String level;
 
     @NotNull
     private String message;
@@ -42,94 +50,4 @@ public class DeviceAlert {
     private long createdAt;
 
     private long resolvedAt;
-
-    // Getters and setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public double getThresholdValue() {
-        return thresholdValue;
-    }
-
-    public void setThresholdValue(double thresholdValue) {
-        this.thresholdValue = thresholdValue;
-    }
-
-    public double getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(double actualValue) {
-        this.actualValue = actualValue;
-    }
-
-    public boolean isResolved() {
-        return resolved;
-    }
-
-    public void setResolved(boolean resolved) {
-        this.resolved = resolved;
-    }
-
-    public long getTs() {
-        return ts;
-    }
-
-    public void setTs(long ts) {
-        this.ts = ts;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getResolvedAt() {
-        return resolvedAt;
-    }
-
-    public void setResolvedAt(long resolvedAt) {
-        this.resolvedAt = resolvedAt;
-    }
-
 }

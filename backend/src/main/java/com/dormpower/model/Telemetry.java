@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 遥测数据模型
@@ -17,6 +20,9 @@ import jakarta.validation.constraints.NotNull;
         @Index(name = "idx_telemetry_ts", columnList = "ts"),
         @Index(name = "idx_telemetry_device_ts", columnList = "deviceId, ts")
 })
+@Getter
+@Setter
+@NoArgsConstructor
 public class Telemetry {
 
     @Id
@@ -37,54 +43,4 @@ public class Telemetry {
 
     @NotNull
     private double currentA;
-
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public long getTs() {
-        return ts;
-    }
-
-    public void setTs(long ts) {
-        this.ts = ts;
-    }
-
-    public double getPowerW() {
-        return powerW;
-    }
-
-    public void setPowerW(double powerW) {
-        this.powerW = powerW;
-    }
-
-    public double getVoltageV() {
-        return voltageV;
-    }
-
-    public void setVoltageV(double voltageV) {
-        this.voltageV = voltageV;
-    }
-
-    public double getCurrentA() {
-        return currentA;
-    }
-
-    public void setCurrentA(double currentA) {
-        this.currentA = currentA;
-    }
-
 }
