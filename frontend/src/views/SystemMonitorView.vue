@@ -134,12 +134,13 @@
       <a-col :span="24">
         <a-row :gutter="20">
           <a-col :xs="24" :lg="12">
-            <a-card title="
-              <span style="display: flex; align-items: center;">
-                <img src="@/assets/icons/chart-bar.svg" alt="Performance" style="width: 20px; height: 20px; margin-right: 8px;" />
-                实时性能趋势
-              </span>
-            " :bordered="false">
+            <a-card :bordered="false">
+              <template #title>
+                <span style="display: flex; align-items: center;">
+                  <img src="@/assets/icons/chart-bar.svg" alt="Performance" style="width: 20px; height: 20px; margin-right: 8px;" />
+                  实时性能趋势
+                </span>
+              </template>
               <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary);">
                 <img src="@/assets/icons/chart-line.svg" alt="Chart" style="width: 32px; height: 32px; margin-right: 8px;" /> 性能趋势图表（开发中...）
               </div>
@@ -147,12 +148,13 @@
           </a-col>
 
           <a-col :xs="24" :lg="12">
-            <a-card title="
-              <span style="display: flex; align-items: center;">
-                <img src="@/assets/icons/lightning.svg" alt="Response Time" style="width: 20px; height: 20px; margin-right: 8px;" />
-                响应时间分布
-              </span>
-            " :bordered="false">
+            <a-card :bordered="false">
+              <template #title>
+                <span style="display: flex; align-items: center;">
+                  <img src="@/assets/icons/lightning.svg" alt="Response Time" style="width: 20px; height: 20px; margin-right: 8px;" />
+                  响应时间分布
+                </span>
+              </template>
               <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary);">
                 <img src="@/assets/icons/lightning.svg" alt="Response Time" style="width: 32px; height: 32px; margin-right: 8px;" /> 响应时间分布图表（开发中...）
               </div>
@@ -166,12 +168,13 @@
         <a-row :gutter="20">
           <a-col :xs="24" :lg="16">
             <!-- API性能统计 -->
-            <a-card title="
-              <span style="display: flex; align-items: center;">
-                <img src="@/assets/icons/rocket.svg" alt="API Performance" style="width: 20px; height: 20px; margin-right: 8px;" />
-                API性能统计
-              </span>
-            " :bordered="false">
+            <a-card :bordered="false">
+              <template #title>
+                <span style="display: flex; align-items: center;">
+                  <img src="@/assets/icons/rocket.svg" alt="API Performance" style="width: 20px; height: 20px; margin-right: 8px;" />
+                  API性能统计
+                </span>
+              </template>
               <template #extra>
                 <a-space>
                   <a-select v-model:value="performanceHours" style="width: 140px" @change="loadAPIPerformance">
@@ -224,12 +227,13 @@
 
           <a-col :xs="24" :lg="8">
             <!-- 告警信息 -->
-            <a-card title="
-              <span style="display: flex; align-items: center;">
-                <img src="@/assets/icons/bell.svg" alt="Alerts" style="width: 20px; height: 20px; margin-right: 8px;" />
-                系统告警
-              </span>
-            " :bordered="false" style="margin-bottom: 20px;">
+            <a-card :bordered="false" style="margin-bottom: 20px;">
+              <template #title>
+                <span style="display: flex; align-items: center;">
+                  <img src="@/assets/icons/bell.svg" alt="Alerts" style="width: 20px; height: 20px; margin-right: 8px;" />
+                  系统告警
+                </span>
+              </template>
               <a-empty v-if="alerts.length === 0" description="暂无告警">
                 <template #image>
                   <CheckCircleOutlined style="font-size: 48px; color: #52c41a;" />
@@ -257,12 +261,13 @@
             </a-card>
 
             <!-- 快捷操作 -->
-            <a-card title="
-              <span style="display: flex; align-items: center;">
-                <img src="@/assets/icons/lightning.svg" alt="Quick Actions" style="width: 20px; height: 20px; margin-right: 8px;" />
-                快捷操作
-              </span>
-            " :bordered="false">
+            <a-card :bordered="false">
+              <template #title>
+                <span style="display: flex; align-items: center;">
+                  <img src="@/assets/icons/lightning.svg" alt="Quick Actions" style="width: 20px; height: 20px; margin-right: 8px;" />
+                  快捷操作
+                </span>
+              </template>
               <a-space direction="vertical" style="width: 100%;">
                 <a-button block @click="handleCollectMetrics">
                   <ThunderboltOutlined />
