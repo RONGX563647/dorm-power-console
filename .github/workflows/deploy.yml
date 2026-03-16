@@ -53,7 +53,7 @@ jobs:
       - name: Build Backend
         run: |
           cd backend
-          mvn clean package -DskipTests -B -s ~/.m2/settings.xml
+          mvn clean package -Dmaven.test.skip=true -B -s ~/.m2/settings.xml
       
       - name: Build Frontend
         run: |
