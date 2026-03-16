@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  SERVER_IP: 117.72.210.10
-  SERVER_USER: root
+  SERVER_IP: 111.230.60.71
+  SERVER_USER: ubuntu
   SERVER_PATH: /opt/dorm-power
 
 jobs:
@@ -288,13 +288,17 @@ jobs:
             echo "=========================================="
             echo "  检查SSL证书"
             echo "=========================================="
-            
+
+            # 创建SSL目录
+            mkdir -p /opt/dorm-power/nginx/ssl
+
             # 检查证书文件是否存在
-            if [ -f /etc/letsencrypt/live/dorm.rongx.top/fullchain.pem ] && [ -f /etc/letsencrypt/live/dorm.rongx.top/privkey.pem ]; then
+            if [ -f /opt/dorm-power/nginx/ssl/cert.pem ] && [ -f /opt/dorm-power/nginx/ssl/key.pem ]; then
               echo "✅ SSL证书已存在"
-              ls -la /etc/letsencrypt/live/dorm.rongx.top/
+              ls -la /opt/dorm-power/nginx/ssl/
             else
               echo "⚠️  SSL证书不存在，Nginx将使用HTTP模式"
+              echo "如需启用HTTPS，请将证书放置到 /opt/dorm-power/nginx/ssl/ 目录"
             fi
           ENDSSH
       - name: Deploy with Docker
