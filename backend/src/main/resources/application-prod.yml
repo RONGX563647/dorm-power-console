@@ -60,11 +60,11 @@ spring:
 redis:
   # 熔断器配置
   circuit-breaker:
-    failure-rate-threshold: 50           # 失败率50%触发熔断
-    slow-call-rate-threshold: 80         # 慢调用率80%触发熔断
-    slow-call-duration-threshold: 500ms  # 慢调用阈值
-    wait-duration-in-open-state: 30s     # 熔断持续30秒
-    sliding-window-size: 10              # 滑动窗口大小
+    failure-rate-threshold: 50              # 失败率阈值 50%
+    slow-call-rate-threshold: 50            # 慢调用率阈值 50%
+    slow-call-duration-threshold: 2s        # 慢调用阈值 2秒
+    wait-duration-in-open-state: 30s        # 熔断开启后等待时间
+    sliding-window-size: 10                 # 滑动窗口大小
 
   # 慢查询监控
   monitor:

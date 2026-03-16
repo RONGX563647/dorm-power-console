@@ -1,5 +1,6 @@
 package com.dormpower.cache;
 
+import com.dormpower.cache.bloom.RedisBloomFilter;
 import com.dormpower.cache.consistency.CacheInvalidationBroadcaster;
 import com.dormpower.cache.hotkey.HotKeyDetectorService;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
@@ -18,12 +19,14 @@ import java.util.function.Supplier;
  *
  * 读取流程：
  * 1. 先查L1本地缓存
- * 2. L1未命中，查L2分布式缓存
- * 3. L2命中，回填L1缓存
+ * 2. L1未命中，检查布隆过滤器（防止穿透）
+ * 3. 布隆过滤器通过后，查L2分布式缓存
+ * 4. L2命中，回填L1缓存
  *
  * 写入流程：
  * 1. 同时写入L1和L2缓存
- * 2. 保证两级缓存一致性
+ * 2. 添加key到布隆过滤器
+ * 3. 保证两级缓存一致性
  *
  * 多节点一致性：
  * - evictLocal(): 仅清除本地L1缓存
@@ -33,9 +36,10 @@ import java.util.function.Supplier;
  * - 熔断保护：Redis故障时自动降级
  * - 热点检测：自动识别热点Key
  * - 缓存广播：多节点缓存一致性
+ * - 布隆过滤器：防止缓存穿透
  *
  * @author dormpower team
- * @version 3.0
+ * @version 3.1
  */
 public class MultiLevelCache implements Cache {
 
@@ -49,6 +53,7 @@ public class MultiLevelCache implements Cache {
     private CircuitBreaker circuitBreaker;
     private HotKeyDetectorService hotKeyDetectorService;
     private CacheInvalidationBroadcaster cacheInvalidationBroadcaster;
+    private RedisBloomFilter redisBloomFilter;
 
     public MultiLevelCache(String name, Cache localCache, Cache remoteCache) {
         this.name = name;
@@ -77,6 +82,14 @@ public class MultiLevelCache implements Cache {
         this.cacheInvalidationBroadcaster = cacheInvalidationBroadcaster;
     }
 
+    /**
+     * 设置布隆过滤器（可选）
+     * 用于防止缓存穿透
+     */
+    public void setRedisBloomFilter(RedisBloomFilter redisBloomFilter) {
+        this.redisBloomFilter = redisBloomFilter;
+    }
+
     @Override
     public String getName() {
         return this.name;
@@ -103,7 +116,14 @@ public class MultiLevelCache implements Cache {
                 return value;
             }
 
-            // 2. L1未命中，使用熔断保护访问L2
+            // 2. 布隆过滤器检查（防止缓存穿透）
+            if (redisBloomFilter != null && !redisBloomFilter.mightContain(name, keyStr)) {
+                // 布隆过滤器确定key不存在，直接返回null，避免查询数据库
+                logger.debug("Cache PENETRATION BLOCKED by BloomFilter - cache: {}, key: {}", name, key);
+                return null;
+            }
+
+            // 3. L1未命中，使用熔断保护访问L2
             value = getFromRemoteWithCircuitBreaker(key);
 
             if (value != null) {
@@ -199,12 +219,24 @@ public class MultiLevelCache implements Cache {
             // 使用熔断保护写入L2
             putRemoteWithCircuitBreaker(key, value);
 
+            // 添加到布隆过滤器（防止后续穿透）
+            addToBloomFilter(String.valueOf(key));
+
             logger.debug("Cache PUT - cache: {}, key: {}, time: {}ms",
                 name, key, System.currentTimeMillis() - startTime);
 
         } catch (Exception e) {
             logger.error("Cache PUT error - cache: {}, key: {}, error: {}",
                 name, key, e.getMessage());
+        }
+    }
+
+    /**
+     * 添加key到布隆过滤器
+     */
+    private void addToBloomFilter(String key) {
+        if (redisBloomFilter != null) {
+            redisBloomFilter.put(name, key);
         }
     }
 

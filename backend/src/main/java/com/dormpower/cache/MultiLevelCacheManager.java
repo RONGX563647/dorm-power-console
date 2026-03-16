@@ -1,5 +1,6 @@
 package com.dormpower.cache;
 
+import com.dormpower.cache.bloom.RedisBloomFilter;
 import com.dormpower.cache.consistency.CacheInvalidationBroadcaster;
 import com.dormpower.cache.hotkey.HotKeyDetectorService;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -26,9 +27,10 @@ import java.util.concurrent.ConcurrentMap;
  * 5. 多节点支持：支持本地缓存失效广播
  * 6. 熔断保护：Redis故障时自动降级
  * 7. 热点检测：自动识别热点Key
+ * 8. 布隆过滤器：防止缓存穿透
  *
  * @author dormpower team
- * @version 3.0
+ * @version 3.1
  */
 public class MultiLevelCacheManager implements CacheManager {
 
@@ -42,6 +44,7 @@ public class MultiLevelCacheManager implements CacheManager {
     private CircuitBreaker circuitBreaker;
     private HotKeyDetectorService hotKeyDetectorService;
     private CacheInvalidationBroadcaster cacheInvalidationBroadcaster;
+    private RedisBloomFilter redisBloomFilter;
 
     public MultiLevelCacheManager(CacheManager localCacheManager, CacheManager remoteCacheManager) {
         this.localCacheManager = localCacheManager;
@@ -75,6 +78,15 @@ public class MultiLevelCacheManager implements CacheManager {
         // 注册缓存失效处理器
         cacheInvalidationBroadcaster.setInvalidationHandler(this::handleCacheInvalidation);
         logger.info("CacheInvalidationBroadcaster enabled for MultiLevelCacheManager");
+    }
+
+    /**
+     * 设置布隆过滤器（由配置类注入）
+     * 用于防止缓存穿透
+     */
+    public void setRedisBloomFilter(RedisBloomFilter redisBloomFilter) {
+        this.redisBloomFilter = redisBloomFilter;
+        logger.info("RedisBloomFilter enabled for MultiLevelCacheManager");
     }
 
     /**
@@ -112,6 +124,9 @@ public class MultiLevelCacheManager implements CacheManager {
             }
             if (cacheInvalidationBroadcaster != null) {
                 multiLevelCache.setCacheInvalidationBroadcaster(cacheInvalidationBroadcaster);
+            }
+            if (redisBloomFilter != null) {
+                multiLevelCache.setRedisBloomFilter(redisBloomFilter);
             }
 
             logger.debug("Created multi-level cache for name: {} with advanced features", key);
