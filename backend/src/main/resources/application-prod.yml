@@ -58,6 +58,14 @@ spring:
 
 # ========== Redis 增强配置 ==========
 redis:
+  # 熔断器配置
+  circuit-breaker:
+    failure-rate-threshold: 50           # 失败率50%触发熔断
+    slow-call-rate-threshold: 80         # 慢调用率80%触发熔断
+    slow-call-duration-threshold: 500ms  # 慢调用阈值
+    wait-duration-in-open-state: 30s     # 熔断持续30秒
+    sliding-window-size: 10              # 滑动窗口大小
+
   # 慢查询监控
   monitor:
     slow-query-threshold-ms: 100      # 慢查询阈值（毫秒）
