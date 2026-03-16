@@ -4,130 +4,56 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 充值记录模型
  */
 @Entity
 @Table(name = "recharge_records")
+@Getter
+@Setter
+@NoArgsConstructor
 public class RechargeRecord {
 
     @Id
     private String id;
 
+    /** 房间ID */
     @NotNull
-    private String roomId; // 房间ID
+    private String roomId;
 
+    /** 充值金额 */
     @NotNull
-    private double amount; // 充值金额
+    private double amount;
 
+    /** 充值前余额 */
     @NotNull
-    private double balanceBefore; // 充值前余额
+    private double balanceBefore;
 
+    /** 充值后余额 */
     @NotNull
-    private double balanceAfter; // 充值后余额
+    private double balanceAfter;
 
+    /** 支付方式：CASH、WECHAT、ALIPAY */
     @NotNull
-    private String paymentMethod; // 支付方式：CASH、WECHAT、ALIPAY
+    private String paymentMethod;
 
-    private String transactionId; // 第三方交易号
+    /** 第三方交易号 */
+    private String transactionId;
 
+    /** 状态：SUCCESS、FAILED、PENDING */
     @NotNull
-    private String status; // 状态：SUCCESS、FAILED、PENDING
+    private String status;
 
-    private String operator; // 操作员
+    /** 操作员 */
+    private String operator;
 
-    private String remark; // 备注
+    /** 备注 */
+    private String remark;
 
     @NotNull
     private long createdAt;
-
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public double getBalanceBefore() {
-        return balanceBefore;
-    }
-
-    public void setBalanceBefore(double balanceBefore) {
-        this.balanceBefore = balanceBefore;
-    }
-
-    public double getBalanceAfter() {
-        return balanceAfter;
-    }
-
-    public void setBalanceAfter(double balanceAfter) {
-        this.balanceAfter = balanceAfter;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
 }

@@ -1,7 +1,16 @@
 package com.dormpower.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 消息模板实体
@@ -11,6 +20,9 @@ import jakarta.validation.constraints.NotBlank;
     @Index(name = "idx_template_code", columnList = "templateCode", unique = true),
     @Index(name = "idx_template_type", columnList = "type")
 })
+@Getter
+@Setter
+@NoArgsConstructor
 public class MessageTemplate {
 
     @Id
@@ -48,124 +60,16 @@ public class MessageTemplate {
 
     private boolean isSystem = false;
 
-    private long createdAt;
+    private long createdAt = System.currentTimeMillis() / 1000;
 
-    private long updatedAt;
+    private long updatedAt = System.currentTimeMillis() / 1000;
 
-    public MessageTemplate() {
-        long now = System.currentTimeMillis() / 1000;
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
+    /**
+     * 便捷构造函数
+     */
     public MessageTemplate(String templateCode, String type, String name) {
-        this();
         this.templateCode = templateCode;
         this.type = type;
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTemplateCode() {
-        return templateCode;
-    }
-
-    public void setTemplateCode(String templateCode) {
-        this.templateCode = templateCode;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getHtmlContent() {
-        return htmlContent;
-    }
-
-    public void setHtmlContent(String htmlContent) {
-        this.htmlContent = htmlContent;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getVariables() {
-        return variables;
-    }
-
-    public void setVariables(String variables) {
-        this.variables = variables;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isSystem() {
-        return isSystem;
-    }
-
-    public void setSystem(boolean system) {
-        isSystem = system;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(long updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

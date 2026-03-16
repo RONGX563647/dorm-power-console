@@ -1,7 +1,16 @@
 package com.dormpower.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 催缴记录实体
@@ -12,6 +21,9 @@ import jakarta.validation.constraints.NotBlank;
     @Index(name = "idx_collection_bill", columnList = "billId"),
     @Index(name = "idx_collection_ts", columnList = "createdAt")
 })
+@Getter
+@Setter
+@NoArgsConstructor
 public class CollectionRecord {
 
     @Id
@@ -58,141 +70,7 @@ public class CollectionRecord {
 
     private long sentTs;
 
-    private long createdAt;
+    private long createdAt = System.currentTimeMillis() / 1000;
 
-    private long updatedAt;
-
-    public CollectionRecord() {
-        long now = System.currentTimeMillis() / 1000;
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getBillId() {
-        return billId;
-    }
-
-    public void setBillId(String billId) {
-        this.billId = billId;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public int getRetryCount() {
-        return retryCount;
-    }
-
-    public void setRetryCount(int retryCount) {
-        this.retryCount = retryCount;
-    }
-
-    public int getMaxRetry() {
-        return maxRetry;
-    }
-
-    public void setMaxRetry(int maxRetry) {
-        this.maxRetry = maxRetry;
-    }
-
-    public long getScheduledTs() {
-        return scheduledTs;
-    }
-
-    public void setScheduledTs(long scheduledTs) {
-        this.scheduledTs = scheduledTs;
-    }
-
-    public long getSentTs() {
-        return sentTs;
-    }
-
-    public void setSentTs(long sentTs) {
-        this.sentTs = sentTs;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(long updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    private long updatedAt = System.currentTimeMillis() / 1000;
 }
