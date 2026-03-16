@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: dorm-power-console/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -59,7 +59,7 @@ jobs:
       
       - name: Build Frontend
         run: |
-          cd dorm-power-console
+          cd frontend
           npm config set registry https://registry.npmmirror.com/
           npm ci
           npm run build
@@ -77,9 +77,8 @@ jobs:
             --exclude='back_end' \
             --exclude='backend/src/test' \
             --exclude='doc' \
-            --exclude='dorm-power-console/.next' \
-            --exclude='dorm-power-console/*.md' \
-            --exclude='dorm-power-console/package-lock.json' \
+            --exclude='frontend/dist' \
+            --exclude='frontend/*.md' \
             --exclude='*.sh' \
             --exclude='.git' \
             --exclude='.github' \
@@ -94,7 +93,6 @@ jobs:
             --exclude='mosquitto/log' \
             --exclude='.gitignore' \
             --exclude='.eslintrc.json' \
-            --exclude='next-env.d.ts' \
             --include='backend/' \
             --include='backend/src/' \
             --include='backend/src/main/' \
@@ -102,24 +100,27 @@ jobs:
             --include='backend/src/main/resources/**' \
             --include='backend/pom.xml' \
             --include='backend/Dockerfile' \
+            --include='backend/docker-entrypoint.sh' \
             --include='backend/.env.example' \
             --include='backend/mosquitto/' \
             --include='backend/mosquitto/**' \
-            --include='dorm-power-console/' \
-            --include='dorm-power-console/src/' \
-            --include='dorm-power-console/src/**' \
-            --include='dorm-power-console/package.json' \
-            --include='dorm-power-console/Dockerfile' \
-            --include='dorm-power-console/next.config.ts' \
-            --include='dorm-power-console/tsconfig.json' \
-            --include='dorm-power-console/public/' \
-            --include='dorm-power-console/public/**' \
+            --include='frontend/' \
+            --include='frontend/src/' \
+            --include='frontend/src/**' \
+            --include='frontend/public/' \
+            --include='frontend/public/**' \
+            --include='frontend/package.json' \
+            --include='frontend/package-lock.json' \
+            --include='frontend/Dockerfile' \
+            --include='frontend/nginx.conf' \
+            --include='frontend/vite.config.ts' \
+            --include='frontend/tsconfig.json' \
+            --include='frontend/index.html' \
             --include='docker-compose.yml' \
             --include='docker-compose.production.yml' \
             --include='nginx/' \
             --include='nginx/**' \
             --include='.env.production.example' \
-            --include='.env.docker.example' \
             --exclude='*' \
             ./ \
             ${{ env.SERVER_USER }}@${{ env.SERVER_IP }}:${{ env.SERVER_PATH }}/
