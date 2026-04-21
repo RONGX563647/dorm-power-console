@@ -353,7 +353,6 @@ def convert_markdown_to_html(md_file):
         extensions=[
             'fenced_code',
             'codehilite',
-            'toc',
             'tables',
             'admonition',
             'attr_list',

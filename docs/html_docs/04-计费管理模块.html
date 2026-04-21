@@ -275,15 +275,15 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="04">模块 04：计费管理模块</h1>
+<h1>模块 04：计费管理模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 3-4 天<br />
 <strong>难度</strong>: ⭐⭐⭐☆☆<br />
 <strong>前置知识</strong>: 模块 01、模块 03、BigDecimal 精度控制、策略模式基础</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解电费计费业务逻辑</li>
 <li>✅ 掌握多种电价策略设计</li>
@@ -291,7 +291,7 @@
 <li>✅ 掌握支付流程设计</li>
 <li>✅ 理解余额管理机制</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够实现电费计算引擎</li>
 <li>✅ 能够设计账单管理系统</li>
@@ -299,7 +299,7 @@
 <li>✅ 能够完成余额管理</li>
 <li>✅ 能够开发数据报表功能</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 完整的电费计算引擎（支持峰谷、阶梯电价）
 - 📁 账单生成与管理系统
@@ -308,8 +308,8 @@
 - 📁 前端账单管理页面
 - 📁 用电统计报表</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：月度账单生成</strong></p>
 <div class="codehilite"><pre><span></span><code>每月初定时任务 → 获取上月用电数据 → 应用电价规则 → 计算电费 → 生成账单 → 推送通知
 </code></pre></div>
@@ -326,7 +326,7 @@
 <div class="codehilite"><pre><span></span><code>定时检查余额 → 余额低于阈值 → 自动触发充值 → 更新余额 → 发送通知
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -378,7 +378,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -426,9 +426,9 @@
 - <strong>定时任务 vs 消息队列</strong>：简单场景用定时任务，复杂场景用消息队列延迟处理
 - <strong>PDF vs Excel</strong>：PDF 适合打印，Excel 适合数据分析，根据场景选择</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-electricitybill">1.1 创建 ElectricityBill 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 创建 ElectricityBill 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/ElectricityBill.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -511,7 +511,7 @@
 - [ ] 理解索引设计目的
 - [ ] 理解金额字段使用 BigDecimal
 - [ ] 运行项目，查看数据库表结构</p>
-<h4 id="12-electricitypricerule">1.2 创建 ElectricityPriceRule 实体</h4>
+<h4>1.2 创建 ElectricityPriceRule 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/ElectricityPriceRule.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -571,7 +571,7 @@
 - [ ] 创建 ElectricityPriceRule.java
 - [ ] 理解枚举类型使用
 - [ ] 理解不同电价类型的字段设计</p>
-<h4 id="13-roombalance-rechargerecord">1.3 创建 RoomBalance 和 RechargeRecord 实体</h4>
+<h4>1.3 创建 RoomBalance 和 RechargeRecord 实体</h4>
 <p><strong>文件位置</strong>: 
 - <code>backend/src/main/java/com/dormpower/model/RoomBalance.java</code>
 - <code>backend/src/main/java/com/dormpower/model/RechargeRecord.java</code></p>
@@ -686,8 +686,8 @@
 - [ ] 理解@UniqueConstraint 用法
 - [ ] 理解余额账户设计思路</p>
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-electricitybillrepository">2.1 创建 ElectricityBillRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 创建 ElectricityBillRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/ElectricityBillRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -726,8 +726,8 @@
 - [ ] 理解 Spring Data JPA 查询方法
 - [ ] 测试 Repository 方法</p>
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-billingservice">3.1 创建 BillingService</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 创建 BillingService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/BillingService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -754,7 +754,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="32-billingserviceimpl">3.2 创建 BillingServiceImpl</h4>
+<h4>3.2 创建 BillingServiceImpl</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/BillingServiceImpl.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
@@ -876,8 +876,8 @@
 - [ ] 理解@Transactional 注解作用
 - [ ] 理解账单生成流程</p>
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="41-billingcontroller">4.1 创建 BillingController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>4.1 创建 BillingController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/BillingController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -946,8 +946,8 @@
 - [ ] 理解 RESTful API 设计
 - [ ] 使用 Postman 测试接口</p>
 <hr />
-<h2 id="_7">四、单元测试</h2>
-<h3 id="41">4.1 测试类设计</h3>
+<h2>四、单元测试</h2>
+<h3>4.1 测试类设计</h3>
 <p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/BillingControllerTest.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -1032,8 +1032,8 @@
 - [ ] 理解 MockMvc 测试方法
 - [ ] 运行测试：<code>mvn test -Dtest=BillingControllerTest</code></p>
 <hr />
-<h2 id="_8">五、前端实现（分步骤）</h2>
-<h3 id="1_1">步骤 1：类型定义</h3>
+<h2>五、前端实现（分步骤）</h2>
+<h3>步骤 1：类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/billing.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">ElectricityBill</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -1100,7 +1100,7 @@
 - [ ] 创建 billing.ts 文件
 - [ ] 理解 TypeScript 接口定义</p>
 <hr />
-<h3 id="2api">步骤 2：API 封装</h3>
+<h3>步骤 2：API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/billing.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ElectricityBill</span><span class="p">,</span><span class="w"> </span><span class="nx">BillingRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">BillingResult</span><span class="p">,</span><span class="w"> </span><span class="nx">RoomBalance</span><span class="p">,</span><span class="w"> </span><span class="nx">RechargeRecord</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/billing&#39;</span><span class="p">;</span>
@@ -1178,7 +1178,7 @@
 - [ ] 理解 Axios 封装
 - [ ] 测试 API 调用</p>
 <hr />
-<h3 id="3">步骤 3：账单管理页面</h3>
+<h3>步骤 3：账单管理页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/BillingView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;billing-container&quot;</span><span class="p">&gt;</span>
@@ -1401,9 +1401,9 @@
 - [ ] 理解 Vue 3 Composition API
 - [ ] 运行前端项目测试页面</p>
 <hr />
-<h2 id="_9">六、联调验证</h2>
-<h3 id="61">6.1 功能验证清单</h3>
-<h4 id="_10">后端验证</h4>
+<h2>六、联调验证</h2>
+<h3>6.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] 测试电费计算接口</li>
@@ -1412,7 +1412,7 @@
 <li>[ ] 验证电价规则正确应用</li>
 <li>[ ] 测试余额更新逻辑</li>
 </ul>
-<h4 id="_11">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问账单管理页面</li>
@@ -1421,14 +1421,14 @@
 <li>[ ] 测试账单支付</li>
 <li>[ ] 验证支付状态更新</li>
 </ul>
-<h4 id="_12">性能验证</h4>
+<h4>性能验证</h4>
 <ul>
 <li>[ ] 测试批量生成账单（100 个房间）</li>
 <li>[ ] 验证大数据量查询性能</li>
 <li>[ ] 测试并发支付</li>
 </ul>
-<h3 id="62">6.2 常见问题与解决方案</h3>
-<h4 id="1_2">问题 1：电费计算精度问题</h4>
+<h3>6.2 常见问题与解决方案</h3>
+<h4>问题 1：电费计算精度问题</h4>
 <p><strong>现象</strong>: 金额计算出现精度丢失</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 使用 BigDecimal，设置精度和舍入模式</span>
@@ -1436,7 +1436,7 @@
 <span class="w">    </span><span class="p">.</span><span class="na">setScale</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">RoundingMode</span><span class="p">.</span><span class="na">HALF_UP</span><span class="p">);</span>
 </code></pre></div>
 
-<h4 id="2">问题 2：余额并发更新问题</h4>
+<h4>问题 2：余额并发更新问题</h4>
 <p><strong>现象</strong>: 同时充值导致余额不正确</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 使用数据库行锁</span>
@@ -1449,8 +1449,8 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_13">七、完成后的文件结构 📁</h2>
-<h3 id="_14">后端新增/修改的文件</h3>
+<h2>七、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">ElectricityBill</span><span class="p">.</span><span class="nx">java</span><span class="w">        </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1477,7 +1477,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">BillingScheduler</span><span class="p">.</span><span class="nx">java</span><span class="w">       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_15">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">billing</span><span class="p">.</span><span class="nx">ts</span><span class="w">                  </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1493,7 +1493,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">BillExport</span><span class="p">.</span><span class="nx">vue</span><span class="w">              </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_16">测试文件</h3>
+<h3>测试文件</h3>
 <div class="codehilite"><pre><span></span><code>backend/src/test/java/com/dormpower/
 ├── controller/
 │   └── BillingControllerTest.java  ✅ 新建
@@ -1502,22 +1502,22 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_17">八、扩展练习 💪</h2>
-<h3 id="_18">基础练习</h3>
+<h2>八、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>添加账单导出功能（Excel 格式）</li>
 <li>实现充值记录查询</li>
 <li>添加余额预警功能</li>
 <li>实现用电统计图表</li>
 </ol>
-<h3 id="_19">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>集成第三方支付（支付宝/微信）</li>
 <li>实现信用额度功能</li>
 <li>实现账单分期</li>
 <li>实现用电预算功能</li>
 </ol>
-<h3 id="_20">挑战练习</h3>
+<h3>挑战练习</h3>
 <ol>
 <li>实现电费预计算和缓存</li>
 <li>实现分布式事务（Seata）</li>
@@ -1525,9 +1525,9 @@
 <li>实现节能建议生成</li>
 </ol>
 <hr />
-<h2 id="_21">九、知识点总结 📝</h2>
-<h3 id="_22">核心知识点</h3>
-<h4 id="_23">后端</h4>
+<h2>九、知识点总结 📝</h2>
+<h3>核心知识点</h3>
+<h4>后端</h4>
 <ol>
 <li><strong>BigDecimal 精度控制</strong></li>
 <li>金额计算</li>
@@ -1555,7 +1555,7 @@
 <li>支付事务</li>
 <li>充值事务</li>
 </ol>
-<h4 id="_24">前端</h4>
+<h4>前端</h4>
 <ol>
 <li><strong>表单验证</strong></li>
 <li>金额验证</li>
@@ -1575,7 +1575,7 @@
 <li>用电统计</li>
 <li>费用趋势</li>
 </ol>
-<h3 id="_25">最佳实践</h3>
+<h3>最佳实践</h3>
 <ol>
 <li><strong>金额计算</strong></li>
 <li>使用 BigDecimal</li>
@@ -1599,7 +1599,7 @@
 <li>审计日志</li>
 </ol>
 <hr />
-<h2 id="_26">十、下一步学习</h2>
+<h2>十、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./05-告警管理模块.md">05-告警管理模块</a></strong> - 学习告警规则设计</li>

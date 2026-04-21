@@ -275,29 +275,29 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="02">模块 02：设备管理模块</h1>
+<h1>模块 02：设备管理模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 4-5 天<br />
 <strong>难度</strong>: ⭐⭐⭐⭐<br />
 <strong>前置知识</strong>: 完成模块 01（用户认证与权限管理）</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解 IoT 设备管理架构</li>
 <li>✅ 掌握 MQTT 通信协议</li>
 <li>✅ 理解设备生命周期管理</li>
 <li>✅ 掌握设备状态机设计</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够设计设备管理数据库</li>
 <li>✅ 能够实现 MQTT 设备通信</li>
 <li>✅ 能够完成设备状态监控</li>
 <li>✅ 能够实现设备分组管理</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 设备 CRUD 接口（创建、查询、更新、删除）
 - 📁 设备分组管理功能
@@ -305,8 +305,8 @@
 - 📁 固件升级功能
 - 📁 前端设备管理页面</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：设备注册</strong></p>
 <div class="codehilite"><pre><span></span><code>新设备到货 → 录入系统 → 分配房间 → 设备上线 → 状态变为 ONLINE
 </code></pre></div>
@@ -323,7 +323,7 @@
 <div class="codehilite"><pre><span></span><code>上传固件 → 选择目标设备 → 推送升级命令 → 设备下载升级 → 上报新版本
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -365,7 +365,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -407,9 +407,9 @@
 - <strong>JPA vs MyBatis</strong>：选择 JPA 因为设备管理 CRUD 操作多，JPA 开发效率更高
 - <strong>WebSocket vs SSE</strong>：选择 WebSocket 因为需要双向通信（前端也可发送控制命令）</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-device">1.1 Device 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 Device 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/Device.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -489,7 +489,7 @@
 - [ ] 理解每个字段的含义
 - [ ] 理解枚举类型定义
 - [ ] 运行项目，查看数据库生成的表结构</p>
-<h4 id="12-devicegroup">1.2 DeviceGroup 实体</h4>
+<h4>1.2 DeviceGroup 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/DeviceGroup.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -522,7 +522,7 @@
 <p><strong>实操任务</strong>:
 - [ ] 创建 DeviceGroup.java
 - [ ] 理解设备组与设备的关系</p>
-<h4 id="13-devicestatushistory">1.3 DeviceStatusHistory 实体</h4>
+<h4>1.3 DeviceStatusHistory 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/DeviceStatusHistory.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -559,8 +559,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-devicerepository">2.1 DeviceRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 DeviceRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/DeviceRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -592,7 +592,7 @@
 - [ ] 创建 DeviceRepository.java
 - [ ] 理解 Spring Data JPA 的命名查询
 - [ ] 测试 Repository 方法</p>
-<h4 id="22-devicegrouprepository">2.2 DeviceGroupRepository</h4>
+<h4>2.2 DeviceGroupRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/DeviceGroupRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -608,8 +608,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-deviceservice">3.1 DeviceService 接口</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 DeviceService 接口</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/DeviceService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -636,7 +636,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="32-deviceserviceimpl">3.2 DeviceServiceImpl 实现</h4>
+<h4>3.2 DeviceServiceImpl 实现</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/DeviceServiceImpl.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
@@ -771,8 +771,8 @@
 - [ ] 理解 CRUD 操作实现
 - [ ] 理解设备状态更新逻辑</p>
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="devicecontroller">DeviceController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>DeviceController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/DeviceController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -844,8 +844,8 @@
 - [ ] 理解@PreAuthorize 权限控制
 - [ ] 使用 Postman 测试设备 CRUD 接口</p>
 <hr />
-<h2 id="_7">四、单元测试</h2>
-<h3 id="devicecontrollertest">DeviceControllerTest</h3>
+<h2>四、单元测试</h2>
+<h3>DeviceControllerTest</h3>
 <p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/DeviceControllerTest.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -926,8 +926,8 @@
 - [ ] 运行测试：<code>mvn test -Dtest=DeviceControllerTest</code>
 - [ ] 查看测试覆盖率报告</p>
 <hr />
-<h2 id="_8">五、前端实现（分步骤）</h2>
-<h3 id="1_1">步骤 1：类型定义</h3>
+<h2>五、前端实现（分步骤）</h2>
+<h3>步骤 1：类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/device.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="nx">DeviceType</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">SOCKET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SOCKET&#39;</span><span class="p">,</span>
@@ -980,7 +980,7 @@
 - [ ] 理解 TypeScript 枚举和接口
 - [ ] 添加新的类型定义</p>
 <hr />
-<h3 id="2api">步骤 2：API 封装</h3>
+<h3>步骤 2：API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/device.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Device</span><span class="p">,</span><span class="w"> </span><span class="nx">CreateDeviceRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">DeviceGroup</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/device&#39;</span><span class="p">;</span>
@@ -1047,7 +1047,7 @@
 - [ ] 理解 Axios 封装
 - [ ] 测试 API 调用</p>
 <hr />
-<h3 id="3">步骤 3：页面组件</h3>
+<h3>步骤 3：页面组件</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/DevicesView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;devices-view&quot;</span><span class="p">&gt;</span>
@@ -1313,7 +1313,7 @@
 - [ ] 理解表单验证
 - [ ] 测试设备列表和 CRUD 操作</p>
 <hr />
-<h3 id="4">步骤 4：状态管理</h3>
+<h3>步骤 4：状态管理</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/stores/device.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineStore</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;pinia&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span><span class="p">;</span>
@@ -1379,7 +1379,7 @@
 - [ ] 理解 Pinia 状态管理
 - [ ] 测试状态管理功能</p>
 <hr />
-<h3 id="5">步骤 5：路由配置</h3>
+<h3>步骤 5：路由配置</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/router/index.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">,</span><span class="w"> </span><span class="nx">createWebHistory</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue-router&#39;</span><span class="p">;</span>
 
@@ -1408,9 +1408,9 @@
 - [ ] 配置设备管理路由
 - [ ] 测试路由访问</p>
 <hr />
-<h2 id="_9">六、联调验证</h2>
-<h3 id="61">6.1 功能验证清单</h3>
-<h4 id="_10">后端验证</h4>
+<h2>六、联调验证</h2>
+<h3>6.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] Postman 测试创建设备接口</li>
@@ -1419,7 +1419,7 @@
 <li>[ ] 测试删除设备</li>
 <li>[ ] 验证设备状态更新</li>
 </ul>
-<h4 id="_11">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问设备管理页面</li>
@@ -1429,14 +1429,14 @@
 <li>[ ] 测试删除设备</li>
 <li>[ ] 测试筛选功能</li>
 </ul>
-<h4 id="_12">联调验证</h4>
+<h4>联调验证</h4>
 <ul>
 <li>[ ] 前端创建设备后后端数据库有记录</li>
 <li>[ ] 后端删除设备后前端列表更新</li>
 <li>[ ] 设备状态实时更新</li>
 </ul>
-<h3 id="62">6.2 常见问题与解决方案</h3>
-<h4 id="1-id">问题 1：设备 ID 重复</h4>
+<h3>6.2 常见问题与解决方案</h3>
+<h4>问题 1：设备 ID 重复</h4>
 <p><strong>现象</strong>: 创建设备时报"设备 ID 已存在"</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 在 Service 层检查</span>
@@ -1445,15 +1445,15 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="2">问题 2：设备状态不更新</h4>
+<h4>问题 2：设备状态不更新</h4>
 <p><strong>现象</strong>: 设备上线后状态仍显示离线</p>
 <p><strong>解决方案</strong>:
 - 检查 MqttBridge 是否正确处理设备上线消息
 - 检查 WebSocket 推送是否正常
 - 检查前端是否正确接收推送</p>
 <hr />
-<h2 id="_13">七、完成后的文件结构 📁</h2>
-<h3 id="_14">后端新增/修改的文件</h3>
+<h2>七、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">Device</span><span class="p">.</span><span class="nx">java</span><span class="w">                  </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1481,7 +1481,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">MqttBridge</span><span class="p">.</span><span class="nx">java</span><span class="w">              </span><span class="err">✏️</span><span class="w"> </span><span class="nx">修改</span><span class="err">（</span><span class="nx">处理设备上线</span><span class="err">）</span>
 </code></pre></div>
 
-<h3 id="_15">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">device</span><span class="p">.</span><span class="nx">ts</span><span class="w">                    </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1497,7 +1497,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">index</span><span class="p">.</span><span class="nx">ts</span><span class="w">                     </span><span class="err">✏️</span><span class="w"> </span><span class="nx">修改</span><span class="err">（</span><span class="nx">添加路由</span><span class="err">）</span>
 </code></pre></div>
 
-<h3 id="_16">测试文件</h3>
+<h3>测试文件</h3>
 <div class="codehilite"><pre><span></span><code>backend/src/test/java/com/dormpower/
 ├── controller/
 │   └── DeviceControllerTest.java    ✅ 新建
@@ -1506,29 +1506,29 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_17">八、扩展练习 💪</h2>
-<h3 id="_18">基础练习</h3>
+<h2>八、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>实现设备批量导入（CSV）</li>
 <li>实现设备搜索功能（按名称、型号）</li>
 <li>实现设备详情页面</li>
 </ol>
-<h3 id="_19">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>实现设备离线缓存机制</li>
 <li>实现设备状态统计功能</li>
 <li>实现设备分组批量操作</li>
 </ol>
-<h3 id="_20">挑战练习</h3>
+<h3>挑战练习</h3>
 <ol>
 <li>实现设备预测性维护（基于数据分析）</li>
 <li>实现设备健康度评估</li>
 <li>实现设备固件 OTA 升级</li>
 </ol>
 <hr />
-<h2 id="_21">九、知识点总结 📝</h2>
-<h3 id="_22">核心知识点</h3>
-<h4 id="_23">后端</h4>
+<h2>九、知识点总结 📝</h2>
+<h3>核心知识点</h3>
+<h4>后端</h4>
 <ol>
 <li><strong>MQTT 协议</strong></li>
 <li>设备主题规范</li>
@@ -1549,7 +1549,7 @@
 <li>枚举类型</li>
 <li>预更新回调</li>
 </ol>
-<h4 id="_24">前端</h4>
+<h4>前端</h4>
 <ol>
 <li><strong>设备列表展示</strong></li>
 <li>表格组件</li>
@@ -1563,7 +1563,7 @@
 <li>WebSocket 订阅</li>
 <li>状态响应式更新</li>
 </ol>
-<h3 id="_25">最佳实践</h3>
+<h3>最佳实践</h3>
 <ol>
 <li>设备 ID 唯一性检查</li>
 <li>状态变更历史记录</li>
@@ -1571,7 +1571,7 @@
 <li>前端状态标签颜色规范</li>
 </ol>
 <hr />
-<h2 id="_26">十、下一步学习</h2>
+<h2>十、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./03-数据采集与监控模块.md">模块 03：数据采集与监控</a></strong> - 学习实时数据采集</li>

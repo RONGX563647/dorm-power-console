@@ -275,29 +275,29 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="07">模块 07：宿舍管理模块</h1>
+<h1>模块 07：宿舍管理模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 2-3 天<br />
 <strong>难度</strong>: ⭐⭐☆☆☆<br />
 <strong>前置知识</strong>: 模块 01、模块 02、基础 CRUD 开发</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解宿舍管理业务模型</li>
 <li>✅ 掌握楼栋 - 房间层级设计</li>
 <li>✅ 理解入住退宿流程</li>
 <li>✅ 掌握住宿统计方法</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够设计宿舍管理数据库</li>
 <li>✅ 能够实现 CRUD 接口</li>
 <li>✅ 能够完成入住退宿功能</li>
 <li>✅ 能够开发统计报表</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 楼栋管理 API
 - 📁 房间管理 API
@@ -305,8 +305,8 @@
 - 📁 住宿统计 API
 - 📁 前端宿舍管理页面</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：楼栋管理</strong></p>
 <div class="codehilite"><pre><span></span><code>创建楼栋 → 设置楼层数 → 设置房间数 → 楼栋信息维护
 </code></pre></div>
@@ -323,7 +323,7 @@
 <div class="codehilite"><pre><span></span><code>学生申请 → 管理员审核 → 检查设备 → 办理退宿 → 清理数据
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -365,7 +365,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -407,9 +407,9 @@
 - <strong>手动 SQL vs JPA</strong>：选择 JPA 因为 CRUD 操作多，查询逻辑简单
 - <strong>前端分页 vs 后端分页</strong>：选择后端分页，减少前端压力，适合大数据量</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-building-room">1.1 创建 Building 和 Room 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 创建 Building 和 Room 实体</h4>
 <p><strong>文件位置</strong>: 
 - <code>backend/src/main/java/com/dormpower/model/Building.java</code>
 - <code>backend/src/main/java/com/dormpower/model/Room.java</code></p>
@@ -514,7 +514,7 @@
 - [ ] 创建 Building.java 和 Room.java
 - [ ] 理解楼栋 - 房间关系
 - [ ] 运行项目，查看数据库表结构</p>
-<h4 id="12-residencerecord">1.2 创建 ResidenceRecord 实体</h4>
+<h4>1.2 创建 ResidenceRecord 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/ResidenceRecord.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -568,8 +568,8 @@
 - [ ] 创建 ResidenceRecord.java
 - [ ] 理解住宿记录设计</p>
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-roomrepository">2.1 创建 RoomRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 创建 RoomRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/RoomRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -599,8 +599,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-roomservice">3.1 创建 RoomService</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 创建 RoomService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/RoomService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -632,8 +632,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="41-roomcontroller">4.1 创建 RoomController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>4.1 创建 RoomController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/RoomController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -721,8 +721,8 @@
 - [ ] 理解 RESTful API 设计
 - [ ] 使用 Postman 测试接口</p>
 <hr />
-<h2 id="_7">四、前端实现</h2>
-<h3 id="41">4.1 类型定义</h3>
+<h2>四、前端实现</h2>
+<h3>4.1 类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/room.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Building</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -760,7 +760,7 @@
 <span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ResidenceStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ACTIVE&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;CHECKED_OUT&#39;</span><span class="p">;</span>
 </code></pre></div>
 
-<h3 id="42-api">4.2 API 封装</h3>
+<h3>4.2 API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/room.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Room</span><span class="p">,</span><span class="w"> </span><span class="nx">Building</span><span class="p">,</span><span class="w"> </span><span class="nx">ResidenceRecord</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/room&#39;</span><span class="p">;</span>
@@ -818,7 +818,7 @@
 <span class="p">};</span>
 </code></pre></div>
 
-<h3 id="43">4.3 宿舍管理页面</h3>
+<h3>4.3 宿舍管理页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/RoomManagementView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;room-management&quot;</span><span class="p">&gt;</span>
@@ -934,9 +934,9 @@
 - [ ] 理解 Vue 3 Composition API
 - [ ] 运行前端项目测试页面</p>
 <hr />
-<h2 id="_8">五、联调验证</h2>
-<h3 id="51">5.1 功能验证清单</h3>
-<h4 id="_9">后端验证</h4>
+<h2>五、联调验证</h2>
+<h3>5.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] 测试房间 CRUD 接口</li>
@@ -944,7 +944,7 @@
 <li>[ ] 测试退宿接口</li>
 <li>[ ] 验证房间状态更新</li>
 </ul>
-<h4 id="_10">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问宿舍管理页面</li>
@@ -952,8 +952,8 @@
 <li>[ ] 测试入住退宿</li>
 </ul>
 <hr />
-<h2 id="_11">六、完成后的文件结构 📁</h2>
-<h3 id="_12">后端新增/修改的文件</h3>
+<h2>六、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">Building</span><span class="p">.</span><span class="nx">java</span><span class="w">             </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -971,7 +971,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">RoomController</span><span class="p">.</span><span class="nx">java</span><span class="w">       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_13">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">room</span><span class="p">.</span><span class="nx">ts</span><span class="w">                   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -982,21 +982,21 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_14">七、扩展练习 💪</h2>
-<h3 id="_15">基础练习</h3>
+<h2>七、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>添加楼栋管理页面</li>
 <li>实现房间搜索</li>
 <li>添加住宿统计</li>
 </ol>
-<h3 id="_16">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>实现批量入住</li>
 <li>实现调宿功能</li>
 <li>实现住宿历史记录</li>
 </ol>
 <hr />
-<h2 id="_17">八、下一步学习</h2>
+<h2>八、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./08-系统管理模块.md">08-系统管理模块</a></strong> - 学习系统配置管理</li>

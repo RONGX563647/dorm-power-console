@@ -275,15 +275,15 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="05">模块 05：告警管理模块</h1>
+<h1>模块 05：告警管理模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 3-4 天<br />
 <strong>难度</strong>: ⭐⭐⭐☆☆<br />
 <strong>前置知识</strong>: 模块 01、模块 03、规则引擎基础、通知机制</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解告警管理系统架构</li>
 <li>✅ 掌握规则引擎设计</li>
@@ -291,7 +291,7 @@
 <li>✅ 掌握告警分级分类</li>
 <li>✅ 理解告警闭环管理流程</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够设计告警规则引擎</li>
 <li>✅ 能够实现告警自动触发</li>
@@ -299,7 +299,7 @@
 <li>✅ 能够实现告警工单管理</li>
 <li>✅ 能够开发告警统计报表</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 完整的告警规则配置系统
 - 📁 实时告警检测与触发
@@ -308,8 +308,8 @@
 - 📁 前端告警管理页面
 - 📁 告警统计与分析报表</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：设备过载告警</strong></p>
 <div class="codehilite"><pre><span></span><code>设备上报电流数据 → 规则引擎检测 → 超过阈值 → 触发告警 → 推送通知 → 生成工单 → 处理闭环
 </code></pre></div>
@@ -326,7 +326,7 @@
 <div class="codehilite"><pre><span></span><code>采集用电数据 → AI 异常检测 → 发现异常模式 → 触发告警 → 安全预警
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -378,7 +378,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -420,9 +420,9 @@
 - <strong>轮询 vs WebSocket</strong>：选择 WebSocket 因为告警需要实时推送，轮询延迟高
 - <strong>数据库 vs 时序库</strong>：教学用数据库简化，生产环境考虑 InfluxDB 存储告警数据</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-alarmrule">1.1 创建 AlarmRule 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 创建 AlarmRule 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AlarmRule.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -511,7 +511,7 @@
 - [ ] 理解告警类型和级别划分
 - [ ] 理解规则表达式设计
 - [ ] 运行项目，查看数据库表结构</p>
-<h4 id="12-alarmrecord">1.2 创建 AlarmRecord 实体</h4>
+<h4>1.2 创建 AlarmRecord 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AlarmRecord.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -606,8 +606,8 @@
 - [ ] 理解告警生命周期状态
 - [ ] 理解索引设计目的</p>
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-alarmrulerepository">2.1 创建 AlarmRuleRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 创建 AlarmRuleRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/AlarmRuleRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -638,8 +638,8 @@
 - [ ] 理解查询方法命名
 - [ ] 测试 Repository 方法</p>
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-alarmservice">3.1 创建 AlarmService</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 创建 AlarmService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AlarmService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -671,7 +671,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="32-alarmserviceimpl">3.2 创建 AlarmServiceImpl</h4>
+<h4>3.2 创建 AlarmServiceImpl</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AlarmServiceImpl.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
@@ -791,8 +791,8 @@
 - [ ] 理解告警触发流程
 - [ ] 理解规则评估逻辑</p>
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="41-alarmcontroller">4.1 创建 AlarmController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>4.1 创建 AlarmController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AlarmController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -870,8 +870,8 @@
 - [ ] 理解 RESTful API 设计
 - [ ] 使用 Postman 测试接口</p>
 <hr />
-<h2 id="_7">四、单元测试</h2>
-<h3 id="41">4.1 测试类设计</h3>
+<h2>四、单元测试</h2>
+<h3>4.1 测试类设计</h3>
 <p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/AlarmControllerTest.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -956,8 +956,8 @@
 - [ ] 理解 MockMvc 测试方法
 - [ ] 运行测试：<code>mvn test -Dtest=AlarmControllerTest</code></p>
 <hr />
-<h2 id="_8">五、前端实现（分步骤）</h2>
-<h3 id="1_1">步骤 1：类型定义</h3>
+<h2>五、前端实现（分步骤）</h2>
+<h3>步骤 1：类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/alarm.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">AlarmRule</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -1022,7 +1022,7 @@
 - [ ] 创建 alarm.ts 文件
 - [ ] 理解 TypeScript 类型定义</p>
 <hr />
-<h3 id="2api">步骤 2：API 封装</h3>
+<h3>步骤 2：API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/alarm.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AlarmRecord</span><span class="p">,</span><span class="w"> </span><span class="nx">AlarmRule</span><span class="p">,</span><span class="w"> </span><span class="nx">AlarmTriggerRequest</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/alarm&#39;</span><span class="p">;</span>
@@ -1084,7 +1084,7 @@
 - [ ] 理解 Axios 封装
 - [ ] 测试 API 调用</p>
 <hr />
-<h3 id="3">步骤 3：告警管理页面</h3>
+<h3>步骤 3：告警管理页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/AlarmView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;alarm-container&quot;</span><span class="p">&gt;</span>
@@ -1373,9 +1373,9 @@
 - [ ] 理解 Vue 3 Composition API
 - [ ] 运行前端项目测试页面</p>
 <hr />
-<h2 id="_9">六、联调验证</h2>
-<h3 id="61">6.1 功能验证清单</h3>
-<h4 id="_10">后端验证</h4>
+<h2>六、联调验证</h2>
+<h3>6.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] 测试告警触发接口</li>
@@ -1384,7 +1384,7 @@
 <li>[ ] 测试告警解决接口</li>
 <li>[ ] 验证通知发送</li>
 </ul>
-<h4 id="_11">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问告警管理页面</li>
@@ -1393,8 +1393,8 @@
 <li>[ ] 测试告警解决</li>
 <li>[ ] 验证状态更新</li>
 </ul>
-<h3 id="62">6.2 常见问题与解决方案</h3>
-<h4 id="1_2">问题 1：告警风暴</h4>
+<h3>6.2 常见问题与解决方案</h3>
+<h4>问题 1：告警风暴</h4>
 <p><strong>现象</strong>: 短时间内产生大量告警</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 告警抑制</span>
@@ -1416,8 +1416,8 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_12">七、完成后的文件结构 📁</h2>
-<h3 id="_13">后端新增/修改的文件</h3>
+<h2>七、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">AlarmRule</span><span class="p">.</span><span class="nx">java</span><span class="w">              </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1435,7 +1435,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">AlarmTriggerRequest</span><span class="p">.</span><span class="nx">java</span><span class="w">    </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_14">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">alarm</span><span class="p">.</span><span class="nx">ts</span><span class="w">                    </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1448,22 +1448,22 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_15">八、扩展练习 💪</h2>
-<h3 id="_16">基础练习</h3>
+<h2>八、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>添加告警规则配置页面</li>
 <li>实现告警统计图表</li>
 <li>添加告警导出功能</li>
 <li>实现告警通知配置</li>
 </ol>
-<h3 id="_17">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>实现规则引擎（Drools）</li>
 <li>实现告警关联分析</li>
 <li>实现告警自动升级</li>
 <li>实现告警工单系统</li>
 </ol>
-<h3 id="_18">挑战练习</h3>
+<h3>挑战练习</h3>
 <ol>
 <li>实现 AI 异常检测</li>
 <li>实现告警预测</li>
@@ -1471,9 +1471,9 @@
 <li>实现告警根因分析</li>
 </ol>
 <hr />
-<h2 id="_19">九、知识点总结 📝</h2>
-<h3 id="_20">核心知识点</h3>
-<h4 id="_21">后端</h4>
+<h2>九、知识点总结 📝</h2>
+<h3>核心知识点</h3>
+<h4>后端</h4>
 <ol>
 <li><strong>规则引擎</strong></li>
 <li>规则表达式</li>
@@ -1496,7 +1496,7 @@
 <li>通知模板</li>
 <li>接收人管理</li>
 </ol>
-<h4 id="_22">前端</h4>
+<h4>前端</h4>
 <ol>
 <li><strong>状态管理</strong></li>
 <li>告警状态标签</li>
@@ -1510,7 +1510,7 @@
 <li>批量解决</li>
 </ol>
 <hr />
-<h2 id="_23">十、下一步学习</h2>
+<h2>十、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./06-控制管理模块.md">06-控制管理模块</a></strong> - 学习设备远程控制</li>

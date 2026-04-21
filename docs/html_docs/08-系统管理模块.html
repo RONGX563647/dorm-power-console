@@ -275,15 +275,15 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="08">模块 08：系统管理模块</h1>
+<h1>模块 08：系统管理模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 3-4 天<br />
 <strong>难度</strong>: ⭐⭐⭐☆☆<br />
 <strong>前置知识</strong>: 模块 01、AOP 编程、日志管理、缓存机制</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解系统配置管理架构</li>
 <li>✅ 掌握数据字典设计</li>
@@ -291,7 +291,7 @@
 <li>✅ 掌握系统日志管理</li>
 <li>✅ 理解 IP 访问控制机制</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够设计系统配置管理</li>
 <li>✅ 能够实现审计日志</li>
@@ -299,7 +299,7 @@
 <li>✅ 能够实现 IP 访问控制</li>
 <li>✅ 能够开发数据备份功能</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 系统配置管理 API
 - 📁 数据字典管理 API
@@ -308,8 +308,8 @@
 - 📁 IP 访问控制
 - 📁 前端系统管理页面</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：系统配置管理</strong></p>
 <div class="codehilite"><pre><span></span><code>管理员修改配置 → 配置保存 → 缓存更新 → 配置生效
 </code></pre></div>
@@ -322,7 +322,7 @@
 <div class="codehilite"><pre><span></span><code>用户访问系统 → IP 检查 → 白名单/黑名单验证 → 允许/拒绝访问
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -365,7 +365,7 @@
 </tbody>
 </table>
 <hr />
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -407,9 +407,9 @@
 - <strong>本地缓存 vs Redis</strong>：简单配置用 Caffeine，共享数据用 Redis
 - <strong>Logback vs Log4j2</strong>：选择 Logback 因为 Spring Boot 默认支持，配置简单</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-systemconfig-auditlog">1.1 创建 SystemConfig 和 AuditLog 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 创建 SystemConfig 和 AuditLog 实体</h4>
 <p><strong>文件位置</strong>: 
 - <code>backend/src/main/java/com/dormpower/model/SystemConfig.java</code>
 - <code>backend/src/main/java/com/dormpower/model/AuditLog.java</code></p>
@@ -539,8 +539,8 @@
 - [ ] 理解审计日志字段设计
 - [ ] 运行项目，查看数据库表结构</p>
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-systemconfigrepository-auditlogrepository">2.1 创建 SystemConfigRepository 和 AuditLogRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 创建 SystemConfigRepository 和 AuditLogRepository</h4>
 <p><strong>文件位置</strong>: 
 - <code>backend/src/main/java/com/dormpower/repository/SystemConfigRepository.java</code>
 - <code>backend/src/main/java/com/dormpower/repository/AuditLogRepository.java</code></p>
@@ -569,8 +569,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-systemconfigservice">3.1 创建 SystemConfigService</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 创建 SystemConfigService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/SystemConfigService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -598,8 +598,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="41-systemconfigcontroller">4.1 创建 SystemConfigController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>4.1 创建 SystemConfigController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/SystemConfigController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -661,8 +661,8 @@
 - [ ] 理解配置管理 API 设计
 - [ ] 使用 Postman 测试接口</p>
 <hr />
-<h2 id="_7">四、前端实现</h2>
-<h3 id="41">4.1 类型定义</h3>
+<h2>四、前端实现</h2>
+<h3>4.1 类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/system.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">SystemConfig</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -695,7 +695,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="42-api">4.2 API 封装</h3>
+<h3>4.2 API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/system.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SystemConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">AuditLog</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/system&#39;</span><span class="p">;</span>
@@ -737,7 +737,7 @@
 <span class="p">};</span>
 </code></pre></div>
 
-<h3 id="43">4.3 系统配置页面</h3>
+<h3>4.3 系统配置页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/SystemConfigView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;system-config&quot;</span><span class="p">&gt;</span>
@@ -805,16 +805,16 @@
 - [ ] 理解 Vue 3 Composition API
 - [ ] 运行前端项目测试页面</p>
 <hr />
-<h2 id="_8">五、联调验证</h2>
-<h3 id="51">5.1 功能验证清单</h3>
-<h4 id="_9">后端验证</h4>
+<h2>五、联调验证</h2>
+<h3>5.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] 测试配置 CRUD 接口</li>
 <li>[ ] 测试审计日志记录</li>
 <li>[ ] 验证配置缓存</li>
 </ul>
-<h4 id="_10">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问系统配置页面</li>
@@ -822,8 +822,8 @@
 <li>[ ] 验证配置生效</li>
 </ul>
 <hr />
-<h2 id="_11">六、完成后的文件结构 📁</h2>
-<h3 id="_12">后端新增/修改的文件</h3>
+<h2>六、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">SystemConfig</span><span class="p">.</span><span class="nx">java</span><span class="w">         </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -844,7 +844,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">AuditLogAspect</span><span class="p">.</span><span class="nx">java</span><span class="w">       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_13">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">system</span><span class="p">.</span><span class="nx">ts</span><span class="w">                 </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -856,21 +856,21 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_14">七、扩展练习 💪</h2>
-<h3 id="_15">基础练习</h3>
+<h2>七、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>添加数据字典管理</li>
 <li>实现系统日志查询</li>
 <li>添加配置分类</li>
 </ol>
-<h3 id="_16">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>实现配置版本管理</li>
 <li>实现配置导入导出</li>
 <li>实现日志清理</li>
 </ol>
 <hr />
-<h2 id="_17">八、下一步学习</h2>
+<h2>八、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./09-AI 智能模块.md">09-AI 智能模块</a></strong> - 学习 AI 功能</li>

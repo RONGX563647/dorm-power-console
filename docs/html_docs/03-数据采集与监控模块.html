@@ -275,15 +275,15 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="03">模块 03：数据采集与监控模块</h1>
+<h1>模块 03：数据采集与监控模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 4-5 天<br />
 <strong>难度</strong>: ⭐⭐⭐⭐☆<br />
 <strong>前置知识</strong>: 模块 01、模块 02、MQTT 协议基础、WebSocket 基础</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解 IoT 数据采集架构</li>
 <li>✅ 掌握 MQTT 遥测数据处理</li>
@@ -291,7 +291,7 @@
 <li>✅ 掌握 WebSocket 实时数据推送</li>
 <li>✅ 理解系统监控指标设计</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够实现高频数据采集</li>
 <li>✅ 能够设计时序数据表结构</li>
@@ -299,7 +299,7 @@
 <li>✅ 能够开发系统监控功能</li>
 <li>✅ 能够完成数据可视化展示</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 完整的遥测数据采集后端 API
 - 📁 实时数据 WebSocket 推送
@@ -308,8 +308,8 @@
 - 📁 前端实时监控页面
 - 📁 历史数据查询与图表展示</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：设备数据上报</strong></p>
 <div class="codehilite"><pre><span></span><code>智能插座 → MQTT Broker → MqttBridge → 数据验证 → 存储到 Telemetry 表 → WebSocket 推送 → 前端实时更新
 </code></pre></div>
@@ -326,7 +326,7 @@
 <div class="codehilite"><pre><span></span><code>用户选择导出范围 → 后端生成 CSV 文件 → 返回下载链接 → 用户下载
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -378,7 +378,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -421,9 +421,9 @@
 - <strong>定时任务 vs 实时计算</strong>：教学场景用定时任务简化实现，生产环境考虑 Flink 实时计算
 | PostgreSQL | 时序数据存储 | 14+ |</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-telemetry">1.1 创建 Telemetry 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 创建 Telemetry 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/Telemetry.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -489,7 +489,7 @@
 - [ ] 理解索引设计目的（加速时间范围查询）
 - [ ] 运行项目，查看数据库表结构
 - [ ] 测试插入测试数据</p>
-<h4 id="12-collectionrecord">1.2 创建 CollectionRecord 实体</h4>
+<h4>1.2 创建 CollectionRecord 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/CollectionRecord.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -544,7 +544,7 @@
 - [ ] 创建 CollectionRecord.java
 - [ ] 理解枚举类型使用
 - [ ] 理解采集记录的作用（用于追踪采集成功率）</p>
-<h4 id="13-systemmetrics">1.3 创建 SystemMetrics 实体</h4>
+<h4>1.3 创建 SystemMetrics 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/SystemMetrics.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -598,8 +598,8 @@
 - [ ] 理解@ElementCollection 用法（存储 Map 类型）
 - [ ] 理解系统指标的分类</p>
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-telemetryrepository">2.1 创建 TelemetryRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 创建 TelemetryRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/TelemetryRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -655,7 +655,7 @@
 - [ ] 理解 Spring Data JPA 查询方法命名
 - [ ] 理解@Query 自定义查询
 - [ ] 测试 Repository 方法</p>
-<h4 id="22-collectionrecordrepository">2.2 创建 CollectionRecordRepository</h4>
+<h4>2.2 创建 CollectionRecordRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/CollectionRecordRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -697,8 +697,8 @@
 </code></pre></div>
 
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-telemetryservice">3.1 创建 TelemetryService</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 创建 TelemetryService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/TelemetryService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -735,7 +735,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="32-telemetryserviceimpl">3.2 创建 TelemetryServiceImpl</h4>
+<h4>3.2 创建 TelemetryServiceImpl</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/TelemetryServiceImpl.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
@@ -816,8 +816,8 @@
 - [ ] 理解@Transactional 注解作用
 - [ ] 理解 WebSocket 推送集成</p>
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="41-telemetrycontroller">4.1 创建 TelemetryController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>4.1 创建 TelemetryController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/TelemetryController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -912,8 +912,8 @@
 - [ ] 使用 Postman 测试查询接口
 - [ ] 测试分页查询</p>
 <hr />
-<h2 id="_7">四、单元测试</h2>
-<h3 id="41">4.1 测试类设计</h3>
+<h2>四、单元测试</h2>
+<h3>4.1 测试类设计</h3>
 <p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/TelemetryControllerTest.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -1053,8 +1053,8 @@
 - [ ] 运行测试：<code>mvn test -Dtest=TelemetryControllerTest</code>
 - [ ] 查看测试覆盖率报告</p>
 <hr />
-<h2 id="_8">五、前端实现（分步骤）</h2>
-<h3 id="1_1">步骤 1：类型定义</h3>
+<h2>五、前端实现（分步骤）</h2>
+<h3>步骤 1：类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/telemetry.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Telemetry</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -1114,7 +1114,7 @@
 - [ ] 理解 TypeScript 接口定义
 - [ ] 添加新的类型定义</p>
 <hr />
-<h3 id="2api">步骤 2：API 封装</h3>
+<h3>步骤 2：API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/telemetry.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Telemetry</span><span class="p">,</span><span class="w"> </span><span class="nx">TelemetryQuery</span><span class="p">,</span><span class="w"> </span><span class="nx">BatchTelemetryRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">CollectionRecord</span><span class="p">,</span><span class="w"> </span><span class="nx">SystemMetric</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/telemetry&#39;</span><span class="p">;</span>
@@ -1220,7 +1220,7 @@
 - [ ] 理解 Axios 封装
 - [ ] 测试 API 调用</p>
 <hr />
-<h3 id="3">步骤 3：遥测数据页面</h3>
+<h3>步骤 3：遥测数据页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/TelemetryView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;telemetry-container&quot;</span><span class="p">&gt;</span>
@@ -1447,7 +1447,7 @@
 - [ ] 理解 ECharts 图表集成
 - [ ] 运行前端项目测试页面</p>
 <hr />
-<h3 id="4">步骤 4：实时监控页面</h3>
+<h3>步骤 4：实时监控页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/LiveView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;live-container&quot;</span><span class="p">&gt;</span>
@@ -1658,9 +1658,9 @@
 - [ ] 理解实时图表更新
 - [ ] 测试实时监控功能</p>
 <hr />
-<h2 id="_9">六、联调验证</h2>
-<h3 id="61">6.1 功能验证清单</h3>
-<h4 id="_10">后端验证</h4>
+<h2>六、联调验证</h2>
+<h3>6.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] 模拟 MQTT 设备上报数据</li>
@@ -1670,7 +1670,7 @@
 <li>[ ] 测试分页查询</li>
 <li>[ ] 测试批量查询</li>
 </ul>
-<h4 id="_11">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问遥测数据页面</li>
@@ -1681,15 +1681,15 @@
 <li>[ ] 验证实时数据更新</li>
 <li>[ ] 验证 WebSocket 连接状态</li>
 </ul>
-<h4 id="_12">性能验证</h4>
+<h4>性能验证</h4>
 <ul>
 <li>[ ] 测试高频数据写入（100 条/秒）</li>
 <li>[ ] 验证大数据量查询性能</li>
 <li>[ ] 测试 WebSocket 并发连接</li>
 <li>[ ] 监控系统资源占用</li>
 </ul>
-<h3 id="62">6.2 常见问题与解决方案</h3>
-<h4 id="1_2">问题 1：大量数据写入导致数据库压力大</h4>
+<h3>6.2 常见问题与解决方案</h3>
+<h4>问题 1：大量数据写入导致数据库压力大</h4>
 <p><strong>现象</strong>: 数据写入慢，CPU 占用高</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 使用批量插入</span>
@@ -1708,7 +1708,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="2">问题 2：实时数据推送延迟</h4>
+<h4>问题 2：实时数据推送延迟</h4>
 <p><strong>现象</strong>: 前端收到数据延迟超过 1 秒</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 使用异步推送</span>
@@ -1719,7 +1719,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="3_1">问题 3：图表数据点过多渲染慢</h4>
+<h4>问题 3：图表数据点过多渲染慢</h4>
 <p><strong>现象</strong>: 图表卡顿，浏览器 CPU 占用高</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 数据降采样</span>
@@ -1738,8 +1738,8 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_13">七、完成后的文件结构 📁</h2>
-<h3 id="_14">后端新增/修改的文件</h3>
+<h2>七、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">Telemetry</span><span class="p">.</span><span class="nx">java</span><span class="w">              </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1767,7 +1767,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">DataCollectionScheduler</span><span class="p">.</span><span class="nx">java</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_15">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">ts</span><span class="w">                </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1788,7 +1788,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">useWebSocket</span><span class="p">.</span><span class="nx">ts</span><span class="w">             </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_16">测试文件</h3>
+<h3>测试文件</h3>
 <div class="codehilite"><pre><span></span><code>backend/src/test/java/com/dormpower/
 ├── controller/
 │   ├── TelemetryControllerTest.java ✅ 新建
@@ -1798,22 +1798,22 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_17">八、扩展练习 💪</h2>
-<h3 id="_18">基础练习</h3>
+<h2>八、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>添加数据导出功能（CSV 格式）</li>
 <li>实现数据筛选（阈值筛选）</li>
 <li>添加数据质量检查</li>
 <li>实现数据补全机制</li>
 </ol>
-<h3 id="_19">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>实现数据异常检测</li>
 <li>添加用电行为分析</li>
 <li>实现负荷预测</li>
 <li>集成 Grafana 监控</li>
 </ol>
-<h3 id="_20">挑战练习</h3>
+<h3>挑战练习</h3>
 <ol>
 <li>实现时序数据库（TimescaleDB）集成</li>
 <li>实现实时计算（Apache Flink）</li>
@@ -1821,9 +1821,9 @@
 <li>实现机器学习异常检测</li>
 </ol>
 <hr />
-<h2 id="_21">九、知识点总结 📝</h2>
-<h3 id="_22">核心知识点</h3>
-<h4 id="_23">后端</h4>
+<h2>九、知识点总结 📝</h2>
+<h3>核心知识点</h3>
+<h4>后端</h4>
 <ol>
 <li><strong>MQTT 数据处理</strong></li>
 <li>消息订阅</li>
@@ -1854,7 +1854,7 @@
 <li>Cron 表达式</li>
 <li>任务管理</li>
 </ol>
-<h4 id="_24">前端</h4>
+<h4>前端</h4>
 <ol>
 <li><strong>ECharts 图表</strong></li>
 <li>折线图</li>
@@ -1877,7 +1877,7 @@
 <li>图表更新</li>
 <li>性能优化</li>
 </ol>
-<h3 id="_25">最佳实践</h3>
+<h3>最佳实践</h3>
 <ol>
 <li><strong>数据采集</strong></li>
 <li>批量插入</li>
@@ -1901,7 +1901,7 @@
 <li>连接数限制</li>
 </ol>
 <hr />
-<h2 id="_26">十、下一步学习</h2>
+<h2>十、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./05-告警管理模块.md">05-告警管理模块</a></strong> - 学习告警规则设计</li>

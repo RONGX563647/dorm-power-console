@@ -275,29 +275,29 @@
     <!-- 主内容区 -->
     <div class="content">
         <article class="markdown-body">
-<h1 id="01">模块 01：用户认证与权限管理模块</h1>
+<h1>模块 01：用户认证与权限管理模块</h1>
 <blockquote>
 <p><strong>学习时长</strong>: 3-5 天<br />
 <strong>难度</strong>: ⭐⭐⭐☆☆<br />
 <strong>前置知识</strong>: Java 基础、Spring Boot 入门、Vue 基础</p>
 </blockquote>
 <hr />
-<h2 id="_1">一、实现目标 ⭐</h2>
-<h3 id="_2">知识目标</h3>
+<h2>一、实现目标 ⭐</h2>
+<h3>知识目标</h3>
 <ul>
 <li>✅ 理解 Spring Security 工作原理</li>
 <li>✅ 掌握 JWT 认证机制</li>
 <li>✅ 理解 RBAC 权限模型设计</li>
 <li>✅ 掌握前后端分离认证流程</li>
 </ul>
-<h3 id="_3">能力目标</h3>
+<h3>能力目标</h3>
 <ul>
 <li>✅ 能够独立设计用户认证系统</li>
 <li>✅ 能够实现 JWT Token 生成与验证</li>
 <li>✅ 能够实现基于角色的权限控制</li>
 <li>✅ 能够完成前后端认证联调</li>
 </ul>
-<h3 id="_4">成果目标</h3>
+<h3>成果目标</h3>
 <p>完成本模块后，你将拥有：
 - 📁 完整的用户认证后端 API（登录、登出、刷新 Token）
 - 📁 用户管理、角色管理、权限管理功能
@@ -305,8 +305,8 @@
 - 📁 完善的单元测试用例
 - 📁 可运行的认证授权系统</p>
 <hr />
-<h2 id="_5">二、需求分析与设计</h2>
-<h3 id="21">2.1 业务场景</h3>
+<h2>二、需求分析与设计</h2>
+<h3>2.1 业务场景</h3>
 <p><strong>场景 1：用户登录</strong></p>
 <div class="codehilite"><pre><span></span><code>用户输入用户名密码 → 系统验证 → 返回 Token → 用户后续请求携带 Token
 </code></pre></div>
@@ -319,7 +319,7 @@
 <div class="codehilite"><pre><span></span><code>管理员创建角色 → 分配权限 → 给用户分配角色 → 用户继承角色权限
 </code></pre></div>
 
-<h3 id="22">2.2 功能需求清单</h3>
+<h3>2.2 功能需求清单</h3>
 <table>
 <thead>
 <tr>
@@ -371,7 +371,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="23">2.3 技术选型与理由</h3>
+<h3>2.3 技术选型与理由</h3>
 <table>
 <thead>
 <tr>
@@ -413,9 +413,9 @@
 - <strong>MD5 vs BCrypt</strong>：选择 BCrypt 因为更安全，支持自适应加密强度
 - <strong>Shiro vs Spring Security</strong>：选择 Spring Security 因为生态更完善，与 Spring Boot 集成更好</p>
 <hr />
-<h2 id="_6">三、后端实现（分步骤）</h2>
-<h3 id="1">步骤 1：实体类设计</h3>
-<h4 id="11-useraccount">1.1 创建 UserAccount 实体</h4>
+<h2>三、后端实现（分步骤）</h2>
+<h3>步骤 1：实体类设计</h3>
+<h4>1.1 创建 UserAccount 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/UserAccount.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -477,7 +477,7 @@
 - [ ] 复制上述代码
 - [ ] 理解每个字段的含义
 - [ ] 运行项目，检查实体类是否被 JPA 识别</p>
-<h4 id="12-role-permission">1.2 创建 Role 和 Permission 实体</h4>
+<h4>1.2 创建 Role 和 Permission 实体</h4>
 <p><strong>文件位置</strong>: 
 - <code>backend/src/main/java/com/dormpower/model/Role.java</code>
 - <code>backend/src/main/java/com/dormpower/model/Permission.java</code></p>
@@ -546,7 +546,7 @@
 - [ ] 创建 Role.java 和 Permission.java
 - [ ] 理解多对多关系配置
 - [ ] 查看数据库生成的表结构</p>
-<h4 id="13">1.3 创建辅助实体类</h4>
+<h4>1.3 创建辅助实体类</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/LoginLog.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
@@ -596,8 +596,8 @@
 - [ ] 创建 LoginLog.java
 - [ ] 理解日志记录的设计思路</p>
 <hr />
-<h3 id="2repository">步骤 2：Repository 层</h3>
-<h4 id="21-useraccountrepository">2.1 创建 UserAccountRepository</h4>
+<h3>步骤 2：Repository 层</h3>
+<h4>2.1 创建 UserAccountRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/UserAccountRepository.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
@@ -624,8 +624,8 @@
 - [ ] 理解 Spring Data JPA 的命名查询
 - [ ] 测试 Repository 方法</p>
 <hr />
-<h3 id="3service">步骤 3：Service 层</h3>
-<h4 id="31-authservice">3.1 创建 AuthService</h4>
+<h3>步骤 3：Service 层</h3>
+<h4>3.1 创建 AuthService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AuthService.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
@@ -645,7 +645,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="32-authserviceimpl">3.2 创建 AuthServiceImpl</h4>
+<h4>3.2 创建 AuthServiceImpl</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AuthServiceImpl.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
@@ -740,8 +740,8 @@
 - [ ] 理解认证流程
 - [ ] 理解 Token 生成逻辑</p>
 <hr />
-<h3 id="4controller">步骤 4：Controller 层</h3>
-<h4 id="41-authcontroller">4.1 创建 AuthController</h4>
+<h3>步骤 4：Controller 层</h3>
+<h4>4.1 创建 AuthController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AuthController.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -792,8 +792,8 @@
 - [ ] 理解@PreAuthorize 权限控制
 - [ ] 使用 Postman 测试登录接口</p>
 <hr />
-<h2 id="_7">四、单元测试</h2>
-<h3 id="41">4.1 测试类设计</h3>
+<h2>四、单元测试</h2>
+<h3>4.1 测试类设计</h3>
 <p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/AuthControllerTest.java</code></p>
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
@@ -873,8 +873,8 @@
 - [ ] 运行测试：<code>mvn test -Dtest=AuthControllerTest</code>
 - [ ] 查看测试覆盖率报告</p>
 <hr />
-<h2 id="_8">五、前端实现（分步骤）</h2>
-<h3 id="1_1">步骤 1：类型定义</h3>
+<h2>五、前端实现（分步骤）</h2>
+<h3>步骤 1：类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/auth.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -909,7 +909,7 @@
 - [ ] 理解 TypeScript 接口定义
 - [ ] 添加新的类型定义</p>
 <hr />
-<h3 id="2api">步骤 2：API 封装</h3>
+<h3>步骤 2：API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/auth.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">LoginRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">AuthResponse</span><span class="p">,</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/auth&#39;</span><span class="p">;</span>
@@ -951,7 +951,7 @@
 - [ ] 理解 Axios 封装
 - [ ] 测试 API 调用</p>
 <hr />
-<h3 id="3">步骤 3：登录页面</h3>
+<h3>步骤 3：登录页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/LoginView.vue</code></p>
 <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;login-container&quot;</span><span class="p">&gt;</span>
@@ -1089,7 +1089,7 @@
 - [ ] 理解表单验证
 - [ ] 运行前端项目测试登录</p>
 <hr />
-<h3 id="4">步骤 4：状态管理</h3>
+<h3>步骤 4：状态管理</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/stores/auth.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineStore</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;pinia&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="p">,</span><span class="w"> </span><span class="nx">computed</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span><span class="p">;</span>
@@ -1156,7 +1156,7 @@
 - [ ] 理解 Pinia 状态管理
 - [ ] 测试状态持久化</p>
 <hr />
-<h3 id="5">步骤 5：路由守卫</h3>
+<h3>步骤 5：路由守卫</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/router/index.ts</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createRouter</span><span class="p">,</span><span class="w"> </span><span class="nx">createWebHistory</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue-router&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useAuthStore</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/stores/auth&#39;</span><span class="p">;</span>
@@ -1205,9 +1205,9 @@
 - [ ] 测试未登录访问受保护页面
 - [ ] 测试登录后跳转</p>
 <hr />
-<h2 id="_9">六、联调验证</h2>
-<h3 id="61">6.1 功能验证清单</h3>
-<h4 id="_10">后端验证</h4>
+<h2>六、联调验证</h2>
+<h3>6.1 功能验证清单</h3>
+<h4>后端验证</h4>
 <ul>
 <li>[ ] 启动后端服务</li>
 <li>[ ] 使用 Postman 测试登录接口</li>
@@ -1216,7 +1216,7 @@
 <li>[ ] 验证 Token 刷新功能</li>
 <li>[ ] 验证登出功能</li>
 </ul>
-<h4 id="_11">前端验证</h4>
+<h4>前端验证</h4>
 <ul>
 <li>[ ] 启动前端服务</li>
 <li>[ ] 访问登录页面</li>
@@ -1226,15 +1226,15 @@
 <li>[ ] 刷新页面后保持登录状态</li>
 <li>[ ] 测试登出功能</li>
 </ul>
-<h4 id="_12">权限控制验证</h4>
+<h4>权限控制验证</h4>
 <ul>
 <li>[ ] 创建不同角色的用户</li>
 <li>[ ] 使用不同角色登录</li>
 <li>[ ] 验证无权限用户无法访问受限页面</li>
 <li>[ ] 验证后端接口权限检查生效</li>
 </ul>
-<h3 id="62">6.2 常见问题与解决方案</h3>
-<h4 id="1_2">问题 1：跨域认证失败</h4>
+<h3>6.2 常见问题与解决方案</h3>
+<h4>问题 1：跨域认证失败</h4>
 <p><strong>现象</strong>: 前端调用后端接口报 CORS 错误</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 在 SecurityConfig 中配置 CORS</span>
@@ -1266,7 +1266,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="2token">问题 2：Token 刷新时序问题</h4>
+<h4>问题 2：Token 刷新时序问题</h4>
 <p><strong>现象</strong>: 多个请求同时触发 Token 刷新</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 在 API 拦截器中控制</span>
@@ -1307,7 +1307,7 @@
 <span class="p">);</span>
 </code></pre></div>
 
-<h4 id="3_1">问题 3：刷新页面后登录状态丢失</h4>
+<h4>问题 3：刷新页面后登录状态丢失</h4>
 <p><strong>现象</strong>: 刷新页面后需要重新登录</p>
 <p><strong>解决方案</strong>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">// 在 App.vue 中恢复登录状态</span>
@@ -1320,8 +1320,8 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_13">七、完成后的文件结构 📁</h2>
-<h3 id="_14">后端新增/修改的文件</h3>
+<h2>七、完成后的文件结构 📁</h2>
+<h3>后端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">UserAccount</span><span class="p">.</span><span class="nx">java</span><span class="w">           </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1362,7 +1362,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">AccessDeniedException</span><span class="p">.</span><span class="nx">java</span><span class="w">   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
 </code></pre></div>
 
-<h3 id="_15">前端新增/修改的文件</h3>
+<h3>前端新增/修改的文件</h3>
 <div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
 <span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">auth</span><span class="p">.</span><span class="nx">ts</span><span class="w">                    </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
@@ -1380,7 +1380,7 @@
 <span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">index</span><span class="p">.</span><span class="nx">ts</span><span class="w">                   </span><span class="err">✏️</span><span class="w"> </span><span class="nx">修改</span><span class="err">（</span><span class="nx">添加路由守卫</span><span class="err">）</span>
 </code></pre></div>
 
-<h3 id="_16">测试文件</h3>
+<h3>测试文件</h3>
 <div class="codehilite"><pre><span></span><code>backend/src/test/java/com/dormpower/
 ├── controller/
 │   ├── AuthControllerTest.java    ✅ 新建
@@ -1391,22 +1391,22 @@
 </code></pre></div>
 
 <hr />
-<h2 id="_17">八、扩展练习 💪</h2>
-<h3 id="_18">基础练习</h3>
+<h2>八、扩展练习 💪</h2>
+<h3>基础练习</h3>
 <ol>
 <li>添加邮箱验证功能</li>
 <li>实现密码找回功能</li>
 <li>添加登录验证码</li>
 <li>实现记住我功能</li>
 </ol>
-<h3 id="_19">进阶练习</h3>
+<h3>进阶练习</h3>
 <ol>
 <li>实现双因素认证（2FA）</li>
 <li>集成第三方登录（微信、QQ）</li>
 <li>实现登录设备管理</li>
 <li>添加异常登录检测</li>
 </ol>
-<h3 id="_20">挑战练习</h3>
+<h3>挑战练习</h3>
 <ol>
 <li>实现 OAuth2 认证服务器</li>
 <li>实现单点登录（SSO）</li>
@@ -1414,9 +1414,9 @@
 <li>实现操作审计日志</li>
 </ol>
 <hr />
-<h2 id="_21">九、知识点总结 📝</h2>
-<h3 id="_22">核心知识点</h3>
-<h4 id="_23">后端</h4>
+<h2>九、知识点总结 📝</h2>
+<h3>核心知识点</h3>
+<h4>后端</h4>
 <ol>
 <li><strong>Spring Security</strong></li>
 <li>认证流程</li>
@@ -1445,7 +1445,7 @@
 <li>用户 - 角色 - 权限关系</li>
 <li>权限继承</li>
 </ol>
-<h4 id="_24">前端</h4>
+<h4>前端</h4>
 <ol>
 <li><strong>Vue Router 守卫</strong></li>
 <li>全局前置守卫</li>
@@ -1468,7 +1468,7 @@
 <li>响应拦截</li>
 <li>Token 刷新</li>
 </ol>
-<h3 id="_25">最佳实践</h3>
+<h3>最佳实践</h3>
 <ol>
 <li><strong>安全性</strong></li>
 <li>密码加密存储</li>
@@ -1493,7 +1493,7 @@
 <li>登录状态保持</li>
 </ol>
 <hr />
-<h2 id="_26">十、下一步学习</h2>
+<h2>十、下一步学习</h2>
 <p>完成本模块后，建议继续学习：</p>
 <ol>
 <li><strong><a href="./07-宿舍管理模块.md">07-宿舍管理模块</a></strong> - 学习基础数据管理</li>
