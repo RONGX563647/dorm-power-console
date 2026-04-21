@@ -1,0 +1,1656 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="DormPower 项目系列学习文档 - 从零开始掌握企业级 Spring Boot + Vue 全栈开发">
+      
+      
+        <meta name="author" content="教学文档编写组">
+      
+      
+        <link rel="canonical" href="https://your-github-username.github.io/dorm-power-console/05-%E5%91%8A%E8%AD%A6%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>模块 05：告警管理模块 - 宿舍用电管理系统 - 教学文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#05" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="宿舍用电管理系统 - 教学文档" class="md-header__button md-logo" aria-label="宿舍用电管理系统 - 教学文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            宿舍用电管理系统 - 教学文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              模块 05：告警管理模块
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/your-github-username/dorm-power-console" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dorm-power-console
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../首页：index.md" class="md-tabs__link">
+        
+  
+    
+  
+  None
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../简单测试：simple-test.md" class="md-tabs__link">
+        
+  
+    
+  
+  None
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="宿舍用电管理系统 - 教学文档" class="md-nav__button md-logo" aria-label="宿舍用电管理系统 - 教学文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    宿舍用电管理系统 - 教学文档
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/your-github-username/dorm-power-console" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dorm-power-console
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../首页：index.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../简单测试：simple-test.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="05">模块 05：告警管理模块<a class="headerlink" href="#05" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-4 天<br />
+<strong>难度</strong>: ⭐⭐⭐☆☆<br />
+<strong>前置知识</strong>: 模块 01、模块 03、规则引擎基础、通知机制</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、实现目标 ⭐<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">知识目标<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ 理解告警管理系统架构</li>
+<li>✅ 掌握规则引擎设计</li>
+<li>✅ 理解告警生命周期管理</li>
+<li>✅ 掌握告警分级分类</li>
+<li>✅ 理解告警闭环管理流程</li>
+</ul>
+<h3 id="_3">能力目标<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ 能够设计告警规则引擎</li>
+<li>✅ 能够实现告警自动触发</li>
+<li>✅ 能够完成告警通知集成</li>
+<li>✅ 能够实现告警工单管理</li>
+<li>✅ 能够开发告警统计报表</li>
+</ul>
+<h3 id="_4">成果目标<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>完成本模块后，你将拥有：
+- 📁 完整的告警规则配置系统
+- 📁 实时告警检测与触发
+- 📁 告警通知多渠道推送
+- 📁 告警工单处理流程
+- 📁 前端告警管理页面
+- 📁 告警统计与分析报表</p>
+<hr />
+<h2 id="_5">二、需求分析与设计<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1 业务场景<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p><strong>场景 1：设备过载告警</strong></p>
+<pre><code>设备上报电流数据 → 规则引擎检测 → 超过阈值 → 触发告警 → 推送通知 → 生成工单 → 处理闭环
+</code></pre>
+<p><strong>场景 2：欠费告警</strong></p>
+<pre><code>房间余额检查 → 低于阈值 → 触发告警 → 发送账单提醒 → 用户充值 → 告警消除
+</code></pre>
+<p><strong>场景 3：设备离线告警</strong></p>
+<pre><code>设备心跳检测 → 超时未上报 → 判定离线 → 触发告警 → 通知管理员 → 维修处理
+</code></pre>
+<p><strong>场景 4：用电异常告警</strong></p>
+<pre><code>采集用电数据 → AI 异常检测 → 发现异常模式 → 触发告警 → 安全预警
+</code></pre>
+<h3 id="22">2.2 功能需求清单<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>告警规则配置</td>
+<td>支持阈值、规则表达式</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>实时告警检测</td>
+<td>流式数据检测</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>告警通知</td>
+<td>多渠道推送</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>告警工单</td>
+<td>工单流转处理</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>告警统计</td>
+<td>报表与趋势分析</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>告警升级</td>
+<td>超时未处理升级</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>告警抑制</td>
+<td>避免告警风暴</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>告警关联</td>
+<td>关联告警分析</td>
+<td>P3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 技术选型与理由<a class="headerlink" href="#23" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Drools</strong></td>
+<td>规则引擎</td>
+<td>8.x</td>
+<td>✅ <strong>规则与代码分离</strong>：业务规则配置化，无需修改代码<br>✅ <strong>灵活表达</strong>：DRL 语言支持复杂规则表达<br>✅ <strong>性能优秀</strong>：Rete 算法高效匹配规则<br>⚠️ <strong>学习曲线</strong>：需要学习 DRL 语法，教学场景简化实现</td>
+</tr>
+<tr>
+<td><strong>Spring Event</strong></td>
+<td>事件驱动机制</td>
+<td>3.2.x</td>
+<td>✅ <strong>解耦组件</strong>：告警触发与处理解耦<br>✅ <strong>异步处理</strong>：支持@EventListener 异步监听<br>✅ <strong>内置支持</strong>：Spring 框架自带，无需额外依赖</td>
+</tr>
+<tr>
+<td><strong>WebSocket</strong></td>
+<td>实时推送</td>
+<td>-</td>
+<td>✅ <strong>实时通知</strong>：告警产生立即推送到前端<br>✅ <strong>多端推送</strong>：支持多个客户端同时接收<br>✅ <strong>双向通信</strong>：前端可发送告警确认/处理指令</td>
+</tr>
+<tr>
+<td><strong>ECharts</strong></td>
+<td>统计图表</td>
+<td>5.x</td>
+<td>✅ <strong>告警趋势</strong>：折线图展示告警趋势<br>✅ <strong>告警分布</strong>：饼图展示告警类型分布<br>✅ <strong>实时监控</strong>：动态刷新告警数据</td>
+</tr>
+</tbody>
+</table>
+<p><strong>技术对比与取舍</strong>：
+- <strong>规则引擎 vs if-else</strong>：简单场景用 if-else，复杂业务用规则引擎便于维护
+- <strong>轮询 vs WebSocket</strong>：选择 WebSocket 因为告警需要实时推送，轮询延迟高
+- <strong>数据库 vs 时序库</strong>：教学用数据库简化，生产环境考虑 InfluxDB 存储告警数据</p>
+<hr />
+<h2 id="_6">三、后端实现（分步骤）<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h3 id="1">步骤 1：实体类设计<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<h4 id="11-alarmrule">1.1 创建 AlarmRule 实体<a class="headerlink" href="#11-alarmrule" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AlarmRule.java</code></p>
+<pre><code class="language-java">package com.dormpower.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = &quot;alarm_rule&quot;)
+public class AlarmRule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false, length = 100)
+    private String ruleName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AlarmType alarmType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AlarmSeverity severity = AlarmSeverity.WARNING;
+
+    @Column(length = 500)
+    private String ruleExpression; // 规则表达式
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal threshold; // 阈值
+
+    @Column(length = 50)
+    private String metricName; // 指标名称
+
+    private Integer durationSeconds; // 持续时间（秒）
+
+    @Column(length = 500)
+    private String notificationTemplate; // 通知模板
+
+    @ElementCollection
+    @CollectionTable(name = &quot;alarm_rule_recipients&quot;)
+    @Column(name = &quot;recipient&quot;)
+    private java.util.List&lt;String&gt; recipients; // 通知接收人
+
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    @Column(length = 500)
+    private String description;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+}
+
+enum AlarmType {
+    OVERLOAD,        // 过载
+    UNDER_VOLTAGE,   // 欠压
+    OVER_VOLTAGE,    // 过压
+    OVER_CURRENT,    // 过流
+    OVER_USE,        // 超量用电
+    DEVICE_OFFLINE,  // 设备离线
+    LOW_BALANCE,     // 余额不足
+    TEMPERATURE,     // 温度异常
+    CUSTOM           // 自定义
+}
+
+enum AlarmSeverity {
+    INFO,        // 提示
+    WARNING,     // 警告
+    CRITICAL,    // 严重
+    EMERGENCY    // 紧急
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmRule.java 文件
+- [ ] 理解告警类型和级别划分
+- [ ] 理解规则表达式设计
+- [ ] 运行项目，查看数据库表结构</p>
+<h4 id="12-alarmrecord">1.2 创建 AlarmRecord 实体<a class="headerlink" href="#12-alarmrecord" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AlarmRecord.java</code></p>
+<pre><code class="language-java">package com.dormpower.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = &quot;alarm_record&quot;, indexes = {
+    @Index(name = &quot;idx_alarm_device_time&quot;, columnList = &quot;deviceId, createdAt&quot;),
+    @Index(name = &quot;idx_alarm_status&quot;, columnList = &quot;status&quot;)
+})
+public class AlarmRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false, length = 100)
+    private String alarmNumber; // 告警编号
+
+    @Column(name = &quot;rule_id&quot;, nullable = false)
+    private UUID ruleId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AlarmType alarmType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AlarmSeverity severity;
+
+    @Column(name = &quot;device_id&quot;)
+    private UUID deviceId;
+
+    @Column(name = &quot;room_id&quot;)
+    private UUID roomId;
+
+    @Column(length = 500)
+    private String alarmMessage; // 告警内容
+
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal alarmValue; // 告警值
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AlarmStatus status = AlarmStatus.ACTIVE;
+
+    private LocalDateTime occurredAt; // 发生时间
+    private LocalDateTime acknowledgedAt; // 确认时间
+    private LocalDateTime resolvedAt; // 解决时间
+
+    @Column(name = &quot;acknowledged_by&quot;)
+    private UUID acknowledgedBy; // 确认人
+
+    @Column(name = &quot;resolved_by&quot;)
+    private UUID resolvedBy; // 解决人
+
+    @Column(length = 500)
+    private String resolutionNote; // 解决备注
+
+    private Integer escalateLevel = 0; // 升级级别
+
+    @Column(length = 500)
+    private String notificationChannels; // 通知渠道
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @PrePersist
+    protected void onCreate() {
+        if (alarmNumber == null) {
+            alarmNumber = &quot;ALM-&quot; + LocalDateTime.now().format(
+                java.time.format.DateTimeFormatter.ofPattern(&quot;yyyyMMddHHmmss&quot;)) + 
+                &quot;-&quot; + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        }
+    }
+}
+
+enum AlarmStatus {
+    ACTIVE,        // 活动中
+    ACKNOWLEDGED,  // 已确认
+    RESOLVED,      // 已解决
+    SUPPRESSED,    // 已抑制
+    CLOSED         // 已关闭
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmRecord.java
+- [ ] 理解告警生命周期状态
+- [ ] 理解索引设计目的</p>
+<hr />
+<h3 id="2repository">步骤 2：Repository 层<a class="headerlink" href="#2repository" title="Permanent link">&para;</a></h3>
+<h4 id="21-alarmrulerepository">2.1 创建 AlarmRuleRepository<a class="headerlink" href="#21-alarmrulerepository" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/AlarmRuleRepository.java</code></p>
+<pre><code class="language-java">package com.dormpower.repository;
+
+import com.dormpower.model.AlarmRule;
+import com.dormpower.model.AlarmType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface AlarmRuleRepository extends JpaRepository&lt;AlarmRule, UUID&gt; {
+
+    List&lt;AlarmRule&gt; findByEnabledTrue();
+
+    List&lt;AlarmRule&gt; findByAlarmTypeAndEnabledTrue(AlarmType alarmType);
+
+    @Query(&quot;SELECT ar FROM AlarmRule ar WHERE ar.enabled = true AND ar.alarmType IN :types&quot;)
+    List&lt;AlarmRule&gt; findByAlarmTypes(@Param(&quot;types&quot;) List&lt;AlarmType&gt; types);
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmRuleRepository.java
+- [ ] 理解查询方法命名
+- [ ] 测试 Repository 方法</p>
+<hr />
+<h3 id="3service">步骤 3：Service 层<a class="headerlink" href="#3service" title="Permanent link">&para;</a></h3>
+<h4 id="31-alarmservice">3.1 创建 AlarmService<a class="headerlink" href="#31-alarmservice" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AlarmService.java</code></p>
+<pre><code class="language-java">package com.dormpower.service;
+
+import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.model.AlarmRule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface AlarmService {
+
+    AlarmRecord triggerAlarm(AlarmTriggerRequest request);
+
+    Page&lt;AlarmRecord&gt; getAlarms(UUID deviceId, String status, LocalDateTime startTime, 
+                                LocalDateTime endTime, Pageable pageable);
+
+    AlarmRecord acknowledgeAlarm(UUID alarmId, UUID userId);
+
+    AlarmRecord resolveAlarm(UUID alarmId, UUID userId, String note);
+
+    List&lt;AlarmRule&gt; getActiveRules();
+
+    void evaluateRules(String deviceId, Object metricData);
+}
+</code></pre>
+<h4 id="32-alarmserviceimpl">3.2 创建 AlarmServiceImpl<a class="headerlink" href="#32-alarmserviceimpl" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AlarmServiceImpl.java</code></p>
+<pre><code class="language-java">package com.dormpower.service.impl;
+
+import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.model.AlarmRule;
+import com.dormpower.model.AlarmStatus;
+import com.dormpower.repository.AlarmRecordRepository;
+import com.dormpower.repository.AlarmRuleRepository;
+import com.dormpower.service.AlarmService;
+import com.dormpower.service.NotificationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AlarmServiceImpl implements AlarmService {
+
+    private final AlarmRuleRepository alarmRuleRepository;
+    private final AlarmRecordRepository alarmRecordRepository;
+    private final NotificationService notificationService;
+
+    @Override
+    @Transactional
+    public AlarmRecord triggerAlarm(AlarmTriggerRequest request) {
+        AlarmRecord alarm = new AlarmRecord();
+        alarm.setRuleId(request.getRuleId());
+        alarm.setAlarmType(request.getAlarmType());
+        alarm.setSeverity(request.getSeverity());
+        alarm.setDeviceId(request.getDeviceId());
+        alarm.setRoomId(request.getRoomId());
+        alarm.setAlarmMessage(request.getMessage());
+        alarm.setAlarmValue(request.getValue());
+        alarm.setOccurredAt(LocalDateTime.now());
+
+        alarmRecordRepository.save(alarm);
+
+        // 发送通知
+        sendAlarmNotification(alarm);
+
+        log.info(&quot;告警触发：{}&quot;, alarm.getAlarmNumber());
+        return alarm;
+    }
+
+    @Override
+    public Page&lt;AlarmRecord&gt; getAlarms(UUID deviceId, String status, 
+                                       LocalDateTime startTime, LocalDateTime endTime,
+                                       Pageable pageable) {
+        // TODO: 实现查询逻辑
+        return alarmRecordRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional
+    public AlarmRecord acknowledgeAlarm(UUID alarmId, UUID userId) {
+        AlarmRecord alarm = alarmRecordRepository.findById(alarmId)
+            .orElseThrow(() -&gt; new RuntimeException(&quot;告警不存在&quot;));
+
+        alarm.setStatus(AlarmStatus.ACKNOWLEDGED);
+        alarm.setAcknowledgedAt(LocalDateTime.now());
+        alarm.setAcknowledgedBy(userId);
+
+        return alarmRecordRepository.save(alarm);
+    }
+
+    @Override
+    @Transactional
+    public AlarmRecord resolveAlarm(UUID alarmId, UUID userId, String note) {
+        AlarmRecord alarm = alarmRecordRepository.findById(alarmId)
+            .orElseThrow(() -&gt; new RuntimeException(&quot;告警不存在&quot;));
+
+        alarm.setStatus(AlarmStatus.RESOLVED);
+        alarm.setResolvedAt(LocalDateTime.now());
+        alarm.setResolvedBy(userId);
+        alarm.setResolutionNote(note);
+
+        return alarmRecordRepository.save(alarm);
+    }
+
+    @Override
+    public List&lt;AlarmRule&gt; getActiveRules() {
+        return alarmRuleRepository.findByEnabledTrue();
+    }
+
+    @Override
+    public void evaluateRules(String deviceId, Object metricData) {
+        List&lt;AlarmRule&gt; rules = getActiveRules();
+
+        for (AlarmRule rule : rules) {
+            // TODO: 实现规则评估逻辑
+            // 1. 解析规则表达式
+            // 2. 评估指标数据
+            // 3. 触发告警
+        }
+    }
+
+    private void sendAlarmNotification(AlarmRecord alarm) {
+        // TODO: 实现通知发送
+        notificationService.sendAlarmNotification(alarm);
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmService 接口
+- [ ] 创建 AlarmServiceImpl 实现类
+- [ ] 理解告警触发流程
+- [ ] 理解规则评估逻辑</p>
+<hr />
+<h3 id="4controller">步骤 4：Controller 层<a class="headerlink" href="#4controller" title="Permanent link">&para;</a></h3>
+<h4 id="41-alarmcontroller">4.1 创建 AlarmController<a class="headerlink" href="#41-alarmcontroller" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AlarmController.java</code></p>
+<pre><code class="language-java">package com.dormpower.controller;
+
+import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.service.AlarmService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/alarms&quot;)
+@RequiredArgsConstructor
+public class AlarmController {
+
+    private final AlarmService alarmService;
+
+    @PostMapping(&quot;/trigger&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('alarm:write', 'admin')&quot;)
+    public ResponseEntity&lt;AlarmRecord&gt; triggerAlarm(@RequestBody AlarmTriggerRequest request) {
+        return ResponseEntity.ok(alarmService.triggerAlarm(request));
+    }
+
+    @GetMapping
+    @PreAuthorize(&quot;hasAnyAuthority('alarm:read', 'admin')&quot;)
+    public ResponseEntity&lt;Page&lt;AlarmRecord&gt;&gt; getAlarms(
+        @RequestParam(required = false) UUID deviceId,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
+        Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+            alarmService.getAlarms(deviceId, status, startTime, endTime, pageable)
+        );
+    }
+
+    @PostMapping(&quot;/{id}/acknowledge&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('alarm:write', 'admin')&quot;)
+    public ResponseEntity&lt;AlarmRecord&gt; acknowledgeAlarm(
+        @PathVariable UUID id,
+        @RequestParam UUID userId
+    ) {
+        return ResponseEntity.ok(alarmService.acknowledgeAlarm(id, userId));
+    }
+
+    @PostMapping(&quot;/{id}/resolve&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('alarm:write', 'admin')&quot;)
+    public ResponseEntity&lt;AlarmRecord&gt; resolveAlarm(
+        @PathVariable UUID id,
+        @RequestParam UUID userId,
+        @RequestParam(required = false) String note
+    ) {
+        return ResponseEntity.ok(alarmService.resolveAlarm(id, userId, note));
+    }
+
+    @GetMapping(&quot;/rules&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('alarm:read', 'admin')&quot;)
+    public ResponseEntity&lt;List&lt;AlarmRecord&gt;&gt; getActiveRules() {
+        return ResponseEntity.ok((List) alarmService.getActiveRules());
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmController.java
+- [ ] 理解 RESTful API 设计
+- [ ] 使用 Postman 测试接口</p>
+<hr />
+<h2 id="_7">四、单元测试<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h3 id="41">4.1 测试类设计<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/AlarmControllerTest.java</code></p>
+<pre><code class="language-java">package com.dormpower.controller;
+
+import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.model.AlarmType;
+import com.dormpower.model.AlarmSeverity;
+import com.dormpower.service.AlarmService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(AlarmController.class)
+class AlarmControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private AlarmService alarmService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void testTriggerAlarm_Success() throws Exception {
+        AlarmTriggerRequest request = new AlarmTriggerRequest();
+        request.setRuleId(UUID.randomUUID());
+        request.setAlarmType(AlarmType.OVERLOAD);
+        request.setSeverity(AlarmSeverity.WARNING);
+        request.setDeviceId(UUID.randomUUID());
+        request.setValue(new BigDecimal(&quot;3000&quot;));
+        request.setMessage(&quot;设备过载&quot;);
+
+        AlarmRecord alarm = new AlarmRecord();
+        alarm.setId(UUID.randomUUID());
+        alarm.setAlarmNumber(&quot;ALM-20240101000001-0001&quot;);
+        alarm.setAlarmType(AlarmType.OVERLOAD);
+
+        when(alarmService.triggerAlarm(any(AlarmTriggerRequest.class))).thenReturn(alarm);
+
+        mockMvc.perform(post(&quot;/api/alarms/trigger&quot;)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath(&quot;$.alarmNumber&quot;).value(&quot;ALM-20240101000001-0001&quot;));
+    }
+
+    @Test
+    void testAcknowledgeAlarm_Success() throws Exception {
+        UUID alarmId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        AlarmRecord alarm = new AlarmRecord();
+        alarm.setId(alarmId);
+        alarm.setStatus(com.dormpower.model.AlarmStatus.ACKNOWLEDGED);
+
+        when(alarmService.acknowledgeAlarm(alarmId, userId)).thenReturn(alarm);
+
+        mockMvc.perform(post(&quot;/api/alarms/{id}/acknowledge&quot;, alarmId)
+                .param(&quot;userId&quot;, userId.toString()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath(&quot;$.status&quot;).value(&quot;ACKNOWLEDGED&quot;));
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmControllerTest.java
+- [ ] 理解 MockMvc 测试方法
+- [ ] 运行测试：<code>mvn test -Dtest=AlarmControllerTest</code></p>
+<hr />
+<h2 id="_8">五、前端实现（分步骤）<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h3 id="1_1">步骤 1：类型定义<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/types/alarm.ts</code></p>
+<pre><code class="language-typescript">export interface AlarmRule {
+  id: string;
+  ruleName: string;
+  alarmType: AlarmType;
+  severity: AlarmSeverity;
+  ruleExpression?: string;
+  threshold?: number;
+  metricName?: string;
+  durationSeconds?: number;
+  enabled: boolean;
+  description?: string;
+}
+
+export interface AlarmRecord {
+  id: string;
+  alarmNumber: string;
+  ruleId: string;
+  alarmType: AlarmType;
+  severity: AlarmSeverity;
+  deviceId?: string;
+  roomId?: string;
+  alarmMessage: string;
+  alarmValue?: number;
+  status: AlarmStatus;
+  occurredAt: string;
+  acknowledgedAt?: string;
+  resolvedAt?: string;
+  acknowledgedBy?: string;
+  resolvedBy?: string;
+  resolutionNote?: string;
+  escalateLevel?: number;
+}
+
+export type AlarmType = 
+  | 'OVERLOAD'
+  | 'UNDER_VOLTAGE'
+  | 'OVER_VOLTAGE'
+  | 'OVER_CURRENT'
+  | 'OVER_USE'
+  | 'DEVICE_OFFLINE'
+  | 'LOW_BALANCE'
+  | 'TEMPERATURE'
+  | 'CUSTOM';
+
+export type AlarmSeverity = 'INFO' | 'WARNING' | 'CRITICAL' | 'EMERGENCY';
+
+export type AlarmStatus = 'ACTIVE' | 'ACKNOWLEDGED' | 'RESOLVED' | 'SUPPRESSED' | 'CLOSED';
+
+export interface AlarmTriggerRequest {
+  ruleId: string;
+  alarmType: AlarmType;
+  severity: AlarmSeverity;
+  deviceId?: string;
+  roomId?: string;
+  message: string;
+  value?: number;
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 alarm.ts 文件
+- [ ] 理解 TypeScript 类型定义</p>
+<hr />
+<h3 id="2api">步骤 2：API 封装<a class="headerlink" href="#2api" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/api/alarm.ts</code></p>
+<pre><code class="language-typescript">import axios from 'axios';
+import type { AlarmRecord, AlarmRule, AlarmTriggerRequest } from '@/types/alarm';
+
+const API_BASE = '/api/alarms';
+
+export const alarmApi = {
+  // 触发告警
+  async triggerAlarm(request: AlarmTriggerRequest): Promise&lt;AlarmRecord&gt; {
+    const response = await axios.post(`${API_BASE}/trigger`, request);
+    return response.data;
+  },
+
+  // 获取告警列表
+  async getAlarms(
+    deviceId?: string,
+    status?: string,
+    startTime?: string,
+    endTime?: string,
+    page = 0,
+    size = 20
+  ) {
+    const response = await axios.get(API_BASE, {
+      params: { deviceId, status, startTime, endTime, page, size }
+    });
+    return response.data;
+  },
+
+  // 确认告警
+  async acknowledgeAlarm(alarmId: string, userId: string): Promise&lt;AlarmRecord&gt; {
+    const response = await axios.post(`${API_BASE}/${alarmId}/acknowledge`, null, {
+      params: { userId }
+    });
+    return response.data;
+  },
+
+  // 解决告警
+  async resolveAlarm(
+    alarmId: string,
+    userId: string,
+    note?: string
+  ): Promise&lt;AlarmRecord&gt; {
+    const response = await axios.post(`${API_BASE}/${alarmId}/resolve`, null, {
+      params: { userId, note }
+    });
+    return response.data;
+  },
+
+  // 获取活动规则
+  async getActiveRules(): Promise&lt;AlarmRule[]&gt; {
+    const response = await axios.get(`${API_BASE}/rules`);
+    return response.data;
+  }
+};
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 alarm.ts API 文件
+- [ ] 理解 Axios 封装
+- [ ] 测试 API 调用</p>
+<hr />
+<h3 id="3">步骤 3：告警管理页面<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/AlarmView.vue</code></p>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;alarm-container&quot;&gt;
+    &lt;el-card class=&quot;filter-card&quot;&gt;
+      &lt;el-form :inline=&quot;true&quot; :model=&quot;queryForm&quot;&gt;
+        &lt;el-form-item label=&quot;设备&quot;&gt;
+          &lt;el-select v-model=&quot;queryForm.deviceId&quot; placeholder=&quot;选择设备&quot;&gt;
+            &lt;el-option
+              v-for=&quot;device in devices&quot;
+              :key=&quot;device.id&quot;
+              :label=&quot;device.name&quot;
+              :value=&quot;device.id&quot;
+            /&gt;
+          &lt;/el-select&gt;
+        &lt;/el-form-item&gt;
+
+        &lt;el-form-item label=&quot;状态&quot;&gt;
+          &lt;el-select v-model=&quot;queryForm.status&quot; placeholder=&quot;全部状态&quot;&gt;
+            &lt;el-option label=&quot;活动中&quot; value=&quot;ACTIVE&quot; /&gt;
+            &lt;el-option label=&quot;已确认&quot; value=&quot;ACKNOWLEDGED&quot; /&gt;
+            &lt;el-option label=&quot;已解决&quot; value=&quot;RESOLVED&quot; /&gt;
+          &lt;/el-select&gt;
+        &lt;/el-form-item&gt;
+
+        &lt;el-form-item&gt;
+          &lt;el-button type=&quot;primary&quot; @click=&quot;handleQuery&quot;&gt;查询&lt;/el-button&gt;
+          &lt;el-button type=&quot;warning&quot; @click=&quot;handleTestAlarm&quot;&gt;测试告警&lt;/el-button&gt;
+        &lt;/el-form-item&gt;
+      &lt;/el-form&gt;
+    &lt;/el-card&gt;
+
+    &lt;el-card&gt;
+      &lt;template #header&gt;
+        &lt;span&gt;告警列表&lt;/span&gt;
+        &lt;el-tag type=&quot;danger&quot; v-if=&quot;activeCount &gt; 0&quot;&gt;
+          活动告警：{{ activeCount }}
+        &lt;/el-tag&gt;
+      &lt;/template&gt;
+
+      &lt;el-table :data=&quot;alarms&quot; stripe v-loading=&quot;loading&quot;&gt;
+        &lt;el-table-column prop=&quot;alarmNumber&quot; label=&quot;告警编号&quot; width=&quot;180&quot; /&gt;
+        &lt;el-table-column prop=&quot;alarmType&quot; label=&quot;类型&quot; width=&quot;120&quot;&gt;
+          &lt;template #default=&quot;{ row }&quot;&gt;
+            &lt;el-tag&gt;{{ getAlarmTypeText(row.alarmType) }}&lt;/el-tag&gt;
+          &lt;/template&gt;
+        &lt;/el-table-column&gt;
+        &lt;el-table-column prop=&quot;severity&quot; label=&quot;级别&quot; width=&quot;100&quot;&gt;
+          &lt;template #default=&quot;{ row }&quot;&gt;
+            &lt;el-tag :type=&quot;getSeverityType(row.severity)&quot;&gt;
+              {{ getSeverityText(row.severity) }}
+            &lt;/el-tag&gt;
+          &lt;/template&gt;
+        &lt;/el-table-column&gt;
+        &lt;el-table-column prop=&quot;alarmMessage&quot; label=&quot;告警内容&quot; min-width=&quot;200&quot; /&gt;
+        &lt;el-table-column prop=&quot;alarmValue&quot; label=&quot;告警值&quot; width=&quot;100&quot; /&gt;
+        &lt;el-table-column prop=&quot;status&quot; label=&quot;状态&quot; width=&quot;100&quot;&gt;
+          &lt;template #default=&quot;{ row }&quot;&gt;
+            &lt;el-tag :type=&quot;getStatusType(row.status)&quot;&gt;
+              {{ getStatusText(row.status) }}
+            &lt;/el-tag&gt;
+          &lt;/template&gt;
+        &lt;/el-table-column&gt;
+        &lt;el-table-column prop=&quot;occurredAt&quot; label=&quot;发生时间&quot; width=&quot;180&quot; /&gt;
+        &lt;el-table-column label=&quot;操作&quot; width=&quot;200&quot;&gt;
+          &lt;template #default=&quot;{ row }&quot;&gt;
+            &lt;el-button
+              v-if=&quot;row.status === 'ACTIVE'&quot;
+              type=&quot;primary&quot;
+              size=&quot;small&quot;
+              @click=&quot;handleAcknowledge(row)&quot;
+            &gt;
+              确认
+            &lt;/el-button&gt;
+            &lt;el-button
+              v-if=&quot;row.status !== 'RESOLVED'&quot;
+              type=&quot;success&quot;
+              size=&quot;small&quot;
+              @click=&quot;handleResolve(row)&quot;
+            &gt;
+              解决
+            &lt;/el-button&gt;
+            &lt;el-button size=&quot;small&quot; @click=&quot;handleViewDetail(row)&quot;&gt;详情&lt;/el-button&gt;
+          &lt;/template&gt;
+        &lt;/el-table-column&gt;
+      &lt;/el-table&gt;
+
+      &lt;el-pagination
+        v-model:current-page=&quot;currentPage&quot;
+        v-model:page-size=&quot;pageSize&quot;
+        :total=&quot;total&quot;
+        @current-change=&quot;handlePageChange&quot;
+      /&gt;
+    &lt;/el-card&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { ref, reactive, onMounted } from 'vue';
+import { alarmApi } from '@/api/alarm';
+import { deviceApi } from '@/api/device';
+import type { AlarmRecord } from '@/types/alarm';
+import { ElMessage, ElMessageBox } from 'element-plus';
+
+const devices = ref&lt;any[]&gt;([]);
+const alarms = ref&lt;AlarmRecord[]&gt;([]);
+const loading = ref(false);
+const activeCount = ref(0);
+
+const queryForm = reactive({
+  deviceId: '',
+  status: ''
+});
+
+const currentPage = ref(1);
+const pageSize = ref(20);
+const total = ref(0);
+
+// 加载设备列表
+const loadDevices = async () =&gt; {
+  try {
+    const response = await deviceApi.getDevices();
+    devices.value = response.content || response;
+  } catch (error) {
+    console.error('Failed to load devices:', error);
+  }
+};
+
+// 加载告警列表
+const loadAlarms = async () =&gt; {
+  loading.value = true;
+  try {
+    const response = await alarmApi.getAlarms(
+      queryForm.deviceId,
+      queryForm.status,
+      undefined,
+      undefined,
+      currentPage.value - 1,
+      pageSize.value
+    );
+
+    alarms.value = response.content || [];
+    total.value = response.totalElements || 0;
+
+    // 统计活动告警
+    activeCount.value = alarms.value.filter(a =&gt; a.status === 'ACTIVE').length;
+  } catch (error: any) {
+    ElMessage.error('加载告警失败：' + (error.response?.data?.message || ''));
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 查询
+const handleQuery = () =&gt; {
+  currentPage.value = 1;
+  loadAlarms();
+};
+
+// 确认告警
+const handleAcknowledge = async (alarm: AlarmRecord) =&gt; {
+  try {
+    await ElMessageBox.confirm('确认该告警？', '告警确认');
+
+    await alarmApi.acknowledgeAlarm(alarm.id, 'current-user-id');
+
+    ElMessage.success('告警已确认');
+    loadAlarms();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('确认失败：' + (error.response?.data?.message || ''));
+    }
+  }
+};
+
+// 解决告警
+const handleResolve = async (alarm: AlarmRecord) =&gt; {
+  try {
+    const { value } = await ElMessageBox.prompt('请输入解决备注', '告警解决', {
+      inputPattern: /.{5,}/,
+      inputErrorMessage: '备注至少 5 个字符'
+    });
+
+    await alarmApi.resolveAlarm(alarm.id, 'current-user-id', value);
+
+    ElMessage.success('告警已解决');
+    loadAlarms();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('解决失败：' + (error.response?.data?.message || ''));
+    }
+  }
+};
+
+// 测试告警
+const handleTestAlarm = async () =&gt; {
+  try {
+    await alarmApi.triggerAlarm({
+      ruleId: 'test-rule-id',
+      alarmType: 'OVERLOAD',
+      severity: 'WARNING',
+      message: '测试告警：设备过载',
+      value: 3000
+    });
+
+    ElMessage.success('测试告警已触发');
+    loadAlarms();
+  } catch (error: any) {
+    ElMessage.error('测试失败：' + (error.response?.data?.message || ''));
+  }
+};
+
+const handleViewDetail = (alarm: AlarmRecord) =&gt; {
+  ElMessage.info('告警详情功能开发中...');
+};
+
+const getAlarmTypeText = (type: string) =&gt; {
+  const texts: Record&lt;string, string&gt; = {
+    OVERLOAD: '过载',
+    DEVICE_OFFLINE: '离线'
+  };
+  return texts[type] || type;
+};
+
+const getSeverityType = (severity: string) =&gt; {
+  const types: Record&lt;string, any&gt; = {
+    INFO: 'info',
+    WARNING: 'warning',
+    CRITICAL: 'danger',
+    EMERGENCY: 'danger'
+  };
+  return types[severity] || 'info';
+};
+
+const getSeverityText = (severity: string) =&gt; {
+  const texts: Record&lt;string, string&gt; = {
+    INFO: '提示',
+    WARNING: '警告',
+    CRITICAL: '严重',
+    EMERGENCY: '紧急'
+  };
+  return texts[severity] || severity;
+};
+
+const getStatusType = (status: string) =&gt; {
+  const types: Record&lt;string, any&gt; = {
+    ACTIVE: 'danger',
+    ACKNOWLEDGED: 'warning',
+    RESOLVED: 'success'
+  };
+  return types[status] || 'info';
+};
+
+const getStatusText = (status: string) =&gt; {
+  const texts: Record&lt;string, string&gt; = {
+    ACTIVE: '活动中',
+    ACKNOWLEDGED: '已确认',
+    RESOLVED: '已解决'
+  };
+  return texts[status] || status;
+};
+
+onMounted(() =&gt; {
+  loadDevices();
+  loadAlarms();
+});
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.alarm-container {
+  padding: 20px;
+}
+
+.filter-card {
+  margin-bottom: 20px;
+}
+
+:deep(.el-pagination) {
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+&lt;/style&gt;
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmView.vue
+- [ ] 理解 Vue 3 Composition API
+- [ ] 运行前端项目测试页面</p>
+<hr />
+<h2 id="_9">六、联调验证<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h3 id="61">6.1 功能验证清单<a class="headerlink" href="#61" title="Permanent link">&para;</a></h3>
+<h4 id="_10">后端验证<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 启动后端服务</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警触发接口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警查询接口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警确认接口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警解决接口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证通知发送</li>
+</ul>
+<h4 id="_11">前端验证<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 启动前端服务</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 访问告警管理页面</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警查询</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警确认</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试告警解决</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证状态更新</li>
+</ul>
+<h3 id="62">6.2 常见问题与解决方案<a class="headerlink" href="#62" title="Permanent link">&para;</a></h3>
+<h4 id="1_2">问题 1：告警风暴<a class="headerlink" href="#1_2" title="Permanent link">&para;</a></h4>
+<p><strong>现象</strong>: 短时间内产生大量告警</p>
+<p><strong>解决方案</strong>:</p>
+<pre><code class="language-java">// 告警抑制
+public class AlarmSuppressor {
+    private Map&lt;String, LocalDateTime&gt; lastAlarmTime = new ConcurrentHashMap&lt;&gt;();
+    private static final long SUPPRESS_WINDOW_MS = 300000; // 5 分钟
+
+    public boolean shouldSuppress(String alarmKey) {
+        LocalDateTime lastTime = lastAlarmTime.get(alarmKey);
+        if (lastTime != null &amp;&amp; 
+            System.currentTimeMillis() - lastTime.atTime(java.time.LocalTime.now()).toInstant(
+                java.time.ZoneOffset.UTC).toEpochMilli() &lt; SUPPRESS_WINDOW_MS) {
+            return true;
+        }
+        lastAlarmTime.put(alarmKey, LocalDateTime.now());
+        return false;
+    }
+}
+</code></pre>
+<hr />
+<h2 id="_12">七、完成后的文件结构 📁<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<h3 id="_13">后端新增/修改的文件<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<pre><code>backend/src/main/java/com/dormpower/
+├── model/
+│   ├── AlarmRule.java              ✅ 新建
+│   └── AlarmRecord.java            ✅ 新建
+├── repository/
+│   ├── AlarmRuleRepository.java    ✅ 新建
+│   └── AlarmRecordRepository.java  ✅ 新建
+├── service/
+│   ├── AlarmService.java           ✅ 新建
+│   └── impl/
+│       └── AlarmServiceImpl.java   ✅ 新建
+├── controller/
+│   └── AlarmController.java        ✅ 新建
+└── dto/
+    └── AlarmTriggerRequest.java    ✅ 新建
+</code></pre>
+<h3 id="_14">前端新增/修改的文件<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<pre><code>frontend/src/
+├── types/
+│   └── alarm.ts                    ✅ 新建
+├── api/
+│   └── alarm.ts                    ✅ 新建
+├── views/
+│   └── AlarmView.vue               ✅ 新建
+└── stores/
+    └── alarm.ts                    ✅ 新建
+</code></pre>
+<hr />
+<h2 id="_15">八、扩展练习 💪<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h2>
+<h3 id="_16">基础练习<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<ol>
+<li>添加告警规则配置页面</li>
+<li>实现告警统计图表</li>
+<li>添加告警导出功能</li>
+<li>实现告警通知配置</li>
+</ol>
+<h3 id="_17">进阶练习<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<ol>
+<li>实现规则引擎（Drools）</li>
+<li>实现告警关联分析</li>
+<li>实现告警自动升级</li>
+<li>实现告警工单系统</li>
+</ol>
+<h3 id="_18">挑战练习<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<ol>
+<li>实现 AI 异常检测</li>
+<li>实现告警预测</li>
+<li>实现智能告警抑制</li>
+<li>实现告警根因分析</li>
+</ol>
+<hr />
+<h2 id="_19">九、知识点总结 📝<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h2>
+<h3 id="_20">核心知识点<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h4 id="_21">后端<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>规则引擎</strong></li>
+<li>规则表达式</li>
+<li>阈值判断</li>
+<li>
+<p>持续时间</p>
+</li>
+<li>
+<p><strong>告警生命周期</strong></p>
+</li>
+<li>活动 → 确认 → 解决</li>
+<li>状态流转</li>
+<li>
+<p>时间记录</p>
+</li>
+<li>
+<p><strong>通知集成</strong></p>
+</li>
+<li>多渠道通知</li>
+<li>通知模板</li>
+<li>接收人管理</li>
+</ol>
+<h4 id="_22">前端<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>状态管理</strong></li>
+<li>告警状态标签</li>
+<li>
+<p>实时更新</p>
+</li>
+<li>
+<p><strong>批量操作</strong></p>
+</li>
+<li>批量确认</li>
+<li>批量解决</li>
+</ol>
+<hr />
+<h2 id="_23">十、下一步学习<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h2>
+<p>完成本模块后，建议继续学习：</p>
+<ol>
+<li><strong><a href="../06-%E6%8E%A7%E5%88%B6%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97/">06-控制管理模块</a></strong> - 学习设备远程控制</li>
+<li><strong><a href="../10-%E9%80%9A%E7%9F%A5%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97/">10-通知管理模块</a></strong> - 学习通知推送</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-21<br />
+<strong>作者</strong>: 教学文档编写组<br />
+<strong>状态</strong>: ✅ 已完成</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 教学文档编写组
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>

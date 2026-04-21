@@ -1,0 +1,1035 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="DormPower 项目系列学习文档 - 从零开始掌握企业级 Spring Boot + Vue 全栈开发">
+      
+      
+        <meta name="author" content="教学文档编写组">
+      
+      
+        <link rel="canonical" href="https://your-github-username.github.io/dorm-power-console/09-AI%20%E6%99%BA%E8%83%BD%E6%A8%A1%E5%9D%97/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>模块 09：AI 智能模块 - 宿舍用电管理系统 - 教学文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#09ai" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="宿舍用电管理系统 - 教学文档" class="md-header__button md-logo" aria-label="宿舍用电管理系统 - 教学文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            宿舍用电管理系统 - 教学文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              模块 09：AI 智能模块
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/your-github-username/dorm-power-console" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dorm-power-console
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../首页：index.md" class="md-tabs__link">
+        
+  
+    
+  
+  None
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../简单测试：simple-test.md" class="md-tabs__link">
+        
+  
+    
+  
+  None
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="宿舍用电管理系统 - 教学文档" class="md-nav__button md-logo" aria-label="宿舍用电管理系统 - 教学文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    宿舍用电管理系统 - 教学文档
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/your-github-username/dorm-power-console" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dorm-power-console
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../首页：index.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../简单测试：simple-test.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="09ai">模块 09：AI 智能模块<a class="headerlink" href="#09ai" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>学习时长</strong>: 4-5 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: 模块 01、模块 03、数据分析基础、RESTful API 集成</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、实现目标 ⭐<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">知识目标<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ 理解 AI 报告生成架构</li>
+<li>✅ 掌握智能问答系统设计</li>
+<li>✅ 理解用电行为分析方法</li>
+<li>✅ 掌握数据预测模型应用</li>
+</ul>
+<h3 id="_3">能力目标<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ 能够设计 AI 报告系统</li>
+<li>✅ 能够实现智能问答接口</li>
+<li>✅ 能够完成用电分析功能</li>
+<li>✅ 能够集成第三方 AI 服务</li>
+</ul>
+<h3 id="_4">成果目标<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>完成本模块后，你将拥有：
+- 📁 AI 用电报告生成 API
+- 📁 智能问答系统
+- 📁 用电行为分析
+- 📁 用电预测功能
+- 📁 前端 AI 功能页面</p>
+<hr />
+<h2 id="_5">二、需求分析与设计<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1 业务场景<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p><strong>场景 1：AI 用电报告生成</strong></p>
+<pre><code>用户请求报告 → 获取用电数据 → AI 分析 → 生成报告 → 返回用户
+</code></pre>
+<p><strong>场景 2：智能问答</strong></p>
+<pre><code>用户提问 → NLP 处理 → 意图识别 → 查询数据 → 生成回答
+</code></pre>
+<p><strong>场景 3：用电异常分析</strong></p>
+<pre><code>采集用电数据 → 异常检测算法 → 发现异常 → 生成分析报告
+</code></pre>
+<h3 id="22">2.2 功能需求清单<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 报告生成</td>
+<td>月度/周度用电报告</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>智能问答</td>
+<td>用电咨询问答</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>用电分析</td>
+<td>用电行为分析</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>用电预测</td>
+<td>未来用电预测</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>节能建议</td>
+<td>智能节能建议</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 技术选型与理由<a class="headerlink" href="#23" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Spring AI</strong></td>
+<td>AI 服务集成框架</td>
+<td>1.x</td>
+<td>✅ <strong>统一接口</strong>：抽象多家 AI 服务商接口<br>✅ <strong>开箱即用</strong>：简化 AI 服务集成流程<br>✅ <strong>流式响应</strong>：支持 SSE 流式输出<br>⚠️ <strong>替代方案</strong>：教学场景可直接调用 REST API</td>
+</tr>
+<tr>
+<td><strong>OpenAI API</strong></td>
+<td>大模型服务</td>
+<td>-</td>
+<td>✅ <strong>智能问答</strong>：GPT 模型提供自然语言问答<br>✅ <strong>报告生成</strong>：根据用电数据生成分析报告<br>✅ <strong>灵活配置</strong>：通过 Prompt 工程控制输出<br>⚠️ <strong>替代方案</strong>：国内可用文心一言/通义千问</td>
+</tr>
+<tr>
+<td><strong>Smile</strong></td>
+<td>Java 机器学习库</td>
+<td>3.x</td>
+<td>✅ <strong>预测算法</strong>：支持回归、时间序列预测<br>✅ <strong>轻量级</strong>：纯 Java 实现，无外部依赖<br>✅ <strong>用电预测</strong>：基于历史数据预测未来用电<br>⚠️ <strong>简化实现</strong>：教学场景可用简单线性回归</td>
+</tr>
+<tr>
+<td><strong>ONNX Runtime</strong></td>
+<td>模型推理引擎</td>
+<td>1.x</td>
+<td>✅ <strong>跨平台</strong>：支持多种框架训练的模型<br>✅ <strong>高性能</strong>：优化的推理引擎<br>✅ <strong>异常检测</strong>：加载预训练模型检测用电异常<br>⚠️ <strong>学习曲线</strong>：需要了解模型训练和部署流程</td>
+</tr>
+</tbody>
+</table>
+<p><strong>技术对比与取舍</strong>：
+- <strong>调用 API vs 自建模型</strong>：教学场景调用 API 简化实现，生产环境考虑自建模型降低成本
+- <strong>复杂模型 vs 简单算法</strong>：根据数据量选择，小数据量用简单算法，大数据量用深度学习
+- <strong>实时预测 vs 离线分析</strong>：实时性要求高用流式处理，否则用离线批处理</p>
+<hr />
+<h2 id="_6">三、后端实现（分步骤）<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h3 id="1">步骤 1：实体类设计<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<h4 id="11-aireport">1.1 创建 AIReport 实体<a class="headerlink" href="#11-aireport" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AIReport.java</code></p>
+<pre><code class="language-java">package com.dormpower.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = &quot;ai_report&quot;)
+public class AIReport {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = &quot;room_id&quot;, nullable = false)
+    private UUID roomId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReportType reportType = ReportType.MONTHLY;
+
+    @Column(nullable = false, length = 20)
+    private String reportPeriod; // 如 2024-01
+
+    @Column(columnDefinition = &quot;TEXT&quot;)
+    private String reportContent; // JSON 格式报告内容
+
+    @Column(length = 2000)
+    private String summary; // 报告摘要
+
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal totalElectricity; // 总用电量
+
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal totalCost; // 总电费
+
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal predictedNext; // 预测下期
+
+    private Integer energySavingScore; // 节能评分（0-100）
+
+    @Column(length = 1000)
+    private String suggestions; // 节能建议
+
+    private LocalDateTime generatedAt = LocalDateTime.now();
+
+    @Column(name = &quot;generated_by&quot;)
+    private UUID generatedBy;
+}
+
+enum ReportType {
+    DAILY, WEEKLY, MONTHLY, YEARLY
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AIReport.java 文件
+- [ ] 理解报告数据结构
+- [ ] 运行项目，查看数据库表结构</p>
+<hr />
+<h3 id="2repository">步骤 2：Repository 层<a class="headerlink" href="#2repository" title="Permanent link">&para;</a></h3>
+<h4 id="21-aireportrepository">2.1 创建 AIReportRepository<a class="headerlink" href="#21-aireportrepository" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/AIReportRepository.java</code></p>
+<pre><code class="language-java">package com.dormpower.repository;
+
+import com.dormpower.model.AIReport;
+import com.dormpower.model.ReportType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface AIReportRepository extends JpaRepository&lt;AIReport, UUID&gt; {
+
+    Optional&lt;AIReport&gt; findByRoomIdAndReportPeriod(UUID roomId, String period);
+
+    List&lt;AIReport&gt; findByRoomIdOrderByGeneratedAtDesc(UUID roomId);
+
+    Optional&lt;AIReport&gt; findTopByRoomIdAndReportTypeOrderByGeneratedAtDesc(
+        UUID roomId, ReportType reportType
+    );
+}
+</code></pre>
+<hr />
+<h3 id="3service">步骤 3：Service 层<a class="headerlink" href="#3service" title="Permanent link">&para;</a></h3>
+<h4 id="31-aireportservice">3.1 创建 AIReportService<a class="headerlink" href="#31-aireportservice" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AIReportService.java</code></p>
+<pre><code class="language-java">package com.dormpower.service;
+
+import com.dormpower.model.AIReport;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface AIReportService {
+
+    AIReport generateReport(UUID roomId, String period);
+
+    Optional&lt;AIReport&gt; getReport(UUID roomId, String period);
+
+    List&lt;AIReport&gt; getReportHistory(UUID roomId);
+
+    String getEnergySavingSuggestion(UUID roomId);
+}
+</code></pre>
+<h4 id="32-aireportserviceimpl">3.2 创建 AIReportServiceImpl<a class="headerlink" href="#32-aireportserviceimpl" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AIReportServiceImpl.java</code></p>
+<pre><code class="language-java">package com.dormpower.service.impl;
+
+import com.dormpower.model.AIReport;
+import com.dormpower.model.ReportType;
+import com.dormpower.repository.AIReportRepository;
+import com.dormpower.service.AIReportService;
+import com.dormpower.service.TelemetryService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AIReportServiceImpl implements AIReportService {
+
+    private final AIReportRepository reportRepository;
+    private final TelemetryService telemetryService;
+
+    @Override
+    @Transactional
+    public AIReport generateReport(UUID roomId, String period) {
+        // TODO: 实现 AI 报告生成逻辑
+        // 1. 获取用电数据
+        // 2. 分析用电行为
+        // 3. 生成报告内容
+        // 4. 保存报告
+
+        AIReport report = new AIReport();
+        report.setRoomId(roomId);
+        report.setReportType(ReportType.MONTHLY);
+        report.setReportPeriod(period);
+        report.setSummary(&quot;本月用电正常&quot;);
+        report.setEnergySavingScore(85);
+        report.setSuggestions(&quot;建议减少夜间用电&quot;);
+
+        return reportRepository.save(report);
+    }
+
+    @Override
+    public Optional&lt;AIReport&gt; getReport(UUID roomId, String period) {
+        return reportRepository.findByRoomIdAndReportPeriod(roomId, period);
+    }
+
+    @Override
+    public List&lt;AIReport&gt; getReportHistory(UUID roomId) {
+        return reportRepository.findByRoomIdOrderByGeneratedAtDesc(roomId);
+    }
+
+    @Override
+    public String getEnergySavingSuggestion(UUID roomId) {
+        // TODO: 实现节能建议生成
+        return &quot;建议合理使用空调，温度设置在 26℃左右&quot;;
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AIReportService 接口
+- [ ] 创建 AIReportServiceImpl 实现类
+- [ ] 理解报告生成流程</p>
+<hr />
+<h3 id="4controller">步骤 4：Controller 层<a class="headerlink" href="#4controller" title="Permanent link">&para;</a></h3>
+<h4 id="41-aireportcontroller">4.1 创建 AIReportController<a class="headerlink" href="#41-aireportcontroller" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AIReportController.java</code></p>
+<pre><code class="language-java">package com.dormpower.controller;
+
+import com.dormpower.model.AIReport;
+import com.dormpower.service.AIReportService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/ai-reports&quot;)
+@RequiredArgsConstructor
+public class AIReportController {
+
+    private final AIReportService aiReportService;
+
+    @PostMapping(&quot;/generate&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('ai:write', 'admin')&quot;)
+    public ResponseEntity&lt;AIReport&gt; generateReport(
+        @RequestParam UUID roomId,
+        @RequestParam String period
+    ) {
+        return ResponseEntity.ok(aiReportService.generateReport(roomId, period));
+    }
+
+    @GetMapping
+    @PreAuthorize(&quot;hasAnyAuthority('ai:read', 'admin')&quot;)
+    public ResponseEntity&lt;AIReport&gt; getReport(
+        @RequestParam UUID roomId,
+        @RequestParam String period
+    ) {
+        return aiReportService.getReport(roomId, period)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(&quot;/history&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('ai:read', 'admin')&quot;)
+    public ResponseEntity&lt;List&lt;AIReport&gt;&gt; getReportHistory(@RequestParam UUID roomId) {
+        return ResponseEntity.ok(aiReportService.getReportHistory(roomId));
+    }
+
+    @GetMapping(&quot;/suggestion&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('ai:read', 'admin')&quot;)
+    public ResponseEntity&lt;String&gt; getSuggestion(@RequestParam UUID roomId) {
+        return ResponseEntity.ok(aiReportService.getEnergySavingSuggestion(roomId));
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AIReportController.java
+- [ ] 理解 AI 报告 API 设计
+- [ ] 使用 Postman 测试接口</p>
+<hr />
+<h2 id="_7">四、前端实现<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h3 id="41">4.1 类型定义<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/types/ai.ts</code></p>
+<pre><code class="language-typescript">export interface AIReport {
+  id: string;
+  roomId: string;
+  reportType: ReportType;
+  reportPeriod: string;
+  reportContent?: any;
+  summary?: string;
+  totalElectricity?: number;
+  totalCost?: number;
+  predictedNext?: number;
+  energySavingScore?: number;
+  suggestions?: string;
+  generatedAt: string;
+}
+
+export type ReportType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+export interface ChatRequest {
+  message: string;
+  context?: any;
+}
+</code></pre>
+<h3 id="42-api">4.2 API 封装<a class="headerlink" href="#42-api" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/api/ai.ts</code></p>
+<pre><code class="language-typescript">import axios from 'axios';
+import type { AIReport, ChatMessage, ChatRequest } from '@/types/ai';
+
+const REPORT_API_BASE = '/api/ai-reports';
+const CHAT_API_BASE = '/api/ai/chat';
+
+export const aiReportApi = {
+  async generateReport(roomId: string, period: string): Promise&lt;AIReport&gt; {
+    const response = await axios.post(`${REPORT_API_BASE}/generate`, null, {
+      params: { roomId, period }
+    });
+    return response.data;
+  },
+
+  async getReport(roomId: string, period: string): Promise&lt;AIReport&gt; {
+    const response = await axios.get(REPORT_API_BASE, {
+      params: { roomId, period }
+    });
+    return response.data;
+  },
+
+  async getReportHistory(roomId: string): Promise&lt;AIReport[]&gt; {
+    const response = await axios.get(`${REPORT_API_BASE}/history`, {
+      params: { roomId }
+    });
+    return response.data;
+  },
+
+  async getSuggestion(roomId: string): Promise&lt;string&gt; {
+    const response = await axios.get(`${REPORT_API_BASE}/suggestion`, {
+      params: { roomId }
+    });
+    return response.data;
+  }
+};
+
+export const aiChatApi = {
+  async sendMessage(request: ChatRequest): Promise&lt;ChatMessage&gt; {
+    const response = await axios.post(CHAT_API_BASE, request);
+    return response.data;
+  }
+};
+</code></pre>
+<h3 id="43-ai">4.3 AI 报告页面<a class="headerlink" href="#43-ai" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/AIReportView.vue</code></p>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;ai-report&quot;&gt;
+    &lt;el-card&gt;
+      &lt;template #header&gt;
+        &lt;span&gt;AI 用电报告&lt;/span&gt;
+        &lt;el-button type=&quot;primary&quot; @click=&quot;handleGenerate&quot;&gt;生成报告&lt;/el-button&gt;
+      &lt;/template&gt;
+
+      &lt;div v-if=&quot;report&quot; class=&quot;report-content&quot;&gt;
+        &lt;el-descriptions title=&quot;报告概览&quot; :column=&quot;2&quot; border&gt;
+          &lt;el-descriptions-item label=&quot;用电周期&quot;&gt;{{ report.reportPeriod }}&lt;/el-descriptions-item&gt;
+          &lt;el-descriptions-item label=&quot;总用电量&quot;&gt;{{ report.totalElectricity }} kWh&lt;/el-descriptions-item&gt;
+          &lt;el-descriptions-item label=&quot;总电费&quot;&gt;{{ report.totalCost }} 元&lt;/el-descriptions-item&gt;
+          &lt;el-descriptions-item label=&quot;节能评分&quot;&gt;
+            &lt;el-tag :type=&quot;getScoreType(report.energySavingScore)&quot;&gt;
+              {{ report.energySavingScore }}分
+            &lt;/el-tag&gt;
+          &lt;/el-descriptions-item&gt;
+        &lt;/el-descriptions&gt;
+
+        &lt;el-divider /&gt;
+
+        &lt;h3&gt;用电分析&lt;/h3&gt;
+        &lt;p&gt;{{ report.summary }}&lt;/p&gt;
+
+        &lt;h3&gt;节能建议&lt;/h3&gt;
+        &lt;p&gt;{{ report.suggestions }}&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;el-empty v-else description=&quot;暂无报告，请先生成报告&quot; /&gt;
+    &lt;/el-card&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { ref, onMounted } from 'vue';
+import { aiReportApi } from '@/api/ai';
+import type { AIReport } from '@/types/ai';
+import { ElMessage } from 'element-plus';
+
+const report = ref&lt;AIReport | null&gt;(null);
+
+const loadReport = async () =&gt; {
+  try {
+    // TODO: 传入实际的 roomId 和 period
+    const result = await aiReportApi.getReport('room-id', '2024-01');
+    report.value = result;
+  } catch (error) {
+    console.log('No report found');
+  }
+};
+
+const handleGenerate = async () =&gt; {
+  try {
+    report.value = await aiReportApi.generateReport('room-id', '2024-01');
+    ElMessage.success('报告生成成功');
+  } catch (error: any) {
+    ElMessage.error('生成失败：' + (error.response?.data?.message || ''));
+  }
+};
+
+const getScoreType = (score?: number) =&gt; {
+  if (!score) return 'info';
+  if (score &gt;= 90) return 'success';
+  if (score &gt;= 70) return 'warning';
+  return 'danger';
+};
+
+onMounted(() =&gt; {
+  loadReport();
+});
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.ai-report {
+  padding: 20px;
+}
+
+.report-content {
+  h3 {
+    margin: 20px 0 10px;
+    color: #303133;
+  }
+
+  p {
+    line-height: 1.6;
+    color: #606266;
+  }
+}
+&lt;/style&gt;
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AIReportView.vue
+- [ ] 理解 Vue 3 Composition API
+- [ ] 运行前端项目测试页面</p>
+<hr />
+<h2 id="_8">五、联调验证<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h3 id="51">5.1 功能验证清单<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
+<h4 id="_9">后端验证<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 启动后端服务</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试报告生成接口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试报告查询接口</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试节能建议接口</li>
+</ul>
+<h4 id="_10">前端验证<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 启动前端服务</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 访问 AI 报告页面</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试报告生成</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证报告显示</li>
+</ul>
+<hr />
+<h2 id="_11">六、完成后的文件结构 📁<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
+<h3 id="_12">后端新增/修改的文件<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<pre><code>backend/src/main/java/com/dormpower/
+├── model/
+│   └── AIReport.java             ✅ 新建
+├── repository/
+│   └── AIReportRepository.java   ✅ 新建
+├── service/
+│   ├── AIReportService.java      ✅ 新建
+│   └── impl/
+│       └── AIReportServiceImpl.java ✅ 新建
+└── controller/
+    └── AIReportController.java   ✅ 新建
+</code></pre>
+<h3 id="_13">前端新增/修改的文件<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<pre><code>frontend/src/
+├── types/
+│   └── ai.ts                       ✅ 新建
+├── api/
+│   └── ai.ts                       ✅ 新建
+└── views/
+    ├── AIReportView.vue            ✅ 新建
+    └── AIChatView.vue              ✅ 新建
+</code></pre>
+<hr />
+<h2 id="_14">七、扩展练习 💪<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<h3 id="_15">基础练习<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<ol>
+<li>添加报告导出功能</li>
+<li>实现报告对比</li>
+<li>添加用电趋势图</li>
+</ol>
+<h3 id="_16">进阶练习<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<ol>
+<li>集成大模型 API</li>
+<li>实现智能问答</li>
+<li>实现用电预测</li>
+</ol>
+<h3 id="_17">挑战练习<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<ol>
+<li>训练用电预测模型</li>
+<li>实现异常检测算法</li>
+<li>实现个性化节能建议</li>
+</ol>
+<hr />
+<h2 id="_18">八、下一步学习<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h2>
+<p>完成本模块后，建议继续学习：</p>
+<ol>
+<li><strong><a href="../10-%E9%80%9A%E7%9F%A5%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97/">10-通知管理模块</a></strong> - 学习通知推送</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-21<br />
+<strong>作者</strong>: 教学文档编写组<br />
+<strong>状态</strong>: ✅ 已完成</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 教学文档编写组
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>

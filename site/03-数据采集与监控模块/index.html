@@ -1,0 +1,2041 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="DormPower 项目系列学习文档 - 从零开始掌握企业级 Spring Boot + Vue 全栈开发">
+      
+      
+        <meta name="author" content="教学文档编写组">
+      
+      
+        <link rel="canonical" href="https://your-github-username.github.io/dorm-power-console/03-%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E4%B8%8E%E7%9B%91%E6%8E%A7%E6%A8%A1%E5%9D%97/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>模块 03：数据采集与监控模块 - 宿舍用电管理系统 - 教学文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#03" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="宿舍用电管理系统 - 教学文档" class="md-header__button md-logo" aria-label="宿舍用电管理系统 - 教学文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            宿舍用电管理系统 - 教学文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              模块 03：数据采集与监控模块
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/your-github-username/dorm-power-console" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dorm-power-console
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../首页：index.md" class="md-tabs__link">
+        
+  
+    
+  
+  None
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../简单测试：simple-test.md" class="md-tabs__link">
+        
+  
+    
+  
+  None
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="宿舍用电管理系统 - 教学文档" class="md-nav__button md-logo" aria-label="宿舍用电管理系统 - 教学文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    宿舍用电管理系统 - 教学文档
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/your-github-username/dorm-power-console" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dorm-power-console
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../首页：index.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../简单测试：simple-test.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="03">模块 03：数据采集与监控模块<a class="headerlink" href="#03" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>学习时长</strong>: 4-5 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐☆<br />
+<strong>前置知识</strong>: 模块 01、模块 02、MQTT 协议基础、WebSocket 基础</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、实现目标 ⭐<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">知识目标<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ 理解 IoT 数据采集架构</li>
+<li>✅ 掌握 MQTT 遥测数据处理</li>
+<li>✅ 理解时序数据存储方案</li>
+<li>✅ 掌握 WebSocket 实时数据推送</li>
+<li>✅ 理解系统监控指标设计</li>
+</ul>
+<h3 id="_3">能力目标<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ 能够实现高频数据采集</li>
+<li>✅ 能够设计时序数据表结构</li>
+<li>✅ 能够实现 WebSocket 实时推送</li>
+<li>✅ 能够开发系统监控功能</li>
+<li>✅ 能够完成数据可视化展示</li>
+</ul>
+<h3 id="_4">成果目标<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>完成本模块后，你将拥有：
+- 📁 完整的遥测数据采集后端 API
+- 📁 实时数据 WebSocket 推送
+- 📁 历史数据查询与导出功能
+- 📁 系统监控指标采集
+- 📁 前端实时监控页面
+- 📁 历史数据查询与图表展示</p>
+<hr />
+<h2 id="_5">二、需求分析与设计<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1 业务场景<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p><strong>场景 1：设备数据上报</strong></p>
+<pre><code>智能插座 → MQTT Broker → MqttBridge → 数据验证 → 存储到 Telemetry 表 → WebSocket 推送 → 前端实时更新
+</code></pre>
+<p><strong>场景 2：历史数据查询</strong></p>
+<pre><code>用户选择设备和时间范围 → 后端查询 Telemetry 表 → 分页返回 → 前端渲染图表
+</code></pre>
+<p><strong>场景 3：实时监控</strong></p>
+<pre><code>设备上报数据 → WebSocket 推送 → 前端订阅 → 实时更新图表（1 秒刷新）
+</code></pre>
+<p><strong>场景 4：数据导出</strong></p>
+<pre><code>用户选择导出范围 → 后端生成 CSV 文件 → 返回下载链接 → 用户下载
+</code></pre>
+<h3 id="22">2.2 功能需求清单<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>遥测数据接收</td>
+<td>通过 MQTT 接收设备上报数据</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>遥测数据存储</td>
+<td>保存到数据库，支持高频写入</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>实时数据推送</td>
+<td>WebSocket 推送实时数据</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>历史数据查询</td>
+<td>按时间范围、设备查询</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>数据导出</td>
+<td>导出 CSV/Excel 格式</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>实时监控</td>
+<td>1 秒刷新实时数据</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>系统指标采集</td>
+<td>CPU、内存、设备在线率</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>定时任务管理</td>
+<td>数据清理等定时任务</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 技术选型与理由<a class="headerlink" href="#23" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MQTT</strong></td>
+<td>设备数据上报协议</td>
+<td>3.1.1</td>
+<td>✅ <strong>发布/订阅模式</strong>：设备发布数据，服务端订阅消费<br>✅ <strong>主题过滤</strong>：支持通配符主题（dorm/telemetry/#）<br>✅ <strong>QoS 保障</strong>：关键数据使用 QoS 1 确保到达<br>✅ <strong>低延迟</strong>：适合高频实时数据传输</td>
+</tr>
+<tr>
+<td><strong>WebSocket</strong></td>
+<td>实时数据推送</td>
+<td>-</td>
+<td>✅ <strong>全双工通信</strong>：服务端主动推送数据到前端<br>✅ <strong>低延迟</strong>：一次握手，持续通信<br>✅ <strong>轻量协议</strong>：相比 HTTP 轮询，减少带宽消耗<br>✅ <strong>Spring 支持</strong>：Spring WebSocket 简化开发</td>
+</tr>
+<tr>
+<td><strong>Spring Scheduler</strong></td>
+<td>定时任务调度</td>
+<td>3.2.x</td>
+<td>✅ <strong>内置支持</strong>：Spring Boot 内置，无需额外依赖<br>✅ <strong>Cron 表达式</strong>：灵活的调度策略<br>✅ <strong>异步执行</strong>：支持@Async 异步任务<br>⚠️ <strong>局限性</strong>：单机调度，分布式场景需用 Quartz/XXL-JOB</td>
+</tr>
+<tr>
+<td><strong>ECharts</strong></td>
+<td>图表库</td>
+<td>5.x</td>
+<td>✅ <strong>丰富图表</strong>：支持折线图、柱状图、仪表盘等<br>✅ <strong>大数据量</strong>：支持 canvas 渲染，性能优秀<br>✅ <strong>响应式</strong>：自适应不同屏幕尺寸<br>✅ <strong>中文文档</strong>：百度开源，文档完善</td>
+</tr>
+</tbody>
+</table>
+<p><strong>技术对比与取舍</strong>：
+- <strong>WebSocket vs SSE</strong>：选择 WebSocket 因为需要双向通信（前端也可发送控制命令）
+- <strong>ECharts vs Chart.js</strong>：选择 ECharts 因为功能更丰富，适合复杂的数据可视化场景
+- <strong>定时任务 vs 实时计算</strong>：教学场景用定时任务简化实现，生产环境考虑 Flink 实时计算
+| PostgreSQL | 时序数据存储 | 14+ |</p>
+<hr />
+<h2 id="_6">三、后端实现（分步骤）<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h3 id="1">步骤 1：实体类设计<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<h4 id="11-telemetry">1.1 创建 Telemetry 实体<a class="headerlink" href="#11-telemetry" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/Telemetry.java</code></p>
+<pre><code class="language-java">package com.dormpower.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = &quot;telemetry&quot;, indexes = {
+    @Index(name = &quot;idx_telemetry_device_time&quot;, columnList = &quot;deviceId, timestamp&quot;),
+    @Index(name = &quot;idx_telemetry_timestamp&quot;, columnList = &quot;timestamp&quot;)
+})
+public class Telemetry {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = &quot;device_id&quot;, nullable = false)
+    private UUID deviceId;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal voltage; // 电压（V）
+
+    @Column(precision = 10, scale = 3)
+    private BigDecimal current; // 电流（A）
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal power; // 功率（W）
+
+    @Column(precision = 5, scale = 3)
+    private BigDecimal powerFactor; // 功率因数
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal frequency; // 频率（Hz）
+
+    @Column(precision = 12, scale = 4)
+    private BigDecimal activeEnergy; // 有功电能（kWh）
+
+    @Column(precision = 12, scale = 4)
+    private BigDecimal reactiveEnergy; // 无功电能（kVarh）
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal temperature; // 温度（℃）
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal humidity; // 湿度（%）
+
+    @Column(nullable = false)
+    private LocalDateTime timestamp; // 数据采集时间
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private Integer quality; // 数据质量标识
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 Telemetry.java 文件
+- [ ] 理解索引设计目的（加速时间范围查询）
+- [ ] 运行项目，查看数据库表结构
+- [ ] 测试插入测试数据</p>
+<h4 id="12-collectionrecord">1.2 创建 CollectionRecord 实体<a class="headerlink" href="#12-collectionrecord" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/CollectionRecord.java</code></p>
+<pre><code class="language-java">package com.dormpower.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = &quot;collection_record&quot;)
+public class CollectionRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = &quot;device_id&quot;, nullable = false)
+    private UUID deviceId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CollectionType collectionType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CollectionStatus status;
+
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    private Integer dataPoints; // 数据点数
+
+    @Column(length = 500)
+    private String errorMessage;
+
+    private Integer retryCount = 0;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+}
+
+enum CollectionType {
+    TELEMETRY, STATUS, EVENT
+}
+
+enum CollectionStatus {
+    SUCCESS, FAILED, TIMEOUT
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 CollectionRecord.java
+- [ ] 理解枚举类型使用
+- [ ] 理解采集记录的作用（用于追踪采集成功率）</p>
+<h4 id="13-systemmetrics">1.3 创建 SystemMetrics 实体<a class="headerlink" href="#13-systemmetrics" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/SystemMetrics.java</code></p>
+<pre><code class="language-java">package com.dormpower.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Entity
+@Table(name = &quot;system_metrics&quot;)
+public class SystemMetrics {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MetricType metricType;
+
+    @Column(nullable = false, length = 100)
+    private String metricName;
+
+    @Column(nullable = false)
+    private Double metricValue;
+
+    @Column(length = 20)
+    private String unit;
+
+    @ElementCollection
+    @CollectionTable(name = &quot;metric_labels&quot;, joinColumns = @JoinColumn(name = &quot;metric_id&quot;))
+    @MapKeyColumn(name = &quot;label_key&quot;)
+    @Column(name = &quot;label_value&quot;)
+    private java.util.Map&lt;String, String&gt; labels;
+
+    @Column(nullable = false)
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    @Column(length = 500)
+    private String description;
+}
+
+enum MetricType {
+    DEVICE, SYSTEM, MQTT, DATABASE
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 SystemMetrics.java
+- [ ] 理解@ElementCollection 用法（存储 Map 类型）
+- [ ] 理解系统指标的分类</p>
+<hr />
+<h3 id="2repository">步骤 2：Repository 层<a class="headerlink" href="#2repository" title="Permanent link">&para;</a></h3>
+<h4 id="21-telemetryrepository">2.1 创建 TelemetryRepository<a class="headerlink" href="#21-telemetryrepository" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/TelemetryRepository.java</code></p>
+<pre><code class="language-java">package com.dormpower.repository;
+
+import com.dormpower.model.Telemetry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface TelemetryRepository extends JpaRepository&lt;Telemetry, UUID&gt; {
+
+    Page&lt;Telemetry&gt; findByDeviceIdAndTimestampBetween(
+        UUID deviceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        Pageable pageable
+    );
+
+    List&lt;Telemetry&gt; findByDeviceIdAndTimestampBetweenOrderByTimestampDesc(
+        UUID deviceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime
+    );
+
+    Optional&lt;Telemetry&gt; findTopByDeviceIdOrderByTimestampDesc(UUID deviceId);
+
+    @Query(&quot;SELECT t FROM Telemetry t WHERE t.deviceId IN :deviceIds AND t.timestamp BETWEEN :startTime AND :endTime&quot;)
+    List&lt;Telemetry&gt; findByDeviceIdsAndTimestampBetween(
+        @Param(&quot;deviceIds&quot;) List&lt;UUID&gt; deviceIds,
+        @Param(&quot;startTime&quot;) LocalDateTime startTime,
+        @Param(&quot;endTime&quot;) LocalDateTime endTime
+    );
+
+    @Query(&quot;SELECT AVG(t.power) FROM Telemetry t WHERE t.deviceId = :deviceId AND t.timestamp BETWEEN :startTime AND :endTime&quot;)
+    Optional&lt;Double&gt; findAveragePower(
+        @Param(&quot;deviceId&quot;) UUID deviceId,
+        @Param(&quot;startTime&quot;) LocalDateTime startTime,
+        @Param(&quot;endTime&quot;) LocalDateTime endTime
+    );
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 TelemetryRepository.java
+- [ ] 理解 Spring Data JPA 查询方法命名
+- [ ] 理解@Query 自定义查询
+- [ ] 测试 Repository 方法</p>
+<h4 id="22-collectionrecordrepository">2.2 创建 CollectionRecordRepository<a class="headerlink" href="#22-collectionrecordrepository" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/CollectionRecordRepository.java</code></p>
+<pre><code class="language-java">package com.dormpower.repository;
+
+import com.dormpower.model.CollectionRecord;
+import com.dormpower.model.CollectionStatus;
+import com.dormpower.model.CollectionType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface CollectionRecordRepository extends JpaRepository&lt;CollectionRecord, UUID&gt; {
+
+    List&lt;CollectionRecord&gt; findByDeviceIdAndTimestampBetween(
+        UUID deviceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime
+    );
+
+    List&lt;CollectionRecord&gt; findByStatusAndTimestampBetween(
+        CollectionStatus status,
+        LocalDateTime startTime,
+        LocalDateTime endTime
+    );
+
+    @Query(&quot;SELECT COUNT(c) FROM CollectionRecord c WHERE c.deviceId = :deviceId AND c.collectionType = :type AND c.timestamp BETWEEN :startTime AND :endTime&quot;)
+    Long countByDeviceIdAndTypeAndTimeRange(
+        @Param(&quot;deviceId&quot;) UUID deviceId,
+        @Param(&quot;type&quot;) CollectionType type,
+        @Param(&quot;startTime&quot;) LocalDateTime startTime,
+        @Param(&quot;endTime&quot;) LocalDateTime endTime
+    );
+}
+</code></pre>
+<hr />
+<h3 id="3service">步骤 3：Service 层<a class="headerlink" href="#3service" title="Permanent link">&para;</a></h3>
+<h4 id="31-telemetryservice">3.1 创建 TelemetryService<a class="headerlink" href="#31-telemetryservice" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/TelemetryService.java</code></p>
+<pre><code class="language-java">package com.dormpower.service;
+
+import com.dormpower.dto.TelemetryData;
+import com.dormpower.model.Telemetry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface TelemetryService {
+
+    void saveTelemetry(TelemetryData data);
+
+    Page&lt;Telemetry&gt; getTelemetryByDevice(
+        UUID deviceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        Pageable pageable
+    );
+
+    Optional&lt;Telemetry&gt; getLatestTelemetry(UUID deviceId);
+
+    List&lt;Telemetry&gt; getBatchTelemetry(
+        List&lt;UUID&gt; deviceIds,
+        LocalDateTime startTime,
+        LocalDateTime endTime
+    );
+
+    Optional&lt;Double&gt; getAveragePower(UUID deviceId, LocalDateTime startTime, LocalDateTime endTime);
+}
+</code></pre>
+<h4 id="32-telemetryserviceimpl">3.2 创建 TelemetryServiceImpl<a class="headerlink" href="#32-telemetryserviceimpl" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/TelemetryServiceImpl.java</code></p>
+<pre><code class="language-java">package com.dormpower.service.impl;
+
+import com.dormpower.dto.TelemetryData;
+import com.dormpower.model.Telemetry;
+import com.dormpower.repository.TelemetryRepository;
+import com.dormpower.service.TelemetryService;
+import com.dormpower.websocket.WebSocketManager;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class TelemetryServiceImpl implements TelemetryService {
+
+    private final TelemetryRepository telemetryRepository;
+    private final ModelMapper modelMapper;
+    private final WebSocketManager webSocketManager;
+
+    @Override
+    @Transactional
+    public void saveTelemetry(TelemetryData data) {
+        Telemetry telemetry = modelMapper.map(data, Telemetry.class);
+        telemetry.setTimestamp(LocalDateTime.now());
+        telemetryRepository.save(telemetry);
+
+        // 通过 WebSocket 推送实时数据
+        webSocketManager.sendTelemetryUpdate(telemetry);
+    }
+
+    @Override
+    public Page&lt;Telemetry&gt; getTelemetryByDevice(
+        UUID deviceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        Pageable pageable
+    ) {
+        return telemetryRepository.findByDeviceIdAndTimestampBetween(
+            deviceId, startTime, endTime, pageable
+        );
+    }
+
+    @Override
+    public Optional&lt;Telemetry&gt; getLatestTelemetry(UUID deviceId) {
+        return telemetryRepository.findTopByDeviceIdOrderByTimestampDesc(deviceId);
+    }
+
+    @Override
+    public List&lt;Telemetry&gt; getBatchTelemetry(
+        List&lt;UUID&gt; deviceIds,
+        LocalDateTime startTime,
+        LocalDateTime endTime
+    ) {
+        return telemetryRepository.findByDeviceIdsAndTimestampBetween(
+            deviceIds, startTime, endTime
+        );
+    }
+
+    @Override
+    public Optional&lt;Double&gt; getAveragePower(UUID deviceId, LocalDateTime startTime, LocalDateTime endTime) {
+        return telemetryRepository.findAveragePower(deviceId, startTime, endTime);
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 TelemetryService 接口
+- [ ] 创建 TelemetryServiceImpl 实现类
+- [ ] 理解@Transactional 注解作用
+- [ ] 理解 WebSocket 推送集成</p>
+<hr />
+<h3 id="4controller">步骤 4：Controller 层<a class="headerlink" href="#4controller" title="Permanent link">&para;</a></h3>
+<h4 id="41-telemetrycontroller">4.1 创建 TelemetryController<a class="headerlink" href="#41-telemetrycontroller" title="Permanent link">&para;</a></h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/TelemetryController.java</code></p>
+<pre><code class="language-java">package com.dormpower.controller;
+
+import com.dormpower.model.Telemetry;
+import com.dormpower.service.TelemetryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/telemetry&quot;)
+@RequiredArgsConstructor
+public class TelemetryController {
+
+    private final TelemetryService telemetryService;
+
+    @GetMapping
+    @PreAuthorize(&quot;hasAnyAuthority('device:read', 'admin')&quot;)
+    public ResponseEntity&lt;Page&lt;Telemetry&gt;&gt; getTelemetry(
+        @RequestParam UUID deviceId,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
+        Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+            telemetryService.getTelemetryByDevice(deviceId, startTime, endTime, pageable)
+        );
+    }
+
+    @GetMapping(&quot;/latest&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('device:read', 'admin')&quot;)
+    public ResponseEntity&lt;Telemetry&gt; getLatestTelemetry(@RequestParam UUID deviceId) {
+        return telemetryService.getLatestTelemetry(deviceId)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping(&quot;/batch&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('device:read', 'admin')&quot;)
+    public ResponseEntity&lt;List&lt;Telemetry&gt;&gt; getBatchTelemetry(
+        @RequestBody BatchTelemetryRequest request
+    ) {
+        List&lt;Telemetry&gt; telemetry = telemetryService.getBatchTelemetry(
+            request.getDeviceIds(),
+            request.getStartTime(),
+            request.getEndTime()
+        );
+        return ResponseEntity.ok(telemetry);
+    }
+
+    @GetMapping(&quot;/average-power&quot;)
+    @PreAuthorize(&quot;hasAnyAuthority('device:read', 'admin')&quot;)
+    public ResponseEntity&lt;Double&gt; getAveragePower(
+        @RequestParam UUID deviceId,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime
+    ) {
+        return telemetryService.getAveragePower(deviceId, startTime, endTime)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Record
+    public static class BatchTelemetryRequest {
+        private List&lt;UUID&gt; deviceIds;
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
+
+        // Getters and Setters
+        public List&lt;UUID&gt; getDeviceIds() { return deviceIds; }
+        public void setDeviceIds(List&lt;UUID&gt; deviceIds) { this.deviceIds = deviceIds; }
+        public LocalDateTime getStartTime() { return startTime; }
+        public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
+        public LocalDateTime getEndTime() { return endTime; }
+        public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 TelemetryController.java
+- [ ] 理解@DateTimeFormat 注解
+- [ ] 使用 Postman 测试查询接口
+- [ ] 测试分页查询</p>
+<hr />
+<h2 id="_7">四、单元测试<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h3 id="41">4.1 测试类设计<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/TelemetryControllerTest.java</code></p>
+<pre><code class="language-java">package com.dormpower.controller;
+
+import com.dormpower.model.Telemetry;
+import com.dormpower.service.TelemetryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(TelemetryController.class)
+class TelemetryControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private TelemetryService telemetryService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void testGetTelemetry_WithTimeRange() throws Exception {
+        UUID deviceId = UUID.randomUUID();
+        LocalDateTime startTime = LocalDateTime.now().minusDays(7);
+        LocalDateTime endTime = LocalDateTime.now();
+
+        Telemetry telemetry = new Telemetry();
+        telemetry.setId(UUID.randomUUID());
+        telemetry.setDeviceId(deviceId);
+        telemetry.setVoltage(new BigDecimal(&quot;220.5&quot;));
+        telemetry.setTimestamp(LocalDateTime.now());
+
+        Page&lt;Telemetry&gt; page = new PageImpl&lt;&gt;(Arrays.asList(telemetry));
+
+        when(telemetryService.getTelemetryByDevice(any(), any(), any(), any()))
+            .thenReturn(page);
+
+        mockMvc.perform(get(&quot;/api/telemetry&quot;)
+                .param(&quot;deviceId&quot;, deviceId.toString())
+                .param(&quot;startTime&quot;, startTime.toString())
+                .param(&quot;endTime&quot;, endTime.toString())
+                .param(&quot;page&quot;, &quot;0&quot;)
+                .param(&quot;size&quot;, &quot;10&quot;)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath(&quot;$.content&quot;).isArray())
+            .andExpect(jsonPath(&quot;$.content[0].voltage&quot;).value(220.5));
+    }
+
+    @Test
+    void testGetLatestTelemetry_Success() throws Exception {
+        UUID deviceId = UUID.randomUUID();
+
+        Telemetry telemetry = new Telemetry();
+        telemetry.setId(UUID.randomUUID());
+        telemetry.setDeviceId(deviceId);
+        telemetry.setPower(new BigDecimal(&quot;100.5&quot;));
+
+        when(telemetryService.getLatestTelemetry(deviceId))
+            .thenReturn(Optional.of(telemetry));
+
+        mockMvc.perform(get(&quot;/api/telemetry/latest&quot;)
+                .param(&quot;deviceId&quot;, deviceId.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath(&quot;$.power&quot;).value(100.5));
+    }
+
+    @Test
+    void testGetLatestTelemetry_NotFound() throws Exception {
+        UUID deviceId = UUID.randomUUID();
+
+        when(telemetryService.getLatestTelemetry(deviceId))
+            .thenReturn(Optional.empty());
+
+        mockMvc.perform(get(&quot;/api/telemetry/latest&quot;)
+                .param(&quot;deviceId&quot;, deviceId.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testGetBatchTelemetry() throws Exception {
+        List&lt;UUID&gt; deviceIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID());
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime endTime = LocalDateTime.now();
+
+        Telemetry telemetry = new Telemetry();
+        telemetry.setId(UUID.randomUUID());
+        telemetry.setDeviceId(deviceIds.get(0));
+        telemetry.setCurrent(new BigDecimal(&quot;0.5&quot;));
+
+        when(telemetryService.getBatchTelemetry(anyList(), any(), any()))
+            .thenReturn(Arrays.asList(telemetry));
+
+        String requestBody = objectMapper.writeValueAsString(
+            Map.of(
+                &quot;deviceIds&quot;, deviceIds,
+                &quot;startTime&quot;, startTime.toString(),
+                &quot;endTime&quot;, endTime.toString()
+            )
+        );
+
+        mockMvc.perform(post(&quot;/api/telemetry/batch&quot;)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath(&quot;$&quot;).isArray())
+            .andExpect(jsonPath(&quot;$[0].current&quot;).value(0.5));
+    }
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 TelemetryControllerTest.java
+- [ ] 理解 MockMvc 测试方法
+- [ ] 运行测试：<code>mvn test -Dtest=TelemetryControllerTest</code>
+- [ ] 查看测试覆盖率报告</p>
+<hr />
+<h2 id="_8">五、前端实现（分步骤）<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h3 id="1_1">步骤 1：类型定义<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/types/telemetry.ts</code></p>
+<pre><code class="language-typescript">export interface Telemetry {
+  id: string;
+  deviceId: string;
+  voltage?: number;
+  current?: number;
+  power?: number;
+  powerFactor?: number;
+  frequency?: number;
+  activeEnergy?: number;
+  reactiveEnergy?: number;
+  temperature?: number;
+  humidity?: number;
+  timestamp: string;
+  quality?: number;
+}
+
+export interface TelemetryQuery {
+  deviceId: string;
+  startTime: string;
+  endTime: string;
+  page?: number;
+  size?: number;
+}
+
+export interface BatchTelemetryRequest {
+  deviceIds: string[];
+  startTime: string;
+  endTime: string;
+}
+
+export interface CollectionRecord {
+  id: string;
+  deviceId: string;
+  collectionType: 'TELEMETRY' | 'STATUS' | 'EVENT';
+  status: 'SUCCESS' | 'FAILED' | 'TIMEOUT';
+  startTime: string;
+  endTime?: string;
+  dataPoints?: number;
+  errorMessage?: string;
+  retryCount?: number;
+}
+
+export interface SystemMetric {
+  id: string;
+  metricType: 'DEVICE' | 'SYSTEM' | 'MQTT' | 'DATABASE';
+  metricName: string;
+  metricValue: number;
+  unit?: string;
+  labels?: Record&lt;string, string&gt;;
+  timestamp: string;
+}
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 telemetry.ts 文件
+- [ ] 理解 TypeScript 接口定义
+- [ ] 添加新的类型定义</p>
+<hr />
+<h3 id="2api">步骤 2：API 封装<a class="headerlink" href="#2api" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/api/telemetry.ts</code></p>
+<pre><code class="language-typescript">import axios from 'axios';
+import type { Telemetry, TelemetryQuery, BatchTelemetryRequest, CollectionRecord, SystemMetric } from '@/types/telemetry';
+
+const API_BASE = '/api/telemetry';
+
+export const telemetryApi = {
+  // 获取遥测数据列表
+  async getTelemetry(query: TelemetryQuery) {
+    const response = await axios.get(API_BASE, { params: query });
+    return response.data;
+  },
+
+  // 获取最新遥测数据
+  async getLatestTelemetry(deviceId: string): Promise&lt;Telemetry&gt; {
+    const response = await axios.get(`${API_BASE}/latest`, {
+      params: { deviceId }
+    });
+    return response.data;
+  },
+
+  // 获取批量遥测数据
+  async getBatchTelemetry(request: BatchTelemetryRequest): Promise&lt;Telemetry[]&gt; {
+    const response = await axios.post(`${API_BASE}/batch`, request);
+    return response.data;
+  },
+
+  // 获取平均功率
+  async getAveragePower(
+    deviceId: string,
+    startTime: string,
+    endTime: string
+  ): Promise&lt;number&gt; {
+    const response = await axios.get(`${API_BASE}/average-power`, {
+      params: { deviceId, startTime, endTime }
+    });
+    return response.data;
+  }
+};
+
+// 数据采集 API
+const COLLECTION_API_BASE = '/api/collections';
+
+export const collectionApi = {
+  // 获取采集记录
+  async getCollectionRecords(
+    deviceId?: string,
+    startTime?: string,
+    endTime?: string
+  ): Promise&lt;CollectionRecord[]&gt; {
+    const response = await axios.get(COLLECTION_API_BASE, {
+      params: { deviceId, startTime, endTime }
+    });
+    return response.data;
+  },
+
+  // 手动触发采集
+  async triggerCollection(deviceId: string, type: 'TELEMETRY' | 'STATUS' | 'EVENT') {
+    const response = await axios.post(`${COLLECTION_API_BASE}/trigger`, {
+      deviceId,
+      collectionType: type
+    });
+    return response.data;
+  },
+
+  // 获取采集统计
+  async getCollectionStats(deviceId: string, period: 'DAY' | 'WEEK' | 'MONTH') {
+    const response = await axios.get(`${COLLECTION_API_BASE}/stats`, {
+      params: { deviceId, period }
+    });
+    return response.data;
+  }
+};
+
+// 系统监控 API
+const MONITORING_API_BASE = '/api/monitoring';
+
+export const monitoringApi = {
+  // 获取系统指标
+  async getSystemMetrics(
+    metricType?: string,
+    startTime?: string,
+    endTime?: string
+  ): Promise&lt;SystemMetric[]&gt; {
+    const response = await axios.get(`${MONITORING_API_BASE}/metrics`, {
+      params: { metricType, startTime, endTime }
+    });
+    return response.data;
+  },
+
+  // 获取设备在线统计
+  async getOnlineStats(period: 'HOUR' | 'DAY' | 'WEEK') {
+    const response = await axios.get(`${MONITORING_API_BASE}/devices/online-stats`, {
+      params: { period }
+    });
+    return response.data;
+  }
+};
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 telemetry.ts API 文件
+- [ ] 理解 Axios 封装
+- [ ] 测试 API 调用</p>
+<hr />
+<h3 id="3">步骤 3：遥测数据页面<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/TelemetryView.vue</code></p>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;telemetry-container&quot;&gt;
+    &lt;el-card class=&quot;filter-card&quot;&gt;
+      &lt;el-form :inline=&quot;true&quot; :model=&quot;queryForm&quot;&gt;
+        &lt;el-form-item label=&quot;设备&quot;&gt;
+          &lt;el-select v-model=&quot;queryForm.deviceId&quot; placeholder=&quot;选择设备&quot; style=&quot;width: 200px&quot;&gt;
+            &lt;el-option
+              v-for=&quot;device in devices&quot;
+              :key=&quot;device.id&quot;
+              :label=&quot;device.name&quot;
+              :value=&quot;device.id&quot;
+            /&gt;
+          &lt;/el-select&gt;
+        &lt;/el-form-item&gt;
+
+        &lt;el-form-item label=&quot;时间范围&quot;&gt;
+          &lt;el-date-picker
+            v-model=&quot;dateRange&quot;
+            type=&quot;datetimerange&quot;
+            range-separator=&quot;至&quot;
+            start-placeholder=&quot;开始时间&quot;
+            end-placeholder=&quot;结束时间&quot;
+            @change=&quot;handleDateChange&quot;
+          /&gt;
+        &lt;/el-form-item&gt;
+
+        &lt;el-form-item&gt;
+          &lt;el-button type=&quot;primary&quot; @click=&quot;handleQuery&quot;&gt;查询&lt;/el-button&gt;
+          &lt;el-button @click=&quot;handleExport&quot;&gt;导出&lt;/el-button&gt;
+        &lt;/el-form-item&gt;
+      &lt;/el-form&gt;
+    &lt;/el-card&gt;
+
+    &lt;el-card class=&quot;chart-card&quot;&gt;
+      &lt;template #header&gt;
+        &lt;span&gt;功率趋势图&lt;/span&gt;
+      &lt;/template&gt;
+      &lt;div ref=&quot;chartRef&quot; style=&quot;height: 400px&quot;&gt;&lt;/div&gt;
+    &lt;/el-card&gt;
+
+    &lt;el-card class=&quot;table-card&quot;&gt;
+      &lt;template #header&gt;
+        &lt;span&gt;遥测数据列表&lt;/span&gt;
+      &lt;/template&gt;
+      &lt;el-table :data=&quot;telemetryData&quot; stripe v-loading=&quot;loading&quot;&gt;
+        &lt;el-table-column prop=&quot;timestamp&quot; label=&quot;时间&quot; width=&quot;180&quot; /&gt;
+        &lt;el-table-column prop=&quot;voltage&quot; label=&quot;电压 (V)&quot; width=&quot;100&quot; /&gt;
+        &lt;el-table-column prop=&quot;current&quot; label=&quot;电流 (A)&quot; width=&quot;100&quot; /&gt;
+        &lt;el-table-column prop=&quot;power&quot; label=&quot;功率 (W)&quot; width=&quot;100&quot; /&gt;
+        &lt;el-table-column prop=&quot;temperature&quot; label=&quot;温度 (℃)&quot; width=&quot;100&quot; /&gt;
+        &lt;el-table-column prop=&quot;quality&quot; label=&quot;数据质量&quot; width=&quot;100&quot; /&gt;
+      &lt;/el-table&gt;
+
+      &lt;el-pagination
+        v-model:current-page=&quot;currentPage&quot;
+        v-model:page-size=&quot;pageSize&quot;
+        :total=&quot;total&quot;
+        :page-sizes=&quot;[20, 50, 100]&quot;
+        layout=&quot;total, sizes, prev, pager, next, jumper&quot;
+        @current-change=&quot;handlePageChange&quot;
+        @size-change=&quot;handleSizeChange&quot;
+      /&gt;
+    &lt;/el-card&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { ref, reactive, onMounted, nextTick } from 'vue';
+import * as echarts from 'echarts';
+import type { ECharts } from 'echarts';
+import { telemetryApi } from '@/api/telemetry';
+import { deviceApi } from '@/api/device';
+import type { Telemetry } from '@/types/telemetry';
+import { ElMessage } from 'element-plus';
+
+const devices = ref&lt;any[]&gt;([]);
+const telemetryData = ref&lt;Telemetry[]&gt;([]);
+const loading = ref(false);
+const chartRef = ref&lt;HTMLElement&gt;();
+let chart: ECharts | null = null;
+
+const queryForm = reactive({
+  deviceId: '',
+  startTime: '',
+  endTime: ''
+});
+
+const dateRange = ref&lt;[Date, Date] | null&gt;(null);
+const currentPage = ref(1);
+const pageSize = ref(20);
+const total = ref(0);
+
+// 加载设备列表
+const loadDevices = async () =&gt; {
+  try {
+    const response = await deviceApi.getDevices();
+    devices.value = response.content || response;
+    if (devices.value.length &gt; 0) {
+      queryForm.deviceId = devices.value[0].id;
+    }
+  } catch (error) {
+    console.error('Failed to load devices:', error);
+  }
+};
+
+// 加载遥测数据
+const loadTelemetry = async () =&gt; {
+  if (!queryForm.deviceId) return;
+
+  loading.value = true;
+  try {
+    const response = await telemetryApi.getTelemetry({
+      deviceId: queryForm.deviceId,
+      startTime: queryForm.startTime,
+      endTime: queryForm.endTime,
+      page: currentPage.value - 1,
+      size: pageSize.value
+    });
+
+    telemetryData.value = response.content || [];
+    total.value = response.totalElements || 0;
+
+    updateChart();
+  } catch (error: any) {
+    ElMessage.error('加载遥测数据失败：' + (error.response?.data?.message || ''));
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 更新日期范围
+const handleDateChange = (dates: [Date, Date] | null) =&gt; {
+  if (dates) {
+    queryForm.startTime = dates[0].toISOString();
+    queryForm.endTime = dates[1].toISOString();
+  }
+};
+
+// 查询
+const handleQuery = () =&gt; {
+  currentPage.value = 1;
+  loadTelemetry();
+};
+
+// 分页变化
+const handlePageChange = (page: number) =&gt; {
+  currentPage.value = page;
+  loadTelemetry();
+};
+
+const handleSizeChange = (size: number) =&gt; {
+  pageSize.value = size;
+  currentPage.value = 1;
+  loadTelemetry();
+};
+
+// 更新图表
+const updateChart = () =&gt; {
+  if (!chart) return;
+
+  const timestamps = telemetryData.value.map(item =&gt; item.timestamp);
+  const powers = telemetryData.value.map(item =&gt; item.power || 0);
+
+  chart.setOption({
+    xAxis: {
+      type: 'category',
+      data: timestamps
+    },
+    yAxis: {
+      type: 'value',
+      name: '功率 (W)'
+    },
+    series: [{
+      data: powers,
+      type: 'line',
+      smooth: true
+    }]
+  });
+};
+
+// 导出
+const handleExport = async () =&gt; {
+  try {
+    ElMessage.success('导出功能开发中...');
+    // TODO: 实现导出功能
+  } catch (error: any) {
+    ElMessage.error('导出失败：' + (error.response?.data?.message || ''));
+  }
+};
+
+onMounted(() =&gt; {
+  loadDevices();
+
+  nextTick(() =&gt; {
+    if (chartRef.value) {
+      chart = echarts.init(chartRef.value);
+    }
+  });
+});
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.telemetry-container {
+  padding: 20px;
+}
+
+.filter-card,
+.chart-card,
+.table-card {
+  margin-bottom: 20px;
+}
+
+.table-card :deep(.el-pagination) {
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+&lt;/style&gt;
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 TelemetryView.vue
+- [ ] 理解 Vue 3 Composition API
+- [ ] 理解 ECharts 图表集成
+- [ ] 运行前端项目测试页面</p>
+<hr />
+<h3 id="4">步骤 4：实时监控页面<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/LiveView.vue</code></p>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;live-container&quot;&gt;
+    &lt;el-header class=&quot;page-header&quot;&gt;
+      &lt;el-select v-model=&quot;selectedDeviceId&quot; placeholder=&quot;选择设备&quot; @change=&quot;handleDeviceChange&quot;&gt;
+        &lt;el-option
+          v-for=&quot;device in devices&quot;
+          :key=&quot;device.id&quot;
+          :label=&quot;device.name&quot;
+          :value=&quot;device.id&quot;
+        /&gt;
+      &lt;/el-select&gt;
+      &lt;el-tag :type=&quot;isConnected ? 'success' : 'danger'&quot;&gt;
+        {{ isConnected ? '实时连接中' : '连接断开' }}
+      &lt;/el-tag&gt;
+    &lt;/el-header&gt;
+
+    &lt;el-row :gutter=&quot;20&quot;&gt;
+      &lt;el-col :span=&quot;6&quot; v-for=&quot;metric in metrics&quot; :key=&quot;metric.name&quot;&gt;
+        &lt;el-card class=&quot;metric-card&quot;&gt;
+          &lt;template #header&gt;
+            &lt;span&gt;{{ metric.name }}&lt;/span&gt;
+          &lt;/template&gt;
+          &lt;div class=&quot;metric-value&quot;&gt;
+            {{ metric.value }} &lt;span class=&quot;metric-unit&quot;&gt;{{ metric.unit }}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/el-card&gt;
+      &lt;/el-col&gt;
+    &lt;/el-row&gt;
+
+    &lt;el-card class=&quot;chart-card&quot;&gt;
+      &lt;template #header&gt;
+        &lt;span&gt;实时功率&lt;/span&gt;
+      &lt;/template&gt;
+      &lt;div ref=&quot;chartRef&quot; style=&quot;height: 400px&quot;&gt;&lt;/div&gt;
+    &lt;/el-card&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import * as echarts from 'echarts';
+import type { ECharts } from 'echarts';
+import { deviceApi } from '@/api/device';
+import { telemetryApi } from '@/api/telemetry';
+import { useWebSocket } from '@/composables/useWebSocket';
+
+const devices = ref&lt;any[]&gt;([]);
+const selectedDeviceId = ref&lt;string&gt;('');
+const chartRef = ref&lt;HTMLElement&gt;();
+let chart: ECharts | null = null;
+
+const metrics = reactive([
+  { name: '电压', value: 0, unit: 'V' },
+  { name: '电流', value: 0, unit: 'A' },
+  { name: '功率', value: 0, unit: 'W' },
+  { name: '温度', value: 0, unit: '℃' }
+]);
+
+const dataPoints = ref&lt;{ time: string; power: number }[]&gt;([]);
+const isConnected = ref(false);
+
+// WebSocket 连接
+const { connect, disconnect, subscribe } = useWebSocket();
+
+// 加载设备列表
+const loadDevices = async () =&gt; {
+  try {
+    const response = await deviceApi.getDevices();
+    devices.value = response.content || response;
+    if (devices.value.length &gt; 0) {
+      selectedDeviceId.value = devices.value[0].id;
+      startMonitoring();
+    }
+  } catch (error) {
+    console.error('Failed to load devices:', error);
+  }
+};
+
+// 开始监控
+const startMonitoring = async () =&gt; {
+  if (!selectedDeviceId.value) return;
+
+  // 连接 WebSocket
+  connect();
+
+  // 订阅设备遥测主题
+  subscribe(`telemetry:${selectedDeviceId.value}`, (data) =&gt; {
+    updateMetrics(data);
+    updateRealtimeChart(data);
+    isConnected.value = true;
+  });
+
+  // 加载初始数据
+  try {
+    const latest = await telemetryApi.getLatestTelemetry(selectedDeviceId.value);
+    updateMetrics(latest);
+  } catch (error) {
+    console.error('Failed to load latest telemetry:', error);
+  }
+};
+
+// 更新指标
+const updateMetrics = (data: any) =&gt; {
+  metrics[0].value = data.voltage || 0;
+  metrics[1].value = data.current || 0;
+  metrics[2].value = data.power || 0;
+  metrics[3].value = data.temperature || 0;
+};
+
+// 更新实时图表
+const updateRealtimeChart = (data: any) =&gt; {
+  const now = new Date().toLocaleTimeString();
+  dataPoints.value.push({ time: now, power: data.power || 0 });
+
+  // 只保留最近 60 个点
+  if (dataPoints.value.length &gt; 60) {
+    dataPoints.value.shift();
+  }
+
+  if (chart) {
+    chart.setOption({
+      xAxis: {
+        data: dataPoints.value.map(p =&gt; p.time)
+      },
+      series: [{
+        data: dataPoints.value.map(p =&gt; p.power)
+      }]
+    });
+  }
+};
+
+// 设备切换
+const handleDeviceChange = () =&gt; {
+  dataPoints.value = [];
+  startMonitoring();
+};
+
+onMounted(() =&gt; {
+  loadDevices();
+
+  if (chartRef.value) {
+    chart = echarts.init(chartRef.value);
+    chart.setOption({
+      xAxis: {
+        type: 'category',
+        data: []
+      },
+      yAxis: {
+        type: 'value',
+        name: '功率 (W)'
+      },
+      series: [{
+        type: 'line',
+        smooth: true,
+        data: []
+      }]
+    });
+  }
+});
+
+onUnmounted(() =&gt; {
+  disconnect();
+  if (chart) {
+    chart.dispose();
+  }
+});
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.live-container {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  margin-bottom: 20px;
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #409EFF;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.metric-unit {
+  font-size: 14px;
+  color: #909399;
+}
+
+.chart-card {
+  margin-top: 20px;
+}
+&lt;/style&gt;
+</code></pre>
+<p><strong>实操任务</strong>:
+- [ ] 创建 LiveView.vue
+- [ ] 理解 WebSocket 实时订阅
+- [ ] 理解实时图表更新
+- [ ] 测试实时监控功能</p>
+<hr />
+<h2 id="_9">六、联调验证<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h3 id="61">6.1 功能验证清单<a class="headerlink" href="#61" title="Permanent link">&para;</a></h3>
+<h4 id="_10">后端验证<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 启动后端服务</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 模拟 MQTT 设备上报数据</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证 Telemetry 数据正确存储</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试查询接口返回数据</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证 WebSocket 推送功能</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试分页查询</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试批量查询</li>
+</ul>
+<h4 id="_11">前端验证<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 启动前端服务</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 访问遥测数据页面</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 选择设备和时间范围</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证数据表格显示</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证图表渲染</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 访问实时监控页面</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证实时数据更新</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证 WebSocket 连接状态</li>
+</ul>
+<h4 id="_12">性能验证<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试高频数据写入（100 条/秒）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 验证大数据量查询性能</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 测试 WebSocket 并发连接</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 监控系统资源占用</li>
+</ul>
+<h3 id="62">6.2 常见问题与解决方案<a class="headerlink" href="#62" title="Permanent link">&para;</a></h3>
+<h4 id="1_2">问题 1：大量数据写入导致数据库压力大<a class="headerlink" href="#1_2" title="Permanent link">&para;</a></h4>
+<p><strong>现象</strong>: 数据写入慢，CPU 占用高</p>
+<p><strong>解决方案</strong>:</p>
+<pre><code class="language-java">// 使用批量插入
+@Transactional
+public void batchSaveTelemetry(List&lt;TelemetryData&gt; dataList) {
+    List&lt;Telemetry&gt; telemetryList = dataList.stream()
+        .map(data -&gt; modelMapper.map(data, Telemetry.class))
+        .collect(Collectors.toList());
+
+    // 分批保存，每 1000 条一批
+    int batchSize = 1000;
+    for (int i = 0; i &lt; telemetryList.size(); i += batchSize) {
+        int end = Math.min(i + batchSize, telemetryList.size());
+        telemetryRepository.saveAll(telemetryList.subList(i, end));
+    }
+}
+</code></pre>
+<h4 id="2">问题 2：实时数据推送延迟<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<p><strong>现象</strong>: 前端收到数据延迟超过 1 秒</p>
+<p><strong>解决方案</strong>:</p>
+<pre><code class="language-java">// 使用异步推送
+@Async
+public void sendTelemetryUpdate(Telemetry telemetry) {
+    String message = objectMapper.writeValueAsString(telemetry);
+    webSocketManager.sendToTopic(&quot;telemetry:&quot; + telemetry.getDeviceId(), message);
+}
+</code></pre>
+<h4 id="3_1">问题 3：图表数据点过多渲染慢<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h4>
+<p><strong>现象</strong>: 图表卡顿，浏览器 CPU 占用高</p>
+<p><strong>解决方案</strong>:</p>
+<pre><code class="language-typescript">// 数据降采样
+function downsample(data: number[], threshold: number) {
+    if (data.length &lt;= threshold) return data;
+
+    const sampled: number[] = [];
+    const step = Math.floor(data.length / threshold);
+
+    for (let i = 0; i &lt; data.length; i += step) {
+        sampled.push(data[i]);
+    }
+
+    return sampled;
+}
+</code></pre>
+<hr />
+<h2 id="_13">七、完成后的文件结构 📁<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
+<h3 id="_14">后端新增/修改的文件<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<pre><code>backend/src/main/java/com/dormpower/
+├── model/
+│   ├── Telemetry.java              ✅ 新建
+│   ├── CollectionRecord.java       ✅ 新建
+│   ├── SystemMetrics.java          ✅ 新建
+│   └── ScheduledTask.java          ✅ 新建
+├── repository/
+│   ├── TelemetryRepository.java    ✅ 新建
+│   ├── CollectionRecordRepository.java ✅ 新建
+│   └── SystemMetricsRepository.java ✅ 新建
+├── service/
+│   ├── TelemetryService.java       ✅ 新建
+│   ├── CollectionService.java      ✅ 新建
+│   └── impl/
+│       ├── TelemetryServiceImpl.java ✅ 新建
+│       └── CollectionServiceImpl.java ✅ 新建
+├── controller/
+│   ├── TelemetryController.java    ✅ 新建
+│   ├── CollectionController.java   ✅ 新建
+│   └── MonitoringController.java   ✅ 新建
+├── dto/
+│   ├── TelemetryData.java          ✅ 新建
+│   └── CollectionRequest.java      ✅ 新建
+└── scheduler/
+    └── DataCollectionScheduler.java ✅ 新建
+</code></pre>
+<h3 id="_15">前端新增/修改的文件<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<pre><code>frontend/src/
+├── types/
+│   └── telemetry.ts                ✅ 新建
+├── api/
+│   ├── telemetry.ts                ✅ 新建
+│   └── monitoring.ts               ✅ 新建
+├── views/
+│   ├── TelemetryView.vue           ✅ 新建
+│   ├── LiveView.vue                ✅ 新建
+│   ├── CollectionView.vue          ✅ 新建
+│   └── SystemMonitorView.vue       ✅ 新建
+├── stores/
+│   └── telemetry.ts                ✅ 新建
+├── components/
+│   ├── TelemetryChart.vue          ✅ 新建
+│   └── RealTimeGauge.vue           ✅ 新建
+└── composables/
+    └── useWebSocket.ts             ✅ 新建
+</code></pre>
+<h3 id="_16">测试文件<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<pre><code>backend/src/test/java/com/dormpower/
+├── controller/
+│   ├── TelemetryControllerTest.java ✅ 新建
+│   └── CollectionControllerTest.java ✅ 新建
+└── service/
+    └── TelemetryServiceTest.java   ✅ 新建
+</code></pre>
+<hr />
+<h2 id="_17">八、扩展练习 💪<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h2>
+<h3 id="_18">基础练习<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<ol>
+<li>添加数据导出功能（CSV 格式）</li>
+<li>实现数据筛选（阈值筛选）</li>
+<li>添加数据质量检查</li>
+<li>实现数据补全机制</li>
+</ol>
+<h3 id="_19">进阶练习<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<ol>
+<li>实现数据异常检测</li>
+<li>添加用电行为分析</li>
+<li>实现负荷预测</li>
+<li>集成 Grafana 监控</li>
+</ol>
+<h3 id="_20">挑战练习<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<ol>
+<li>实现时序数据库（TimescaleDB）集成</li>
+<li>实现实时计算（Apache Flink）</li>
+<li>实现数据分层存储</li>
+<li>实现机器学习异常检测</li>
+</ol>
+<hr />
+<h2 id="_21">九、知识点总结 📝<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h2>
+<h3 id="_22">核心知识点<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<h4 id="_23">后端<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>MQTT 数据处理</strong></li>
+<li>消息订阅</li>
+<li>数据解析</li>
+<li>
+<p>数据验证</p>
+</li>
+<li>
+<p><strong>时序数据存储</strong></p>
+</li>
+<li>索引设计</li>
+<li>分区策略</li>
+<li>
+<p>批量插入优化</p>
+</li>
+<li>
+<p><strong>WebSocket 实时推送</strong></p>
+</li>
+<li>连接管理</li>
+<li>消息推送</li>
+<li>
+<p>并发处理</p>
+</li>
+<li>
+<p><strong>定时任务调度</strong></p>
+</li>
+<li>Spring Scheduler</li>
+<li>Cron 表达式</li>
+<li>任务管理</li>
+</ol>
+<h4 id="_24">前端<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>ECharts 图表</strong></li>
+<li>折线图</li>
+<li>实时图表</li>
+<li>
+<p>多轴图表</p>
+</li>
+<li>
+<p><strong>WebSocket 集成</strong></p>
+</li>
+<li>连接管理</li>
+<li>消息订阅</li>
+<li>
+<p>断线重连</p>
+</li>
+<li>
+<p><strong>实时数据更新</strong></p>
+</li>
+<li>响应式数据</li>
+<li>图表更新</li>
+<li>性能优化</li>
+</ol>
+<h3 id="_25">最佳实践<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>数据采集</strong></li>
+<li>批量插入</li>
+<li>异步处理</li>
+<li>
+<p>数据缓冲</p>
+</li>
+<li>
+<p><strong>查询优化</strong></p>
+</li>
+<li>时间范围索引</li>
+<li>分页查询</li>
+<li>
+<p>查询缓存</p>
+</li>
+<li>
+<p><strong>实时推送</strong></p>
+</li>
+<li>消息队列缓冲</li>
+<li>推送频率控制</li>
+<li>连接数限制</li>
+</ol>
+<hr />
+<h2 id="_26">十、下一步学习<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h2>
+<p>完成本模块后，建议继续学习：</p>
+<ol>
+<li><strong><a href="../05-%E5%91%8A%E8%AD%A6%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97/">05-告警管理模块</a></strong> - 学习告警规则设计</li>
+<li><strong><a href="../04-%E8%AE%A1%E8%B4%B9%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97/">04-计费管理模块</a></strong> - 学习电费计算</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-21<br />
+<strong>作者</strong>: 教学文档编写组<br />
+<strong>状态</strong>: ✅ 已完成</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 教学文档编写组
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,96 @@
+site_name: 宿舍用电管理系统 - 教学文档
+site_description: DormPower 项目系列学习文档 - 从零开始掌握企业级 Spring Boot + Vue 全栈开发
+site_author: 教学文档编写组
+site_url: https://your-github-username.github.io/dorm-power-console
+
+# Repository
+repo_name: dorm-power-console
+repo_url: https://github.com/your-github-username/dorm-power-console
+edit_uri: blob/main/docs/learn/
+
+# 文档目录
+docs_dir: .
+
+# 构建输出目录
+site_dir: ../../site
+
+# Copyright
+copyright: Copyright &copy; 2024 教学文档编写组
+
+# Configuration
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+    - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Plugins
+plugins:
+  - search:
+      lang:
+        - zh
+        - en
+
+# Extra CSS
+extra_css:
+  - stylesheets/extra.css
+
+# Navigation
+nav:
+  - 首页：index.md
+  - 简单测试：simple-test.md

@@ -1,0 +1,249 @@
+/* 代码块样式增强 */
+.md-typeset pre > code {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset code {
+    border-radius: 0.3rem;
+    padding: 0.2em 0.5em;
+}
+
+/* 代码高亮主题优化 */
+.md-typeset .highlight span.linenos {
+    padding: 0 8px;
+    margin-right: 8px;
+    border-right: 1px solid rgba(127, 127, 127, 0.3);
+    color: rgba(127, 127, 127, 0.6);
+    user-select: none;
+}
+
+/* 表格样式优化 */
+.md-typeset table:not([class]) {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset table th {
+    background-color: rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table th {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 提示框样式优化 */
+.md-typeset .admonition {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset .admonition-title {
+    border-radius: 0.5rem 0.5rem 0 0;
+    font-weight: 600;
+}
+
+/* 目录导航优化 */
+.md-sidebar__scrollwrap {
+    scrollbar-width: thin;
+}
+
+/* 代码复制按钮优化 */
+.md-clipboard {
+    color: rgba(0, 0, 0, 0.5);
+    transition: color 0.25s;
+}
+
+.md-clipboard:hover {
+    color: rgba(0, 0, 0, 0.875);
+}
+
+[data-md-color-scheme="slate"] .md-clipboard {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-md-color-scheme="slate"] .md-clipboard:hover {
+    color: rgba(255, 255, 255, 0.875);
+}
+
+/* 标签页样式优化 */
+.md-typeset .tabbed-set {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset .tabbed-labels {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 0.5rem 1rem;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .tabbed-labels {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 返回顶部按钮 */
+.md-top {
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 搜索框优化 */
+.md-search__input {
+    background-color: rgba(0, 0, 0, 0.09);
+    border-radius: 1rem;
+}
+
+[data-md-color-scheme="slate"] .md-search__input {
+    background-color: rgba(255, 255, 255, 0.09);
+}
+
+/* 代码注释高亮 */
+.md-typeset .c1,
+.md-typeset .c,
+.md-typeset .cm,
+.md-typeset .cp,
+.md-typeset .c1,
+.md-typeset .cs {
+    color: #6a9955;
+    font-style: italic;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .c1,
+[data-md-color-scheme="slate"] .md-typeset .c {
+    color: #7ca668;
+}
+
+/* Java 关键字高亮 */
+.md-typeset .k,
+.md-typeset .kc,
+.md-typeset .kd,
+.md-typeset .kn,
+.md-typeset .kp,
+.md-typeset .kr,
+.md-typeset .kt {
+    color: #569cd6;
+    font-weight: bold;
+}
+
+/* 字符串高亮 */
+.md-typeset .s,
+.md-typeset .s1,
+.md-typeset .s2,
+.md-typeset .sb,
+.md-typeset .sc,
+.md-typeset .sd,
+.md-typeset .se,
+.md-typeset .sh,
+.md-typeset .si,
+.md-typeset .sx {
+    color: #ce9178;
+}
+
+/* 数字高亮 */
+.md-typeset .m,
+.md-typeset .mf,
+.md-typeset .mh,
+.md-typeset .mi,
+.md-typeset .mo {
+    color: #b5cea8;
+}
+
+/* 函数名高亮 */
+.md-typeset .nf,
+.md-typeset .fm {
+    color: #dcdcaa;
+}
+
+/* 类名高亮 */
+.md-typeset .nc,
+.md-typeset .nn {
+    color: #4ec9b0;
+    font-weight: bold;
+}
+
+/* 自定义徽章样式 */
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.5em;
+}
+
+.badge-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.badge-success {
+    background-color: #10b981;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* 目录层级缩进优化 */
+.md-nav__item--section > .md-nav__link {
+    font-weight: 600;
+    color: var(--md-primary-fg-color);
+}
+
+/* 代码块标题样式 */
+.md-typeset .highlight span.filename {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    font-size: 0.85em;
+    font-weight: 600;
+    border-radius: 0.5rem 0.5rem 0 0;
+    display: block;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .highlight span.filename {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 列表项间距优化 */
+.md-typeset ul li,
+.md-typeset ol li {
+    margin-bottom: 0.25em;
+}
+
+/* 表格内容换行 */
+.md-typeset table td {
+    white-space: normal;
+    max-width: 600px;
+}
+
+/* 响应式优化 */
+@media screen and (max-width: 76.2344em) {
+    .md-nav--primary .md-nav__title[for="__drawer"] {
+        background-color: var(--md-primary-fg-color);
+    }
+}
+
+/* 打印优化 */
+@media print {
+    .md-header,
+    .md-sidebar,
+    .md-footer,
+    .md-tabs {
+        display: none !important;
+    }
+    
+    .md-main {
+        max-width: 100%;
+    }
+}

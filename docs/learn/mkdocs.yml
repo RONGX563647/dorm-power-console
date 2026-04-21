@@ -1,0 +1,164 @@
+site_name: 宿舍用电管理系统 - 教学文档
+site_description: DormPower 项目系列学习文档 - 从零开始掌握企业级 Spring Boot + Vue 全栈开发
+site_author: 教学文档编写组
+site_url: https://rongx563647.github.io/dorm-power-console
+
+# Repository
+repo_name: dorm-power-console
+repo_url: https://github.com/RONGX563647/dorm-power-console
+edit_uri: blob/main/docs/learn/
+
+# 文档目录
+docs_dir: .
+
+# 构建输出目录
+site_dir: ../../site
+
+# Copyright
+copyright: Copyright &copy; 2024 教学文档编写组
+
+# Configuration
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+    - toc.integrate
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.ico
+  logo: assets/logo.svg
+
+# Customization
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-github-username
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: false
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+      lang:
+        - zh
+        - en
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - awesome-pages:
+      collapse_single_pages: true
+
+# Extra CSS
+extra_css:
+  - stylesheets/extra.css
+
+# Extra JavaScript
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# Navigation
+nav:
+  - 首页: index.md
+  - 测试: test.md
+  # - 教学规划: 教学规划.md
+  # - 快速开始: 快速开始.md
+  # - 学习检查清单: 学习检查清单.md
+  # - 教学文档总结: 教学文档总结.md
+  # - 模块教程:
+  #   - 01-用户认证与权限管理模块.md
+  #   - 02-设备管理模块.md
+  #   - 03-数据采集与监控模块.md
+  #   - 04-计费管理模块.md
+  #   - 05-告警管理模块.md
+  #   - 06-控制管理模块.md
+  #   - 07-宿舍管理模块.md
+  #   - 08-系统管理模块.md
+  #   - 09-AI 智能模块.md
+  #   - 10-通知管理模块.md
