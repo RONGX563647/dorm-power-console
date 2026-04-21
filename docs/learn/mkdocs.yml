@@ -1,17 +1,17 @@
 site_name: 宿舍用电管理系统 - 教学文档
 site_description: DormPower 项目系列学习文档 - 从零开始掌握企业级 Spring Boot + Vue 全栈开发
 site_author: 教学文档编写组
-site_url: https://rongx563647.github.io/dorm-power-console
+site_url: https://rongx563647.github.io/dorm-power-console/
 
 # Repository
-repo_name: dorm-power-console
+repo_name: RONGX563647/dorm-power-console
 repo_url: https://github.com/RONGX563647/dorm-power-console
-edit_uri: blob/main/docs/learn/
+edit_uri: edit/main/docs/learn/
 
 # 文档目录
 docs_dir: .
 
-# 构建输出目录
+# 构建输出目录（GitHub Actions 会覆盖此设置为 ../../_site）
 site_dir: ../../site
 
 # Copyright
@@ -63,12 +63,9 @@ extra:
   generator: false
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/your-github-username
-    - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/
-  analytics:
-    provider: google
-    property: G-XXXXXXXXXX
+      link: https://github.com/RONGX563647
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/RONGX563647/dorm-power-console
 
 # Extensions
 markdown_extensions:
@@ -145,20 +142,15 @@ extra_javascript:
 
 # Navigation
 nav:
-  - 首页: index.md
-  - 测试: test.md
-  # - 教学规划: 教学规划.md
-  # - 快速开始: 快速开始.md
-  # - 学习检查清单: 学习检查清单.md
-  # - 教学文档总结: 教学文档总结.md
-  # - 模块教程:
-  #   - 01-用户认证与权限管理模块.md
-  #   - 02-设备管理模块.md
-  #   - 03-数据采集与监控模块.md
-  #   - 04-计费管理模块.md
-  #   - 05-告警管理模块.md
-  #   - 06-控制管理模块.md
-  #   - 07-宿舍管理模块.md
-  #   - 08-系统管理模块.md
-  #   - 09-AI 智能模块.md
-  #   - 10-通知管理模块.md
+  - 首页：index.md
+  - 模块教程:
+      - 01-用户认证与权限管理模块.md
+      - 02-设备管理模块.md
+      - 03-数据采集与监控模块.md
+      - 04-计费管理模块.md
+      - 05-告警管理模块.md
+      - 06-控制管理模块.md
+      - 07-宿舍管理模块.md
+      - 08-系统管理模块.md
+      - 09-AI 智能模块.md
+      - 10-通知管理模块.md

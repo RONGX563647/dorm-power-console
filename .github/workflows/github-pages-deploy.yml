@@ -1,4 +1,4 @@
-name: Deploy Documentation to GitHub Pages
+name: Deploy Teaching Docs to GitHub Pages
 
 on:
   push:
@@ -6,22 +6,17 @@ on:
       - main
     paths:
       - 'docs/learn/**'
-      - 'mkdocs.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'docs/learn/**'
-      - 'mkdocs.yml'
+      - 'docs/learn/mkdocs.yml'
+      - 'docs/learn/requirements.txt'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "teaching-docs-pages"
   cancel-in-progress: false
 
 jobs:
@@ -42,22 +37,29 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'docs/learn/requirements.txt'
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build site
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
+      - name: Build with MkDocs
         run: |
-          mkdocs build --clean --config-file mkdocs.yml --site-dir ../../site
+          mkdocs build --clean --config-file mkdocs.yml --site-dir ../../_site
+        env:
+          SITE_URL: https://rongx563647.github.io/dorm-power-console/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./_site
 
   deploy:
-    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
