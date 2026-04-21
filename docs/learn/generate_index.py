@@ -16,10 +16,7 @@ INDEX_HTML = '''<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宿舍用电管理系统 - 教学文档</title>
-    
-    <!-- GitHub Markdown CSS -->
     <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
-    
     <style>
         body {
             max-width: 1200px;
@@ -28,7 +25,6 @@ INDEX_HTML = '''<!DOCTYPE html>
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             background: #f6f8fa;
         }
-        
         .markdown-body {
             background: #fff;
             box-sizing: border-box;
@@ -39,13 +35,11 @@ INDEX_HTML = '''<!DOCTYPE html>
             border-radius: 6px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
         @media (max-width: 768px) {
             .markdown-body {
                 padding: 15px;
             }
         }
-        
         /* 模块卡片 */
         .module-grid {
             display: grid;
@@ -53,7 +47,6 @@ INDEX_HTML = '''<!DOCTYPE html>
             gap: 20px;
             margin: 30px 0;
         }
-        
         .module-card {
             background: #fff;
             border: 1px solid #e1e4e8;
@@ -61,18 +54,15 @@ INDEX_HTML = '''<!DOCTYPE html>
             padding: 20px;
             transition: all 0.3s;
         }
-        
         .module-card:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             transform: translateY(-2px);
             border-color: #0366d6;
         }
-        
         .module-card h3 {
             margin: 0 0 10px 0;
             color: #0366d6;
         }
-        
         .module-card .difficulty {
             display: inline-block;
             padding: 2px 8px;
@@ -81,7 +71,6 @@ INDEX_HTML = '''<!DOCTYPE html>
             font-size: 12px;
             color: #586069;
         }
-        
         .module-card .duration {
             display: inline-block;
             padding: 2px 8px;
@@ -91,7 +80,6 @@ INDEX_HTML = '''<!DOCTYPE html>
             color: #586069;
             margin-left: 8px;
         }
-        
         .module-card a {
             display: block;
             margin-top: 15px;
@@ -99,11 +87,9 @@ INDEX_HTML = '''<!DOCTYPE html>
             text-decoration: none;
             font-weight: 600;
         }
-        
         .module-card a:hover {
             text-decoration: underline;
         }
-        
         /* 导航链接 */
         .nav-links {
             display: flex;
@@ -111,7 +97,6 @@ INDEX_HTML = '''<!DOCTYPE html>
             margin: 20px 0;
             flex-wrap: wrap;
         }
-        
         .nav-links a {
             padding: 10px 20px;
             background: #0366d6;
@@ -120,7 +105,6 @@ INDEX_HTML = '''<!DOCTYPE html>
             border-radius: 6px;
             transition: background 0.3s;
         }
-        
         .nav-links a:hover {
             background: #0255b3;
         }
@@ -300,5 +284,4 @@ index_file = OUTPUT_DIR / "index.html"
 with open(index_file, 'w', encoding='utf-8') as f:
     f.write(INDEX_HTML)
 
-print(f"✅ 首页已生成：{index_file}")
-print(f"📁 输出目录：{OUTPUT_DIR}")
+print(f"[OK] 首页已生成：{index_file}")

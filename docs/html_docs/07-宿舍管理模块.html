@@ -3,54 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>07 宿舍管理模块</title>
-    
-    <!-- Prism.js 代码高亮 -->
+    <title>07 宿舍管理模块 - 宿舍用电管理系统教学文档</title>
     <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
-    
-    <!-- GitHub Markdown CSS -->
     <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
-    
     <style>
         body {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
         }
-        
         .markdown-body {
+            background: #fff;
             box-sizing: border-box;
             min-width: 200px;
             max-width: 100%;
             margin: 0 auto;
             padding: 45px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
         @media (max-width: 768px) {
             .markdown-body {
                 padding: 15px;
             }
         }
-        
-        /* 代码块样式 */
-        pre {
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        
-        pre[class*="language-"] {
-            margin: 1em 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        /* 导航样式 */
-        .nav-container {
+        /* 侧边导航 */
+        .nav {
             position: fixed;
-            top: 0;
             left: 0;
+            top: 0;
             width: 250px;
             height: 100vh;
             background: #1e1e1e;
@@ -59,49 +42,43 @@
             overflow-y: auto;
             z-index: 1000;
         }
-        
-        .nav-container h3 {
+        .nav h3 {
             margin: 0 0 20px 0;
             padding: 0 20px;
             font-size: 16px;
             border-bottom: 1px solid #333;
             padding-bottom: 15px;
         }
-        
-        .nav-container ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .nav-container li {
-            margin: 0;
-        }
-        
-        .nav-container a {
+        .nav a {
             display: block;
             padding: 10px 20px;
             color: #ccc;
             text-decoration: none;
             transition: all 0.3s;
         }
-        
-        .nav-container a:hover {
+        .nav a:hover {
             background: #333;
             color: #fff;
         }
-        
-        .nav-container a.active {
+        .nav a.active {
             background: #0366d6;
             color: #fff;
         }
-        
-        .content-wrapper {
+        .content {
             margin-left: 250px;
             padding: 20px;
         }
-        
-        /* 返回顶部按钮 */
+        /* 代码块样式 */
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1em 0;
+        }
+        pre[class*="language-"] {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        /* 返回顶部 */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -117,7 +94,6 @@
             display: none;
             z-index: 999;
         }
-        
         .back-to-top:hover {
             background: #0255b3;
         }
@@ -125,25 +101,23 @@
 </head>
 <body>
     <!-- 侧边导航 -->
-    <nav class="nav-container">
+    <nav class="nav">
         <h3>📚 教学文档</h3>
-        <ul>
-            <li><a href="index.html">🏠 首页</a></li>
-            <li><a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a></li>
-            <li><a href="02-设备管理模块.html">02-设备管理模块</a></li>
-            <li><a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a></li>
-            <li><a href="04-计费管理模块.html">04-计费管理模块</a></li>
-            <li><a href="05-告警管理模块.html">05-告警管理模块</a></li>
-            <li><a href="06-控制管理模块.html">06-控制管理模块</a></li>
-            <li><a href="07-宿舍管理模块.html">07-宿舍管理模块</a></li>
-            <li><a href="08-系统管理模块.html">08-系统管理模块</a></li>
-            <li><a href="09-AI 智能模块.html">09-AI 智能模块</a></li>
-            <li><a href="10-通知管理模块.html">10-通知管理模块</a></li>
-        </ul>
+        <a href="index.html">🏠 首页</a>
+        <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+        <a href="02-设备管理模块.html">02-设备管理模块</a>
+        <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+        <a href="04-计费管理模块.html">04-计费管理模块</a>
+        <a href="05-告警管理模块.html">05-告警管理模块</a>
+        <a href="06-控制管理模块.html">06-控制管理模块</a>
+        <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+        <a href="08-系统管理模块.html">08-系统管理模块</a>
+        <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+        <a href="10-通知管理模块.html">10-通知管理模块</a>
     </nav>
     
     <!-- 主内容区 -->
-    <div class="content-wrapper">
+    <div class="content">
         <article class="markdown-body">
 <h1 id="07">模块 07：宿舍管理模块</h1>
 <blockquote>
@@ -177,14 +151,22 @@
 <hr />
 <h2 id="_5">二、需求分析与设计</h2>
 <h3 id="21">2.1 业务场景</h3>
-<p><strong>场景 1：楼栋管理</strong>
-<code>创建楼栋 → 设置楼层数 → 设置房间数 → 楼栋信息维护</code></p>
-<p><strong>场景 2：房间管理</strong>
-<code>创建房间 → 设置床位 → 分配设备 → 房间信息维护</code></p>
-<p><strong>场景 3：入住管理</strong>
-<code>学生申请 → 管理员审核 → 分配房间 → 办理入住 → 设备绑定</code></p>
-<p><strong>场景 4：退宿管理</strong>
-<code>学生申请 → 管理员审核 → 检查设备 → 办理退宿 → 清理数据</code></p>
+<p><strong>场景 1：楼栋管理</strong></p>
+<div class="codehilite"><pre><span></span><code>创建楼栋 → 设置楼层数 → 设置房间数 → 楼栋信息维护
+</code></pre></div>
+
+<p><strong>场景 2：房间管理</strong></p>
+<div class="codehilite"><pre><span></span><code>创建房间 → 设置床位 → 分配设备 → 房间信息维护
+</code></pre></div>
+
+<p><strong>场景 3：入住管理</strong></p>
+<div class="codehilite"><pre><span></span><code>学生申请 → 管理员审核 → 分配房间 → 办理入住 → 设备绑定
+</code></pre></div>
+
+<p><strong>场景 4：退宿管理</strong></p>
+<div class="codehilite"><pre><span></span><code>学生申请 → 管理员审核 → 检查设备 → 办理退宿 → 清理数据
+</code></pre></div>
+
 <h3 id="22">2.2 功能需求清单</h3>
 <table>
 <thead>
@@ -275,152 +257,157 @@
 <p><strong>文件位置</strong>: 
 - <code>backend/src/main/java/com/dormpower/model/Building.java</code>
 - <code>backend/src/main/java/com/dormpower/model/Room.java</code></p>
-<p>```java
-// Building.java
-package com.dormpower.model;</p>
-<p>import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.UUID;</p>
-<p>@Data
-@Entity
-@Table(name = "building")
-public class Building {</p>
-<div class="codehilite"><pre><span></span><code><span class="err">@</span><span class="nx">Id</span>
-<span class="err">@</span><span class="nx">GeneratedValue</span><span class="p">(</span><span class="nx">strategy</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">GenerationType</span><span class="p">.</span><span class="nx">UUID</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">UUID</span><span class="w"> </span><span class="nx">id</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="c1">// Building.java</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">name</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">address</span><span class="p">;</span>
+<span class="nd">@Data</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;building&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Building</span><span class="w"> </span><span class="p">{</span>
 
-<span class="k">private</span><span class="w"> </span><span class="nx">Integer</span><span class="w"> </span><span class="nx">floors</span><span class="p">;</span><span class="w"> </span><span class="c1">// 楼层数</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">UUID</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="k">private</span><span class="w"> </span><span class="nx">Integer</span><span class="w"> </span><span class="nx">totalRooms</span><span class="p">;</span><span class="w"> </span><span class="c1">// 房间总数</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">description</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">address</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">boolean</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">floors</span><span class="p">;</span><span class="w"> </span><span class="c1">// 楼层数</span>
 
-<span class="k">private</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="w"> </span><span class="nx">createdAt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="w"> </span><span class="nx">updatedAt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">totalRooms</span><span class="p">;</span><span class="w"> </span><span class="c1">// 房间总数</span>
 
-<span class="err">@</span><span class="nx">PreUpdate</span>
-<span class="k">protected</span><span class="w"> </span><span class="nx">void</span><span class="w"> </span><span class="nx">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">updatedAt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@PreUpdate</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
-<p>```java
-// Room.java
-package com.dormpower.model;</p>
-<p>import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.UUID;</p>
-<p>@Data
-@Entity
-@Table(name = "room", indexes = {
-    @Index(name = "idx_room_building", columnList = "building_id"),
-    @Index(name = "idx_room_number", columnList = "room_number")
-})
-public class Room {</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
-<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="c1">// Room.java</span>
+<span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_number&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">roomNumber</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;building_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">;</span>
+<span class="nd">@Data</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;room&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">indexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Index</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;idx_room_building&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">columnList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;building_id&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="nd">@Index</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;idx_room_number&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">columnList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;room_number&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Room</span><span class="w"> </span><span class="p">{</span>
 
-<span class="n">private</span><span class="w"> </span><span class="k">Integer</span><span class="w"> </span><span class="nf">floor</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">楼层</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">UUID</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="n">private</span><span class="w"> </span><span class="k">Integer</span><span class="w"> </span><span class="n">maxOccupancy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">最大入住人数</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;room_number&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">roomNumber</span><span class="p">;</span>
 
-<span class="n">private</span><span class="w"> </span><span class="k">Integer</span><span class="w"> </span><span class="n">currentOccupancy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">当前入住人数</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;building_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">;</span>
 
-<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">RoomStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RoomStatus</span><span class="p">.</span><span class="n">VACANT</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">floor</span><span class="p">;</span><span class="w"> </span><span class="c1">// 楼层</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">maxOccupancy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="c1">// 最大入住人数</span>
 
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">currentOccupancy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// 当前入住人数</span>
 
-<span class="nv">@PreUpdate</span>
-<span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">RoomStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RoomStatus</span><span class="p">.</span><span class="na">VACANT</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@PreUpdate</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span><span class="w"> </span><span class="n">RoomStatus</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">VACANT</span><span class="p">,</span><span class="w">     </span><span class="c1">// 空置</span>
+<span class="w">    </span><span class="n">OCCUPIED</span><span class="p">,</span><span class="w">   </span><span class="c1">// 已入住</span>
+<span class="w">    </span><span class="n">MAINTENANCE</span><span class="w"> </span><span class="c1">// 维修中</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}</p>
-<p>enum RoomStatus {
-    VACANT,     // 空置
-    OCCUPIED,   // 已入住
-    MAINTENANCE // 维修中
-}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 Building.java 和 Room.java
 - [ ] 理解楼栋 - 房间关系
 - [ ] 运行项目，查看数据库表结构</p>
 <h4 id="12-residencerecord">1.2 创建 ResidenceRecord 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/ResidenceRecord.java</code></p>
-<p>```java
-package com.dormpower.model;</p>
-<p>import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;</p>
-<p>@Data
-@Entity
-@Table(name = "residence_record")
-public class ResidenceRecord {</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
-<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;user_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDate</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
+<span class="nd">@Data</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;residence_record&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ResidenceRecord</span><span class="w"> </span><span class="p">{</span>
 
-<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
-<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">ResidenceStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResidenceStatus</span><span class="p">.</span><span class="n">ACTIVE</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">UUID</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">checkInDate</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">入住日期</span>
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">checkOutDate</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">退宿日期</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;user_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">remark</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
 
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ResidenceStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResidenceStatus</span><span class="p">.</span><span class="na">ACTIVE</span><span class="p">;</span>
 
-<span class="nv">@PreUpdate</span>
-<span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">checkInDate</span><span class="p">;</span><span class="w"> </span><span class="c1">// 入住日期</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">checkOutDate</span><span class="p">;</span><span class="w"> </span><span class="c1">// 退宿日期</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">remark</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@PreUpdate</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span><span class="w"> </span><span class="n">ResidenceStatus</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ACTIVE</span><span class="p">,</span><span class="w">     </span><span class="c1">// 在住</span>
+<span class="w">    </span><span class="n">CHECKED_OUT</span><span class="w"> </span><span class="c1">// 已退宿</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}</p>
-<p>enum ResidenceStatus {
-    ACTIVE,     // 在住
-    CHECKED_OUT // 已退宿
-}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 ResidenceRecord.java
 - [ ] 理解住宿记录设计</p>
@@ -428,145 +415,151 @@ public class ResidenceRecord {</p>
 <h3 id="2repository">步骤 2：Repository 层</h3>
 <h4 id="21-roomrepository">2.1 创建 RoomRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/RoomRepository.java</code></p>
-<p>```java
-package com.dormpower.repository;</p>
-<p>import com.dormpower.model.Room;
-import com.dormpower.model.RoomStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;</p>
-<p>import java.util.List;
-import java.util.Optional;
-import java.util.UUID;</p>
-<p>@Repository
-public interface RoomRepository extends JpaRepository<Room, UUID> {</p>
-<div class="codehilite"><pre><span></span><code><span class="n">List</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByBuildingId</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">);</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
-<span class="n">List</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByStatus</span><span class="p">(</span><span class="n">RoomStatus</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Room</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.RoomStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.Query</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.repository.query.Param</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Repository</span><span class="p">;</span>
 
-<span class="nv">@Query</span><span class="p">(</span><span class="ss">&quot;SELECT COUNT(r) FROM Room r WHERE r.buildingId = :buildingId AND r.status = &#39;OCCUPIED&#39;&quot;</span><span class="p">)</span>
-<span class="n">Long</span><span class="w"> </span><span class="n">countOccupiedRooms</span><span class="p">(</span><span class="nv">@Param</span><span class="p">(</span><span class="ss">&quot;buildingId&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="n">Optional</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByRoomNumber</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">roomNumber</span><span class="p">);</span>
+<span class="nd">@Repository</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">RoomRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Room</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByBuildingId</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByStatus</span><span class="p">(</span><span class="n">RoomStatus</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">&quot;SELECT COUNT(r) FROM Room r WHERE r.buildingId = :buildingId AND r.status = &#39;OCCUPIED&#39;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Long</span><span class="w"> </span><span class="nf">countOccupiedRooms</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">&quot;buildingId&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByRoomNumber</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">roomNumber</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <hr />
 <h3 id="3service">步骤 3：Service 层</h3>
 <h4 id="31-roomservice">3.1 创建 RoomService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/RoomService.java</code></p>
-<p>```java
-package com.dormpower.service;</p>
-<p>import com.dormpower.dto.RoomDTO;
-import com.dormpower.model.Room;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;</p>
-<p>import java.util.List;
-import java.util.Optional;
-import java.util.UUID;</p>
-<p>public interface RoomService {</p>
-<div class="codehilite"><pre><span></span><code>Room createRoom(RoomDTO dto);
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
-Room updateRoom(UUID id, RoomDTO dto);
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.dto.RoomDTO</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Room</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Page</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Pageable</span><span class="p">;</span>
 
-Page&lt;Room&gt; getRooms(UUID buildingId, Pageable pageable);
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-Optional&lt;Room&gt; getRoom(UUID id);
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">RoomService</span><span class="w"> </span><span class="p">{</span>
 
-void deleteRoom(UUID id);
+<span class="w">    </span><span class="n">Room</span><span class="w"> </span><span class="nf">createRoom</span><span class="p">(</span><span class="n">RoomDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">);</span>
 
-Room checkIn(UUID roomId, UUID userId);
+<span class="w">    </span><span class="n">Room</span><span class="w"> </span><span class="nf">updateRoom</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">RoomDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">);</span>
 
-Room checkOut(UUID roomId, UUID userId);
+<span class="w">    </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getRooms</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getRoom</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">deleteRoom</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Room</span><span class="w"> </span><span class="nf">checkIn</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Room</span><span class="w"> </span><span class="nf">checkOut</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <hr />
 <h3 id="4controller">步骤 4：Controller 层</h3>
 <h4 id="41-roomcontroller">4.1 创建 RoomController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/RoomController.java</code></p>
-<p>```java
-package com.dormpower.controller;</p>
-<p>import com.dormpower.dto.RoomDTO;
-import com.dormpower.model.Room;
-import com.dormpower.service.RoomService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;</p>
-<p>import java.util.List;
-import java.util.UUID;</p>
-<p>@RestController
-@RequestMapping("/api/rooms")
-@RequiredArgsConstructor
-public class RoomController {</p>
-<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">RoomService</span><span class="w"> </span><span class="n">roomService</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
-<span class="nv">@PostMapping</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createRoom</span><span class="p">(</span><span class="nv">@RequestBody</span><span class="w"> </span><span class="n">RoomDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="n">createRoom</span><span class="p">(</span><span class="n">dto</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.dto.RoomDTO</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Room</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.RoomService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Page</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Pageable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.access.prepost.PreAuthorize</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
 
-<span class="nv">@GetMapping</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getRooms</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">,</span>
-<span class="w">    </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="n">getRooms</span><span class="p">(</span><span class="n">buildingId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/{id}&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getRoom</span><span class="p">(</span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">roomService</span><span class="p">.</span><span class="n">getRoom</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="k">map</span><span class="p">(</span><span class="nl">ResponseEntity</span><span class="p">:</span><span class="err">:</span><span class="n">ok</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">orElse</span><span class="p">(</span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">notFound</span><span class="p">().</span><span class="n">build</span><span class="p">());</span>
-<span class="err">}</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/rooms&quot;</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RoomController</span><span class="w"> </span><span class="p">{</span>
 
-<span class="nv">@PutMapping</span><span class="p">(</span><span class="ss">&quot;/{id}&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">updateRoom</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">@RequestBody</span><span class="w"> </span><span class="n">RoomDTO</span><span class="w"> </span><span class="n">dto</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="n">updateRoom</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">dto</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">RoomService</span><span class="w"> </span><span class="n">roomService</span><span class="p">;</span>
 
-<span class="nv">@DeleteMapping</span><span class="p">(</span><span class="ss">&quot;/{id}&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deleteRoom</span><span class="p">(</span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">roomService</span><span class="p">.</span><span class="n">deleteRoom</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">noContent</span><span class="p">().</span><span class="n">build</span><span class="p">();</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@PostMapping</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">createRoom</span><span class="p">(</span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">RoomDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="na">createRoom</span><span class="p">(</span><span class="n">dto</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/{id}/checkin&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">checkIn</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="n">checkIn</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">getRooms</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="na">getRooms</span><span class="p">(</span><span class="n">buildingId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/{id}/checkout&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="n">checkOut</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="n">checkOut</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getRoom</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">roomService</span><span class="p">.</span><span class="na">getRoom</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">ResponseEntity</span><span class="p">::</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">notFound</span><span class="p">().</span><span class="na">build</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PutMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">updateRoom</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">RoomDTO</span><span class="w"> </span><span class="n">dto</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="na">updateRoom</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">dto</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@DeleteMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">deleteRoom</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">roomService</span><span class="p">.</span><span class="na">deleteRoom</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">noContent</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/{id}/checkin&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">checkIn</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="na">checkIn</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/{id}/checkout&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;room:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Room</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">checkOut</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">roomService</span><span class="p">.</span><span class="na">checkOut</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 RoomController.java
 - [ ] 理解 RESTful API 设计
@@ -575,198 +568,211 @@ public class RoomController {</p>
 <h2 id="_7">四、前端实现</h2>
 <h3 id="41">4.1 类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/room.ts</code></p>
-<p>```typescript
-export interface Building {
-  id: string;
-  name: string;
-  address?: string;
-  floors?: number;
-  totalRooms?: number;
-  description?: string;
-  enabled: boolean;
-}</p>
-<p>export interface Room {
-  id: string;
-  roomNumber: string;
-  buildingId: string;
-  floor?: number;
-  maxOccupancy?: number;
-  currentOccupancy?: number;
-  status: RoomStatus;
-  description?: string;
-}</p>
-<p>export type RoomStatus = 'VACANT' | 'OCCUPIED' | 'MAINTENANCE';</p>
-<p>export interface ResidenceRecord {
-  id: string;
-  userId: string;
-  roomId: string;
-  status: ResidenceStatus;
-  checkInDate?: string;
-  checkOutDate?: string;
-  remark?: string;
-}</p>
-<p>export type ResidenceStatus = 'ACTIVE' | 'CHECKED_OUT';
-```</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Building</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">address?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">floors?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">totalRooms?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">description?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Room</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">roomNumber</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">buildingId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">floor?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">maxOccupancy?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">currentOccupancy?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">RoomStatus</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">description?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">RoomStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;VACANT&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;OCCUPIED&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;MAINTENANCE&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">ResidenceRecord</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">ResidenceStatus</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">checkInDate?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">checkOutDate?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">remark?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ResidenceStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ACTIVE&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;CHECKED_OUT&#39;</span><span class="p">;</span>
+</code></pre></div>
+
 <h3 id="42-api">4.2 API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/room.ts</code></p>
-<p>```typescript
-import axios from 'axios';
-import type { Room, Building, ResidenceRecord } from '@/types/room';</p>
-<p>const ROOM_API_BASE = '/api/rooms';
-const BUILDING_API_BASE = '/api/buildings';</p>
-<p>export const roomApi = {
-  async getRooms(buildingId?: string, page = 0, size = 20) {
-    const response = await axios.get(ROOM_API_BASE, {
-      params: { buildingId, page, size }
-    });
-    return response.data;
-  },</p>
-<p>async createRoom(room: Partial<Room>) {
-    const response = await axios.post(ROOM_API_BASE, room);
-    return response.data;
-  },</p>
-<p>async updateRoom(roomId: string, room: Partial<Room>) {
-    const response = await axios.put(<code>${ROOM_API_BASE}/${roomId}</code>, room);
-    return response.data;
-  },</p>
-<p>async deleteRoom(roomId: string) {
-    await axios.delete(<code>${ROOM_API_BASE}/${roomId}</code>);
-  },</p>
-<p>async checkIn(roomId: string, userId: string) {
-    const response = await axios.post(<code>${ROOM_API_BASE}/${roomId}/checkin</code>, null, {
-      params: { userId }
-    });
-    return response.data;
-  },</p>
-<p>async checkOut(roomId: string, userId: string) {
-    const response = await axios.post(<code>${ROOM_API_BASE}/${roomId}/checkout</code>, null, {
-      params: { userId }
-    });
-    return response.data;
-  }
-};</p>
-<p>export const buildingApi = {
-  async getBuildings() {
-    const response = await axios.get(BUILDING_API_BASE);
-    return response.data;
-  },</p>
-<p>async createBuilding(building: Partial<Building>) {
-    const response = await axios.post(BUILDING_API_BASE, building);
-    return response.data;
-  }
-};
-```</p>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Room</span><span class="p">,</span><span class="w"> </span><span class="nx">Building</span><span class="p">,</span><span class="w"> </span><span class="nx">ResidenceRecord</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/room&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">ROOM_API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/api/rooms&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">BUILDING_API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/api/buildings&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">roomApi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getRooms</span><span class="p">(</span><span class="nx">buildingId?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">ROOM_API_BASE</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">buildingId</span><span class="p">,</span><span class="w"> </span><span class="nx">page</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">createRoom</span><span class="p">(</span><span class="nx">room</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">Room</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">ROOM_API_BASE</span><span class="p">,</span><span class="w"> </span><span class="nx">room</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">updateRoom</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">room</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">Room</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">ROOM_API_BASE</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">roomId</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">room</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">deleteRoom</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">ROOM_API_BASE</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">roomId</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">checkIn</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">ROOM_API_BASE</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">roomId</span><span class="si">}</span><span class="sb">/checkin`</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">userId</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">checkOut</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">ROOM_API_BASE</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">roomId</span><span class="si">}</span><span class="sb">/checkout`</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">userId</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">buildingApi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getBuildings</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">BUILDING_API_BASE</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">createBuilding</span><span class="p">(</span><span class="nx">building</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">Building</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">BUILDING_API_BASE</span><span class="p">,</span><span class="w"> </span><span class="nx">building</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
 <h3 id="43">4.3 宿舍管理页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/RoomManagementView.vue</code></p>
-<p>```vue
-<template>
-<br />
-<div class="room-management">
-    <el-card>
-      <template #header>
-        <span>房间管理</span>
-        <el-button type="primary" @click="handleAdd">添加房间</el-button>
-      </template>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;room-management&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">el-card</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">header</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>房间管理<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;primary&quot;</span> <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleAdd</span><span class="s">&quot;</span><span class="p">&gt;</span>添加房间<span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 
-      <el-table :data="rooms" stripe>
-        <el-table-column prop="roomNumber" label="房间号" width="120" />
-        <el-table-column prop="floor" label="楼层" width="80" />
-        <el-table-column prop="maxOccupancy" label="床位" width="80" />
-        <el-table-column prop="currentOccupancy" label="已住" width="80" />
-        <el-table-column prop="status" label="状态" width="100">
-          <template #default="{ row }">
-            <el-tag :type="getStatusType(row.status)">
-              {{ getStatusText(row.status) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template #default="{ row }">
-            <el-button size="small" @click="handleEdit(row)">编辑</el-button>
-            <el-button 
-              v-if="row.status === 'VACANT'" 
-              size="small" 
-              type="primary"
-              @click="handleCheckIn(row)"
-            >
+      <span class="p">&lt;</span><span class="nt">el-table</span> <span class="p">:</span><span class="na">data</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">rooms</span><span class="s">&quot;</span> <span class="na">stripe</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-table-column</span> <span class="na">prop</span><span class="o">=</span><span class="s">&quot;roomNumber&quot;</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;房间号&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;120&quot;</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-table-column</span> <span class="na">prop</span><span class="o">=</span><span class="s">&quot;floor&quot;</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;楼层&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;80&quot;</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-table-column</span> <span class="na">prop</span><span class="o">=</span><span class="s">&quot;maxOccupancy&quot;</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;床位&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;80&quot;</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-table-column</span> <span class="na">prop</span><span class="o">=</span><span class="s">&quot;currentOccupancy&quot;</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;已住&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;80&quot;</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-table-column</span> <span class="na">prop</span><span class="o">=</span><span class="s">&quot;status&quot;</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;状态&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;100&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">default</span><span class="o">=</span><span class="s">&quot;{ row }&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">el-tag</span> <span class="p">:</span><span class="na">type</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">getStatusType</span><span class="p">(</span><span class="nx">row</span><span class="p">.</span><span class="nx">status</span><span class="p">)</span><span class="s">&quot;</span><span class="p">&gt;</span>
+              <span class="cp">{{</span><span class="w"> </span><span class="nx">getStatusText</span><span class="p">(</span><span class="nx">row</span><span class="p">.</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="cp">}}</span>
+            <span class="p">&lt;/</span><span class="nt">el-tag</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">el-table-column</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-table-column</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;操作&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;200&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">default</span><span class="o">=</span><span class="s">&quot;{ row }&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">el-button</span> <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span> <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleEdit</span><span class="p">(</span><span class="nx">row</span><span class="p">)</span><span class="s">&quot;</span><span class="p">&gt;</span>编辑<span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">el-button</span> 
+              <span class="na">v-if</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">row</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;VACANT&#39;</span><span class="s">&quot;</span> 
+              <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span> 
+              <span class="na">type</span><span class="o">=</span><span class="s">&quot;primary&quot;</span>
+              <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleCheckIn</span><span class="p">(</span><span class="nx">row</span><span class="p">)</span><span class="s">&quot;</span>
+            <span class="p">&gt;</span>
               入住
-            </el-button>
-            <el-button 
-              v-if="row.status === 'OCCUPIED'" 
-              size="small" 
-              type="warning"
-              @click="handleCheckOut(row)"
-            >
+            <span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">el-button</span> 
+              <span class="na">v-if</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">row</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;OCCUPIED&#39;</span><span class="s">&quot;</span> 
+              <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span> 
+              <span class="na">type</span><span class="o">=</span><span class="s">&quot;warning&quot;</span>
+              <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleCheckOut</span><span class="p">(</span><span class="nx">row</span><span class="p">)</span><span class="s">&quot;</span>
+            <span class="p">&gt;</span>
               退宿
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
-  </div></p>
-<p></template></p>
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { roomApi } from '@/api/room';
-import type { Room } from '@/types/room';
-import { ElMessage } from 'element-plus';
+            <span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">el-table-column</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">el-table</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">el-card</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 
-const rooms = ref<Room[]>([]);
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">setup</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;ts&quot;</span><span class="p">&gt;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="p">,</span><span class="w"> </span><span class="nx">onMounted</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">roomApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/api/room&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Room</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/room&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ElMessage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;element-plus&#39;</span><span class="p">;</span>
 
-const loadRooms = async () => {
-  try {
-    const response = await roomApi.getRooms();
-    rooms.value = response.content || response;
-  } catch (error) {
-    console.error('Failed to load rooms:', error);
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">rooms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="o">&lt;</span><span class="nx">Room</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
 
-const handleAdd = () => {
-  ElMessage.info('添加房间功能开发中...');
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">loadRooms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">roomApi</span><span class="p">.</span><span class="nx">getRooms</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">rooms</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">content</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">response</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to load rooms:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-const handleEdit = (room: Room) => {
-  ElMessage.info('编辑房间功能开发中...');
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleAdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;添加房间功能开发中...&#39;</span><span class="p">);</span>
+<span class="p">};</span>
 
-const handleCheckIn = async (room: Room) => {
-  ElMessage.info('办理入住功能开发中...');
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleEdit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">room</span><span class="o">:</span><span class="w"> </span><span class="nx">Room</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;编辑房间功能开发中...&#39;</span><span class="p">);</span>
+<span class="p">};</span>
 
-const handleCheckOut = async (room: Room) => {
-  ElMessage.info('办理退宿功能开发中...');
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleCheckIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">room</span><span class="o">:</span><span class="w"> </span><span class="nx">Room</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;办理入住功能开发中...&#39;</span><span class="p">);</span>
+<span class="p">};</span>
 
-const getStatusType = (status: string) => {
-  const types: Record<string, any> = {
-    VACANT: 'success',
-    OCCUPIED: 'warning',
-    MAINTENANCE: 'danger'
-  };
-  return types[status] || 'info';
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleCheckOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">room</span><span class="o">:</span><span class="w"> </span><span class="nx">Room</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;办理退宿功能开发中...&#39;</span><span class="p">);</span>
+<span class="p">};</span>
 
-const getStatusText = (status: string) => {
-  const texts: Record<string, string> = {
-    VACANT: '空置',
-    OCCUPIED: '已入住',
-    MAINTENANCE: '维修中'
-  };
-  return texts[status] || status;
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">getStatusType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">types</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="nx">string</span><span class="p">,</span><span class="w"> </span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">VACANT</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">OCCUPIED</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;warning&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">MAINTENANCE</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;danger&#39;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">types</span><span class="p">[</span><span class="nx">status</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;info&#39;</span><span class="p">;</span>
+<span class="p">};</span>
 
-onMounted(() => {
-  loadRooms();
-});
-</script>
+<span class="kd">const</span><span class="w"> </span><span class="nx">getStatusText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">texts</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="nx">string</span><span class="p">,</span><span class="w"> </span><span class="nx">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">VACANT</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;空置&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">OCCUPIED</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;已入住&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">MAINTENANCE</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;维修中&#39;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">texts</span><span class="p">[</span><span class="nx">status</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">status</span><span class="p">;</span>
+<span class="p">};</span>
 
-<style scoped>
-.room-management {
-  padding: 20px;
-}
-</style>
-<p>```</p>
+<span class="nx">onMounted</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">loadRooms</span><span class="p">();</span>
+<span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">style</span> <span class="na">scoped</span><span class="p">&gt;</span>
+<span class="p">.</span><span class="nc">room-management</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</code></pre></div>
+
 <p><strong>实操任务</strong>:
 - [ ] 创建 RoomManagementView.vue
 - [ ] 理解 Vue 3 Composition API
@@ -792,29 +798,33 @@ onMounted(() => {
 <hr />
 <h2 id="_11">六、完成后的文件结构 📁</h2>
 <h3 id="_12">后端新增/修改的文件</h3>
-<p><code>backend/src/main/java/com/dormpower/
-├── model/
-│   ├── Building.java             ✅ 新建
-│   ├── Room.java                 ✅ 新建
-│   └── ResidenceRecord.java      ✅ 新建
-├── repository/
-│   ├── BuildingRepository.java   ✅ 新建
-│   └── RoomRepository.java       ✅ 新建
-├── service/
-│   ├── RoomService.java          ✅ 新建
-│   └── impl/
-│       └── RoomServiceImpl.java  ✅ 新建
-└── controller/
-    ├── BuildingController.java   ✅ 新建
-    └── RoomController.java       ✅ 新建</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">Building</span><span class="p">.</span><span class="nx">java</span><span class="w">             </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">Room</span><span class="p">.</span><span class="nx">java</span><span class="w">                 </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">ResidenceRecord</span><span class="p">.</span><span class="nx">java</span><span class="w">      </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">repository</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">BuildingRepository</span><span class="p">.</span><span class="nx">java</span><span class="w">   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">RoomRepository</span><span class="p">.</span><span class="nx">java</span><span class="w">       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">service</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">RoomService</span><span class="p">.</span><span class="nx">java</span><span class="w">          </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="kd">impl</span><span class="o">/</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="nx">RoomServiceImpl</span><span class="p">.</span><span class="nx">java</span><span class="w">  </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">controller</span><span class="o">/</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="nx">BuildingController</span><span class="p">.</span><span class="nx">java</span><span class="w">   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">RoomController</span><span class="p">.</span><span class="nx">java</span><span class="w">       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+</code></pre></div>
+
 <h3 id="_13">前端新增/修改的文件</h3>
-<p><code>frontend/src/
-├── types/
-│   └── room.ts                   ✅ 新建
-├── api/
-│   └── room.ts                   ✅ 新建
-└── views/
-    └── RoomManagementView.vue    ✅ 新建</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">room</span><span class="p">.</span><span class="nx">ts</span><span class="w">                   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="kn">api</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">room</span><span class="p">.</span><span class="nx">ts</span><span class="w">                   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">views</span><span class="o">/</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">RoomManagementView</span><span class="p">.</span><span class="nx">vue</span><span class="w">    </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+</code></pre></div>
+
 <hr />
 <h2 id="_14">七、扩展练习 💪</h2>
 <h3 id="_15">基础练习</h3>
@@ -846,7 +856,7 @@ onMounted(() => {
     <!-- 返回顶部按钮 -->
     <a href="#" class="back-to-top" id="backToTop">↑</a>
     
-    <!-- Prism.js -->
+    <!-- Prism.js 代码高亮 -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
@@ -875,8 +885,9 @@ onMounted(() => {
         
         // 当前页面高亮
         const currentPage = window.location.pathname.split('/').pop();
-        document.querySelectorAll('.nav-container a').forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
                 link.classList.add('active');
             }
         });

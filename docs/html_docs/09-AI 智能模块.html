@@ -3,54 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>09 AI 智能模块</title>
-    
-    <!-- Prism.js 代码高亮 -->
+    <title>09 AI 智能模块 - 宿舍用电管理系统教学文档</title>
     <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
-    
-    <!-- GitHub Markdown CSS -->
     <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
-    
     <style>
         body {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
         }
-        
         .markdown-body {
+            background: #fff;
             box-sizing: border-box;
             min-width: 200px;
             max-width: 100%;
             margin: 0 auto;
             padding: 45px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
         @media (max-width: 768px) {
             .markdown-body {
                 padding: 15px;
             }
         }
-        
-        /* 代码块样式 */
-        pre {
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        
-        pre[class*="language-"] {
-            margin: 1em 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        /* 导航样式 */
-        .nav-container {
+        /* 侧边导航 */
+        .nav {
             position: fixed;
-            top: 0;
             left: 0;
+            top: 0;
             width: 250px;
             height: 100vh;
             background: #1e1e1e;
@@ -59,49 +42,43 @@
             overflow-y: auto;
             z-index: 1000;
         }
-        
-        .nav-container h3 {
+        .nav h3 {
             margin: 0 0 20px 0;
             padding: 0 20px;
             font-size: 16px;
             border-bottom: 1px solid #333;
             padding-bottom: 15px;
         }
-        
-        .nav-container ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .nav-container li {
-            margin: 0;
-        }
-        
-        .nav-container a {
+        .nav a {
             display: block;
             padding: 10px 20px;
             color: #ccc;
             text-decoration: none;
             transition: all 0.3s;
         }
-        
-        .nav-container a:hover {
+        .nav a:hover {
             background: #333;
             color: #fff;
         }
-        
-        .nav-container a.active {
+        .nav a.active {
             background: #0366d6;
             color: #fff;
         }
-        
-        .content-wrapper {
+        .content {
             margin-left: 250px;
             padding: 20px;
         }
-        
-        /* 返回顶部按钮 */
+        /* 代码块样式 */
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1em 0;
+        }
+        pre[class*="language-"] {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        /* 返回顶部 */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -117,7 +94,6 @@
             display: none;
             z-index: 999;
         }
-        
         .back-to-top:hover {
             background: #0255b3;
         }
@@ -125,25 +101,23 @@
 </head>
 <body>
     <!-- 侧边导航 -->
-    <nav class="nav-container">
+    <nav class="nav">
         <h3>📚 教学文档</h3>
-        <ul>
-            <li><a href="index.html">🏠 首页</a></li>
-            <li><a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a></li>
-            <li><a href="02-设备管理模块.html">02-设备管理模块</a></li>
-            <li><a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a></li>
-            <li><a href="04-计费管理模块.html">04-计费管理模块</a></li>
-            <li><a href="05-告警管理模块.html">05-告警管理模块</a></li>
-            <li><a href="06-控制管理模块.html">06-控制管理模块</a></li>
-            <li><a href="07-宿舍管理模块.html">07-宿舍管理模块</a></li>
-            <li><a href="08-系统管理模块.html">08-系统管理模块</a></li>
-            <li><a href="09-AI 智能模块.html">09-AI 智能模块</a></li>
-            <li><a href="10-通知管理模块.html">10-通知管理模块</a></li>
-        </ul>
+        <a href="index.html">🏠 首页</a>
+        <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+        <a href="02-设备管理模块.html">02-设备管理模块</a>
+        <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+        <a href="04-计费管理模块.html">04-计费管理模块</a>
+        <a href="05-告警管理模块.html">05-告警管理模块</a>
+        <a href="06-控制管理模块.html">06-控制管理模块</a>
+        <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+        <a href="08-系统管理模块.html">08-系统管理模块</a>
+        <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+        <a href="10-通知管理模块.html">10-通知管理模块</a>
     </nav>
     
     <!-- 主内容区 -->
-    <div class="content-wrapper">
+    <div class="content">
         <article class="markdown-body">
 <h1 id="09ai">模块 09：AI 智能模块</h1>
 <blockquote>
@@ -177,12 +151,18 @@
 <hr />
 <h2 id="_5">二、需求分析与设计</h2>
 <h3 id="21">2.1 业务场景</h3>
-<p><strong>场景 1：AI 用电报告生成</strong>
-<code>用户请求报告 → 获取用电数据 → AI 分析 → 生成报告 → 返回用户</code></p>
-<p><strong>场景 2：智能问答</strong>
-<code>用户提问 → NLP 处理 → 意图识别 → 查询数据 → 生成回答</code></p>
-<p><strong>场景 3：用电异常分析</strong>
-<code>采集用电数据 → 异常检测算法 → 发现异常 → 生成分析报告</code></p>
+<p><strong>场景 1：AI 用电报告生成</strong></p>
+<div class="codehilite"><pre><span></span><code>用户请求报告 → 获取用电数据 → AI 分析 → 生成报告 → 返回用户
+</code></pre></div>
+
+<p><strong>场景 2：智能问答</strong></p>
+<div class="codehilite"><pre><span></span><code>用户提问 → NLP 处理 → 意图识别 → 查询数据 → 生成回答
+</code></pre></div>
+
+<p><strong>场景 3：用电异常分析</strong></p>
+<div class="codehilite"><pre><span></span><code>采集用电数据 → 异常检测算法 → 发现异常 → 生成分析报告
+</code></pre></div>
+
 <h3 id="22">2.2 功能需求清单</h3>
 <table>
 <thead>
@@ -266,61 +246,63 @@
 <h3 id="1">步骤 1：实体类设计</h3>
 <h4 id="11-aireport">1.1 创建 AIReport 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AIReport.java</code></p>
-<p>```java
-package com.dormpower.model;</p>
-<p>import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.UUID;</p>
-<p>@Data
-@Entity
-@Table(name = "ai_report")
-public class AIReport {</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
-<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
-<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">ReportType</span><span class="w"> </span><span class="n">reportType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportType</span><span class="p">.</span><span class="n">MONTHLY</span><span class="p">;</span>
+<span class="nd">@Data</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ai_report&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AIReport</span><span class="w"> </span><span class="p">{</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">reportPeriod</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">如</span><span class="w"> </span><span class="mi">2024</span><span class="o">-</span><span class="mi">01</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">UUID</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;TEXT&quot;</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">reportContent</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="n">格式报告内容</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">summary</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">报告摘要</span>
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ReportType</span><span class="w"> </span><span class="n">reportType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportType</span><span class="p">.</span><span class="na">MONTHLY</span><span class="p">;</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">totalElectricity</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">总用电量</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">reportPeriod</span><span class="p">;</span><span class="w"> </span><span class="c1">// 如 2024-01</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">totalCost</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">总电费</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;TEXT&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">reportContent</span><span class="p">;</span><span class="w"> </span><span class="c1">// JSON 格式报告内容</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">predictedNext</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">预测下期</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">summary</span><span class="p">;</span><span class="w"> </span><span class="c1">// 报告摘要</span>
 
-<span class="n">private</span><span class="w"> </span><span class="k">Integer</span><span class="w"> </span><span class="n">energySavingScore</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">节能评分</span><span class="err">（</span><span class="mi">0</span><span class="o">-</span><span class="mi">100</span><span class="err">）</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">math</span><span class="p">.</span><span class="na">BigDecimal</span><span class="w"> </span><span class="n">totalElectricity</span><span class="p">;</span><span class="w"> </span><span class="c1">// 总用电量</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">suggestions</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">节能建议</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">math</span><span class="p">.</span><span class="na">BigDecimal</span><span class="w"> </span><span class="n">totalCost</span><span class="p">;</span><span class="w"> </span><span class="c1">// 总电费</span>
 
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">generatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">math</span><span class="p">.</span><span class="na">BigDecimal</span><span class="w"> </span><span class="n">predictedNext</span><span class="p">;</span><span class="w"> </span><span class="c1">// 预测下期</span>
 
-<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;generated_by&quot;</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">generatedBy</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">energySavingScore</span><span class="p">;</span><span class="w"> </span><span class="c1">// 节能评分（0-100）</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">suggestions</span><span class="p">;</span><span class="w"> </span><span class="c1">// 节能建议</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">generatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;generated_by&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">generatedBy</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span><span class="w"> </span><span class="n">ReportType</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">DAILY</span><span class="p">,</span><span class="w"> </span><span class="n">WEEKLY</span><span class="p">,</span><span class="w"> </span><span class="n">MONTHLY</span><span class="p">,</span><span class="w"> </span><span class="n">YEARLY</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}</p>
-<p>enum ReportType {
-    DAILY, WEEKLY, MONTHLY, YEARLY
-}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 AIReport.java 文件
 - [ ] 理解报告数据结构
@@ -329,112 +311,117 @@ public class AIReport {</p>
 <h3 id="2repository">步骤 2：Repository 层</h3>
 <h4 id="21-aireportrepository">2.1 创建 AIReportRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/AIReportRepository.java</code></p>
-<p>```java
-package com.dormpower.repository;</p>
-<p>import com.dormpower.model.AIReport;
-import com.dormpower.model.ReportType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;</p>
-<p>import java.util.List;
-import java.util.Optional;
-import java.util.UUID;</p>
-<p>@Repository
-public interface AIReportRepository extends JpaRepository<AIReport, UUID> {</p>
-<div class="codehilite"><pre><span></span><code>Optional&lt;AIReport&gt; findByRoomIdAndReportPeriod(UUID roomId, String period);
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
-List&lt;AIReport&gt; findByRoomIdOrderByGeneratedAtDesc(UUID roomId);
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.AIReport</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.ReportType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Repository</span><span class="p">;</span>
 
-Optional&lt;AIReport&gt; findTopByRoomIdAndReportTypeOrderByGeneratedAtDesc(
-    UUID roomId, ReportType reportType
-);
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
+
+<span class="nd">@Repository</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">AIReportRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByRoomIdAndReportPeriod</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByRoomIdOrderByGeneratedAtDesc</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findTopByRoomIdAndReportTypeOrderByGeneratedAtDesc</span><span class="p">(</span>
+<span class="w">        </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">ReportType</span><span class="w"> </span><span class="n">reportType</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <hr />
 <h3 id="3service">步骤 3：Service 层</h3>
 <h4 id="31-aireportservice">3.1 创建 AIReportService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AIReportService.java</code></p>
-<p>```java
-package com.dormpower.service;</p>
-<p>import com.dormpower.model.AIReport;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;</p>
-<p>public interface AIReportService {</p>
-<div class="codehilite"><pre><span></span><code>AIReport generateReport(UUID roomId, String period);
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
-Optional&lt;AIReport&gt; getReport(UUID roomId, String period);
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.AIReport</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-List&lt;AIReport&gt; getReportHistory(UUID roomId);
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">AIReportService</span><span class="w"> </span><span class="p">{</span>
 
-String getEnergySavingSuggestion(UUID roomId);
+<span class="w">    </span><span class="n">AIReport</span><span class="w"> </span><span class="nf">generateReport</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getReport</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getReportHistory</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="nf">getEnergySavingSuggestion</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <h4 id="32-aireportserviceimpl">3.2 创建 AIReportServiceImpl</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AIReportServiceImpl.java</code></p>
-<p>```java
-package com.dormpower.service.impl;</p>
-<p>import com.dormpower.model.AIReport;
-import com.dormpower.model.ReportType;
-import com.dormpower.repository.AIReportRepository;
-import com.dormpower.service.AIReportService;
-import com.dormpower.service.TelemetryService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;</p>
-<p>import java.util.List;
-import java.util.Optional;
-import java.util.UUID;</p>
-<p>@Slf4j
-@Service
-@RequiredArgsConstructor
-public class AIReportServiceImpl implements AIReportService {</p>
-<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AIReportRepository</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">;</span>
-<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">TelemetryService</span><span class="w"> </span><span class="n">telemetryService</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
-<span class="nv">@Override</span>
-<span class="nv">@Transactional</span>
-<span class="k">public</span><span class="w"> </span><span class="n">AIReport</span><span class="w"> </span><span class="n">generateReport</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现</span><span class="w"> </span><span class="n">AI</span><span class="w"> </span><span class="n">报告生成逻辑</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">获取用电数据</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">分析用电行为</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">生成报告内容</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="n">保存报告</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.AIReport</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.ReportType</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.repository.AIReportRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.AIReportService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.TelemetryService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">AIReport</span><span class="w"> </span><span class="n">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AIReport</span><span class="p">();</span>
-<span class="w">    </span><span class="n">report</span><span class="p">.</span><span class="n">setRoomId</span><span class="p">(</span><span class="n">roomId</span><span class="p">);</span>
-<span class="w">    </span><span class="n">report</span><span class="p">.</span><span class="n">setReportType</span><span class="p">(</span><span class="n">ReportType</span><span class="p">.</span><span class="n">MONTHLY</span><span class="p">);</span>
-<span class="w">    </span><span class="n">report</span><span class="p">.</span><span class="n">setReportPeriod</span><span class="p">(</span><span class="n">period</span><span class="p">);</span>
-<span class="w">    </span><span class="n">report</span><span class="p">.</span><span class="n">setSummary</span><span class="p">(</span><span class="ss">&quot;本月用电正常&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">report</span><span class="p">.</span><span class="n">setEnergySavingScore</span><span class="p">(</span><span class="mi">85</span><span class="p">);</span>
-<span class="w">    </span><span class="n">report</span><span class="p">.</span><span class="n">setSuggestions</span><span class="p">(</span><span class="ss">&quot;建议减少夜间用电&quot;</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">report</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AIReportServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">AIReportService</span><span class="w"> </span><span class="p">{</span>
 
-<span class="nv">@Override</span>
-<span class="k">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getReport</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">.</span><span class="n">findByRoomIdAndReportPeriod</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AIReportRepository</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">TelemetryService</span><span class="w"> </span><span class="n">telemetryService</span><span class="p">;</span>
 
-<span class="nv">@Override</span>
-<span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getReportHistory</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">.</span><span class="n">findByRoomIdOrderByGeneratedAtDesc</span><span class="p">(</span><span class="n">roomId</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">AIReport</span><span class="w"> </span><span class="nf">generateReport</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// TODO: 实现 AI 报告生成逻辑</span>
+<span class="w">        </span><span class="c1">// 1. 获取用电数据</span>
+<span class="w">        </span><span class="c1">// 2. 分析用电行为</span>
+<span class="w">        </span><span class="c1">// 3. 生成报告内容</span>
+<span class="w">        </span><span class="c1">// 4. 保存报告</span>
 
-<span class="nv">@Override</span>
-<span class="k">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">getEnergySavingSuggestion</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现节能建议生成</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ss">&quot;建议合理使用空调，温度设置在 26℃左右&quot;</span><span class="p">;</span>
-<span class="err">}</span>
+<span class="w">        </span><span class="n">AIReport</span><span class="w"> </span><span class="n">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AIReport</span><span class="p">();</span>
+<span class="w">        </span><span class="n">report</span><span class="p">.</span><span class="na">setRoomId</span><span class="p">(</span><span class="n">roomId</span><span class="p">);</span>
+<span class="w">        </span><span class="n">report</span><span class="p">.</span><span class="na">setReportType</span><span class="p">(</span><span class="n">ReportType</span><span class="p">.</span><span class="na">MONTHLY</span><span class="p">);</span>
+<span class="w">        </span><span class="n">report</span><span class="p">.</span><span class="na">setReportPeriod</span><span class="p">(</span><span class="n">period</span><span class="p">);</span>
+<span class="w">        </span><span class="n">report</span><span class="p">.</span><span class="na">setSummary</span><span class="p">(</span><span class="s">&quot;本月用电正常&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">report</span><span class="p">.</span><span class="na">setEnergySavingScore</span><span class="p">(</span><span class="mi">85</span><span class="p">);</span>
+<span class="w">        </span><span class="n">report</span><span class="p">.</span><span class="na">setSuggestions</span><span class="p">(</span><span class="s">&quot;建议减少夜间用电&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">report</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getReport</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">.</span><span class="na">findByRoomIdAndReportPeriod</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getReportHistory</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">reportRepository</span><span class="p">.</span><span class="na">findByRoomIdOrderByGeneratedAtDesc</span><span class="p">(</span><span class="n">roomId</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getEnergySavingSuggestion</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// TODO: 实现节能建议生成</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;建议合理使用空调，温度设置在 26℃左右&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 AIReportService 接口
 - [ ] 创建 AIReportServiceImpl 实现类
@@ -443,57 +430,59 @@ public class AIReportServiceImpl implements AIReportService {</p>
 <h3 id="4controller">步骤 4：Controller 层</h3>
 <h4 id="41-aireportcontroller">4.1 创建 AIReportController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AIReportController.java</code></p>
-<p>```java
-package com.dormpower.controller;</p>
-<p>import com.dormpower.model.AIReport;
-import com.dormpower.service.AIReportService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;</p>
-<p>import java.util.List;
-import java.util.UUID;</p>
-<p>@RestController
-@RequestMapping("/api/ai-reports")
-@RequiredArgsConstructor
-public class AIReportController {</p>
-<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AIReportService</span><span class="w"> </span><span class="n">aiReportService</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
-<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/generate&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;ai:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="n">generateReport</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">aiReportService</span><span class="p">.</span><span class="n">generateReport</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.AIReport</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.AIReportService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.access.prepost.PreAuthorize</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
 
-<span class="nv">@GetMapping</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;ai:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getReport</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">aiReportService</span><span class="p">.</span><span class="n">getReport</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="k">map</span><span class="p">(</span><span class="nl">ResponseEntity</span><span class="p">:</span><span class="err">:</span><span class="n">ok</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">orElse</span><span class="p">(</span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">notFound</span><span class="p">().</span><span class="n">build</span><span class="p">());</span>
-<span class="err">}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/history&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;ai:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getReportHistory</span><span class="p">(</span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">aiReportService</span><span class="p">.</span><span class="n">getReportHistory</span><span class="p">(</span><span class="n">roomId</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/ai-reports&quot;</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AIReportController</span><span class="w"> </span><span class="p">{</span>
 
-<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/suggestion&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;ai:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getSuggestion</span><span class="p">(</span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">aiReportService</span><span class="p">.</span><span class="n">getEnergySavingSuggestion</span><span class="p">(</span><span class="n">roomId</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AIReportService</span><span class="w"> </span><span class="n">aiReportService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/generate&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;ai:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">generateReport</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">aiReportService</span><span class="p">.</span><span class="na">generateReport</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;ai:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getReport</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">aiReportService</span><span class="p">.</span><span class="na">getReport</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">ResponseEntity</span><span class="p">::</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">notFound</span><span class="p">().</span><span class="na">build</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/history&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;ai:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">AIReport</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">getReportHistory</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">aiReportService</span><span class="p">.</span><span class="na">getReportHistory</span><span class="p">(</span><span class="n">roomId</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/suggestion&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;ai:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getSuggestion</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">aiReportService</span><span class="p">.</span><span class="na">getEnergySavingSuggestion</span><span class="p">(</span><span class="n">roomId</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 AIReportController.java
 - [ ] 理解 AI 报告 API 设计
@@ -502,167 +491,176 @@ public class AIReportController {</p>
 <h2 id="_7">四、前端实现</h2>
 <h3 id="41">4.1 类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/ai.ts</code></p>
-<p>```typescript
-export interface AIReport {
-  id: string;
-  roomId: string;
-  reportType: ReportType;
-  reportPeriod: string;
-  reportContent?: any;
-  summary?: string;
-  totalElectricity?: number;
-  totalCost?: number;
-  predictedNext?: number;
-  energySavingScore?: number;
-  suggestions?: string;
-  generatedAt: string;
-}</p>
-<p>export type ReportType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';</p>
-<p>export interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-}</p>
-<p>export interface ChatRequest {
-  message: string;
-  context?: any;
-}
-```</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">AIReport</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">reportType</span><span class="o">:</span><span class="w"> </span><span class="kt">ReportType</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">reportPeriod</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">reportContent?</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">summary?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">totalElectricity?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">totalCost?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">predictedNext?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">energySavingScore?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">suggestions?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">generatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ReportType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;DAILY&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;WEEKLY&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;MONTHLY&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;YEARLY&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">ChatMessage</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;assistant&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">ChatRequest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">context?</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <h3 id="42-api">4.2 API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/ai.ts</code></p>
-<p>```typescript
-import axios from 'axios';
-import type { AIReport, ChatMessage, ChatRequest } from '@/types/ai';</p>
-<p>const REPORT_API_BASE = '/api/ai-reports';
-const CHAT_API_BASE = '/api/ai/chat';</p>
-<p>export const aiReportApi = {
-  async generateReport(roomId: string, period: string): Promise<AIReport> {
-    const response = await axios.post(<code>${REPORT_API_BASE}/generate</code>, null, {
-      params: { roomId, period }
-    });
-    return response.data;
-  },</p>
-<p>async getReport(roomId: string, period: string): Promise<AIReport> {
-    const response = await axios.get(REPORT_API_BASE, {
-      params: { roomId, period }
-    });
-    return response.data;
-  },</p>
-<p>async getReportHistory(roomId: string): Promise<AIReport[]> {
-    const response = await axios.get(<code>${REPORT_API_BASE}/history</code>, {
-      params: { roomId }
-    });
-    return response.data;
-  },</p>
-<p>async getSuggestion(roomId: string): Promise<string> {
-    const response = await axios.get(<code>${REPORT_API_BASE}/suggestion</code>, {
-      params: { roomId }
-    });
-    return response.data;
-  }
-};</p>
-<p>export const aiChatApi = {
-  async sendMessage(request: ChatRequest): Promise<ChatMessage> {
-    const response = await axios.post(CHAT_API_BASE, request);
-    return response.data;
-  }
-};
-```</p>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AIReport</span><span class="p">,</span><span class="w"> </span><span class="nx">ChatMessage</span><span class="p">,</span><span class="w"> </span><span class="nx">ChatRequest</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/ai&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">REPORT_API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/api/ai-reports&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">CHAT_API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/api/ai/chat&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">aiReportApi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">generateReport</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">period</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">REPORT_API_BASE</span><span class="si">}</span><span class="sb">/generate`</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">roomId</span><span class="p">,</span><span class="w"> </span><span class="nx">period</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getReport</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">period</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AIReport</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">REPORT_API_BASE</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">roomId</span><span class="p">,</span><span class="w"> </span><span class="nx">period</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getReportHistory</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AIReport</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">REPORT_API_BASE</span><span class="si">}</span><span class="sb">/history`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">roomId</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getSuggestion</span><span class="p">(</span><span class="nx">roomId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">REPORT_API_BASE</span><span class="si">}</span><span class="sb">/suggestion`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">roomId</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">aiChatApi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">sendMessage</span><span class="p">(</span><span class="nx">request</span><span class="o">:</span><span class="w"> </span><span class="kt">ChatRequest</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ChatMessage</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">CHAT_API_BASE</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
 <h3 id="43-ai">4.3 AI 报告页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/AIReportView.vue</code></p>
-<p>```vue
-<template>
-<br />
-<div class="ai-report">
-    <el-card>
-      <template #header>
-        <span>AI 用电报告</span>
-        <el-button type="primary" @click="handleGenerate">生成报告</el-button>
-      </template>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ai-report&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">el-card</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">header</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>AI 用电报告<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;primary&quot;</span> <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleGenerate</span><span class="s">&quot;</span><span class="p">&gt;</span>生成报告<span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 
-      <div v-if="report" class="report-content">
-        <el-descriptions title="报告概览" :column="2" border>
-          <el-descriptions-item label="用电周期">{{ report.reportPeriod }}</el-descriptions-item>
-          <el-descriptions-item label="总用电量">{{ report.totalElectricity }} kWh</el-descriptions-item>
-          <el-descriptions-item label="总电费">{{ report.totalCost }} 元</el-descriptions-item>
-          <el-descriptions-item label="节能评分">
-            <el-tag :type="getScoreType(report.energySavingScore)">
-              {{ report.energySavingScore }}分
-            </el-tag>
-          </el-descriptions-item>
-        </el-descriptions>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">v-if</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">report</span><span class="s">&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;report-content&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-descriptions</span> <span class="na">title</span><span class="o">=</span><span class="s">&quot;报告概览&quot;</span> <span class="p">:</span><span class="na">column</span><span class="o">=</span><span class="s">&quot;</span><span class="mf">2</span><span class="s">&quot;</span> <span class="na">border</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">el-descriptions-item</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;用电周期&quot;</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">report</span><span class="p">.</span><span class="nx">reportPeriod</span><span class="w"> </span><span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">el-descriptions-item</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">el-descriptions-item</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;总用电量&quot;</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">report</span><span class="p">.</span><span class="nx">totalElectricity</span><span class="w"> </span><span class="cp">}}</span> kWh<span class="p">&lt;/</span><span class="nt">el-descriptions-item</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">el-descriptions-item</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;总电费&quot;</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">report</span><span class="p">.</span><span class="nx">totalCost</span><span class="w"> </span><span class="cp">}}</span> 元<span class="p">&lt;/</span><span class="nt">el-descriptions-item</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">el-descriptions-item</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;节能评分&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">el-tag</span> <span class="p">:</span><span class="na">type</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">getScoreType</span><span class="p">(</span><span class="nx">report</span><span class="p">.</span><span class="nx">energySavingScore</span><span class="p">)</span><span class="s">&quot;</span><span class="p">&gt;</span>
+              <span class="cp">{{</span><span class="w"> </span><span class="nx">report</span><span class="p">.</span><span class="nx">energySavingScore</span><span class="w"> </span><span class="cp">}}</span>分
+            <span class="p">&lt;/</span><span class="nt">el-tag</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">el-descriptions-item</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">el-descriptions</span><span class="p">&gt;</span>
 
-        <el-divider />
+        <span class="p">&lt;</span><span class="nt">el-divider</span> <span class="p">/&gt;</span>
 
-        <h3>用电分析</h3>
-        <p>{{ report.summary }}</p>
+        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>用电分析<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">report</span><span class="p">.</span><span class="nx">summary</span><span class="w"> </span><span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
-        <h3>节能建议</h3>
-        <p>{{ report.suggestions }}</p>
-      </div>
+        <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>节能建议<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">report</span><span class="p">.</span><span class="nx">suggestions</span><span class="w"> </span><span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-      <el-empty v-else description="暂无报告，请先生成报告" />
-    </el-card>
-  </div></p>
-<p></template></p>
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { aiReportApi } from '@/api/ai';
-import type { AIReport } from '@/types/ai';
-import { ElMessage } from 'element-plus';
+      <span class="p">&lt;</span><span class="nt">el-empty</span> <span class="na">v-else</span> <span class="na">description</span><span class="o">=</span><span class="s">&quot;暂无报告，请先生成报告&quot;</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">el-card</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 
-const report = ref<AIReport | null>(null);
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">setup</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;ts&quot;</span><span class="p">&gt;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="p">,</span><span class="w"> </span><span class="nx">onMounted</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">aiReportApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/api/ai&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AIReport</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/ai&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ElMessage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;element-plus&#39;</span><span class="p">;</span>
 
-const loadReport = async () => {
-  try {
-    // TODO: 传入实际的 roomId 和 period
-    const result = await aiReportApi.getReport('room-id', '2024-01');
-    report.value = result;
-  } catch (error) {
-    console.log('No report found');
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="o">&lt;</span><span class="nx">AIReport</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
 
-const handleGenerate = async () => {
-  try {
-    report.value = await aiReportApi.generateReport('room-id', '2024-01');
-    ElMessage.success('报告生成成功');
-  } catch (error: any) {
-    ElMessage.error('生成失败：' + (error.response?.data?.message || ''));
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">loadReport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// TODO: 传入实际的 roomId 和 period</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">aiReportApi</span><span class="p">.</span><span class="nx">getReport</span><span class="p">(</span><span class="s1">&#39;room-id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2024-01&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">report</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;No report found&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-const getScoreType = (score?: number) => {
-  if (!score) return 'info';
-  if (score >= 90) return 'success';
-  if (score >= 70) return 'warning';
-  return 'danger';
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleGenerate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">report</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">aiReportApi</span><span class="p">.</span><span class="nx">generateReport</span><span class="p">(</span><span class="s1">&#39;room-id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2024-01&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="s1">&#39;报告生成成功&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;生成失败：&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="o">?</span><span class="p">.</span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-onMounted(() => {
-  loadReport();
-});
-</script>
+<span class="kd">const</span><span class="w"> </span><span class="nx">getScoreType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">score</span><span class="o">?:</span><span class="w"> </span><span class="nx">number</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">score</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;info&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">90</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">70</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;warning&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;danger&#39;</span><span class="p">;</span>
+<span class="p">};</span>
 
-<style scoped>
-.ai-report {
-  padding: 20px;
-}
+<span class="nx">onMounted</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">loadReport</span><span class="p">();</span>
+<span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 
-.report-content {
-  h3 {
-    margin: 20px 0 10px;
-    color: #303133;
-  }
+<span class="p">&lt;</span><span class="nt">style</span> <span class="na">scoped</span><span class="p">&gt;</span>
+<span class="p">.</span><span class="nc">ai-report</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
 
-  p {
-    line-height: 1.6;
-    color: #606266;
-  }
-}
-</style>
-<p>```</p>
+<span class="p">.</span><span class="nc">report-content</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">h3</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">    </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#303133</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nt">p</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">line-height</span><span class="p">:</span><span class="w"> </span><span class="mf">1.6</span><span class="p">;</span>
+<span class="w">    </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#606266</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="err">}</span>
+<span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</code></pre></div>
+
 <p><strong>实操任务</strong>:
 - [ ] 创建 AIReportView.vue
 - [ ] 理解 Vue 3 Composition API
@@ -687,26 +685,30 @@ onMounted(() => {
 <hr />
 <h2 id="_11">六、完成后的文件结构 📁</h2>
 <h3 id="_12">后端新增/修改的文件</h3>
-<p><code>backend/src/main/java/com/dormpower/
-├── model/
-│   └── AIReport.java             ✅ 新建
-├── repository/
-│   └── AIReportRepository.java   ✅ 新建
-├── service/
-│   ├── AIReportService.java      ✅ 新建
-│   └── impl/
-│       └── AIReportServiceImpl.java ✅ 新建
-└── controller/
-    └── AIReportController.java   ✅ 新建</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">AIReport</span><span class="p">.</span><span class="nx">java</span><span class="w">             </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">repository</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">AIReportRepository</span><span class="p">.</span><span class="nx">java</span><span class="w">   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">service</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">AIReportService</span><span class="p">.</span><span class="nx">java</span><span class="w">      </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="kd">impl</span><span class="o">/</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="nx">AIReportServiceImpl</span><span class="p">.</span><span class="nx">java</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">controller</span><span class="o">/</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">AIReportController</span><span class="p">.</span><span class="nx">java</span><span class="w">   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+</code></pre></div>
+
 <h3 id="_13">前端新增/修改的文件</h3>
-<p><code>frontend/src/
-├── types/
-│   └── ai.ts                       ✅ 新建
-├── api/
-│   └── ai.ts                       ✅ 新建
-└── views/
-    ├── AIReportView.vue            ✅ 新建
-    └── AIChatView.vue              ✅ 新建</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">ai</span><span class="p">.</span><span class="nx">ts</span><span class="w">                       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="kn">api</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">ai</span><span class="p">.</span><span class="nx">ts</span><span class="w">                       </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">views</span><span class="o">/</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="nx">AIReportView</span><span class="p">.</span><span class="nx">vue</span><span class="w">            </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">AIChatView</span><span class="p">.</span><span class="nx">vue</span><span class="w">              </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+</code></pre></div>
+
 <hr />
 <h2 id="_14">七、扩展练习 💪</h2>
 <h3 id="_15">基础练习</h3>
@@ -743,7 +745,7 @@ onMounted(() => {
     <!-- 返回顶部按钮 -->
     <a href="#" class="back-to-top" id="backToTop">↑</a>
     
-    <!-- Prism.js -->
+    <!-- Prism.js 代码高亮 -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
@@ -772,8 +774,9 @@ onMounted(() => {
         
         // 当前页面高亮
         const currentPage = window.location.pathname.split('/').pop();
-        document.querySelectorAll('.nav-container a').forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
                 link.classList.add('active');
             }
         });

@@ -3,54 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10 通知管理模块</title>
-    
-    <!-- Prism.js 代码高亮 -->
+    <title>10 通知管理模块 - 宿舍用电管理系统教学文档</title>
     <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
-    
-    <!-- GitHub Markdown CSS -->
     <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
-    
     <style>
         body {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
         }
-        
         .markdown-body {
+            background: #fff;
             box-sizing: border-box;
             min-width: 200px;
             max-width: 100%;
             margin: 0 auto;
             padding: 45px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
         @media (max-width: 768px) {
             .markdown-body {
                 padding: 15px;
             }
         }
-        
-        /* 代码块样式 */
-        pre {
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        
-        pre[class*="language-"] {
-            margin: 1em 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        /* 导航样式 */
-        .nav-container {
+        /* 侧边导航 */
+        .nav {
             position: fixed;
-            top: 0;
             left: 0;
+            top: 0;
             width: 250px;
             height: 100vh;
             background: #1e1e1e;
@@ -59,49 +42,43 @@
             overflow-y: auto;
             z-index: 1000;
         }
-        
-        .nav-container h3 {
+        .nav h3 {
             margin: 0 0 20px 0;
             padding: 0 20px;
             font-size: 16px;
             border-bottom: 1px solid #333;
             padding-bottom: 15px;
         }
-        
-        .nav-container ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .nav-container li {
-            margin: 0;
-        }
-        
-        .nav-container a {
+        .nav a {
             display: block;
             padding: 10px 20px;
             color: #ccc;
             text-decoration: none;
             transition: all 0.3s;
         }
-        
-        .nav-container a:hover {
+        .nav a:hover {
             background: #333;
             color: #fff;
         }
-        
-        .nav-container a.active {
+        .nav a.active {
             background: #0366d6;
             color: #fff;
         }
-        
-        .content-wrapper {
+        .content {
             margin-left: 250px;
             padding: 20px;
         }
-        
-        /* 返回顶部按钮 */
+        /* 代码块样式 */
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1em 0;
+        }
+        pre[class*="language-"] {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        /* 返回顶部 */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -117,7 +94,6 @@
             display: none;
             z-index: 999;
         }
-        
         .back-to-top:hover {
             background: #0255b3;
         }
@@ -125,25 +101,23 @@
 </head>
 <body>
     <!-- 侧边导航 -->
-    <nav class="nav-container">
+    <nav class="nav">
         <h3>📚 教学文档</h3>
-        <ul>
-            <li><a href="index.html">🏠 首页</a></li>
-            <li><a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a></li>
-            <li><a href="02-设备管理模块.html">02-设备管理模块</a></li>
-            <li><a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a></li>
-            <li><a href="04-计费管理模块.html">04-计费管理模块</a></li>
-            <li><a href="05-告警管理模块.html">05-告警管理模块</a></li>
-            <li><a href="06-控制管理模块.html">06-控制管理模块</a></li>
-            <li><a href="07-宿舍管理模块.html">07-宿舍管理模块</a></li>
-            <li><a href="08-系统管理模块.html">08-系统管理模块</a></li>
-            <li><a href="09-AI 智能模块.html">09-AI 智能模块</a></li>
-            <li><a href="10-通知管理模块.html">10-通知管理模块</a></li>
-        </ul>
+        <a href="index.html">🏠 首页</a>
+        <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+        <a href="02-设备管理模块.html">02-设备管理模块</a>
+        <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+        <a href="04-计费管理模块.html">04-计费管理模块</a>
+        <a href="05-告警管理模块.html">05-告警管理模块</a>
+        <a href="06-控制管理模块.html">06-控制管理模块</a>
+        <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+        <a href="08-系统管理模块.html">08-系统管理模块</a>
+        <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+        <a href="10-通知管理模块.html">10-通知管理模块</a>
     </nav>
     
     <!-- 主内容区 -->
-    <div class="content-wrapper">
+    <div class="content">
         <article class="markdown-body">
 <h1 id="10">模块 10：通知管理模块</h1>
 <blockquote>
@@ -177,14 +151,22 @@
 <hr />
 <h2 id="_5">二、需求分析与设计</h2>
 <h3 id="21">2.1 业务场景</h3>
-<p><strong>场景 1：站内信通知</strong>
-<code>系统生成通知 → 保存到数据库 → WebSocket 推送 → 用户接收</code></p>
-<p><strong>场景 2：邮件通知</strong>
-<code>触发邮件通知 → 加载模板 → 填充数据 → 发送邮件 → 记录发送结果</code></p>
-<p><strong>场景 3：短信通知</strong>
-<code>触发短信通知 → 加载模板 → 调用短信 API → 发送短信 → 记录结果</code></p>
-<p><strong>场景 4：通知设置</strong>
-<code>用户设置通知偏好 → 保存设置 → 发送通知时检查偏好</code></p>
+<p><strong>场景 1：站内信通知</strong></p>
+<div class="codehilite"><pre><span></span><code>系统生成通知 → 保存到数据库 → WebSocket 推送 → 用户接收
+</code></pre></div>
+
+<p><strong>场景 2：邮件通知</strong></p>
+<div class="codehilite"><pre><span></span><code>触发邮件通知 → 加载模板 → 填充数据 → 发送邮件 → 记录发送结果
+</code></pre></div>
+
+<p><strong>场景 3：短信通知</strong></p>
+<div class="codehilite"><pre><span></span><code>触发短信通知 → 加载模板 → 调用短信 API → 发送短信 → 记录结果
+</code></pre></div>
+
+<p><strong>场景 4：通知设置</strong></p>
+<div class="codehilite"><pre><span></span><code>用户设置通知偏好 → 保存设置 → 发送通知时检查偏好
+</code></pre></div>
+
 <h3 id="22">2.2 功能需求清单</h3>
 <table>
 <thead>
@@ -273,136 +255,140 @@
 <h3 id="1">步骤 1：实体类设计</h3>
 <h4 id="11-notification">1.1 创建 Notification 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/Notification.java</code></p>
-<p>```java
-package com.dormpower.model;</p>
-<p>import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.UUID;</p>
-<p>@Data
-@Entity
-@Table(name = "notification", indexes = {
-    @Index(name = "idx_notification_user", columnList = "userId, status"),
-    @Index(name = "idx_notification_type", columnList = "type")
-})
-public class Notification {</p>
-<div class="codehilite"><pre><span></span><code><span class="err">@</span><span class="nx">Id</span>
-<span class="err">@</span><span class="nx">GeneratedValue</span><span class="p">(</span><span class="nx">strategy</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">GenerationType</span><span class="p">.</span><span class="nx">UUID</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">UUID</span><span class="w"> </span><span class="nx">id</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;user_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">UUID</span><span class="w"> </span><span class="nx">userId</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Enumerated</span><span class="p">(</span><span class="nx">EnumType</span><span class="p">.</span><span class="nx">STRING</span><span class="p">)</span>
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">NotificationType</span><span class="w"> </span><span class="k">type</span><span class="p">;</span>
+<span class="nd">@Data</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;notification&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">indexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Index</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;idx_notification_user&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">columnList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;userId, status&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="nd">@Index</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;idx_notification_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">columnList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;type&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Notification</span><span class="w"> </span><span class="p">{</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">title</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">UUID</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">columnDefinition</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;TEXT&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">content</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;user_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Enumerated</span><span class="p">(</span><span class="nx">EnumType</span><span class="p">.</span><span class="nx">STRING</span><span class="p">)</span>
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">nullable</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">NotificationStatus</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">NotificationStatus</span><span class="p">.</span><span class="nx">UNREAD</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">NotificationType</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
 
-<span class="k">private</span><span class="w"> </span><span class="nx">Integer</span><span class="w"> </span><span class="nx">priority</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// 优先级 0-10</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">actionUrl</span><span class="p">;</span><span class="w"> </span><span class="c1">// 关联操作链接</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;TEXT&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;related_type&quot;</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">relatedType</span><span class="p">;</span><span class="w"> </span><span class="c1">// 关联类型（BILL, ALARM 等）</span>
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="p">.</span><span class="na">UNREAD</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;related_id&quot;</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">UUID</span><span class="w"> </span><span class="nx">relatedId</span><span class="p">;</span><span class="w"> </span><span class="c1">// 关联 ID</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// 优先级 0-10</span>
 
-<span class="k">private</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="w"> </span><span class="nx">readAt</span><span class="p">;</span><span class="w"> </span><span class="c1">// 阅读时间</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="w"> </span><span class="nx">sentAt</span><span class="p">;</span><span class="w"> </span><span class="c1">// 发送时间</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">actionUrl</span><span class="p">;</span><span class="w"> </span><span class="c1">// 关联操作链接</span>
 
-<span class="err">@</span><span class="nx">Column</span><span class="p">(</span><span class="nx">length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="k">private</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">errorMessage</span><span class="p">;</span><span class="w"> </span><span class="c1">// 发送错误信息</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;related_type&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">relatedType</span><span class="p">;</span><span class="w"> </span><span class="c1">// 关联类型（BILL, ALARM 等）</span>
 
-<span class="k">private</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="w"> </span><span class="nx">createdAt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;related_id&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">relatedId</span><span class="p">;</span><span class="w"> </span><span class="c1">// 关联 ID</span>
 
-<span class="err">@</span><span class="nx">PrePersist</span>
-<span class="k">protected</span><span class="w"> </span><span class="nx">void</span><span class="w"> </span><span class="nx">onCreate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sentAt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">NotificationStatus</span><span class="p">.</span><span class="nx">SENT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">sentAt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">LocalDateTime</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">readAt</span><span class="p">;</span><span class="w"> </span><span class="c1">// 阅读时间</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">sentAt</span><span class="p">;</span><span class="w"> </span><span class="c1">// 发送时间</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">errorMessage</span><span class="p">;</span><span class="w"> </span><span class="c1">// 发送错误信息</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@PrePersist</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sentAt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="p">.</span><span class="na">SENT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sentAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span><span class="w"> </span><span class="n">NotificationType</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">SYSTEM</span><span class="p">,</span><span class="w">         </span><span class="c1">// 系统通知</span>
+<span class="w">    </span><span class="n">BILL</span><span class="p">,</span><span class="w">           </span><span class="c1">// 账单通知</span>
+<span class="w">    </span><span class="n">ALARM</span><span class="p">,</span><span class="w">          </span><span class="c1">// 告警通知</span>
+<span class="w">    </span><span class="n">DEVICE</span><span class="p">,</span><span class="w">         </span><span class="c1">// 设备通知</span>
+<span class="w">    </span><span class="n">ANNOUNCEMENT</span><span class="w">    </span><span class="c1">// 公告</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">DRAFT</span><span class="p">,</span><span class="w">      </span><span class="c1">// 草稿</span>
+<span class="w">    </span><span class="n">PENDING</span><span class="p">,</span><span class="w">    </span><span class="c1">// 待发送</span>
+<span class="w">    </span><span class="n">SENT</span><span class="p">,</span><span class="w">       </span><span class="c1">// 已发送</span>
+<span class="w">    </span><span class="n">READ</span><span class="p">,</span><span class="w">       </span><span class="c1">// 已读</span>
+<span class="w">    </span><span class="n">FAILED</span><span class="w">      </span><span class="c1">// 发送失败</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>}</p>
-<p>enum NotificationType {
-    SYSTEM,         // 系统通知
-    BILL,           // 账单通知
-    ALARM,          // 告警通知
-    DEVICE,         // 设备通知
-    ANNOUNCEMENT    // 公告
-}</p>
-<p>enum NotificationStatus {
-    DRAFT,      // 草稿
-    PENDING,    // 待发送
-    SENT,       // 已发送
-    READ,       // 已读
-    FAILED      // 发送失败
-}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 Notification.java 文件
 - [ ] 理解通知类型和状态
 - [ ] 运行项目，查看数据库表结构</p>
 <h4 id="12-notificationtemplate">1.2 创建 NotificationTemplate 实体</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/NotificationTemplate.java</code></p>
-<p>```java
-package com.dormpower.model;</p>
-<p>import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.UUID;</p>
-<p>@Data
-@Entity
-@Table(name = "notification_template")
-public class NotificationTemplate {</p>
-<div class="codehilite"><pre><span></span><code><span class="err">@</span><span class="n">Id</span>
-<span class="err">@</span><span class="n">GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.model</span><span class="p">;</span>
 
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">templateCode</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">模板编码</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">templateName</span><span class="p">;</span>
+<span class="nd">@Data</span>
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;notification_template&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">NotificationTemplate</span><span class="w"> </span><span class="p">{</span>
 
-<span class="err">@</span><span class="n">Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="o">.</span><span class="n">STRING</span><span class="p">)</span>
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">NotificationType</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Id</span>
+<span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">UUID</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TEXT&quot;</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">subject</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">邮件</span><span class="o">/</span><span class="err">短信主题</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">templateCode</span><span class="p">;</span><span class="w"> </span><span class="c1">// 模板编码</span>
 
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TEXT&quot;</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">content</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">模板内容</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">templateName</span><span class="p">;</span>
 
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">variables</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">变量定义（</span><span class="n">JSON</span><span class="err">）</span>
+<span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">NotificationType</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
 
-<span class="err">@</span><span class="n">Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">)</span>
-<span class="n">private</span><span class="w"> </span><span class="n">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">true</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;TEXT&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">subject</span><span class="p">;</span><span class="w"> </span><span class="c1">// 邮件/短信主题</span>
 
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="o">.</span><span class="n">now</span><span class="p">();</span>
-<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="o">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">columnDefinition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;TEXT&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">content</span><span class="p">;</span><span class="w"> </span><span class="c1">// 模板内容</span>
 
-<span class="err">@</span><span class="n">PreUpdate</span>
-<span class="n">protected</span><span class="w"> </span><span class="nb nb-Type">void</span><span class="w"> </span><span class="n">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="o">.</span><span class="n">now</span><span class="p">();</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">variables</span><span class="p">;</span><span class="w"> </span><span class="c1">// 变量定义（JSON）</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@PreUpdate</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 NotificationTemplate.java
 - [ ] 理解模板变量设计</p>
@@ -410,169 +396,175 @@ public class NotificationTemplate {</p>
 <h3 id="2repository">步骤 2：Repository 层</h3>
 <h4 id="21-notificationrepository">2.1 创建 NotificationRepository</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/NotificationRepository.java</code></p>
-<p>```java
-package com.dormpower.repository;</p>
-<p>import com.dormpower.model.Notification;
-import com.dormpower.model.NotificationStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;</p>
-<p>import java.util.List;
-import java.util.UUID;</p>
-<p>@Repository
-public interface NotificationRepository extends JpaRepository<Notification, UUID> {</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">Page</span><span class="p">&lt;</span><span class="nx">Notification</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">findByUserId</span><span class="p">(</span><span class="nx">UUID</span><span class="w"> </span><span class="nx">userId</span><span class="p">,</span><span class="w"> </span><span class="nx">Pageable</span><span class="w"> </span><span class="nx">pageable</span><span class="p">);</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
 
-<span class="nx">List</span><span class="p">&lt;</span><span class="nx">Notification</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">findByUserIdAndStatus</span><span class="p">(</span><span class="nx">UUID</span><span class="w"> </span><span class="nx">userId</span><span class="p">,</span><span class="w"> </span><span class="nx">NotificationStatus</span><span class="w"> </span><span class="nx">status</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Notification</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.NotificationStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Page</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Pageable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.Query</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Repository</span><span class="p">;</span>
 
-<span class="err">@</span><span class="nx">Query</span><span class="p">(</span><span class="s">&quot;SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.status = &#39;UNREAD&#39;&quot;</span><span class="p">)</span>
-<span class="nx">Long</span><span class="w"> </span><span class="nx">countUnreadByUserId</span><span class="p">(</span><span class="nx">UUID</span><span class="w"> </span><span class="nx">userId</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nx">List</span><span class="p">&lt;</span><span class="nx">Notification</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">findByUserIdAndType</span><span class="p">(</span><span class="nx">UUID</span><span class="w"> </span><span class="nx">userId</span><span class="p">,</span><span class="w"> </span><span class="nx">NotificationType</span><span class="w"> </span><span class="k">type</span><span class="p">);</span>
+<span class="nd">@Repository</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">NotificationRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Notification</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByUserId</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByUserIdAndStatus</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">&quot;SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.status = &#39;UNREAD&#39;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Long</span><span class="w"> </span><span class="nf">countUnreadByUserId</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByUserIdAndType</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationType</span><span class="w"> </span><span class="n">type</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <hr />
 <h3 id="3service">步骤 3：Service 层</h3>
 <h4 id="31-notificationservice">3.1 创建 NotificationService</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/NotificationService.java</code></p>
-<p>```java
-package com.dormpower.service;</p>
-<p>import com.dormpower.dto.NotificationRequest;
-import com.dormpower.model.Notification;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;</p>
-<p>import java.util.List;
-import java.util.Optional;
-import java.util.UUID;</p>
-<p>public interface NotificationService {</p>
-<div class="codehilite"><pre><span></span><code>Notification sendNotification(NotificationRequest request);
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
 
-void sendBulkNotification(List&lt;UUID&gt; userIds, NotificationRequest request);
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.dto.NotificationRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Notification</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Page</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Pageable</span><span class="p">;</span>
 
-Page&lt;Notification&gt; getUserNotifications(UUID userId, Pageable pageable);
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-Long getUnreadCount(UUID userId);
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">NotificationService</span><span class="w"> </span><span class="p">{</span>
 
-void markAsRead(UUID notificationId);
+<span class="w">    </span><span class="n">Notification</span><span class="w"> </span><span class="nf">sendNotification</span><span class="p">(</span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 
-void markAllAsRead(UUID userId);
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendBulkNotification</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">UUID</span><span class="o">&gt;</span><span class="w"> </span><span class="n">userIds</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 
-void deleteNotification(UUID notificationId);
+<span class="w">    </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getUserNotifications</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Long</span><span class="w"> </span><span class="nf">getUnreadCount</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">markAsRead</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">notificationId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">markAllAsRead</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">deleteNotification</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">notificationId</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <h4 id="32-notificationserviceimpl">3.2 创建 NotificationServiceImpl</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/NotificationServiceImpl.java</code></p>
-<p>```java
-package com.dormpower.service.impl;</p>
-<p>import com.dormpower.dto.NotificationRequest;
-import com.dormpower.model.Notification;
-import com.dormpower.model.NotificationStatus;
-import com.dormpower.repository.NotificationRepository;
-import com.dormpower.service.NotificationService;
-import com.dormpower.websocket.WebSocketManager;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;</p>
-<p>import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;</p>
-<p>@Slf4j
-@Service
-@RequiredArgsConstructor
-public class NotificationServiceImpl implements NotificationService {</p>
-<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">NotificationRepository</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">;</span>
-<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">WebSocketManager</span><span class="w"> </span><span class="n">webSocketManager</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service.impl</span><span class="p">;</span>
 
-<span class="nv">@Override</span>
-<span class="nv">@Transactional</span>
-<span class="k">public</span><span class="w"> </span><span class="n">Notification</span><span class="w"> </span><span class="n">sendNotification</span><span class="p">(</span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">Notification</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Notification</span><span class="p">();</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setUserId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getUserId</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setType</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setTitle</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getTitle</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setContent</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getContent</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setPriority</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getPriority</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="vm">?</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">getPriority</span><span class="p">()</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setActionUrl</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getActionUrl</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setRelatedType</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getRelatedType</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setRelatedId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getRelatedId</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">NotificationStatus</span><span class="p">.</span><span class="n">SENT</span><span class="p">);</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setSentAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.dto.NotificationRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Notification</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.NotificationStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.repository.NotificationRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.NotificationService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.websocket.WebSocketManager</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Page</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Pageable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.scheduling.annotation.Async</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">Notification</span><span class="w"> </span><span class="n">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">notification</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">通过</span><span class="w"> </span><span class="n">WebSocket</span><span class="w"> </span><span class="n">推送</span>
-<span class="w">    </span><span class="n">webSocketManager</span><span class="p">.</span><span class="n">sendNotification</span><span class="p">(</span><span class="n">saved</span><span class="p">);</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">NotificationServiceImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">NotificationService</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="nf">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="ss">&quot;通知已发送：{} to user {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">saved</span><span class="p">.</span><span class="n">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">saved</span><span class="p">.</span><span class="n">getUserId</span><span class="p">());</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">saved</span><span class="p">;</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">NotificationRepository</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">WebSocketManager</span><span class="w"> </span><span class="n">webSocketManager</span><span class="p">;</span>
 
-<span class="nv">@Override</span>
-<span class="nv">@Async</span>
-<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sendBulkNotification</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">UUID</span><span class="o">&gt;</span><span class="w"> </span><span class="n">userIds</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">userIds</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="n">request</span><span class="p">.</span><span class="n">setUserId</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
-<span class="w">            </span><span class="n">sendNotification</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="k">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="nf">log</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="ss">&quot;发送通知给失败 userId: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Notification</span><span class="w"> </span><span class="nf">sendNotification</span><span class="p">(</span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Notification</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Notification</span><span class="p">();</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setUserId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getUserId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setType</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getType</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setTitle</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getTitle</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setContent</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getContent</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setPriority</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getPriority</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getPriority</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setActionUrl</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getActionUrl</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setRelatedType</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getRelatedType</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setRelatedId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getRelatedId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setStatus</span><span class="p">(</span><span class="n">NotificationStatus</span><span class="p">.</span><span class="na">SENT</span><span class="p">);</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setSentAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
 
-<span class="nv">@Override</span>
-<span class="k">public</span><span class="w"> </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getUserNotifications</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="n">findByUserId</span><span class="p">(</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">        </span><span class="n">Notification</span><span class="w"> </span><span class="n">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">notification</span><span class="p">);</span>
 
-<span class="nv">@Override</span>
-<span class="k">public</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">getUnreadCount</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="n">countUnreadByUserId</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">        </span><span class="c1">// 通过 WebSocket 推送</span>
+<span class="w">        </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">sendNotification</span><span class="p">(</span><span class="n">saved</span><span class="p">);</span>
 
-<span class="nv">@Override</span>
-<span class="nv">@Transactional</span>
-<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">markAsRead</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">notificationId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">Notification</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">notificationId</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;通知不存在&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;通知已发送：{} to user {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">saved</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">saved</span><span class="p">.</span><span class="na">getUserId</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">saved</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">NotificationStatus</span><span class="p">.</span><span class="k">READ</span><span class="p">);</span>
-<span class="w">    </span><span class="n">notification</span><span class="p">.</span><span class="n">setReadAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notificationRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">notification</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Async</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendBulkNotification</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">UUID</span><span class="o">&gt;</span><span class="w"> </span><span class="n">userIds</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">userIds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">request</span><span class="p">.</span><span class="na">setUserId</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
+<span class="w">                </span><span class="n">sendNotification</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;发送通知给失败 userId: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="nv">@Override</span>
-<span class="nv">@Transactional</span>
-<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">markAllAsRead</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="n">notifications</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notificationRepository</span>
-<span class="w">        </span><span class="p">.</span><span class="n">findByUserIdAndStatus</span><span class="p">(</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="p">.</span><span class="n">UNREAD</span><span class="p">);</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getUserNotifications</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">findByUserId</span><span class="p">(</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Notification</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">notifications</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">NotificationStatus</span><span class="p">.</span><span class="k">READ</span><span class="p">);</span>
-<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="n">setReadAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="w">    </span><span class="n">notificationRepository</span><span class="p">.</span><span class="n">saveAll</span><span class="p">(</span><span class="n">notifications</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="nf">getUnreadCount</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">countUnreadByUserId</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="nv">@Override</span>
-<span class="nv">@Transactional</span>
-<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">deleteNotification</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">notificationId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">notificationRepository</span><span class="p">.</span><span class="n">deleteById</span><span class="p">(</span><span class="n">notificationId</span><span class="p">);</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">markAsRead</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">notificationId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Notification</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">notificationId</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="s">&quot;通知不存在&quot;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setStatus</span><span class="p">(</span><span class="n">NotificationStatus</span><span class="p">.</span><span class="na">READ</span><span class="p">);</span>
+<span class="w">        </span><span class="n">notification</span><span class="p">.</span><span class="na">setReadAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">notification</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">markAllAsRead</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="n">notifications</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">notificationRepository</span>
+<span class="w">            </span><span class="p">.</span><span class="na">findByUserIdAndStatus</span><span class="p">(</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">NotificationStatus</span><span class="p">.</span><span class="na">UNREAD</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Notification</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">notifications</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">notification</span><span class="p">.</span><span class="na">setStatus</span><span class="p">(</span><span class="n">NotificationStatus</span><span class="p">.</span><span class="na">READ</span><span class="p">);</span>
+<span class="w">            </span><span class="n">notification</span><span class="p">.</span><span class="na">setReadAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">saveAll</span><span class="p">(</span><span class="n">notifications</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">deleteNotification</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">notificationId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">notificationRepository</span><span class="p">.</span><span class="na">deleteById</span><span class="p">(</span><span class="n">notificationId</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 NotificationService 接口
 - [ ] 创建 NotificationServiceImpl 实现类
@@ -582,88 +574,90 @@ public class NotificationServiceImpl implements NotificationService {</p>
 <h3 id="4controller">步骤 4：Controller 层</h3>
 <h4 id="41-notificationcontroller">4.1 创建 NotificationController</h4>
 <p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/NotificationController.java</code></p>
-<p>```java
-package com.dormpower.controller;</p>
-<p>import com.dormpower.dto.NotificationRequest;
-import com.dormpower.model.Notification;
-import com.dormpower.service.NotificationService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;</p>
-<p>import java.util.List;
-import java.util.Map;
-import java.util.UUID;</p>
-<p>@RestController
-@RequestMapping("/api/notifications")
-@RequiredArgsConstructor
-public class NotificationController {</p>
-<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">NotificationService</span><span class="w"> </span><span class="n">notificationService</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.controller</span><span class="p">;</span>
 
-<span class="nv">@GetMapping</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getMyNotifications</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span><span class="p">,</span>
-<span class="w">    </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">从用户名获取用户</span><span class="w"> </span><span class="n">ID</span>
-<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">fromString</span><span class="p">(</span><span class="n">userDetails</span><span class="p">.</span><span class="n">getUsername</span><span class="p">());</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span>
-<span class="w">        </span><span class="n">notificationService</span><span class="p">.</span><span class="n">getUserNotifications</span><span class="p">(</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span>
-<span class="w">    </span><span class="p">);</span>
-<span class="err">}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.dto.NotificationRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Notification</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.NotificationService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Page</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.domain.Pageable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.http.ResponseEntity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.access.prepost.PreAuthorize</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.core.annotation.AuthenticationPrincipal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.core.userdetails.UserDetails</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.*</span><span class="p">;</span>
 
-<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/unread-count&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getUnreadCount</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">fromString</span><span class="p">(</span><span class="n">userDetails</span><span class="p">.</span><span class="n">getUsername</span><span class="p">());</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">notificationService</span><span class="p">.</span><span class="n">getUnreadCount</span><span class="p">(</span><span class="n">userId</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
 
-<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/{id}/read&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">markAsRead</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">notificationService</span><span class="p">.</span><span class="n">markAsRead</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">().</span><span class="n">build</span><span class="p">();</span>
-<span class="err">}</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&quot;/api/notifications&quot;</span><span class="p">)</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">NotificationController</span><span class="w"> </span><span class="p">{</span>
 
-<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/read-all&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">markAllAsRead</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">fromString</span><span class="p">(</span><span class="n">userDetails</span><span class="p">.</span><span class="n">getUsername</span><span class="p">());</span>
-<span class="w">    </span><span class="n">notificationService</span><span class="p">.</span><span class="n">markAllAsRead</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">().</span><span class="n">build</span><span class="p">();</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">NotificationService</span><span class="w"> </span><span class="n">notificationService</span><span class="p">;</span>
 
-<span class="nv">@DeleteMapping</span><span class="p">(</span><span class="ss">&quot;/{id}&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deleteNotification</span><span class="p">(</span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">notificationService</span><span class="p">.</span><span class="n">deleteNotification</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">noContent</span><span class="p">().</span><span class="n">build</span><span class="p">();</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">getMyNotifications</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// TODO: 从用户名获取用户 ID</span>
+<span class="w">        </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="na">fromString</span><span class="p">(</span><span class="n">userDetails</span><span class="p">.</span><span class="na">getUsername</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span>
+<span class="w">            </span><span class="n">notificationService</span><span class="p">.</span><span class="na">getUserNotifications</span><span class="p">(</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/send&quot;</span><span class="p">)</span>
-<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;notification:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
-<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sendNotification</span><span class="p">(</span>
-<span class="w">    </span><span class="nv">@RequestBody</span><span class="w"> </span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span>
-<span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">notificationService</span><span class="p">.</span><span class="n">sendNotification</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
-<span class="err">}</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/unread-count&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getUnreadCount</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="na">fromString</span><span class="p">(</span><span class="n">userDetails</span><span class="p">.</span><span class="na">getUsername</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">notificationService</span><span class="p">.</span><span class="na">getUnreadCount</span><span class="p">(</span><span class="n">userId</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/{id}/read&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">markAsRead</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">        </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">notificationService</span><span class="p">.</span><span class="na">markAsRead</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/read-all&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">markAllAsRead</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@AuthenticationPrincipal</span><span class="w"> </span><span class="n">UserDetails</span><span class="w"> </span><span class="n">userDetails</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="na">fromString</span><span class="p">(</span><span class="n">userDetails</span><span class="p">.</span><span class="na">getUsername</span><span class="p">());</span>
+<span class="w">        </span><span class="n">notificationService</span><span class="p">.</span><span class="na">markAllAsRead</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@DeleteMapping</span><span class="p">(</span><span class="s">&quot;/{id}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">deleteNotification</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">notificationService</span><span class="p">.</span><span class="na">deleteNotification</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">noContent</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/send&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@PreAuthorize</span><span class="p">(</span><span class="s">&quot;hasAnyAuthority(&#39;notification:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">sendNotification</span><span class="p">(</span>
+<span class="w">        </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">NotificationRequest</span><span class="w"> </span><span class="n">request</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">notificationService</span><span class="p">.</span><span class="na">sendNotification</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>}
-```</p>
 <p><strong>实操任务</strong>:
 - [ ] 创建 NotificationController.java
 - [ ] 理解通知 API 设计
@@ -672,316 +666,326 @@ public class NotificationController {</p>
 <h2 id="_7">四、前端实现</h2>
 <h3 id="41">4.1 类型定义</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/types/notification.ts</code></p>
-<p>```typescript
-export interface Notification {
-  id: string;
-  userId: string;
-  type: NotificationType;
-  title: string;
-  content: string;
-  status: NotificationStatus;
-  priority?: number;
-  actionUrl?: string;
-  relatedType?: string;
-  relatedId?: string;
-  readAt?: string;
-  sentAt?: string;
-  createdAt: string;
-}</p>
-<p>export type NotificationType = 
-  | 'SYSTEM'
-  | 'BILL'
-  | 'ALARM'
-  | 'DEVICE'
-  | 'ANNOUNCEMENT';</p>
-<p>export type NotificationStatus = 
-  | 'DRAFT'
-  | 'PENDING'
-  | 'SENT'
-  | 'READ'
-  | 'FAILED';</p>
-<p>export interface NotificationRequest {
-  userId: string;
-  type: NotificationType;
-  title: string;
-  content: string;
-  priority?: number;
-  actionUrl?: string;
-  relatedType?: string;
-  relatedId?: string;
-}
-```</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Notification</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">NotificationType</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">NotificationStatus</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">priority?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">actionUrl?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">relatedType?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">relatedId?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">readAt?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">sentAt?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">createdAt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">NotificationType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;SYSTEM&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;BILL&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ALARM&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;DEVICE&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ANNOUNCEMENT&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">NotificationStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;DRAFT&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;PENDING&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;SENT&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;READ&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;FAILED&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">NotificationRequest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">NotificationType</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">priority?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">actionUrl?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">relatedType?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">relatedId?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <h3 id="42-api">4.2 API 封装</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/api/notification.ts</code></p>
-<p>```typescript
-import axios from 'axios';
-import type { Notification, NotificationRequest } from '@/types/notification';</p>
-<p>const API_BASE = '/api/notifications';</p>
-<p>export const notificationApi = {
-  // 获取通知列表
-  async getNotifications(page = 0, size = 20) {
-    const response = await axios.get(API_BASE, {
-      params: { page, size }
-    });
-    return response.data;
-  },</p>
-<p>// 获取未读数量
-  async getUnreadCount(): Promise<number> {
-    const response = await axios.get(<code>${API_BASE}/unread-count</code>);
-    return response.data;
-  },</p>
-<p>// 标记为已读
-  async markAsRead(notificationId: string) {
-    await axios.post(<code>${API_BASE}/${notificationId}/read</code>);
-  },</p>
-<p>// 全部标记为已读
-  async markAllAsRead() {
-    await axios.post(<code>${API_BASE}/read-all</code>);
-  },</p>
-<p>// 删除通知
-  async deleteNotification(notificationId: string) {
-    await axios.delete(<code>${API_BASE}/${notificationId}</code>);
-  },</p>
-<p>// 发送通知
-  async sendNotification(request: NotificationRequest): Promise<Notification> {
-    const response = await axios.post(<code>${API_BASE}/send</code>, request);
-    return response.data;
-  }
-};
-```</p>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Notification</span><span class="p">,</span><span class="w"> </span><span class="nx">NotificationRequest</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/notification&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/api/notifications&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">notificationApi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 获取通知列表</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getNotifications</span><span class="p">(</span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">API_BASE</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">page</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// 获取未读数量</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getUnreadCount</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">number</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_BASE</span><span class="si">}</span><span class="sb">/unread-count`</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// 标记为已读</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">markAsRead</span><span class="p">(</span><span class="nx">notificationId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_BASE</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">notificationId</span><span class="si">}</span><span class="sb">/read`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// 全部标记为已读</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">markAllAsRead</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_BASE</span><span class="si">}</span><span class="sb">/read-all`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// 删除通知</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">deleteNotification</span><span class="p">(</span><span class="nx">notificationId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_BASE</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">notificationId</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// 发送通知</span>
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">sendNotification</span><span class="p">(</span><span class="nx">request</span><span class="o">:</span><span class="w"> </span><span class="kt">NotificationRequest</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Notification</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_BASE</span><span class="si">}</span><span class="sb">/send`</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
 <h3 id="43">4.3 通知中心页面</h3>
 <p><strong>文件位置</strong>: <code>frontend/src/views/NotificationView.vue</code></p>
-<p>```vue
-<template>
-<br />
-<div class="notification-center">
-    <el-card>
-      <template #header>
-        <span>消息中心</span>
-        <el-button 
-          type="primary" 
-          size="small"
-          @click="handleMarkAllRead"
-        >
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-center&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">el-card</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">header</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>消息中心<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-button</span> 
+          <span class="na">type</span><span class="o">=</span><span class="s">&quot;primary&quot;</span> 
+          <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span>
+          <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleMarkAllRead</span><span class="s">&quot;</span>
+        <span class="p">&gt;</span>
           全部已读
-        </el-button>
-      </template>
+        <span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 
-      <el-tabs v-model="activeTab">
-        <el-tab-pane label="全部消息" name="all">
-          <el-badge :value="unreadCount" class="tab-badge">
-            <span>消息列表</span>
-          </el-badge>
-        </el-tab-pane>
-        <el-tab-pane label="未读" name="unread">
-          <el-badge :value="unreadCount" class="tab-badge">
-            <span>未读消息</span>
-          </el-badge>
-        </el-tab-pane>
-      </el-tabs>
+      <span class="p">&lt;</span><span class="nt">el-tabs</span> <span class="na">v-model</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">activeTab</span><span class="s">&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-tab-pane</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;全部消息&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">el-badge</span> <span class="p">:</span><span class="na">value</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">unreadCount</span><span class="s">&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tab-badge&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>消息列表<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">el-badge</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">el-tab-pane</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-tab-pane</span> <span class="na">label</span><span class="o">=</span><span class="s">&quot;未读&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;unread&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">el-badge</span> <span class="p">:</span><span class="na">value</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">unreadCount</span><span class="s">&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tab-badge&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>未读消息<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">el-badge</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">el-tab-pane</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">el-tabs</span><span class="p">&gt;</span>
 
-      <el-list :data="notifications" class="notification-list">
-        <el-list-item
-          v-for="item in notifications"
-          :key="item.id"
-          :class="{ 'unread-item': item.status === 'UNREAD' }"
-        >
-          <template #default>
-            <div class="notification-item" @click="handleRead(item)">
-              <div class="notification-header">
-                <el-tag :type="getTypeType(item.type)" size="small">
-                  {{ getTypeText(item.type) }}
-                </el-tag>
-                <span class="notification-time">{{ formatTime(item.createdAt) }}</span>
-              </div>
-              <div class="notification-title">{{ item.title }}</div>
-              <div class="notification-content">{{ item.content }}</div>
-            </div>
-            <template #extra>
-              <el-button 
-                v-if="item.status === 'UNREAD'" 
-                size="small" 
-                @click="handleMarkRead(item.id)"
-              >
+      <span class="p">&lt;</span><span class="nt">el-list</span> <span class="p">:</span><span class="na">data</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">notifications</span><span class="s">&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-list&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">el-list-item</span>
+          <span class="na">v-for</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">item</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">notifications</span><span class="s">&quot;</span>
+          <span class="p">:</span><span class="na">key</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="s">&quot;</span>
+          <span class="p">:</span><span class="na">class</span><span class="o">=</span><span class="s">&quot;</span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;unread-item&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;UNREAD&#39;</span><span class="w"> </span><span class="p">}</span><span class="s">&quot;</span>
+        <span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">default</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-item&quot;</span> <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleRead</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span><span class="s">&quot;</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-header&quot;</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">el-tag</span> <span class="p">:</span><span class="na">type</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">getTypeType</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span><span class="s">&quot;</span> <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span><span class="p">&gt;</span>
+                  <span class="cp">{{</span><span class="w"> </span><span class="nx">getTypeText</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span><span class="w"> </span><span class="cp">}}</span>
+                <span class="p">&lt;/</span><span class="nt">el-tag</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-time&quot;</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">formatTime</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">createdAt</span><span class="p">)</span><span class="w"> </span><span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+              <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-title&quot;</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">title</span><span class="w"> </span><span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;notification-content&quot;</span><span class="p">&gt;</span><span class="cp">{{</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">content</span><span class="w"> </span><span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">template</span> <span class="err">#</span><span class="na">extra</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">el-button</span> 
+                <span class="na">v-if</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">item</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;UNREAD&#39;</span><span class="s">&quot;</span> 
+                <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span> 
+                <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleMarkRead</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="s">&quot;</span>
+              <span class="p">&gt;</span>
                 标记已读
-              </el-button>
-              <el-button size="small" @click="handleDelete(item.id)">删除</el-button>
-            </template>
-          </template>
-        </el-list-item>
-      </el-list>
+              <span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">el-button</span> <span class="na">size</span><span class="o">=</span><span class="s">&quot;small&quot;</span> <span class="p">@</span><span class="na">click</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handleDelete</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="s">&quot;</span><span class="p">&gt;</span>删除<span class="p">&lt;/</span><span class="nt">el-button</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">el-list-item</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">el-list</span><span class="p">&gt;</span>
 
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :total="total"
-        @current-change="handlePageChange"
-      />
-    </el-card>
-  </div></p>
-<p></template></p>
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { notificationApi } from '@/api/notification';
-import type { Notification } from '@/types/notification';
-import { ElMessage, ElMessageBox } from 'element-plus';
+      <span class="p">&lt;</span><span class="nt">el-pagination</span>
+        <span class="na">v-model</span><span class="p">:</span><span class="na">current-page</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">currentPage</span><span class="s">&quot;</span>
+        <span class="na">v-model</span><span class="p">:</span><span class="na">page-size</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">pageSize</span><span class="s">&quot;</span>
+        <span class="p">:</span><span class="na">total</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">total</span><span class="s">&quot;</span>
+        <span class="p">@</span><span class="na">current-change</span><span class="o">=</span><span class="s">&quot;</span><span class="nx">handlePageChange</span><span class="s">&quot;</span>
+      <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">el-card</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
 
-const activeTab = ref('all');
-const notifications = ref<Notification[]>([]);
-const unreadCount = ref(0);
-const currentPage = ref(1);
-const pageSize = ref(10);
-const total = ref(0);
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">setup</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;ts&quot;</span><span class="p">&gt;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="p">,</span><span class="w"> </span><span class="nx">onMounted</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">notificationApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/api/notification&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Notification</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/types/notification&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ElMessage</span><span class="p">,</span><span class="w"> </span><span class="nx">ElMessageBox</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;element-plus&#39;</span><span class="p">;</span>
 
-const loadNotifications = async () => {
-  try {
-    const response = await notificationApi.getNotifications(
-      currentPage.value - 1,
-      pageSize.value
-    );
-    notifications.value = response.content || [];
-    total.value = response.totalElements || 0;
+<span class="kd">const</span><span class="w"> </span><span class="nx">activeTab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">notifications</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="o">&lt;</span><span class="nx">Notification</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">unreadCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">currentPage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">pageSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="mf">10</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
 
-    // 加载未读数量
-    unreadCount.value = await notificationApi.getUnreadCount();
-  } catch (error) {
-    console.error('Failed to load notifications:', error);
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">loadNotifications</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">notificationApi</span><span class="p">.</span><span class="nx">getNotifications</span><span class="p">(</span>
+<span class="w">      </span><span class="nx">currentPage</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">pageSize</span><span class="p">.</span><span class="nx">value</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">notifications</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">content</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="nx">total</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">totalElements</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
 
-const handleRead = (notification: Notification) => {
-  if (notification.status === 'UNREAD') {
-    handleMarkRead(notification.id);
-  }
+<span class="w">    </span><span class="c1">// 加载未读数量</span>
+<span class="w">    </span><span class="nx">unreadCount</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">notificationApi</span><span class="p">.</span><span class="nx">getUnreadCount</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to load notifications:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-  if (notification.actionUrl) {
-    // TODO: 跳转到关联页面
-    console.log('Navigate to:', notification.actionUrl);
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">notification</span><span class="o">:</span><span class="w"> </span><span class="nx">Notification</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">notification</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;UNREAD&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">handleMarkRead</span><span class="p">(</span><span class="nx">notification</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
 
-const handleMarkRead = async (notificationId: string) => {
-  try {
-    await notificationApi.markAsRead(notificationId);
-    loadNotifications();
-  } catch (error) {
-    console.error('Failed to mark as read:', error);
-  }
-};
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">notification</span><span class="p">.</span><span class="nx">actionUrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// TODO: 跳转到关联页面</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Navigate to:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">notification</span><span class="p">.</span><span class="nx">actionUrl</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-const handleMarkAllRead = async () => {
-  try {
-    await notificationApi.markAllAsRead();
-    ElMessage.success('全部标记为已读');
-    loadNotifications();
-  } catch (error) {
-    console.error('Failed to mark all as read:', error);
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleMarkRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">notificationId</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">notificationApi</span><span class="p">.</span><span class="nx">markAsRead</span><span class="p">(</span><span class="nx">notificationId</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">loadNotifications</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to mark as read:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-const handleDelete = async (notificationId: string) => {
-  try {
-    await ElMessageBox.confirm('确认删除该通知？', '删除确认');
-    await notificationApi.deleteNotification(notificationId);
-    ElMessage.success('删除成功');
-    loadNotifications();
-  } catch (error: any) {
-    if (error !== 'cancel') {
-      ElMessage.error('删除失败：' + (error.response?.data?.message || ''));
-    }
-  }
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleMarkAllRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">notificationApi</span><span class="p">.</span><span class="nx">markAllAsRead</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="s1">&#39;全部标记为已读&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">loadNotifications</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to mark all as read:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-const handlePageChange = (page: number) => {
-  currentPage.value = page;
-  loadNotifications();
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handleDelete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">notificationId</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">ElMessageBox</span><span class="p">.</span><span class="nx">confirm</span><span class="p">(</span><span class="s1">&#39;确认删除该通知？&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;删除确认&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">notificationApi</span><span class="p">.</span><span class="nx">deleteNotification</span><span class="p">(</span><span class="nx">notificationId</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="s1">&#39;删除成功&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">loadNotifications</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;cancel&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">ElMessage</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;删除失败：&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="o">?</span><span class="p">.</span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
 
-const getTypeType = (type: string) => {
-  const types: Record<string, any> = {
-    SYSTEM: 'info',
-    BILL: 'warning',
-    ALARM: 'danger',
-    DEVICE: 'success'
-  };
-  return types[type] || 'info';
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">handlePageChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="nx">number</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">currentPage</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">page</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">loadNotifications</span><span class="p">();</span>
+<span class="p">};</span>
 
-const getTypeText = (type: string) => {
-  const texts: Record<string, string> = {
-    SYSTEM: '系统',
-    BILL: '账单',
-    ALARM: '告警',
-    DEVICE: '设备'
-  };
-  return texts[type] || type;
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">getTypeType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">types</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="nx">string</span><span class="p">,</span><span class="w"> </span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">SYSTEM</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;info&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">BILL</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;warning&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">ALARM</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;danger&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">DEVICE</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">types</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;info&#39;</span><span class="p">;</span>
+<span class="p">};</span>
 
-const formatTime = (time: string) => {
-  return new Date(time).toLocaleString('zh-CN');
-};
+<span class="kd">const</span><span class="w"> </span><span class="nx">getTypeText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">texts</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="nx">string</span><span class="p">,</span><span class="w"> </span><span class="nx">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">SYSTEM</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;系统&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">BILL</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;账单&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">ALARM</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;告警&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">DEVICE</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;设备&#39;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">texts</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">type</span><span class="p">;</span>
+<span class="p">};</span>
 
-onMounted(() => {
-  loadNotifications();
-});
-</script>
+<span class="kd">const</span><span class="w"> </span><span class="nx">formatTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">time</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">time</span><span class="p">).</span><span class="nx">toLocaleString</span><span class="p">(</span><span class="s1">&#39;zh-CN&#39;</span><span class="p">);</span>
+<span class="p">};</span>
 
-<style scoped>
-.notification-center {
-  padding: 20px;
-}
+<span class="nx">onMounted</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">loadNotifications</span><span class="p">();</span>
+<span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 
-.tab-badge {
-  margin-left: 10px;
-}
+<span class="p">&lt;</span><span class="nt">style</span> <span class="na">scoped</span><span class="p">&gt;</span>
+<span class="p">.</span><span class="nc">notification-center</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
 
-.notification-list {
-  margin-top: 20px;
-}
+<span class="p">.</span><span class="nc">tab-badge</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">margin-left</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
 
-.notification-item {
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 4px;
+<span class="p">.</span><span class="nc">notification-list</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">margin-top</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
 
-  &:hover {
-    background-color: #f5f7fa;
-  }
-}
+<span class="p">.</span><span class="nc">notification-item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">cursor</span><span class="p">:</span><span class="w"> </span><span class="kc">pointer</span><span class="p">;</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="kt">px</span><span class="p">;</span>
 
-.unread-item {
-  background-color: #ecf5ff;
-}
+<span class="w">  </span><span class="err">&amp;:hover</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#f5f7fa</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="err">}</span>
 
-.notification-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
+<span class="p">.</span><span class="nc">unread-item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#ecf5ff</span><span class="p">;</span>
+<span class="p">}</span>
 
-.notification-time {
-  font-size: 12px;
-  color: #909399;
-}
+<span class="p">.</span><span class="nc">notification-header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span>
+<span class="w">  </span><span class="k">justify-content</span><span class="p">:</span><span class="w"> </span><span class="kc">space-between</span><span class="p">;</span>
+<span class="w">  </span><span class="k">margin-bottom</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
 
-.notification-title {
-  font-weight: bold;
-  margin-bottom: 4px;
-  color: #303133;
-}
+<span class="p">.</span><span class="nc">notification-time</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#909399</span><span class="p">;</span>
+<span class="p">}</span>
 
-.notification-content {
-  font-size: 14px;
-  color: #606266;
-  line-height: 1.5;
-}
+<span class="p">.</span><span class="nc">notification-title</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="kc">bold</span><span class="p">;</span>
+<span class="w">  </span><span class="k">margin-bottom</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#303133</span><span class="p">;</span>
+<span class="p">}</span>
 
-:deep(.el-pagination) {
-  margin-top: 20px;
-  justify-content: flex-end;
-}
-</style>
-<p>```</p>
+<span class="p">.</span><span class="nc">notification-content</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#606266</span><span class="p">;</span>
+<span class="w">  </span><span class="k">line-height</span><span class="p">:</span><span class="w"> </span><span class="mf">1.5</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">:</span><span class="nd">deep</span><span class="o">(</span><span class="p">.</span><span class="nc">el-pagination</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">margin-top</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">justify-content</span><span class="p">:</span><span class="w"> </span><span class="kc">flex-end</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</code></pre></div>
+
 <p><strong>实操任务</strong>:
 - [ ] 创建 NotificationView.vue
 - [ ] 理解 Vue 3 Composition API
@@ -1008,26 +1012,30 @@ onMounted(() => {
 <hr />
 <h2 id="_11">六、完成后的文件结构 📁</h2>
 <h3 id="_12">后端新增/修改的文件</h3>
-<p><code>backend/src/main/java/com/dormpower/
-├── model/
-│   ├── Notification.java           ✅ 新建
-│   └── NotificationTemplate.java   ✅ 新建
-├── repository/
-│   └── NotificationRepository.java ✅ 新建
-├── service/
-│   ├── NotificationService.java    ✅ 新建
-│   └── impl/
-│       └── NotificationServiceImpl.java ✅ 新建
-└── controller/
-    └── NotificationController.java ✅ 新建</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">backend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">Notification</span><span class="p">.</span><span class="nx">java</span><span class="w">           </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">NotificationTemplate</span><span class="p">.</span><span class="nx">java</span><span class="w">   </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">repository</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">NotificationRepository</span><span class="p">.</span><span class="nx">java</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">service</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">NotificationService</span><span class="p">.</span><span class="nx">java</span><span class="w">    </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="kd">impl</span><span class="o">/</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="nx">NotificationServiceImpl</span><span class="p">.</span><span class="nx">java</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">controller</span><span class="o">/</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">NotificationController</span><span class="p">.</span><span class="nx">java</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+</code></pre></div>
+
 <h3 id="_13">前端新增/修改的文件</h3>
-<p><code>frontend/src/
-├── types/
-│   └── notification.ts             ✅ 新建
-├── api/
-│   └── notification.ts             ✅ 新建
-└── views/
-    └── NotificationView.vue        ✅ 新建</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">frontend</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">notification</span><span class="p">.</span><span class="nx">ts</span><span class="w">             </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">├──</span><span class="w"> </span><span class="kn">api</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">notification</span><span class="p">.</span><span class="nx">ts</span><span class="w">             </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">views</span><span class="o">/</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">NotificationView</span><span class="p">.</span><span class="nx">vue</span><span class="w">        </span><span class="err">✅</span><span class="w"> </span><span class="nx">新建</span>
+</code></pre></div>
+
 <hr />
 <h2 id="_14">七、扩展练习 💪</h2>
 <h3 id="_15">基础练习</h3>
@@ -1095,7 +1103,7 @@ onMounted(() => {
     <!-- 返回顶部按钮 -->
     <a href="#" class="back-to-top" id="backToTop">↑</a>
     
-    <!-- Prism.js -->
+    <!-- Prism.js 代码高亮 -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
@@ -1124,8 +1132,9 @@ onMounted(() => {
         
         // 当前页面高亮
         const currentPage = window.location.pathname.split('/').pop();
-        document.querySelectorAll('.nav-container a').forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
                 link.classList.add('active');
             }
         });
