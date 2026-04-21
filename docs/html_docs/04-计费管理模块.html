@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04 计费管理模块</title>
+    
+    <!-- Prism.js 代码高亮 -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+    
+    <!-- GitHub Markdown CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+        
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 45px;
+        }
+        
+        @media (max-width: 768px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+        
+        /* 代码块样式 */
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        pre[class*="language-"] {
+            margin: 1em 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* 导航样式 */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-container h3 {
+            margin: 0 0 20px 0;
+            padding: 0 20px;
+            font-size: 16px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .nav-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-container li {
+            margin: 0;
+        }
+        
+        .nav-container a {
+            display: block;
+            padding: 10px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-container a:hover {
+            background: #333;
+            color: #fff;
+        }
+        
+        .nav-container a.active {
+            background: #0366d6;
+            color: #fff;
+        }
+        
+        .content-wrapper {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0366d6;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            text-align: center;
+            line-height: 50px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+        }
+        
+        .back-to-top:hover {
+            background: #0255b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav-container">
+        <h3>📚 教学文档</h3>
+        <ul>
+            <li><a href="index.html">🏠 首页</a></li>
+            <li><a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a></li>
+            <li><a href="02-设备管理模块.html">02-设备管理模块</a></li>
+            <li><a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a></li>
+            <li><a href="04-计费管理模块.html">04-计费管理模块</a></li>
+            <li><a href="05-告警管理模块.html">05-告警管理模块</a></li>
+            <li><a href="06-控制管理模块.html">06-控制管理模块</a></li>
+            <li><a href="07-宿舍管理模块.html">07-宿舍管理模块</a></li>
+            <li><a href="08-系统管理模块.html">08-系统管理模块</a></li>
+            <li><a href="09-AI 智能模块.html">09-AI 智能模块</a></li>
+            <li><a href="10-通知管理模块.html">10-通知管理模块</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content-wrapper">
+        <article class="markdown-body">
+<h1 id="04">模块 04：计费管理模块</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-4 天<br />
+<strong>难度</strong>: ⭐⭐⭐☆☆<br />
+<strong>前置知识</strong>: 模块 01、模块 03、BigDecimal 精度控制、策略模式基础</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、实现目标 ⭐</h2>
+<h3 id="_2">知识目标</h3>
+<ul>
+<li>✅ 理解电费计费业务逻辑</li>
+<li>✅ 掌握多种电价策略设计</li>
+<li>✅ 理解账单生命周期管理</li>
+<li>✅ 掌握支付流程设计</li>
+<li>✅ 理解余额管理机制</li>
+</ul>
+<h3 id="_3">能力目标</h3>
+<ul>
+<li>✅ 能够实现电费计算引擎</li>
+<li>✅ 能够设计账单管理系统</li>
+<li>✅ 能够实现支付集成</li>
+<li>✅ 能够完成余额管理</li>
+<li>✅ 能够开发数据报表功能</li>
+</ul>
+<h3 id="_4">成果目标</h3>
+<p>完成本模块后，你将拥有：
+- 📁 完整的电费计算引擎（支持峰谷、阶梯电价）
+- 📁 账单生成与管理系统
+- 📁 充值缴费功能
+- 📁 余额管理与自动充值
+- 📁 前端账单管理页面
+- 📁 用电统计报表</p>
+<hr />
+<h2 id="_5">二、需求分析与设计</h2>
+<h3 id="21">2.1 业务场景</h3>
+<p><strong>场景 1：月度账单生成</strong>
+<code>每月初定时任务 → 获取上月用电数据 → 应用电价规则 → 计算电费 → 生成账单 → 推送通知</code></p>
+<p><strong>场景 2：在线充值缴费</strong>
+<code>用户选择充值金额 → 调用支付接口 → 更新房间余额 → 自动扣缴欠费 → 记录充值流水</code></p>
+<p><strong>场景 3：电费试算</strong>
+<code>用户选择时间范围 → 获取用电数据 → 应用电价规则 → 试算电费 → 返回明细</code></p>
+<p><strong>场景 4：自动充值</strong>
+<code>定时检查余额 → 余额低于阈值 → 自动触发充值 → 更新余额 → 发送通知</code></p>
+<h3 id="22">2.2 功能需求清单</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>电费计算</td>
+<td>支持峰谷、阶梯电价</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>账单生成</td>
+<td>按月自动生成账单</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>账单查询</td>
+<td>按房间、状态、周期查询</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>在线支付</td>
+<td>支持多种支付方式</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>充值管理</td>
+<td>在线充值、记录查询</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>余额管理</td>
+<td>余额查询、预警</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>自动充值</td>
+<td>余额不足自动充值</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>账单导出</td>
+<td>导出 PDF/Excel</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 技术选型与理由</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BigDecimal</strong></td>
+<td>精确金额计算</td>
+<td>-</td>
+<td>✅ <strong>精确计算</strong>：避免浮点数精度丢失问题<br>✅ <strong>多种舍入模式</strong>：支持 8 种舍入模式（HALF_UP 等）<br>✅ <strong>金融标准</strong>：金融行业强制使用<br>⚠️ <strong>注意</strong>：实际项目使用 double，建议改为 BigDecimal<br>✅ <strong>最佳实践</strong>：金额字段必须使用 BigDecimal，数据库用 DECIMAL 类型</td>
+</tr>
+<tr>
+<td><strong>Spring Scheduler</strong></td>
+<td>定时任务</td>
+<td>3.2.x</td>
+<td>✅ <strong>月度账单</strong>：每月初自动生成上月账单<br>✅ <strong>余额检查</strong>：定期检查房间余额，触发预警<br>✅ <strong>简单配置</strong>：@Scheduled(cron = "0 0 0 1 * ?")</td>
+</tr>
+<tr>
+<td><strong>Strategy Pattern</strong></td>
+<td>电价策略模式</td>
+<td>-</td>
+<td>✅ <strong>解耦算法</strong>：电价算法与业务逻辑分离<br>✅ <strong>易扩展</strong>：新增电价策略无需修改现有代码<br>✅ <strong>符合开闭原则</strong>：对扩展开放，对修改关闭</td>
+</tr>
+<tr>
+<td><strong>iText</strong></td>
+<td>PDF 生成</td>
+<td>7.x</td>
+<td>✅ <strong>账单导出</strong>：生成 PDF 格式账单<br>✅ <strong>模板支持</strong>：支持 HTML/CSS 模板<br>⚠️ <strong>替代方案</strong>：实际项目使用 EasyExcel 导出 Excel</td>
+</tr>
+<tr>
+<td><strong>EasyExcel</strong></td>
+<td>Excel 导出</td>
+<td>3.x</td>
+<td>✅ <strong>性能优秀</strong>：流式处理，避免 OOM<br>✅ <strong>阿里开源</strong>：经过大规模生产验证<br>✅ <strong>注解驱动</strong>：@ExcelProperty 简化配置</td>
+</tr>
+</tbody>
+</table>
+<p><strong>技术对比与取舍</strong>：
+- <strong>BigDecimal vs double</strong>：教学演示用 double 简化代码，实际项目必须用 BigDecimal
+- <strong>定时任务 vs 消息队列</strong>：简单场景用定时任务，复杂场景用消息队列延迟处理
+- <strong>PDF vs Excel</strong>：PDF 适合打印，Excel 适合数据分析，根据场景选择</p>
+<hr />
+<h2 id="_6">三、后端实现（分步骤）</h2>
+<h3 id="1">步骤 1：实体类设计</h3>
+<h4 id="11-electricitybill">1.1 创建 ElectricityBill 实体</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/ElectricityBill.java</code></p>
+<p>```java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "electricity_bill", indexes = {
+    @Index(name = "idx_bill_room_period", columnList = "roomId, billingPeriod"),
+    @Index(name = "idx_bill_status", columnList = "status")
+})
+public class ElectricityBill {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">billNumber</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">账单编号</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">billingPeriod</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">计费周期</span><span class="err">，</span><span class="n">如</span><span class="w"> </span><span class="mi">2024</span><span class="o">-</span><span class="mi">01</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">electricityAmount</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">用电量</span><span class="err">（</span><span class="n">kWh</span><span class="err">）</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">unitPrice</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">单价</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">totalAmount</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">总金额</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">paidAmount</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">已付金额</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">remainingAmount</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">剩余金额</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BillStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BillStatus</span><span class="p">.</span><span class="n">UNPAID</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">dueDate</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">截止日期</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">paidAt</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">支付时间</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">PaymentMethod</span><span class="w"> </span><span class="n">paymentMethod</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">支付方式</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">paidBy</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">支付人</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+
+<span class="nv">@PreUpdate</span>
+<span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum BillStatus {
+    UNPAID, PAID, OVERDUE, CANCELLED
+}</p>
+<p>enum PaymentMethod {
+    BALANCE, ALIPAY, WECHAT, BANK_TRANSFER
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 ElectricityBill.java 文件
+- [ ] 理解索引设计目的
+- [ ] 理解金额字段使用 BigDecimal
+- [ ] 运行项目，查看数据库表结构</p>
+<h4 id="12-electricitypricerule">1.2 创建 ElectricityPriceRule 实体</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/ElectricityPriceRule.java</code></p>
+<p>```java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "electricity_price_rule")
+public class ElectricityPriceRule {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ruleName</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">PriceRuleType</span><span class="w"> </span><span class="n">ruleType</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">unitPrice</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">基础单价</span>
+
+<span class="n">private</span><span class="w"> </span><span class="k">LocalTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">生效时间</span><span class="err">（</span><span class="n">峰谷电价用</span><span class="err">）</span>
+<span class="n">private</span><span class="w"> </span><span class="k">LocalTime</span><span class="w"> </span><span class="n">endTime</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">结束时间</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">tierThreshold</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">阶梯阈值</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">tierPrice</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">阶梯价格</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">effectiveDate</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">生效日期</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">expiryDate</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">失效日期</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum PriceRuleType {
+    FLAT, // 平价
+    TIME_OF_USE, // 峰谷
+    TIERED // 阶梯
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 ElectricityPriceRule.java
+- [ ] 理解枚举类型使用
+- [ ] 理解不同电价类型的字段设计</p>
+<h4 id="13-roombalance-rechargerecord">1.3 创建 RoomBalance 和 RechargeRecord 实体</h4>
+<p><strong>文件位置</strong>: 
+- <code>backend/src/main/java/com/dormpower/model/RoomBalance.java</code>
+- <code>backend/src/main/java/com/dormpower/model/RechargeRecord.java</code></p>
+<p>```java
+// RoomBalance.java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "room_balance", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "room_id")
+})
+public class RoomBalance {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">ZERO</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">totalRecharge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">ZERO</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">totalConsumption</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">ZERO</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">lastRechargeAt</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">lastConsumptionAt</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">warningThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">TEN</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">autoRechargeEnabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">autoRechargeAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+
+<span class="nv">@PreUpdate</span>
+<span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p>```java
+// RechargeRecord.java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "recharge_record")
+public class RechargeRecord {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;user_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">amount</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">PaymentMethod</span><span class="w"> </span><span class="n">paymentMethod</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">transactionId</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">RechargeStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RechargeStatus</span><span class="p">.</span><span class="n">PENDING</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">paidAt</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">支付成功时间</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">remark</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">errorMessage</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum RechargeStatus {
+    PENDING, SUCCESS, FAILED
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 RoomBalance.java 和 RechargeRecord.java
+- [ ] 理解@UniqueConstraint 用法
+- [ ] 理解余额账户设计思路</p>
+<hr />
+<h3 id="2repository">步骤 2：Repository 层</h3>
+<h4 id="21-electricitybillrepository">2.1 创建 ElectricityBillRepository</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/ElectricityBillRepository.java</code></p>
+<p>```java
+package com.dormpower.repository;</p>
+<p>import com.dormpower.model.ElectricityBill;
+import com.dormpower.model.BillStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;</p>
+<p>import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;</p>
+<p>@Repository
+public interface ElectricityBillRepository extends JpaRepository<ElectricityBill, UUID> {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Optional</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByRoomIdAndBillingPeriod</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">billingPeriod</span><span class="p">);</span>
+
+<span class="n">Page</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByRoomIdAndStatus</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">BillStatus</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+
+<span class="n">Page</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByRoomId</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+
+<span class="n">List</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findByStatusAndDueDateBefore</span><span class="p">(</span><span class="n">BillStatus</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDate</span><span class="w"> </span><span class="n">dueDate</span><span class="p">);</span>
+
+<span class="nv">@Query</span><span class="p">(</span><span class="ss">&quot;SELECT SUM(eb.totalAmount) FROM ElectricityBill eb WHERE eb.roomId = :roomId AND eb.status = &#39;PAID&#39; AND eb.billingPeriod = :period&quot;</span><span class="p">)</span>
+<span class="n">Optional</span><span class="o">&lt;</span><span class="k">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findTotalPaidByRoomAndPeriod</span><span class="p">(</span><span class="nv">@Param</span><span class="p">(</span><span class="ss">&quot;roomId&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="nv">@Param</span><span class="p">(</span><span class="ss">&quot;period&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 ElectricityBillRepository.java
+- [ ] 理解 Spring Data JPA 查询方法
+- [ ] 测试 Repository 方法</p>
+<hr />
+<h3 id="3service">步骤 3：Service 层</h3>
+<h4 id="31-billingservice">3.1 创建 BillingService</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/BillingService.java</code></p>
+<p>```java
+package com.dormpower.service;</p>
+<p>import com.dormpower.dto.BillingRequest;
+import com.dormpower.dto.BillingResult;
+import com.dormpower.model.ElectricityBill;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;</p>
+<p>import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>public interface BillingService {</p>
+<div class="codehilite"><pre><span></span><code>ElectricityBill generateBill(BillingRequest request);
+
+Page&lt;ElectricityBill&gt; getBills(UUID roomId, String period, Pageable pageable);
+
+ElectricityBill payBill(UUID billId, UUID userId, String paymentMethod);
+
+BillingResult calculateElectricity(UUID roomId, LocalDateTime startTime, LocalDateTime endTime);
+
+void batchGenerateBills(String billingPeriod, UUID buildingId);
+</code></pre></div>
+
+<p>}
+```</p>
+<h4 id="32-billingserviceimpl">3.2 创建 BillingServiceImpl</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/BillingServiceImpl.java</code></p>
+<p>```java
+package com.dormpower.service.impl;</p>
+<p>import com.dormpower.dto.BillingRequest;
+import com.dormpower.dto.BillingResult;
+import com.dormpower.model.ElectricityBill;
+import com.dormpower.model.BillStatus;
+import com.dormpower.repository.ElectricityBillRepository;
+import com.dormpower.service.BillingService;
+import com.dormpower.service.TelemetryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;</p>
+<p>import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;</p>
+<p>@Service
+@RequiredArgsConstructor
+public class BillingServiceImpl implements BillingService {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">ElectricityBillRepository</span><span class="w"> </span><span class="n">billRepository</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">TelemetryService</span><span class="w"> </span><span class="n">telemetryService</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">DateTimeFormatter</span><span class="w"> </span><span class="n">FORMATTER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormatter</span><span class="p">.</span><span class="n">ofPattern</span><span class="p">(</span><span class="ss">&quot;yyyy-MM&quot;</span><span class="p">);</span>
+
+<span class="nv">@Override</span>
+<span class="nv">@Transactional</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ElectricityBill</span><span class="w"> </span><span class="n">generateBill</span><span class="p">(</span><span class="n">BillingRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">检查是否已存在账单</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">getBillingPeriod</span><span class="p">();</span>
+<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">getRoomId</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">request</span><span class="p">.</span><span class="n">isForceRegenerate</span><span class="p">())</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">billRepository</span><span class="p">.</span><span class="n">findByRoomIdAndBillingPeriod</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">).</span><span class="n">isPresent</span><span class="p">())</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;账单已存在&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">计算电费</span>
+<span class="w">    </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDate</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">period</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="ss">&quot;-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DateTimeFormatter</span><span class="p">.</span><span class="n">ofPattern</span><span class="p">(</span><span class="ss">&quot;yyyy-MM-dd&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">atStartOfDay</span><span class="p">();</span>
+<span class="w">    </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">startTime</span><span class="p">.</span><span class="n">plusMonths</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">minusSeconds</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">BillingResult</span><span class="w"> </span><span class="k">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calculateElectricity</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span><span class="w"> </span><span class="n">endTime</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">生成账单</span>
+<span class="w">    </span><span class="n">ElectricityBill</span><span class="w"> </span><span class="n">bill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ElectricityBill</span><span class="p">();</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setBillNumber</span><span class="p">(</span><span class="ss">&quot;BILL-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="ss">&quot;-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">().</span><span class="n">toString</span><span class="p">().</span><span class="nf">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">).</span><span class="n">toUpperCase</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setRoomId</span><span class="p">(</span><span class="n">roomId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setBillingPeriod</span><span class="p">(</span><span class="n">period</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setElectricityAmount</span><span class="p">(</span><span class="k">result</span><span class="p">.</span><span class="n">getElectricityAmount</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setUnitPrice</span><span class="p">(</span><span class="k">result</span><span class="p">.</span><span class="n">getUnitPrice</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setTotalAmount</span><span class="p">(</span><span class="k">result</span><span class="p">.</span><span class="n">getTotalAmount</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setRemainingAmount</span><span class="p">(</span><span class="k">result</span><span class="p">.</span><span class="n">getTotalAmount</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">BillStatus</span><span class="p">.</span><span class="n">UNPAID</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setDueDate</span><span class="p">(</span><span class="n">LocalDate</span><span class="p">.</span><span class="n">now</span><span class="p">().</span><span class="n">plusDays</span><span class="p">(</span><span class="mi">15</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">billRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">bill</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getBills</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">billRepository</span><span class="p">.</span><span class="n">findByRoomId</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="nv">@Transactional</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ElectricityBill</span><span class="w"> </span><span class="n">payBill</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">billId</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">paymentMethod</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">ElectricityBill</span><span class="w"> </span><span class="n">bill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">billRepository</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">billId</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;账单不存在&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bill</span><span class="p">.</span><span class="n">getStatus</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">BillStatus</span><span class="p">.</span><span class="n">PAID</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;账单已支付&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">更新账单状态</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">BillStatus</span><span class="p">.</span><span class="n">PAID</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setPaidAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setPaidBy</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setPaymentMethod</span><span class="p">(</span><span class="n">Enum</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">PaymentMethod</span><span class="p">.</span><span class="k">class</span><span class="p">,</span><span class="w"> </span><span class="n">paymentMethod</span><span class="p">));</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setPaidAmount</span><span class="p">(</span><span class="n">bill</span><span class="p">.</span><span class="n">getRemainingAmount</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setRemainingAmount</span><span class="p">(</span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">ZERO</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">billRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">bill</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">BillingResult</span><span class="w"> </span><span class="n">calculateElectricity</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现电费计算逻辑</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">获取用电数据</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">应用电价规则</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">计算总电费</span>
+<span class="w">    </span><span class="n">BillingResult</span><span class="w"> </span><span class="k">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BillingResult</span><span class="p">();</span>
+<span class="w">    </span><span class="k">result</span><span class="p">.</span><span class="n">setElectricityAmount</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+<span class="w">    </span><span class="k">result</span><span class="p">.</span><span class="n">setUnitPrice</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="mf">0.5</span><span class="p">));</span>
+<span class="w">    </span><span class="k">result</span><span class="p">.</span><span class="n">setTotalAmount</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="mi">50</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="nv">@Transactional</span>
+<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">batchGenerateBills</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">billingPeriod</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">buildingId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现批量生成账单逻辑</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">获取楼栋所有房间</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">逐个生成账单</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">记录生成结果</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 BillingService 接口
+- [ ] 创建 BillingServiceImpl 实现类
+- [ ] 理解@Transactional 注解作用
+- [ ] 理解账单生成流程</p>
+<hr />
+<h3 id="4controller">步骤 4：Controller 层</h3>
+<h4 id="41-billingcontroller">4.1 创建 BillingController</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/BillingController.java</code></p>
+<p>```java
+package com.dormpower.controller;</p>
+<p>import com.dormpower.dto.BillingRequest;
+import com.dormpower.dto.BillingResult;
+import com.dormpower.model.ElectricityBill;
+import com.dormpower.service.BillingService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;</p>
+<p>import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@RestController
+@RequestMapping("/api/bills")
+@RequiredArgsConstructor
+public class BillingController {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">BillingService</span><span class="w"> </span><span class="n">billingService</span><span class="p">;</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/generate&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;bill:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">generateBill</span><span class="p">(</span><span class="nv">@RequestBody</span><span class="w"> </span><span class="n">BillingRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">billingService</span><span class="p">.</span><span class="n">generateBill</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@GetMapping</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;bill:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getBills</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">period</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span>
+<span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">billingService</span><span class="p">.</span><span class="n">getBills</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/{id}/pay&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;bill:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">ElectricityBill</span><span class="o">&gt;</span><span class="w"> </span><span class="n">payBill</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">paymentMethod</span>
+<span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">billingService</span><span class="p">.</span><span class="n">payBill</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">paymentMethod</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/calculate&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;bill:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">BillingResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">calculateElectricity</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="nv">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="n">ISO</span><span class="p">.</span><span class="n">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="nv">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="n">ISO</span><span class="p">.</span><span class="n">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span>
+<span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">billingService</span><span class="p">.</span><span class="n">calculateElectricity</span><span class="p">(</span><span class="n">roomId</span><span class="p">,</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span><span class="w"> </span><span class="n">endTime</span><span class="p">));</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 BillingController.java
+- [ ] 理解 RESTful API 设计
+- [ ] 使用 Postman 测试接口</p>
+<hr />
+<h2 id="_7">四、单元测试</h2>
+<h3 id="41">4.1 测试类设计</h3>
+<p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/BillingControllerTest.java</code></p>
+<p>```java
+package com.dormpower.controller;</p>
+<p>import com.dormpower.dto.BillingRequest;
+import com.dormpower.model.ElectricityBill;
+import com.dormpower.model.BillStatus;
+import com.dormpower.service.BillingService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;</p>
+<p>import java.math.BigDecimal;
+import java.util.UUID;</p>
+<p>import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.<em>;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.</em>;</p>
+<p>@WebMvcTest(BillingController.class)
+class BillingControllerTest {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Autowired</span>
+<span class="n">private</span><span class="w"> </span><span class="n">MockMvc</span><span class="w"> </span><span class="n">mockMvc</span><span class="p">;</span>
+
+<span class="nv">@MockBean</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BillingService</span><span class="w"> </span><span class="n">billingService</span><span class="p">;</span>
+
+<span class="nv">@Autowired</span>
+<span class="n">private</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="nv">@Test</span>
+<span class="n">void</span><span class="w"> </span><span class="n">testGenerateBill_Success</span><span class="p">()</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">();</span>
+<span class="w">    </span><span class="n">BillingRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BillingRequest</span><span class="p">();</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setRoomId</span><span class="p">(</span><span class="n">roomId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setBillingPeriod</span><span class="p">(</span><span class="ss">&quot;2024-01&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setForceRegenerate</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ElectricityBill</span><span class="w"> </span><span class="n">bill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ElectricityBill</span><span class="p">();</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setBillNumber</span><span class="p">(</span><span class="ss">&quot;BILL-202401-001&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setTotalAmount</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">(</span><span class="ss">&quot;50.00&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">BillStatus</span><span class="p">.</span><span class="n">UNPAID</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">billingService</span><span class="p">.</span><span class="n">generateBill</span><span class="p">(</span><span class="ow">any</span><span class="p">(</span><span class="n">BillingRequest</span><span class="p">.</span><span class="k">class</span><span class="p">))).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">bill</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">mockMvc</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="ss">&quot;/api/bills/generate&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="n">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="n">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="n">isOk</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.billNumber&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="ss">&quot;BILL-202401-001&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.totalAmount&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="mf">50.00</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@Test</span>
+<span class="n">void</span><span class="w"> </span><span class="n">testPayBill_Success</span><span class="p">()</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">billId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">();</span>
+<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">ElectricityBill</span><span class="w"> </span><span class="n">bill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ElectricityBill</span><span class="p">();</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="n">billId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bill</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">BillStatus</span><span class="p">.</span><span class="n">PAID</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">billingService</span><span class="p">.</span><span class="n">payBill</span><span class="p">(</span><span class="n">billId</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;BALANCE&quot;</span><span class="p">)).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">bill</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">mockMvc</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="ss">&quot;/api/bills/{id}/pay&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">billId</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">param</span><span class="p">(</span><span class="ss">&quot;userId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">.</span><span class="n">toString</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="n">param</span><span class="p">(</span><span class="ss">&quot;paymentMethod&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;BALANCE&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="n">isOk</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.status&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="ss">&quot;PAID&quot;</span><span class="p">));</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 BillingControllerTest.java
+- [ ] 理解 MockMvc 测试方法
+- [ ] 运行测试：<code>mvn test -Dtest=BillingControllerTest</code></p>
+<hr />
+<h2 id="_8">五、前端实现（分步骤）</h2>
+<h3 id="1_1">步骤 1：类型定义</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/types/billing.ts</code></p>
+<p>```typescript
+export interface ElectricityBill {
+  id: string;
+  billNumber: string;
+  roomId: string;
+  billingPeriod: string;
+  electricityAmount: number;
+  unitPrice: number;
+  totalAmount: number;
+  paidAmount?: number;
+  remainingAmount?: number;
+  status: 'UNPAID' | 'PAID' | 'OVERDUE' | 'CANCELLED';
+  dueDate?: string;
+  paidAt?: string;
+  paymentMethod?: 'BALANCE' | 'ALIPAY' | 'WECHAT' | 'BANK_TRANSFER';
+  createdAt: string;
+}</p>
+<p>export interface BillingRequest {
+  roomId: string;
+  billingPeriod: string;
+  forceRegenerate: boolean;
+}</p>
+<p>export interface BillingResult {
+  electricityAmount: number;
+  unitPrice: number;
+  totalAmount: number;
+  breakdown?: {
+    peakAmount?: number;
+    valleyAmount?: number;
+    peakCost?: number;
+    valleyCost?: number;
+  };
+}</p>
+<p>export interface RoomBalance {
+  roomId: string;
+  balance: number;
+  totalRecharge: number;
+  totalConsumption: number;
+  lastRechargeAt?: string;
+  lastConsumptionAt?: string;
+  warningThreshold?: number;
+  autoRechargeEnabled?: boolean;
+  autoRechargeAmount?: number;
+}</p>
+<p>export interface RechargeRecord {
+  id: string;
+  roomId: string;
+  userId: string;
+  amount: number;
+  paymentMethod: string;
+  transactionId?: string;
+  status: 'PENDING' | 'SUCCESS' | 'FAILED';
+  paidAt?: string;
+  remark?: string;
+  createdAt: string;
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 billing.ts 文件
+- [ ] 理解 TypeScript 接口定义</p>
+<hr />
+<h3 id="2api">步骤 2：API 封装</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/api/billing.ts</code></p>
+<p>```typescript
+import axios from 'axios';
+import type { ElectricityBill, BillingRequest, BillingResult, RoomBalance, RechargeRecord } from '@/types/billing';</p>
+<p>const API_BASE = '/api/bills';</p>
+<p>export const billingApi = {
+  // 生成账单
+  async generateBill(request: BillingRequest): Promise<ElectricityBill> {
+    const response = await axios.post(API_BASE + '/generate', request);
+    return response.data;
+  },</p>
+<p>// 获取账单列表
+  async getBills(roomId: string, period?: string, page = 0, size = 20) {
+    const response = await axios.get(API_BASE, {
+      params: { roomId, period, page, size }
+    });
+    return response.data;
+  },</p>
+<p>// 支付账单
+  async payBill(billId: string, userId: string, paymentMethod: string): Promise<ElectricityBill> {
+    const response = await axios.post(<code>${API_BASE}/${billId}/pay</code>, null, {
+      params: { userId, paymentMethod }
+    });
+    return response.data;
+  },</p>
+<p>// 试算电费
+  async calculateElectricity(
+    roomId: string,
+    startTime: string,
+    endTime: string
+  ): Promise<BillingResult> {
+    const response = await axios.get(<code>${API_BASE}/calculate</code>, {
+      params: { roomId, startTime, endTime }
+    });
+    return response.data;
+  }
+};</p>
+<p>// 余额管理 API
+const BALANCE_API_BASE = '/api/rooms';</p>
+<p>export const balanceApi = {
+  // 获取房间余额
+  async getBalance(roomId: string): Promise<RoomBalance> {
+    const response = await axios.get(<code>${BALANCE_API_BASE}/${roomId}/balance</code>);
+    return response.data;
+  },</p>
+<p>// 充值
+  async recharge(roomId: string, amount: number, paymentMethod: string, remark?: string) {
+    const response = await axios.post(<code>${BALANCE_API_BASE}/${roomId}/recharge</code>, {
+      amount,
+      paymentMethod,
+      remark
+    });
+    return response.data;
+  },</p>
+<p>// 获取充值记录
+  async getRechargeRecords(roomId: string, page = 0, size = 20) {
+    const response = await axios.get(<code>${BALANCE_API_BASE}/${roomId}/recharge-records</code>, {
+      params: { page, size }
+    });
+    return response.data;
+  }
+};
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 billing.ts API 文件
+- [ ] 理解 Axios 封装
+- [ ] 测试 API 调用</p>
+<hr />
+<h3 id="3">步骤 3：账单管理页面</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/BillingView.vue</code></p>
+<p>```vue
+<template>
+<br />
+<div class="billing-container">
+    <el-card class="filter-card">
+      <el-form :inline="true" :model="queryForm">
+        <el-form-item label="房间">
+          <el-select v-model="queryForm.roomId" placeholder="选择房间">
+            <el-option
+              v-for="room in rooms"
+              :key="room.id"
+              :label="room.name"
+              :value="room.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="状态">
+          <el-select v-model="queryForm.status" placeholder="全部状态">
+            <el-option label="未支付" value="UNPAID" />
+            <el-option label="已支付" value="PAID" />
+            <el-option label="逾期" value="OVERDUE" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="handleQuery">查询</el-button>
+          <el-button type="success" @click="handleGenerate">生成账单</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <el-card>
+      <template #header>
+        <span>账单列表</span>
+      </template>
+      <el-table :data="bills" stripe v-loading="loading">
+        <el-table-column prop="billNumber" label="账单编号" width="180" />
+        <el-table-column prop="billingPeriod" label="计费周期" width="120" />
+        <el-table-column prop="electricityAmount" label="用电量 (kWh)" width="120" />
+        <el-table-column prop="totalAmount" label="金额 (元)" width="100" />
+        <el-table-column prop="status" label="状态" width="100">
+          <template #default="{ row }">
+            <el-tag :type="getStatusType(row.status)">
+              {{ getStatusText(row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="dueDate" label="截止日期" width="120" />
+        <el-table-column label="操作" width="150">
+          <template #default="{ row }">
+            <el-button
+              v-if="row.status === 'UNPAID'"
+              type="primary"
+              size="small"
+              @click="handlePay(row)"
+            >
+              支付
+            </el-button>
+            <el-button size="small" @click="handleViewDetail(row)">详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :total="total"
+        @current-change="handlePageChange"
+      />
+    </el-card>
+  </div></p>
+<p></template></p>
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue';
+import { billingApi } from '@/api/billing';
+import { roomApi } from '@/api/room';
+import type { ElectricityBill } from '@/types/billing';
+import { ElMessage, ElMessageBox } from 'element-plus';
+
+const rooms = ref<any[]>([]);
+const bills = ref<ElectricityBill[]>([]);
+const loading = ref(false);
+
+const queryForm = reactive({
+  roomId: '',
+  status: ''
+});
+
+const currentPage = ref(1);
+const pageSize = ref(20);
+const total = ref(0);
+
+// 加载房间列表
+const loadRooms = async () => {
+  try {
+    const response = await roomApi.getRooms();
+    rooms.value = response.content || response;
+    if (rooms.value.length > 0) {
+      queryForm.roomId = rooms.value[0].id;
+    }
+  } catch (error) {
+    console.error('Failed to load rooms:', error);
+  }
+};
+
+// 加载账单列表
+const loadBills = async () => {
+  if (!queryForm.roomId) return;
+
+  loading.value = true;
+  try {
+    const response = await billingApi.getBills(
+      queryForm.roomId,
+      undefined,
+      currentPage.value - 1,
+      pageSize.value
+    );
+
+    bills.value = response.content || [];
+    total.value = response.totalElements || 0;
+  } catch (error: any) {
+    ElMessage.error('加载账单失败：' + (error.response?.data?.message || ''));
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 查询
+const handleQuery = () => {
+  currentPage.value = 1;
+  loadBills();
+};
+
+// 生成账单
+const handleGenerate = async () => {
+  try {
+    await ElMessageBox.prompt('请输入计费周期（如 2024-01）', '生成账单', {
+      inputPattern: /^\d{4}-\d{2}$/,
+      inputErrorMessage: '格式不正确'
+    });
+
+    await billingApi.generateBill({
+      roomId: queryForm.roomId,
+      billingPeriod: '2024-01',
+      forceRegenerate: false
+    });
+
+    ElMessage.success('账单生成成功');
+    loadBills();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('生成账单失败：' + (error.response?.data?.message || ''));
+    }
+  }
+};
+
+// 支付
+const handlePay = async (bill: ElectricityBill) => {
+  try {
+    await ElMessageBox.confirm('确认支付该账单？', '支付确认');
+
+    await billingApi.payBill(bill.id, 'current-user-id', 'BALANCE');
+
+    ElMessage.success('支付成功');
+    loadBills();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('支付失败：' + (error.response?.data?.message || ''));
+    }
+  }
+};
+
+const handleViewDetail = (bill: ElectricityBill) => {
+  ElMessage.info('账单详情功能开发中...');
+};
+
+const getStatusType = (status: string) => {
+  const types: Record<string, any> = {
+    UNPAID: 'warning',
+    PAID: 'success',
+    OVERDUE: 'danger'
+  };
+  return types[status] || 'info';
+};
+
+const getStatusText = (status: string) => {
+  const texts: Record<string, string> = {
+    UNPAID: '未支付',
+    PAID: '已支付',
+    OVERDUE: '逾期'
+  };
+  return texts[status] || status;
+};
+
+onMounted(() => {
+  loadRooms();
+  loadBills();
+});
+</script>
+
+<style scoped>
+.billing-container {
+  padding: 20px;
+}
+
+.filter-card {
+  margin-bottom: 20px;
+}
+
+:deep(.el-pagination) {
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+</style>
+<p>```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 BillingView.vue
+- [ ] 理解 Vue 3 Composition API
+- [ ] 运行前端项目测试页面</p>
+<hr />
+<h2 id="_9">六、联调验证</h2>
+<h3 id="61">6.1 功能验证清单</h3>
+<h4 id="_10">后端验证</h4>
+<ul>
+<li>[ ] 启动后端服务</li>
+<li>[ ] 测试电费计算接口</li>
+<li>[ ] 测试账单生成接口</li>
+<li>[ ] 测试账单支付接口</li>
+<li>[ ] 验证电价规则正确应用</li>
+<li>[ ] 测试余额更新逻辑</li>
+</ul>
+<h4 id="_11">前端验证</h4>
+<ul>
+<li>[ ] 启动前端服务</li>
+<li>[ ] 访问账单管理页面</li>
+<li>[ ] 测试账单查询</li>
+<li>[ ] 测试账单生成</li>
+<li>[ ] 测试账单支付</li>
+<li>[ ] 验证支付状态更新</li>
+</ul>
+<h4 id="_12">性能验证</h4>
+<ul>
+<li>[ ] 测试批量生成账单（100 个房间）</li>
+<li>[ ] 验证大数据量查询性能</li>
+<li>[ ] 测试并发支付</li>
+</ul>
+<h3 id="62">6.2 常见问题与解决方案</h3>
+<h4 id="1_2">问题 1：电费计算精度问题</h4>
+<p><strong>现象</strong>: 金额计算出现精度丢失</p>
+<p><strong>解决方案</strong>:
+<code>java
+// 使用 BigDecimal，设置精度和舍入模式
+BigDecimal amount = electricity.multiply(unitPrice)
+    .setScale(2, RoundingMode.HALF_UP);</code></p>
+<h4 id="2">问题 2：余额并发更新问题</h4>
+<p><strong>现象</strong>: 同时充值导致余额不正确</p>
+<p><strong>解决方案</strong>:
+```java
+// 使用数据库行锁
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+RoomBalance findByRoomId(UUID roomId);</p>
+<p>// 或使用乐观锁
+@Version
+private Long version;
+```</p>
+<hr />
+<h2 id="_13">七、完成后的文件结构 📁</h2>
+<h3 id="_14">后端新增/修改的文件</h3>
+<p><code>backend/src/main/java/com/dormpower/
+├── model/
+│   ├── ElectricityBill.java        ✅ 新建
+│   ├── ElectricityPriceRule.java   ✅ 新建
+│   ├── RoomBalance.java            ✅ 新建
+│   └── RechargeRecord.java         ✅ 新建
+├── repository/
+│   ├── ElectricityBillRepository.java ✅ 新建
+│   ├── PriceRuleRepository.java    ✅ 新建
+│   └── RoomBalanceRepository.java  ✅ 新建
+├── service/
+│   ├── BillingService.java         ✅ 新建
+│   ├── RechargeService.java        ✅ 新建
+│   └── impl/
+│       ├── BillingServiceImpl.java ✅ 新建
+│       └── RechargeServiceImpl.java ✅ 新建
+├── controller/
+│   ├── BillingController.java      ✅ 新建
+│   └── RechargeController.java     ✅ 新建
+├── dto/
+│   ├── BillingRequest.java         ✅ 新建
+│   └── BillingResult.java          ✅ 新建
+└── scheduler/
+    └── BillingScheduler.java       ✅ 新建</code></p>
+<h3 id="_15">前端新增/修改的文件</h3>
+<p><code>frontend/src/
+├── types/
+│   └── billing.ts                  ✅ 新建
+├── api/
+│   └── billing.ts                  ✅ 新建
+├── views/
+│   ├── BillingView.vue             ✅ 新建
+│   ├── RechargeView.vue            ✅ 新建
+│   └── PriceRuleView.vue           ✅ 新建
+├── stores/
+│   └── billing.ts                  ✅ 新建
+└── components/
+    └── BillExport.vue              ✅ 新建</code></p>
+<h3 id="_16">测试文件</h3>
+<p><code>backend/src/test/java/com/dormpower/
+├── controller/
+│   └── BillingControllerTest.java  ✅ 新建
+└── service/
+    └── BillingServiceTest.java     ✅ 新建</code></p>
+<hr />
+<h2 id="_17">八、扩展练习 💪</h2>
+<h3 id="_18">基础练习</h3>
+<ol>
+<li>添加账单导出功能（Excel 格式）</li>
+<li>实现充值记录查询</li>
+<li>添加余额预警功能</li>
+<li>实现用电统计图表</li>
+</ol>
+<h3 id="_19">进阶练习</h3>
+<ol>
+<li>集成第三方支付（支付宝/微信）</li>
+<li>实现信用额度功能</li>
+<li>实现账单分期</li>
+<li>实现用电预算功能</li>
+</ol>
+<h3 id="_20">挑战练习</h3>
+<ol>
+<li>实现电费预计算和缓存</li>
+<li>实现分布式事务（Seata）</li>
+<li>实现智能电费分析</li>
+<li>实现节能建议生成</li>
+</ol>
+<hr />
+<h2 id="_21">九、知识点总结 📝</h2>
+<h3 id="_22">核心知识点</h3>
+<h4 id="_23">后端</h4>
+<ol>
+<li><strong>BigDecimal 精度控制</strong></li>
+<li>金额计算</li>
+<li>精度设置</li>
+<li>
+<p>舍入模式</p>
+</li>
+<li>
+<p><strong>策略模式</strong></p>
+</li>
+<li>电价策略</li>
+<li>
+<p>计费引擎</p>
+</li>
+<li>
+<p><strong>定时任务</strong></p>
+</li>
+<li>月度账单生成</li>
+<li>
+<p>余额检查</p>
+</li>
+<li>
+<p><strong>事务管理</strong></p>
+</li>
+<li>支付事务</li>
+<li>充值事务</li>
+</ol>
+<h4 id="_24">前端</h4>
+<ol>
+<li><strong>表单验证</strong></li>
+<li>金额验证</li>
+<li>
+<p>周期格式</p>
+</li>
+<li>
+<p><strong>状态管理</strong></p>
+</li>
+<li>账单数据缓存</li>
+<li>
+<p>支付状态</p>
+</li>
+<li>
+<p><strong>图表展示</strong></p>
+</li>
+<li>用电统计</li>
+<li>费用趋势</li>
+</ol>
+<h3 id="_25">最佳实践</h3>
+<ol>
+<li><strong>金额计算</strong></li>
+<li>使用 BigDecimal</li>
+<li>设置合适精度</li>
+<li>
+<p>统一舍入模式</p>
+</li>
+<li>
+<p><strong>并发控制</strong></p>
+</li>
+<li>数据库锁</li>
+<li>乐观锁</li>
+<li>
+<p>分布式锁</p>
+</li>
+<li>
+<p><strong>数据安全</strong></p>
+</li>
+<li>支付安全</li>
+<li>防重复支付</li>
+<li>审计日志</li>
+</ol>
+<hr />
+<h2 id="_26">十、下一步学习</h2>
+<p>完成本模块后，建议继续学习：</p>
+<ol>
+<li><strong><a href="./05-告警管理模块.md">05-告警管理模块</a></strong> - 学习告警规则设计</li>
+<li><strong><a href="./06-控制管理模块.md">06-控制管理模块</a></strong> - 学习设备远程控制</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-21<br />
+<strong>作者</strong>: 教学文档编写组<br />
+<strong>状态</strong>: ✅ 已完成</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav-container a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

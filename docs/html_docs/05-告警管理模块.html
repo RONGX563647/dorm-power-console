@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05 告警管理模块</title>
+    
+    <!-- Prism.js 代码高亮 -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+    
+    <!-- GitHub Markdown CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+        
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 45px;
+        }
+        
+        @media (max-width: 768px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+        
+        /* 代码块样式 */
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        pre[class*="language-"] {
+            margin: 1em 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* 导航样式 */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-container h3 {
+            margin: 0 0 20px 0;
+            padding: 0 20px;
+            font-size: 16px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .nav-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-container li {
+            margin: 0;
+        }
+        
+        .nav-container a {
+            display: block;
+            padding: 10px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-container a:hover {
+            background: #333;
+            color: #fff;
+        }
+        
+        .nav-container a.active {
+            background: #0366d6;
+            color: #fff;
+        }
+        
+        .content-wrapper {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0366d6;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            text-align: center;
+            line-height: 50px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+        }
+        
+        .back-to-top:hover {
+            background: #0255b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav-container">
+        <h3>📚 教学文档</h3>
+        <ul>
+            <li><a href="index.html">🏠 首页</a></li>
+            <li><a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a></li>
+            <li><a href="02-设备管理模块.html">02-设备管理模块</a></li>
+            <li><a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a></li>
+            <li><a href="04-计费管理模块.html">04-计费管理模块</a></li>
+            <li><a href="05-告警管理模块.html">05-告警管理模块</a></li>
+            <li><a href="06-控制管理模块.html">06-控制管理模块</a></li>
+            <li><a href="07-宿舍管理模块.html">07-宿舍管理模块</a></li>
+            <li><a href="08-系统管理模块.html">08-系统管理模块</a></li>
+            <li><a href="09-AI 智能模块.html">09-AI 智能模块</a></li>
+            <li><a href="10-通知管理模块.html">10-通知管理模块</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content-wrapper">
+        <article class="markdown-body">
+<h1 id="05">模块 05：告警管理模块</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-4 天<br />
+<strong>难度</strong>: ⭐⭐⭐☆☆<br />
+<strong>前置知识</strong>: 模块 01、模块 03、规则引擎基础、通知机制</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、实现目标 ⭐</h2>
+<h3 id="_2">知识目标</h3>
+<ul>
+<li>✅ 理解告警管理系统架构</li>
+<li>✅ 掌握规则引擎设计</li>
+<li>✅ 理解告警生命周期管理</li>
+<li>✅ 掌握告警分级分类</li>
+<li>✅ 理解告警闭环管理流程</li>
+</ul>
+<h3 id="_3">能力目标</h3>
+<ul>
+<li>✅ 能够设计告警规则引擎</li>
+<li>✅ 能够实现告警自动触发</li>
+<li>✅ 能够完成告警通知集成</li>
+<li>✅ 能够实现告警工单管理</li>
+<li>✅ 能够开发告警统计报表</li>
+</ul>
+<h3 id="_4">成果目标</h3>
+<p>完成本模块后，你将拥有：
+- 📁 完整的告警规则配置系统
+- 📁 实时告警检测与触发
+- 📁 告警通知多渠道推送
+- 📁 告警工单处理流程
+- 📁 前端告警管理页面
+- 📁 告警统计与分析报表</p>
+<hr />
+<h2 id="_5">二、需求分析与设计</h2>
+<h3 id="21">2.1 业务场景</h3>
+<p><strong>场景 1：设备过载告警</strong>
+<code>设备上报电流数据 → 规则引擎检测 → 超过阈值 → 触发告警 → 推送通知 → 生成工单 → 处理闭环</code></p>
+<p><strong>场景 2：欠费告警</strong>
+<code>房间余额检查 → 低于阈值 → 触发告警 → 发送账单提醒 → 用户充值 → 告警消除</code></p>
+<p><strong>场景 3：设备离线告警</strong>
+<code>设备心跳检测 → 超时未上报 → 判定离线 → 触发告警 → 通知管理员 → 维修处理</code></p>
+<p><strong>场景 4：用电异常告警</strong>
+<code>采集用电数据 → AI 异常检测 → 发现异常模式 → 触发告警 → 安全预警</code></p>
+<h3 id="22">2.2 功能需求清单</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>告警规则配置</td>
+<td>支持阈值、规则表达式</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>实时告警检测</td>
+<td>流式数据检测</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>告警通知</td>
+<td>多渠道推送</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>告警工单</td>
+<td>工单流转处理</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>告警统计</td>
+<td>报表与趋势分析</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>告警升级</td>
+<td>超时未处理升级</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>告警抑制</td>
+<td>避免告警风暴</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>告警关联</td>
+<td>关联告警分析</td>
+<td>P3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 技术选型与理由</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Drools</strong></td>
+<td>规则引擎</td>
+<td>8.x</td>
+<td>✅ <strong>规则与代码分离</strong>：业务规则配置化，无需修改代码<br>✅ <strong>灵活表达</strong>：DRL 语言支持复杂规则表达<br>✅ <strong>性能优秀</strong>：Rete 算法高效匹配规则<br>⚠️ <strong>学习曲线</strong>：需要学习 DRL 语法，教学场景简化实现</td>
+</tr>
+<tr>
+<td><strong>Spring Event</strong></td>
+<td>事件驱动机制</td>
+<td>3.2.x</td>
+<td>✅ <strong>解耦组件</strong>：告警触发与处理解耦<br>✅ <strong>异步处理</strong>：支持@EventListener 异步监听<br>✅ <strong>内置支持</strong>：Spring 框架自带，无需额外依赖</td>
+</tr>
+<tr>
+<td><strong>WebSocket</strong></td>
+<td>实时推送</td>
+<td>-</td>
+<td>✅ <strong>实时通知</strong>：告警产生立即推送到前端<br>✅ <strong>多端推送</strong>：支持多个客户端同时接收<br>✅ <strong>双向通信</strong>：前端可发送告警确认/处理指令</td>
+</tr>
+<tr>
+<td><strong>ECharts</strong></td>
+<td>统计图表</td>
+<td>5.x</td>
+<td>✅ <strong>告警趋势</strong>：折线图展示告警趋势<br>✅ <strong>告警分布</strong>：饼图展示告警类型分布<br>✅ <strong>实时监控</strong>：动态刷新告警数据</td>
+</tr>
+</tbody>
+</table>
+<p><strong>技术对比与取舍</strong>：
+- <strong>规则引擎 vs if-else</strong>：简单场景用 if-else，复杂业务用规则引擎便于维护
+- <strong>轮询 vs WebSocket</strong>：选择 WebSocket 因为告警需要实时推送，轮询延迟高
+- <strong>数据库 vs 时序库</strong>：教学用数据库简化，生产环境考虑 InfluxDB 存储告警数据</p>
+<hr />
+<h2 id="_6">三、后端实现（分步骤）</h2>
+<h3 id="1">步骤 1：实体类设计</h3>
+<h4 id="11-alarmrule">1.1 创建 AlarmRule 实体</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AlarmRule.java</code></p>
+<p>```java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "alarm_rule")
+public class AlarmRule {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ruleName</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AlarmType</span><span class="w"> </span><span class="n">alarmType</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AlarmSeverity</span><span class="w"> </span><span class="n">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AlarmSeverity</span><span class="p">.</span><span class="n">WARNING</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ruleExpression</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">规则表达式</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">threshold</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">阈值</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">metricName</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">指标名称</span>
+
+<span class="n">private</span><span class="w"> </span><span class="k">Integer</span><span class="w"> </span><span class="n">durationSeconds</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">持续时间</span><span class="err">（</span><span class="n">秒</span><span class="err">）</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">notificationTemplate</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">通知模板</span>
+
+<span class="nv">@ElementCollection</span>
+<span class="nv">@CollectionTable</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;alarm_rule_recipients&quot;</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;recipient&quot;</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">recipients</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">通知接收人</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+
+<span class="nv">@PreUpdate</span>
+<span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onUpdate</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum AlarmType {
+    OVERLOAD,        // 过载
+    UNDER_VOLTAGE,   // 欠压
+    OVER_VOLTAGE,    // 过压
+    OVER_CURRENT,    // 过流
+    OVER_USE,        // 超量用电
+    DEVICE_OFFLINE,  // 设备离线
+    LOW_BALANCE,     // 余额不足
+    TEMPERATURE,     // 温度异常
+    CUSTOM           // 自定义
+}</p>
+<p>enum AlarmSeverity {
+    INFO,        // 提示
+    WARNING,     // 警告
+    CRITICAL,    // 严重
+    EMERGENCY    // 紧急
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmRule.java 文件
+- [ ] 理解告警类型和级别划分
+- [ ] 理解规则表达式设计
+- [ ] 运行项目，查看数据库表结构</p>
+<h4 id="12-alarmrecord">1.2 创建 AlarmRecord 实体</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/AlarmRecord.java</code></p>
+<p>```java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "alarm_record", indexes = {
+    @Index(name = "idx_alarm_device_time", columnList = "deviceId, createdAt"),
+    @Index(name = "idx_alarm_status", columnList = "status")
+})
+public class AlarmRecord {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">alarmNumber</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">告警编号</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;rule_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">ruleId</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AlarmType</span><span class="w"> </span><span class="n">alarmType</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AlarmSeverity</span><span class="w"> </span><span class="n">severity</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;device_id&quot;</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">deviceId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;room_id&quot;</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">roomId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">alarmMessage</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">告警内容</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">alarmValue</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">告警值</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AlarmStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AlarmStatus</span><span class="p">.</span><span class="n">ACTIVE</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">occurredAt</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">发生时间</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">acknowledgedAt</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">确认时间</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">resolvedAt</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">解决时间</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;acknowledged_by&quot;</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">acknowledgedBy</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">确认人</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;resolved_by&quot;</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">resolvedBy</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">解决人</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">resolutionNote</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">解决备注</span>
+
+<span class="n">private</span><span class="w"> </span><span class="k">Integer</span><span class="w"> </span><span class="n">escalateLevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">升级级别</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">notificationChannels</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">通知渠道</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+
+<span class="nv">@PrePersist</span>
+<span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onCreate</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">alarmNumber</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">alarmNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;ALM-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">().</span><span class="nf">format</span><span class="p">(</span>
+<span class="w">            </span><span class="n">java</span><span class="p">.</span><span class="nc">time</span><span class="p">.</span><span class="nf">format</span><span class="p">.</span><span class="n">DateTimeFormatter</span><span class="p">.</span><span class="n">ofPattern</span><span class="p">(</span><span class="ss">&quot;yyyyMMddHHmmss&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+<span class="w">            </span><span class="ss">&quot;-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">().</span><span class="n">toString</span><span class="p">().</span><span class="nf">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">).</span><span class="n">toUpperCase</span><span class="p">();</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum AlarmStatus {
+    ACTIVE,        // 活动中
+    ACKNOWLEDGED,  // 已确认
+    RESOLVED,      // 已解决
+    SUPPRESSED,    // 已抑制
+    CLOSED         // 已关闭
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmRecord.java
+- [ ] 理解告警生命周期状态
+- [ ] 理解索引设计目的</p>
+<hr />
+<h3 id="2repository">步骤 2：Repository 层</h3>
+<h4 id="21-alarmrulerepository">2.1 创建 AlarmRuleRepository</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/AlarmRuleRepository.java</code></p>
+<p>```java
+package com.dormpower.repository;</p>
+<p>import com.dormpower.model.AlarmRule;
+import com.dormpower.model.AlarmType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;</p>
+<p>import java.util.List;
+import java.util.UUID;</p>
+<p>@Repository
+public interface AlarmRuleRepository extends JpaRepository<AlarmRule, UUID> {</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">List</span><span class="p">&lt;</span><span class="nx">AlarmRule</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">findByEnabledTrue</span><span class="p">();</span>
+
+<span class="nx">List</span><span class="p">&lt;</span><span class="nx">AlarmRule</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">findByAlarmTypeAndEnabledTrue</span><span class="p">(</span><span class="nx">AlarmType</span><span class="w"> </span><span class="nx">alarmType</span><span class="p">);</span>
+
+<span class="err">@</span><span class="nx">Query</span><span class="p">(</span><span class="s">&quot;SELECT ar FROM AlarmRule ar WHERE ar.enabled = true AND ar.alarmType IN :types&quot;</span><span class="p">)</span>
+<span class="nx">List</span><span class="p">&lt;</span><span class="nx">AlarmRule</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">findByAlarmTypes</span><span class="p">(</span><span class="err">@</span><span class="nx">Param</span><span class="p">(</span><span class="s">&quot;types&quot;</span><span class="p">)</span><span class="w"> </span><span class="nx">List</span><span class="p">&lt;</span><span class="nx">AlarmType</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">types</span><span class="p">);</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmRuleRepository.java
+- [ ] 理解查询方法命名
+- [ ] 测试 Repository 方法</p>
+<hr />
+<h3 id="3service">步骤 3：Service 层</h3>
+<h4 id="31-alarmservice">3.1 创建 AlarmService</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AlarmService.java</code></p>
+<p>```java
+package com.dormpower.service;</p>
+<p>import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.model.AlarmRule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;</p>
+<p>import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;</p>
+<p>public interface AlarmService {</p>
+<div class="codehilite"><pre><span></span><code>AlarmRecord triggerAlarm(AlarmTriggerRequest request);
+
+Page&lt;AlarmRecord&gt; getAlarms(UUID deviceId, String status, LocalDateTime startTime, 
+                            LocalDateTime endTime, Pageable pageable);
+
+AlarmRecord acknowledgeAlarm(UUID alarmId, UUID userId);
+
+AlarmRecord resolveAlarm(UUID alarmId, UUID userId, String note);
+
+List&lt;AlarmRule&gt; getActiveRules();
+
+void evaluateRules(String deviceId, Object metricData);
+</code></pre></div>
+
+<p>}
+```</p>
+<h4 id="32-alarmserviceimpl">3.2 创建 AlarmServiceImpl</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AlarmServiceImpl.java</code></p>
+<p>```java
+package com.dormpower.service.impl;</p>
+<p>import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.model.AlarmRule;
+import com.dormpower.model.AlarmStatus;
+import com.dormpower.repository.AlarmRecordRepository;
+import com.dormpower.repository.AlarmRuleRepository;
+import com.dormpower.service.AlarmService;
+import com.dormpower.service.NotificationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;</p>
+<p>import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;</p>
+<p>@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AlarmServiceImpl implements AlarmService {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AlarmRuleRepository</span><span class="w"> </span><span class="n">alarmRuleRepository</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AlarmRecordRepository</span><span class="w"> </span><span class="n">alarmRecordRepository</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">NotificationService</span><span class="w"> </span><span class="n">notificationService</span><span class="p">;</span>
+
+<span class="nv">@Override</span>
+<span class="nv">@Transactional</span>
+<span class="k">public</span><span class="w"> </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">triggerAlarm</span><span class="p">(</span><span class="n">AlarmTriggerRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">alarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AlarmRecord</span><span class="p">();</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setRuleId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getRuleId</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAlarmType</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getAlarmType</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setSeverity</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getSeverity</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setDeviceId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getDeviceId</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setRoomId</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getRoomId</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAlarmMessage</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAlarmValue</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setOccurredAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">alarmRecordRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">发送通知</span>
+<span class="w">    </span><span class="n">sendAlarmNotification</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nf">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="ss">&quot;告警触发：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alarm</span><span class="p">.</span><span class="n">getAlarmNumber</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alarm</span><span class="p">;</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">Page</span><span class="o">&lt;</span><span class="n">AlarmRecord</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getAlarms</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                                   </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span><span class="p">,</span>
+<span class="w">                                   </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现查询逻辑</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alarmRecordRepository</span><span class="p">.</span><span class="n">findAll</span><span class="p">(</span><span class="n">pageable</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="nv">@Transactional</span>
+<span class="k">public</span><span class="w"> </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">acknowledgeAlarm</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">alarmId</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">alarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alarmRecordRepository</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">alarmId</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;告警不存在&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">AlarmStatus</span><span class="p">.</span><span class="n">ACKNOWLEDGED</span><span class="p">);</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAcknowledgedAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAcknowledgedBy</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alarmRecordRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="nv">@Transactional</span>
+<span class="k">public</span><span class="w"> </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">resolveAlarm</span><span class="p">(</span><span class="n">UUID</span><span class="w"> </span><span class="n">alarmId</span><span class="p">,</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">note</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">alarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alarmRecordRepository</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">alarmId</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;告警不存在&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">AlarmStatus</span><span class="p">.</span><span class="n">RESOLVED</span><span class="p">);</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setResolvedAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setResolvedBy</span><span class="p">(</span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setResolutionNote</span><span class="p">(</span><span class="n">note</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alarmRecordRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AlarmRule</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getActiveRules</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alarmRuleRepository</span><span class="p">.</span><span class="n">findByEnabledTrue</span><span class="p">();</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">evaluateRules</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="k">Object</span><span class="w"> </span><span class="n">metricData</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AlarmRule</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getActiveRules</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">AlarmRule</span><span class="w"> </span><span class="k">rule</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">rules</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现规则评估逻辑</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">解析规则表达式</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">评估指标数据</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">触发告警</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sendAlarmNotification</span><span class="p">(</span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">alarm</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nl">TODO</span><span class="p">:</span><span class="w"> </span><span class="n">实现通知发送</span>
+<span class="w">    </span><span class="n">notificationService</span><span class="p">.</span><span class="n">sendAlarmNotification</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmService 接口
+- [ ] 创建 AlarmServiceImpl 实现类
+- [ ] 理解告警触发流程
+- [ ] 理解规则评估逻辑</p>
+<hr />
+<h3 id="4controller">步骤 4：Controller 层</h3>
+<h4 id="41-alarmcontroller">4.1 创建 AlarmController</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AlarmController.java</code></p>
+<p>```java
+package com.dormpower.controller;</p>
+<p>import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.service.AlarmService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;</p>
+<p>import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;</p>
+<p>@RestController
+@RequestMapping("/api/alarms")
+@RequiredArgsConstructor
+public class AlarmController {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AlarmService</span><span class="w"> </span><span class="n">alarmService</span><span class="p">;</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/trigger&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;alarm:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AlarmRecord</span><span class="o">&gt;</span><span class="w"> </span><span class="n">triggerAlarm</span><span class="p">(</span><span class="nv">@RequestBody</span><span class="w"> </span><span class="n">AlarmTriggerRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">alarmService</span><span class="p">.</span><span class="n">triggerAlarm</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@GetMapping</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;alarm:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Page</span><span class="o">&lt;</span><span class="n">AlarmRecord</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getAlarms</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="nv">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="n">ISO</span><span class="p">.</span><span class="n">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="nv">@DateTimeFormat</span><span class="p">(</span><span class="n">iso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeFormat</span><span class="p">.</span><span class="n">ISO</span><span class="p">.</span><span class="n">DATE_TIME</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span>
+<span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span>
+<span class="w">        </span><span class="n">alarmService</span><span class="p">.</span><span class="n">getAlarms</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">startTime</span><span class="p">,</span><span class="w"> </span><span class="n">endTime</span><span class="p">,</span><span class="w"> </span><span class="n">pageable</span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/{id}/acknowledge&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;alarm:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AlarmRecord</span><span class="o">&gt;</span><span class="w"> </span><span class="n">acknowledgeAlarm</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span>
+<span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">alarmService</span><span class="p">.</span><span class="n">acknowledgeAlarm</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/{id}/resolve&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;alarm:write&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AlarmRecord</span><span class="o">&gt;</span><span class="w"> </span><span class="n">resolveAlarm</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">note</span>
+<span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">alarmService</span><span class="p">.</span><span class="n">resolveAlarm</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">note</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/rules&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;hasAnyAuthority(&#39;alarm:read&#39;, &#39;admin&#39;)&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">AlarmRecord</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getActiveRules</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">((</span><span class="n">List</span><span class="p">)</span><span class="w"> </span><span class="n">alarmService</span><span class="p">.</span><span class="n">getActiveRules</span><span class="p">());</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmController.java
+- [ ] 理解 RESTful API 设计
+- [ ] 使用 Postman 测试接口</p>
+<hr />
+<h2 id="_7">四、单元测试</h2>
+<h3 id="41">4.1 测试类设计</h3>
+<p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/AlarmControllerTest.java</code></p>
+<p>```java
+package com.dormpower.controller;</p>
+<p>import com.dormpower.dto.AlarmTriggerRequest;
+import com.dormpower.model.AlarmRecord;
+import com.dormpower.model.AlarmType;
+import com.dormpower.model.AlarmSeverity;
+import com.dormpower.service.AlarmService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;</p>
+<p>import java.math.BigDecimal;
+import java.util.UUID;</p>
+<p>import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.<em>;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.</em>;</p>
+<p>@WebMvcTest(AlarmController.class)
+class AlarmControllerTest {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Autowired</span>
+<span class="n">private</span><span class="w"> </span><span class="n">MockMvc</span><span class="w"> </span><span class="n">mockMvc</span><span class="p">;</span>
+
+<span class="nv">@MockBean</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AlarmService</span><span class="w"> </span><span class="n">alarmService</span><span class="p">;</span>
+
+<span class="nv">@Autowired</span>
+<span class="n">private</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="nv">@Test</span>
+<span class="n">void</span><span class="w"> </span><span class="n">testTriggerAlarm_Success</span><span class="p">()</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">AlarmTriggerRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AlarmTriggerRequest</span><span class="p">();</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setRuleId</span><span class="p">(</span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">());</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setAlarmType</span><span class="p">(</span><span class="n">AlarmType</span><span class="p">.</span><span class="n">OVERLOAD</span><span class="p">);</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setSeverity</span><span class="p">(</span><span class="n">AlarmSeverity</span><span class="p">.</span><span class="n">WARNING</span><span class="p">);</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setDeviceId</span><span class="p">(</span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">());</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setValue</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">(</span><span class="ss">&quot;3000&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">request</span><span class="p">.</span><span class="n">setMessage</span><span class="p">(</span><span class="ss">&quot;设备过载&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">alarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AlarmRecord</span><span class="p">();</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">());</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAlarmNumber</span><span class="p">(</span><span class="ss">&quot;ALM-20240101000001-0001&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setAlarmType</span><span class="p">(</span><span class="n">AlarmType</span><span class="p">.</span><span class="n">OVERLOAD</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">alarmService</span><span class="p">.</span><span class="n">triggerAlarm</span><span class="p">(</span><span class="ow">any</span><span class="p">(</span><span class="n">AlarmTriggerRequest</span><span class="p">.</span><span class="k">class</span><span class="p">))).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">mockMvc</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="ss">&quot;/api/alarms/trigger&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="n">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="n">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="n">isOk</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.alarmNumber&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="ss">&quot;ALM-20240101000001-0001&quot;</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@Test</span>
+<span class="n">void</span><span class="w"> </span><span class="n">testAcknowledgeAlarm_Success</span><span class="p">()</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">alarmId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">();</span>
+<span class="w">    </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">AlarmRecord</span><span class="w"> </span><span class="n">alarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AlarmRecord</span><span class="p">();</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="n">alarmId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">alarm</span><span class="p">.</span><span class="n">setStatus</span><span class="p">(</span><span class="n">com</span><span class="p">.</span><span class="n">dormpower</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">AlarmStatus</span><span class="p">.</span><span class="n">ACKNOWLEDGED</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">alarmService</span><span class="p">.</span><span class="n">acknowledgeAlarm</span><span class="p">(</span><span class="n">alarmId</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">)).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">alarm</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">mockMvc</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="ss">&quot;/api/alarms/{id}/acknowledge&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alarmId</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">param</span><span class="p">(</span><span class="ss">&quot;userId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">.</span><span class="n">toString</span><span class="p">()))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="n">isOk</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.status&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="ss">&quot;ACKNOWLEDGED&quot;</span><span class="p">));</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmControllerTest.java
+- [ ] 理解 MockMvc 测试方法
+- [ ] 运行测试：<code>mvn test -Dtest=AlarmControllerTest</code></p>
+<hr />
+<h2 id="_8">五、前端实现（分步骤）</h2>
+<h3 id="1_1">步骤 1：类型定义</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/types/alarm.ts</code></p>
+<p>```typescript
+export interface AlarmRule {
+  id: string;
+  ruleName: string;
+  alarmType: AlarmType;
+  severity: AlarmSeverity;
+  ruleExpression?: string;
+  threshold?: number;
+  metricName?: string;
+  durationSeconds?: number;
+  enabled: boolean;
+  description?: string;
+}</p>
+<p>export interface AlarmRecord {
+  id: string;
+  alarmNumber: string;
+  ruleId: string;
+  alarmType: AlarmType;
+  severity: AlarmSeverity;
+  deviceId?: string;
+  roomId?: string;
+  alarmMessage: string;
+  alarmValue?: number;
+  status: AlarmStatus;
+  occurredAt: string;
+  acknowledgedAt?: string;
+  resolvedAt?: string;
+  acknowledgedBy?: string;
+  resolvedBy?: string;
+  resolutionNote?: string;
+  escalateLevel?: number;
+}</p>
+<p>export type AlarmType = 
+  | 'OVERLOAD'
+  | 'UNDER_VOLTAGE'
+  | 'OVER_VOLTAGE'
+  | 'OVER_CURRENT'
+  | 'OVER_USE'
+  | 'DEVICE_OFFLINE'
+  | 'LOW_BALANCE'
+  | 'TEMPERATURE'
+  | 'CUSTOM';</p>
+<p>export type AlarmSeverity = 'INFO' | 'WARNING' | 'CRITICAL' | 'EMERGENCY';</p>
+<p>export type AlarmStatus = 'ACTIVE' | 'ACKNOWLEDGED' | 'RESOLVED' | 'SUPPRESSED' | 'CLOSED';</p>
+<p>export interface AlarmTriggerRequest {
+  ruleId: string;
+  alarmType: AlarmType;
+  severity: AlarmSeverity;
+  deviceId?: string;
+  roomId?: string;
+  message: string;
+  value?: number;
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 alarm.ts 文件
+- [ ] 理解 TypeScript 类型定义</p>
+<hr />
+<h3 id="2api">步骤 2：API 封装</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/api/alarm.ts</code></p>
+<p>```typescript
+import axios from 'axios';
+import type { AlarmRecord, AlarmRule, AlarmTriggerRequest } from '@/types/alarm';</p>
+<p>const API_BASE = '/api/alarms';</p>
+<p>export const alarmApi = {
+  // 触发告警
+  async triggerAlarm(request: AlarmTriggerRequest): Promise<AlarmRecord> {
+    const response = await axios.post(<code>${API_BASE}/trigger</code>, request);
+    return response.data;
+  },</p>
+<p>// 获取告警列表
+  async getAlarms(
+    deviceId?: string,
+    status?: string,
+    startTime?: string,
+    endTime?: string,
+    page = 0,
+    size = 20
+  ) {
+    const response = await axios.get(API_BASE, {
+      params: { deviceId, status, startTime, endTime, page, size }
+    });
+    return response.data;
+  },</p>
+<p>// 确认告警
+  async acknowledgeAlarm(alarmId: string, userId: string): Promise<AlarmRecord> {
+    const response = await axios.post(<code>${API_BASE}/${alarmId}/acknowledge</code>, null, {
+      params: { userId }
+    });
+    return response.data;
+  },</p>
+<p>// 解决告警
+  async resolveAlarm(
+    alarmId: string,
+    userId: string,
+    note?: string
+  ): Promise<AlarmRecord> {
+    const response = await axios.post(<code>${API_BASE}/${alarmId}/resolve</code>, null, {
+      params: { userId, note }
+    });
+    return response.data;
+  },</p>
+<p>// 获取活动规则
+  async getActiveRules(): Promise<AlarmRule[]> {
+    const response = await axios.get(<code>${API_BASE}/rules</code>);
+    return response.data;
+  }
+};
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 alarm.ts API 文件
+- [ ] 理解 Axios 封装
+- [ ] 测试 API 调用</p>
+<hr />
+<h3 id="3">步骤 3：告警管理页面</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/AlarmView.vue</code></p>
+<p>```vue
+<template>
+<br />
+<div class="alarm-container">
+    <el-card class="filter-card">
+      <el-form :inline="true" :model="queryForm">
+        <el-form-item label="设备">
+          <el-select v-model="queryForm.deviceId" placeholder="选择设备">
+            <el-option
+              v-for="device in devices"
+              :key="device.id"
+              :label="device.name"
+              :value="device.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="状态">
+          <el-select v-model="queryForm.status" placeholder="全部状态">
+            <el-option label="活动中" value="ACTIVE" />
+            <el-option label="已确认" value="ACKNOWLEDGED" />
+            <el-option label="已解决" value="RESOLVED" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="handleQuery">查询</el-button>
+          <el-button type="warning" @click="handleTestAlarm">测试告警</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <el-card>
+      <template #header>
+        <span>告警列表</span>
+        <el-tag type="danger" v-if="activeCount > 0">
+          活动告警：{{ activeCount }}
+        </el-tag>
+      </template>
+
+      <el-table :data="alarms" stripe v-loading="loading">
+        <el-table-column prop="alarmNumber" label="告警编号" width="180" />
+        <el-table-column prop="alarmType" label="类型" width="120">
+          <template #default="{ row }">
+            <el-tag>{{ getAlarmTypeText(row.alarmType) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="severity" label="级别" width="100">
+          <template #default="{ row }">
+            <el-tag :type="getSeverityType(row.severity)">
+              {{ getSeverityText(row.severity) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="alarmMessage" label="告警内容" min-width="200" />
+        <el-table-column prop="alarmValue" label="告警值" width="100" />
+        <el-table-column prop="status" label="状态" width="100">
+          <template #default="{ row }">
+            <el-tag :type="getStatusType(row.status)">
+              {{ getStatusText(row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="occurredAt" label="发生时间" width="180" />
+        <el-table-column label="操作" width="200">
+          <template #default="{ row }">
+            <el-button
+              v-if="row.status === 'ACTIVE'"
+              type="primary"
+              size="small"
+              @click="handleAcknowledge(row)"
+            >
+              确认
+            </el-button>
+            <el-button
+              v-if="row.status !== 'RESOLVED'"
+              type="success"
+              size="small"
+              @click="handleResolve(row)"
+            >
+              解决
+            </el-button>
+            <el-button size="small" @click="handleViewDetail(row)">详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :total="total"
+        @current-change="handlePageChange"
+      />
+    </el-card>
+  </div></p>
+<p></template></p>
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue';
+import { alarmApi } from '@/api/alarm';
+import { deviceApi } from '@/api/device';
+import type { AlarmRecord } from '@/types/alarm';
+import { ElMessage, ElMessageBox } from 'element-plus';
+
+const devices = ref<any[]>([]);
+const alarms = ref<AlarmRecord[]>([]);
+const loading = ref(false);
+const activeCount = ref(0);
+
+const queryForm = reactive({
+  deviceId: '',
+  status: ''
+});
+
+const currentPage = ref(1);
+const pageSize = ref(20);
+const total = ref(0);
+
+// 加载设备列表
+const loadDevices = async () => {
+  try {
+    const response = await deviceApi.getDevices();
+    devices.value = response.content || response;
+  } catch (error) {
+    console.error('Failed to load devices:', error);
+  }
+};
+
+// 加载告警列表
+const loadAlarms = async () => {
+  loading.value = true;
+  try {
+    const response = await alarmApi.getAlarms(
+      queryForm.deviceId,
+      queryForm.status,
+      undefined,
+      undefined,
+      currentPage.value - 1,
+      pageSize.value
+    );
+
+    alarms.value = response.content || [];
+    total.value = response.totalElements || 0;
+
+    // 统计活动告警
+    activeCount.value = alarms.value.filter(a => a.status === 'ACTIVE').length;
+  } catch (error: any) {
+    ElMessage.error('加载告警失败：' + (error.response?.data?.message || ''));
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 查询
+const handleQuery = () => {
+  currentPage.value = 1;
+  loadAlarms();
+};
+
+// 确认告警
+const handleAcknowledge = async (alarm: AlarmRecord) => {
+  try {
+    await ElMessageBox.confirm('确认该告警？', '告警确认');
+
+    await alarmApi.acknowledgeAlarm(alarm.id, 'current-user-id');
+
+    ElMessage.success('告警已确认');
+    loadAlarms();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('确认失败：' + (error.response?.data?.message || ''));
+    }
+  }
+};
+
+// 解决告警
+const handleResolve = async (alarm: AlarmRecord) => {
+  try {
+    const { value } = await ElMessageBox.prompt('请输入解决备注', '告警解决', {
+      inputPattern: /.{5,}/,
+      inputErrorMessage: '备注至少 5 个字符'
+    });
+
+    await alarmApi.resolveAlarm(alarm.id, 'current-user-id', value);
+
+    ElMessage.success('告警已解决');
+    loadAlarms();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('解决失败：' + (error.response?.data?.message || ''));
+    }
+  }
+};
+
+// 测试告警
+const handleTestAlarm = async () => {
+  try {
+    await alarmApi.triggerAlarm({
+      ruleId: 'test-rule-id',
+      alarmType: 'OVERLOAD',
+      severity: 'WARNING',
+      message: '测试告警：设备过载',
+      value: 3000
+    });
+
+    ElMessage.success('测试告警已触发');
+    loadAlarms();
+  } catch (error: any) {
+    ElMessage.error('测试失败：' + (error.response?.data?.message || ''));
+  }
+};
+
+const handleViewDetail = (alarm: AlarmRecord) => {
+  ElMessage.info('告警详情功能开发中...');
+};
+
+const getAlarmTypeText = (type: string) => {
+  const texts: Record<string, string> = {
+    OVERLOAD: '过载',
+    DEVICE_OFFLINE: '离线'
+  };
+  return texts[type] || type;
+};
+
+const getSeverityType = (severity: string) => {
+  const types: Record<string, any> = {
+    INFO: 'info',
+    WARNING: 'warning',
+    CRITICAL: 'danger',
+    EMERGENCY: 'danger'
+  };
+  return types[severity] || 'info';
+};
+
+const getSeverityText = (severity: string) => {
+  const texts: Record<string, string> = {
+    INFO: '提示',
+    WARNING: '警告',
+    CRITICAL: '严重',
+    EMERGENCY: '紧急'
+  };
+  return texts[severity] || severity;
+};
+
+const getStatusType = (status: string) => {
+  const types: Record<string, any> = {
+    ACTIVE: 'danger',
+    ACKNOWLEDGED: 'warning',
+    RESOLVED: 'success'
+  };
+  return types[status] || 'info';
+};
+
+const getStatusText = (status: string) => {
+  const texts: Record<string, string> = {
+    ACTIVE: '活动中',
+    ACKNOWLEDGED: '已确认',
+    RESOLVED: '已解决'
+  };
+  return texts[status] || status;
+};
+
+onMounted(() => {
+  loadDevices();
+  loadAlarms();
+});
+</script>
+
+<style scoped>
+.alarm-container {
+  padding: 20px;
+}
+
+.filter-card {
+  margin-bottom: 20px;
+}
+
+:deep(.el-pagination) {
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+</style>
+<p>```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AlarmView.vue
+- [ ] 理解 Vue 3 Composition API
+- [ ] 运行前端项目测试页面</p>
+<hr />
+<h2 id="_9">六、联调验证</h2>
+<h3 id="61">6.1 功能验证清单</h3>
+<h4 id="_10">后端验证</h4>
+<ul>
+<li>[ ] 启动后端服务</li>
+<li>[ ] 测试告警触发接口</li>
+<li>[ ] 测试告警查询接口</li>
+<li>[ ] 测试告警确认接口</li>
+<li>[ ] 测试告警解决接口</li>
+<li>[ ] 验证通知发送</li>
+</ul>
+<h4 id="_11">前端验证</h4>
+<ul>
+<li>[ ] 启动前端服务</li>
+<li>[ ] 访问告警管理页面</li>
+<li>[ ] 测试告警查询</li>
+<li>[ ] 测试告警确认</li>
+<li>[ ] 测试告警解决</li>
+<li>[ ] 验证状态更新</li>
+</ul>
+<h3 id="62">6.2 常见问题与解决方案</h3>
+<h4 id="1_2">问题 1：告警风暴</h4>
+<p><strong>现象</strong>: 短时间内产生大量告警</p>
+<p><strong>解决方案</strong>:
+```java
+// 告警抑制
+public class AlarmSuppressor {
+    private Map<String, LocalDateTime> lastAlarmTime = new ConcurrentHashMap&lt;&gt;();
+    private static final long SUPPRESS_WINDOW_MS = 300000; // 5 分钟</p>
+<div class="codehilite"><pre><span></span><code>public boolean shouldSuppress(String alarmKey) {
+    LocalDateTime lastTime = lastAlarmTime.get(alarmKey);
+    if (lastTime != null &amp;&amp; 
+        System.currentTimeMillis() - lastTime.atTime(java.time.LocalTime.now()).toInstant(
+            java.time.ZoneOffset.UTC).toEpochMilli() &lt; SUPPRESS_WINDOW_MS) {
+        return true;
+    }
+    lastAlarmTime.put(alarmKey, LocalDateTime.now());
+    return false;
+}
+</code></pre></div>
+
+<p>}
+```</p>
+<hr />
+<h2 id="_12">七、完成后的文件结构 📁</h2>
+<h3 id="_13">后端新增/修改的文件</h3>
+<p><code>backend/src/main/java/com/dormpower/
+├── model/
+│   ├── AlarmRule.java              ✅ 新建
+│   └── AlarmRecord.java            ✅ 新建
+├── repository/
+│   ├── AlarmRuleRepository.java    ✅ 新建
+│   └── AlarmRecordRepository.java  ✅ 新建
+├── service/
+│   ├── AlarmService.java           ✅ 新建
+│   └── impl/
+│       └── AlarmServiceImpl.java   ✅ 新建
+├── controller/
+│   └── AlarmController.java        ✅ 新建
+└── dto/
+    └── AlarmTriggerRequest.java    ✅ 新建</code></p>
+<h3 id="_14">前端新增/修改的文件</h3>
+<p><code>frontend/src/
+├── types/
+│   └── alarm.ts                    ✅ 新建
+├── api/
+│   └── alarm.ts                    ✅ 新建
+├── views/
+│   └── AlarmView.vue               ✅ 新建
+└── stores/
+    └── alarm.ts                    ✅ 新建</code></p>
+<hr />
+<h2 id="_15">八、扩展练习 💪</h2>
+<h3 id="_16">基础练习</h3>
+<ol>
+<li>添加告警规则配置页面</li>
+<li>实现告警统计图表</li>
+<li>添加告警导出功能</li>
+<li>实现告警通知配置</li>
+</ol>
+<h3 id="_17">进阶练习</h3>
+<ol>
+<li>实现规则引擎（Drools）</li>
+<li>实现告警关联分析</li>
+<li>实现告警自动升级</li>
+<li>实现告警工单系统</li>
+</ol>
+<h3 id="_18">挑战练习</h3>
+<ol>
+<li>实现 AI 异常检测</li>
+<li>实现告警预测</li>
+<li>实现智能告警抑制</li>
+<li>实现告警根因分析</li>
+</ol>
+<hr />
+<h2 id="_19">九、知识点总结 📝</h2>
+<h3 id="_20">核心知识点</h3>
+<h4 id="_21">后端</h4>
+<ol>
+<li><strong>规则引擎</strong></li>
+<li>规则表达式</li>
+<li>阈值判断</li>
+<li>
+<p>持续时间</p>
+</li>
+<li>
+<p><strong>告警生命周期</strong></p>
+</li>
+<li>活动 → 确认 → 解决</li>
+<li>状态流转</li>
+<li>
+<p>时间记录</p>
+</li>
+<li>
+<p><strong>通知集成</strong></p>
+</li>
+<li>多渠道通知</li>
+<li>通知模板</li>
+<li>接收人管理</li>
+</ol>
+<h4 id="_22">前端</h4>
+<ol>
+<li><strong>状态管理</strong></li>
+<li>告警状态标签</li>
+<li>
+<p>实时更新</p>
+</li>
+<li>
+<p><strong>批量操作</strong></p>
+</li>
+<li>批量确认</li>
+<li>批量解决</li>
+</ol>
+<hr />
+<h2 id="_23">十、下一步学习</h2>
+<p>完成本模块后，建议继续学习：</p>
+<ol>
+<li><strong><a href="./06-控制管理模块.md">06-控制管理模块</a></strong> - 学习设备远程控制</li>
+<li><strong><a href="./10-通知管理模块.md">10-通知管理模块</a></strong> - 学习通知推送</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-21<br />
+<strong>作者</strong>: 教学文档编写组<br />
+<strong>状态</strong>: ✅ 已完成</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav-container a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

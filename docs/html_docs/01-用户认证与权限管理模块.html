@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 用户认证与权限管理模块</title>
+    
+    <!-- Prism.js 代码高亮 -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+    
+    <!-- GitHub Markdown CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+        
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 45px;
+        }
+        
+        @media (max-width: 768px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+        
+        /* 代码块样式 */
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        pre[class*="language-"] {
+            margin: 1em 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* 导航样式 */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-container h3 {
+            margin: 0 0 20px 0;
+            padding: 0 20px;
+            font-size: 16px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .nav-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-container li {
+            margin: 0;
+        }
+        
+        .nav-container a {
+            display: block;
+            padding: 10px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-container a:hover {
+            background: #333;
+            color: #fff;
+        }
+        
+        .nav-container a.active {
+            background: #0366d6;
+            color: #fff;
+        }
+        
+        .content-wrapper {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0366d6;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            text-align: center;
+            line-height: 50px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+        }
+        
+        .back-to-top:hover {
+            background: #0255b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav-container">
+        <h3>📚 教学文档</h3>
+        <ul>
+            <li><a href="index.html">🏠 首页</a></li>
+            <li><a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a></li>
+            <li><a href="02-设备管理模块.html">02-设备管理模块</a></li>
+            <li><a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a></li>
+            <li><a href="04-计费管理模块.html">04-计费管理模块</a></li>
+            <li><a href="05-告警管理模块.html">05-告警管理模块</a></li>
+            <li><a href="06-控制管理模块.html">06-控制管理模块</a></li>
+            <li><a href="07-宿舍管理模块.html">07-宿舍管理模块</a></li>
+            <li><a href="08-系统管理模块.html">08-系统管理模块</a></li>
+            <li><a href="09-AI 智能模块.html">09-AI 智能模块</a></li>
+            <li><a href="10-通知管理模块.html">10-通知管理模块</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content-wrapper">
+        <article class="markdown-body">
+<h1 id="01">模块 01：用户认证与权限管理模块</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-5 天<br />
+<strong>难度</strong>: ⭐⭐⭐☆☆<br />
+<strong>前置知识</strong>: Java 基础、Spring Boot 入门、Vue 基础</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、实现目标 ⭐</h2>
+<h3 id="_2">知识目标</h3>
+<ul>
+<li>✅ 理解 Spring Security 工作原理</li>
+<li>✅ 掌握 JWT 认证机制</li>
+<li>✅ 理解 RBAC 权限模型设计</li>
+<li>✅ 掌握前后端分离认证流程</li>
+</ul>
+<h3 id="_3">能力目标</h3>
+<ul>
+<li>✅ 能够独立设计用户认证系统</li>
+<li>✅ 能够实现 JWT Token 生成与验证</li>
+<li>✅ 能够实现基于角色的权限控制</li>
+<li>✅ 能够完成前后端认证联调</li>
+</ul>
+<h3 id="_4">成果目标</h3>
+<p>完成本模块后，你将拥有：
+- 📁 完整的用户认证后端 API（登录、登出、刷新 Token）
+- 📁 用户管理、角色管理、权限管理功能
+- 📁 前端登录页面和用户管理页面
+- 📁 完善的单元测试用例
+- 📁 可运行的认证授权系统</p>
+<hr />
+<h2 id="_5">二、需求分析与设计</h2>
+<h3 id="21">2.1 业务场景</h3>
+<p><strong>场景 1：用户登录</strong>
+<code>用户输入用户名密码 → 系统验证 → 返回 Token → 用户后续请求携带 Token</code></p>
+<p><strong>场景 2：权限控制</strong>
+<code>用户访问资源 → 系统检查 Token → 验证权限 → 允许/拒绝访问</code></p>
+<p><strong>场景 3：角色管理</strong>
+<code>管理员创建角色 → 分配权限 → 给用户分配角色 → 用户继承角色权限</code></p>
+<h3 id="22">2.2 功能需求清单</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户登录</td>
+<td>用户名密码认证，返回 JWT Token</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>用户登出</td>
+<td>使 Token 失效</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Token 刷新</td>
+<td>Token 过期前刷新</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>用户管理</td>
+<td>用户 CRUD、重置密码</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>角色管理</td>
+<td>角色 CRUD、分配权限</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>权限管理</td>
+<td>权限 CRUD、分配角色</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>登录日志</td>
+<td>记录登录行为</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>IP 访问控制</td>
+<td>IP 白名单/黑名单</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 技术选型与理由</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Spring Security</strong></td>
+<td>安全框架</td>
+<td>3.2.x</td>
+<td>✅ <strong>行业标准</strong>：Spring 官方推荐的安全框架，生态完善<br>✅ <strong>功能全面</strong>：支持认证、授权、CSRF 防护、会话管理<br>✅ <strong>灵活扩展</strong>：支持自定义认证逻辑、权限表达式<br>✅ <strong>学习价值</strong>：企业级项目必备技能，就业市场需求大</td>
+</tr>
+<tr>
+<td><strong>JWT (jjwt)</strong></td>
+<td>Token 认证</td>
+<td>0.12.x</td>
+<td>✅ <strong>无状态</strong>：服务端不存储 Token，降低服务器压力<br>✅ <strong>跨域支持</strong>：适合前后端分离架构<br>✅ <strong>自包含</strong>：Token 中包含用户信息，减少数据库查询<br>✅ <strong>安全性</strong>：支持签名验证，防止篡改<br>⚠️ <strong>注意</strong>：实际项目中使用 String 作为主键而非 UUID，便于分布式 ID 生成</td>
+</tr>
+<tr>
+<td><strong>BCrypt</strong></td>
+<td>密码加密</td>
+<td>-</td>
+<td>✅ <strong>加盐哈希</strong>：自动处理盐值，无需手动管理<br>✅ <strong>自适应</strong>：可调整加密强度（work factor）<br>✅ <strong>不可逆</strong>：即使数据库泄露也无法还原密码<br>✅ <strong>Spring 集成</strong>：Spring Security 内置支持</td>
+</tr>
+<tr>
+<td><strong>Vue Router</strong></td>
+<td>路由守卫</td>
+<td>4.x</td>
+<td>✅ <strong>官方路由</strong>：Vue.js 官方维护，兼容性好<br>✅ <strong>路由守卫</strong>：实现前端权限控制（beforeEach）<br>✅ <strong>动态路由</strong>：支持根据权限动态加载路由<br>✅ <strong>TypeScript</strong>：完整的类型支持</td>
+</tr>
+</tbody>
+</table>
+<p><strong>技术对比与取舍</strong>：
+- <strong>Session vs JWT</strong>：选择 JWT 因为项目是前后端分离架构，且需要支持移动端
+- <strong>MD5 vs BCrypt</strong>：选择 BCrypt 因为更安全，支持自适应加密强度
+- <strong>Shiro vs Spring Security</strong>：选择 Spring Security 因为生态更完善，与 Spring Boot 集成更好</p>
+<hr />
+<h2 id="_6">三、后端实现（分步骤）</h2>
+<h3 id="1">步骤 1：实体类设计</h3>
+<h4 id="11-useraccount">1.1 创建 UserAccount 实体</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/UserAccount.java</code></p>
+<p>```java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "user_account")
+public class UserAccount {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">password</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">email</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">phone</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UserStatus</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UserStatus</span><span class="p">.</span><span class="n">ACTIVE</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">accountNonExpired</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">accountNonLocked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">credentialsNonExpired</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">lastLoginAt</span><span class="p">;</span>
+
+<span class="nv">@ManyToMany</span><span class="p">(</span><span class="k">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="n">EAGER</span><span class="p">)</span>
+<span class="nv">@JoinTable</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;user_role&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">joinColumns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;user_id&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">inverseJoinColumns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;role_id&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="k">Set</span><span class="o">&lt;</span><span class="k">Role</span><span class="o">&gt;</span><span class="w"> </span><span class="n">roles</span><span class="p">;</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum UserStatus {
+    ACTIVE, INACTIVE, LOCKED
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 UserAccount.java 文件
+- [ ] 复制上述代码
+- [ ] 理解每个字段的含义
+- [ ] 运行项目，检查实体类是否被 JPA 识别</p>
+<h4 id="12-role-permission">1.2 创建 Role 和 Permission 实体</h4>
+<p><strong>文件位置</strong>: 
+- <code>backend/src/main/java/com/dormpower/model/Role.java</code>
+- <code>backend/src/main/java/com/dormpower/model/Permission.java</code></p>
+<p>```java
+// Role.java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.util.Set;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "role")
+public class Role {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">ROLE_ADMIN</span><span class="p">,</span><span class="w"> </span><span class="n">ROLE_USER</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+
+<span class="nv">@ManyToMany</span><span class="p">(</span><span class="k">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="n">EAGER</span><span class="p">)</span>
+<span class="nv">@JoinTable</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;role_permission&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">joinColumns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;role_id&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">inverseJoinColumns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;permission_id&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="k">Set</span><span class="o">&lt;</span><span class="n">Permission</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">permissions</span><span class="p">;</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p>```java
+// Permission.java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "permission")
+public class Permission {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="k">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">user</span><span class="err">:</span><span class="k">read</span><span class="p">,</span><span class="w"> </span><span class="nl">device</span><span class="p">:</span><span class="k">write</span>
+
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">resourceType</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">USER</span><span class="p">,</span><span class="w"> </span><span class="n">DEVICE</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">operation</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">READ</span><span class="p">,</span><span class="w"> </span><span class="k">WRITE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 Role.java 和 Permission.java
+- [ ] 理解多对多关系配置
+- [ ] 查看数据库生成的表结构</p>
+<h4 id="13">1.3 创建辅助实体类</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/model/LoginLog.java</code></p>
+<p>```java
+package com.dormpower.model;</p>
+<p>import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.UUID;</p>
+<p>@Data
+@Entity
+@Table(name = "login_log")
+public class LoginLog {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Id</span>
+<span class="nv">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="n">UUID</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">loginTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">();</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">ipAddress</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userAgent</span><span class="p">;</span>
+
+<span class="nv">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="n">STRING</span><span class="p">)</span>
+<span class="nv">@Column</span><span class="p">(</span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">LoginStatus</span><span class="w"> </span><span class="n">loginStatus</span><span class="p">;</span>
+
+<span class="nv">@Column</span><span class="p">(</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span>
+<span class="n">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">failureReason</span><span class="p">;</span>
+</code></pre></div>
+
+<p>}</p>
+<p>enum LoginStatus {
+    SUCCESS, FAILED
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 LoginLog.java
+- [ ] 理解日志记录的设计思路</p>
+<hr />
+<h3 id="2repository">步骤 2：Repository 层</h3>
+<h4 id="21-useraccountrepository">2.1 创建 UserAccountRepository</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/UserAccountRepository.java</code></p>
+<p>```java
+package com.dormpower.repository;</p>
+<p>import com.dormpower.model.UserAccount;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;</p>
+<p>import java.util.Optional;
+import java.util.UUID;</p>
+<p>@Repository
+public interface UserAccountRepository extends JpaRepository<UserAccount, UUID> {</p>
+<div class="codehilite"><pre><span></span><code>Optional&lt;UserAccount&gt; findByUsername(String username);
+
+boolean existsByUsername(String username);
+
+boolean existsByEmail(String email);
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 UserAccountRepository.java
+- [ ] 理解 Spring Data JPA 的命名查询
+- [ ] 测试 Repository 方法</p>
+<hr />
+<h3 id="3service">步骤 3：Service 层</h3>
+<h4 id="31-authservice">3.1 创建 AuthService</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/AuthService.java</code></p>
+<p>```java
+package com.dormpower.service;</p>
+<p>import com.dormpower.dto.request.LoginRequest;
+import com.dormpower.dto.response.AuthResponse;
+import com.dormpower.model.UserAccount;</p>
+<p>public interface AuthService {</p>
+<div class="codehilite"><pre><span></span><code>AuthResponse login(LoginRequest request);
+
+void logout(String token);
+
+AuthResponse refreshToken(String refreshToken);
+
+UserAccount getCurrentUser();
+</code></pre></div>
+
+<p>}
+```</p>
+<h4 id="32-authserviceimpl">3.2 创建 AuthServiceImpl</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/impl/AuthServiceImpl.java</code></p>
+<p>```java
+package com.dormpower.service.impl;</p>
+<p>import com.dormpower.dto.request.LoginRequest;
+import com.dormpower.dto.response.AuthResponse;
+import com.dormpower.model.UserAccount;
+import com.dormpower.repository.UserAccountRepository;
+import com.dormpower.service.AuthService;
+import com.dormpower.utils.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;</p>
+<p>@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AuthenticationManager</span><span class="w"> </span><span class="n">authenticationManager</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">UserAccountRepository</span><span class="w"> </span><span class="n">userAccountRepository</span><span class="p">;</span>
+<span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">JwtTokenProvider</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">;</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">AuthResponse</span><span class="w"> </span><span class="n">login</span><span class="p">(</span><span class="n">LoginRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">认证</span>
+<span class="w">    </span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authenticationManager</span><span class="p">.</span><span class="n">authenticate</span><span class="p">(</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">UsernamePasswordAuthenticationToken</span><span class="p">(</span>
+<span class="w">            </span><span class="n">request</span><span class="p">.</span><span class="n">getUsername</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">request</span><span class="p">.</span><span class="n">getPassword</span><span class="p">()</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">生成</span><span class="w"> </span><span class="n">Token</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">generateAccessToken</span><span class="p">(</span><span class="n">authentication</span><span class="p">);</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">refreshToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">generateRefreshToken</span><span class="p">(</span><span class="n">authentication</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">更新最后登录时间</span>
+<span class="w">    </span><span class="n">UserAccount</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userAccountRepository</span><span class="p">.</span><span class="n">findByUsername</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getUsername</span><span class="p">()).</span><span class="n">orElseThrow</span><span class="p">();</span>
+<span class="w">    </span><span class="k">user</span><span class="p">.</span><span class="n">setLastLoginAt</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="nc">time</span><span class="p">.</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">());</span>
+<span class="w">    </span><span class="n">userAccountRepository</span><span class="p">.</span><span class="k">save</span><span class="p">(</span><span class="k">user</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="n">返回响应</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AuthResponse</span><span class="p">.</span><span class="n">builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">accessToken</span><span class="p">(</span><span class="n">accessToken</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">refreshToken</span><span class="p">(</span><span class="n">refreshToken</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">userId</span><span class="p">(</span><span class="k">user</span><span class="p">.</span><span class="n">getId</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">username</span><span class="p">(</span><span class="k">user</span><span class="p">.</span><span class="n">getUsername</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">build</span><span class="p">();</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">logout</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">将</span><span class="w"> </span><span class="n">Token</span><span class="w"> </span><span class="n">加入黑名单</span>
+<span class="w">    </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">addToBlacklist</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">AuthResponse</span><span class="w"> </span><span class="n">refreshToken</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">refreshToken</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">验证刷新</span><span class="w"> </span><span class="n">Token</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">validateToken</span><span class="p">(</span><span class="n">refreshToken</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;Invalid refresh token&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">getUsernameFromToken</span><span class="p">(</span><span class="n">refreshToken</span><span class="p">);</span>
+<span class="w">    </span><span class="n">UserAccount</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userAccountRepository</span><span class="p">.</span><span class="n">findByUsername</span><span class="p">(</span><span class="n">username</span><span class="p">).</span><span class="n">orElseThrow</span><span class="p">();</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">生成新</span><span class="w"> </span><span class="n">Token</span>
+<span class="w">    </span><span class="n">Authentication</span><span class="w"> </span><span class="n">authentication</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">getAuthentication</span><span class="p">(</span><span class="n">refreshToken</span><span class="p">);</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">newAccessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">generateAccessToken</span><span class="p">(</span><span class="n">authentication</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AuthResponse</span><span class="p">.</span><span class="n">builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">accessToken</span><span class="p">(</span><span class="n">newAccessToken</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">refreshToken</span><span class="p">(</span><span class="n">refreshToken</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">userId</span><span class="p">(</span><span class="k">user</span><span class="p">.</span><span class="n">getId</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">username</span><span class="p">(</span><span class="k">user</span><span class="p">.</span><span class="n">getUsername</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">build</span><span class="p">();</span>
+<span class="err">}</span>
+
+<span class="nv">@Override</span>
+<span class="k">public</span><span class="w"> </span><span class="n">UserAccount</span><span class="w"> </span><span class="n">getCurrentUser</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">从安全上下文获取当前用户</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwtTokenProvider</span><span class="p">.</span><span class="n">getCurrentUserUsername</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">userAccountRepository</span><span class="p">.</span><span class="n">findByUsername</span><span class="p">(</span><span class="n">username</span><span class="p">).</span><span class="n">orElseThrow</span><span class="p">();</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AuthService 接口
+- [ ] 创建 AuthServiceImpl 实现类
+- [ ] 理解认证流程
+- [ ] 理解 Token 生成逻辑</p>
+<hr />
+<h3 id="4controller">步骤 4：Controller 层</h3>
+<h4 id="41-authcontroller">4.1 创建 AuthController</h4>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/controller/AuthController.java</code></p>
+<p>```java
+package com.dormpower.controller;</p>
+<p>import com.dormpower.dto.request.LoginRequest;
+import com.dormpower.dto.response.AuthResponse;
+import com.dormpower.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;</p>
+<p>@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">AuthService</span><span class="w"> </span><span class="n">authService</span><span class="p">;</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/login&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AuthResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">login</span><span class="p">(</span><span class="nv">@Valid</span><span class="w"> </span><span class="nv">@RequestBody</span><span class="w"> </span><span class="n">LoginRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">authService</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/logout&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logout</span><span class="p">(</span><span class="nv">@RequestHeader</span><span class="p">(</span><span class="ss">&quot;Authorization&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">authService</span><span class="p">.</span><span class="n">logout</span><span class="p">(</span><span class="n">token</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="ss">&quot;Bearer &quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">().</span><span class="n">build</span><span class="p">();</span>
+<span class="err">}</span>
+
+<span class="nv">@PostMapping</span><span class="p">(</span><span class="ss">&quot;/refresh&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">AuthResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">refreshToken</span><span class="p">(</span><span class="nv">@RequestHeader</span><span class="p">(</span><span class="ss">&quot;Authorization&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">refreshToken</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">authService</span><span class="p">.</span><span class="n">refreshToken</span><span class="p">(</span><span class="n">refreshToken</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="ss">&quot;Bearer &quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="p">)));</span>
+<span class="err">}</span>
+
+<span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/me&quot;</span><span class="p">)</span>
+<span class="nv">@PreAuthorize</span><span class="p">(</span><span class="ss">&quot;isAuthenticated()&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="k">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getCurrentUser</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ResponseEntity</span><span class="p">.</span><span class="n">ok</span><span class="p">(</span><span class="n">authService</span><span class="p">.</span><span class="n">getCurrentUser</span><span class="p">());</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AuthController.java
+- [ ] 理解@RestController 注解
+- [ ] 理解@PreAuthorize 权限控制
+- [ ] 使用 Postman 测试登录接口</p>
+<hr />
+<h2 id="_7">四、单元测试</h2>
+<h3 id="41">4.1 测试类设计</h3>
+<p><strong>文件位置</strong>: <code>backend/src/test/java/com/dormpower/controller/AuthControllerTest.java</code></p>
+<p>```java
+package com.dormpower.controller;</p>
+<p>import com.dormpower.dto.request.LoginRequest;
+import com.dormpower.dto.response.AuthResponse;
+import com.dormpower.service.AuthService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;</p>
+<p>import java.util.UUID;</p>
+<p>import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;</p>
+<p>@WebMvcTest(AuthController.class)
+class AuthControllerTest {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Autowired</span>
+<span class="n">private</span><span class="w"> </span><span class="n">MockMvc</span><span class="w"> </span><span class="n">mockMvc</span><span class="p">;</span>
+
+<span class="nv">@MockBean</span>
+<span class="n">private</span><span class="w"> </span><span class="n">AuthService</span><span class="w"> </span><span class="n">authService</span><span class="p">;</span>
+
+<span class="nv">@Autowired</span>
+<span class="n">private</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="nv">@Test</span>
+<span class="n">void</span><span class="w"> </span><span class="n">testLogin_Success</span><span class="p">()</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">准备测试数据</span>
+<span class="w">    </span><span class="n">LoginRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LoginRequest</span><span class="p">(</span><span class="ss">&quot;admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;password123&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">AuthResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuthResponse</span><span class="p">.</span><span class="n">builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">accessToken</span><span class="p">(</span><span class="ss">&quot;test-access-token&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">refreshToken</span><span class="p">(</span><span class="ss">&quot;test-refresh-token&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">userId</span><span class="p">(</span><span class="n">UUID</span><span class="p">.</span><span class="n">randomUUID</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">username</span><span class="p">(</span><span class="ss">&quot;admin&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">build</span><span class="p">();</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Mock</span><span class="w"> </span><span class="n">Service</span><span class="w"> </span><span class="n">返回</span>
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">authService</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="ow">any</span><span class="p">(</span><span class="n">LoginRequest</span><span class="p">.</span><span class="k">class</span><span class="p">))).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">执行测试</span>
+<span class="w">    </span><span class="n">mockMvc</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="ss">&quot;/api/auth/login&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="n">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="n">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="n">isOk</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.accessToken&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="ss">&quot;test-access-token&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="ss">&quot;$.username&quot;</span><span class="p">).</span><span class="k">value</span><span class="p">(</span><span class="ss">&quot;admin&quot;</span><span class="p">));</span>
+<span class="err">}</span>
+
+<span class="nv">@Test</span>
+<span class="n">void</span><span class="w"> </span><span class="n">testLogin_InvalidCredentials</span><span class="p">()</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">测试无效凭证</span>
+<span class="w">    </span><span class="n">LoginRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LoginRequest</span><span class="p">(</span><span class="ss">&quot;admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;wrong-password&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">authService</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="ow">any</span><span class="p">(</span><span class="n">LoginRequest</span><span class="p">.</span><span class="k">class</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">thenThrow</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="ss">&quot;Invalid credentials&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="n">mockMvc</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">post</span><span class="p">(</span><span class="ss">&quot;/api/auth/login&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="n">APPLICATION_JSON</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">content</span><span class="p">(</span><span class="n">objectMapper</span><span class="p">.</span><span class="n">writeValueAsString</span><span class="p">(</span><span class="n">request</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="n">is4xxClientError</span><span class="p">());</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 AuthControllerTest.java
+- [ ] 理解 MockMvc 测试方法
+- [ ] 运行测试：<code>mvn test -Dtest=AuthControllerTest</code>
+- [ ] 查看测试覆盖率报告</p>
+<hr />
+<h2 id="_8">五、前端实现（分步骤）</h2>
+<h3 id="1_1">步骤 1：类型定义</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/types/auth.ts</code></p>
+<p>```typescript
+export interface User {
+  id: string;
+  username: string;
+  email?: string;
+  phone?: string;
+  roles: string[];
+  permissions: string[];
+}</p>
+<p>export interface LoginRequest {
+  username: string;
+  password: string;
+}</p>
+<p>export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  userId: string;
+  username: string;
+}</p>
+<p>export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+}
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 auth.ts 文件
+- [ ] 理解 TypeScript 接口定义
+- [ ] 添加新的类型定义</p>
+<hr />
+<h3 id="2api">步骤 2：API 封装</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/api/auth.ts</code></p>
+<p>```typescript
+import axios from 'axios';
+import type { LoginRequest, AuthResponse, User } from '@/types/auth';</p>
+<p>const API_BASE = '/api/auth';</p>
+<p>export const authApi = {
+  // 登录
+  async login(data: LoginRequest): Promise<AuthResponse> {
+    const response = await axios.post(<code>${API_BASE}/login</code>, data);
+    return response.data;
+  },</p>
+<p>// 登出
+  async logout(token: string): Promise<void> {
+    await axios.post(<code>${API_BASE}/logout</code>, null, {
+      headers: { Authorization: <code>Bearer ${token}</code> }
+    });
+  },</p>
+<p>// 刷新 Token
+  async refreshToken(refreshToken: string): Promise<AuthResponse> {
+    const response = await axios.post(<code>${API_BASE}/refresh</code>, null, {
+      headers: { Authorization: <code>Bearer ${refreshToken}</code> }
+    });
+    return response.data;
+  },</p>
+<p>// 获取当前用户信息
+  async getCurrentUser(): Promise<User> {
+    const response = await axios.get(<code>${API_BASE}/me</code>);
+    return response.data;
+  }
+};
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 auth.ts 文件
+- [ ] 理解 Axios 封装
+- [ ] 测试 API 调用</p>
+<hr />
+<h3 id="3">步骤 3：登录页面</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/views/LoginView.vue</code></p>
+<p>```vue
+<template>
+<br />
+<div class="login-container">
+    <div class="login-box">
+      <h1 class="login-title">宿舍用电管理系统</h1>
+
+      <el-form
+        ref="formRef"
+        :model="loginForm"
+        :rules="rules"
+        @submit.prevent="handleLogin"
+      >
+        <el-form-item prop="username">
+          <el-input
+            v-model="loginForm.username"
+            placeholder="用户名"
+            prefix-icon="User"
+            size="large"
+          />
+        </el-form-item>
+
+        <el-form-item prop="password">
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            placeholder="密码"
+            prefix-icon="Lock"
+            size="large"
+            show-password
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button
+            type="primary"
+            size="large"
+            :loading="loading"
+            native-type="submit"
+            style="width: 100%"
+          >
+            登录
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div></p>
+<p></template></p>
+<script setup lang="ts">
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
+import { authApi } from '@/api/auth';
+import { useAuthStore } from '@/stores/auth';
+
+const router = useRouter();
+const authStore = useAuthStore();
+const formRef = ref<FormInstance>();
+const loading = ref(false);
+
+const loginForm = reactive({
+  username: 'admin',
+  password: 'admin123'
+});
+
+const rules: FormRules = {
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, message: '密码长度至少 6 位', trigger: 'blur' }
+  ]
+};
+
+const handleLogin = async () => {
+  if (!formRef.value) return;
+
+  await formRef.value.validate(async (valid) => {
+    if (!valid) return;
+
+    loading.value = true;
+    try {
+      const response = await authApi.login(loginForm);
+
+      // 保存 Token 和用户信息
+      await authStore.setToken(response.accessToken);
+      await authStore.setUser({
+        id: response.userId,
+        username: response.username,
+        roles: [],
+        permissions: []
+      });
+
+      ElMessage.success('登录成功');
+      router.push('/');
+    } catch (error: any) {
+      ElMessage.error(error.response?.data?.message || '登录失败');
+    } finally {
+      loading.value = false;
+    }
+  });
+};
+</script>
+
+<style scoped>
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+  width: 400px;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+</style>
+<p>```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 LoginView.vue
+- [ ] 理解 Vue 3 Composition API
+- [ ] 理解表单验证
+- [ ] 运行前端项目测试登录</p>
+<hr />
+<h3 id="4">步骤 4：状态管理</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/stores/auth.ts</code></p>
+<p>```typescript
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import type { User, AuthState } from '@/types/auth';
+import { authApi } from '@/api/auth';</p>
+<p>export const useAuthStore = defineStore('auth', () =&gt; {
+  const token = ref<string | null>(localStorage.getItem('token'));
+  const user = ref<User | null>(null);</p>
+<p>const isAuthenticated = computed(() =&gt; !!token.value);
+  const roles = computed(() =&gt; user.value?.roles || []);
+  const permissions = computed(() =&gt; user.value?.permissions || []);</p>
+<p>// 设置 Token
+  async function setToken(newToken: string) {
+    token.value = newToken;
+    localStorage.setItem('token', newToken);
+  }</p>
+<p>// 设置用户信息
+  async function setUser(newUser: User) {
+    user.value = newUser;
+  }</p>
+<p>// 加载用户信息
+  async function loadUser() {
+    if (!token.value) return;</p>
+<div class="codehilite"><pre><span></span><code><span class="n">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">userData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">await</span><span class="w"> </span><span class="n">authApi</span><span class="o">.</span><span class="n">getCurrentUser</span><span class="p">();</span>
+<span class="w">  </span><span class="n">user</span><span class="o">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userData</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">catch</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">console</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failed to load user:&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>}</p>
+<p>// 登出
+  async function logout() {
+    if (token.value) {
+      await authApi.logout(token.value);
+    }
+    token.value = null;
+    user.value = null;
+    localStorage.removeItem('token');
+  }</p>
+<p>return {
+    token,
+    user,
+    isAuthenticated,
+    roles,
+    permissions,
+    setToken,
+    setUser,
+    loadUser,
+    logout
+  };
+});
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 创建 auth.ts store
+- [ ] 理解 Pinia 状态管理
+- [ ] 测试状态持久化</p>
+<hr />
+<h3 id="5">步骤 5：路由守卫</h3>
+<p><strong>文件位置</strong>: <code>frontend/src/router/index.ts</code></p>
+<p>```typescript
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';</p>
+<p>const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/login',
+      name: 'Login',
+      component: () =&gt; import('@/views/LoginView.vue')
+    },
+    {
+      path: '/',
+      name: 'Home',
+      component: () =&gt; import('@/views/HomeView.vue'),
+      meta: { requiresAuth: true }
+    }
+  ]
+});</p>
+<p>// 全局前置守卫
+router.beforeEach(async (to, from, next) =&gt; {
+  const authStore = useAuthStore();</p>
+<p>// 检查是否需要认证
+  if (to.meta.requiresAuth &amp;&amp; !authStore.isAuthenticated) {
+    next({ name: 'Login', query: { redirect: to.fullPath } });
+    return;
+  }</p>
+<p>// 如果已认证但访问登录页
+  if (to.name === 'Login' &amp;&amp; authStore.isAuthenticated) {
+    next({ name: 'Home' });
+    return;
+  }</p>
+<p>next();
+});</p>
+<p>export default router;
+```</p>
+<p><strong>实操任务</strong>:
+- [ ] 配置路由守卫
+- [ ] 测试未登录访问受保护页面
+- [ ] 测试登录后跳转</p>
+<hr />
+<h2 id="_9">六、联调验证</h2>
+<h3 id="61">6.1 功能验证清单</h3>
+<h4 id="_10">后端验证</h4>
+<ul>
+<li>[ ] 启动后端服务</li>
+<li>[ ] 使用 Postman 测试登录接口</li>
+<li>[ ] 验证返回的 Token 格式正确</li>
+<li>[ ] 使用 Token 访问受保护接口</li>
+<li>[ ] 验证 Token 刷新功能</li>
+<li>[ ] 验证登出功能</li>
+</ul>
+<h4 id="_11">前端验证</h4>
+<ul>
+<li>[ ] 启动前端服务</li>
+<li>[ ] 访问登录页面</li>
+<li>[ ] 输入正确的用户名密码</li>
+<li>[ ] 验证登录成功后跳转到首页</li>
+<li>[ ] 验证 Token 存储到 localStorage</li>
+<li>[ ] 刷新页面后保持登录状态</li>
+<li>[ ] 测试登出功能</li>
+</ul>
+<h4 id="_12">权限控制验证</h4>
+<ul>
+<li>[ ] 创建不同角色的用户</li>
+<li>[ ] 使用不同角色登录</li>
+<li>[ ] 验证无权限用户无法访问受限页面</li>
+<li>[ ] 验证后端接口权限检查生效</li>
+</ul>
+<h3 id="62">6.2 常见问题与解决方案</h3>
+<h4 id="1_2">问题 1：跨域认证失败</h4>
+<p><strong>现象</strong>: 前端调用后端接口报 CORS 错误</p>
+<p><strong>解决方案</strong>:
+```java
+// 在 SecurityConfig 中配置 CORS
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@Bean</span>
+<span class="k">public</span><span class="w"> </span><span class="n">SecurityFilterChain</span><span class="w"> </span><span class="n">filterChain</span><span class="p">(</span><span class="n">HttpSecurity</span><span class="w"> </span><span class="n">http</span><span class="p">)</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">http</span>
+<span class="w">        </span><span class="p">.</span><span class="n">cors</span><span class="p">(</span><span class="n">cors</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cors</span><span class="p">.</span><span class="n">configurationSource</span><span class="p">(</span><span class="n">corsConfigurationSource</span><span class="p">()))</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="n">其他配置</span>
+<span class="w">    </span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">http</span><span class="p">.</span><span class="n">build</span><span class="p">();</span>
+<span class="err">}</span>
+
+<span class="nv">@Bean</span>
+<span class="k">public</span><span class="w"> </span><span class="n">CorsConfigurationSource</span><span class="w"> </span><span class="n">corsConfigurationSource</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="n">CorsConfiguration</span><span class="w"> </span><span class="n">configuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CorsConfiguration</span><span class="p">();</span>
+<span class="w">    </span><span class="n">configuration</span><span class="p">.</span><span class="n">setAllowedOrigins</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="ss">&quot;http://localhost:3000&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">configuration</span><span class="p">.</span><span class="n">setAllowedMethods</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="ss">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;POST&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;PUT&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;DELETE&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;OPTIONS&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">configuration</span><span class="p">.</span><span class="n">setAllowedHeaders</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="ss">&quot;*&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">configuration</span><span class="p">.</span><span class="n">setAllowCredentials</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">UrlBasedCorsConfigurationSource</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UrlBasedCorsConfigurationSource</span><span class="p">();</span>
+<span class="w">    </span><span class="n">source</span><span class="p">.</span><span class="n">registerCorsConfiguration</span><span class="p">(</span><span class="ss">&quot;/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">configuration</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">source</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>}
+```</p>
+<h4 id="2token">问题 2：Token 刷新时序问题</h4>
+<p><strong>现象</strong>: 多个请求同时触发 Token 刷新</p>
+<p><strong>解决方案</strong>:
+```typescript
+// 在 API 拦截器中控制
+let isRefreshing = false;
+let refreshSubscribers: Array&lt;(token: string) =&gt; void&gt; = [];</p>
+<p>axios.interceptors.response.use(
+  response =&gt; response,
+  async error =&gt; {
+    const { config, response } = error;</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">response</span><span class="err">?</span><span class="o">.</span><span class="n">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">401</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">config</span><span class="o">.</span><span class="n">_retry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isRefreshing</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">等待刷新完成</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">Promise</span><span class="p">(</span><span class="n">resolve</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">refreshSubscribers</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">token</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">config</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">Authorization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">`</span><span class="n">Bearer</span><span class="w"> </span><span class="o">$</span><span class="p">{</span><span class="n">token</span><span class="p">}</span><span class="err">`</span><span class="p">;</span>
+<span class="w">        </span><span class="n">resolve</span><span class="p">(</span><span class="n">axios</span><span class="p">(</span><span class="n">config</span><span class="p">));</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">_retry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">true</span><span class="p">;</span>
+<span class="w">  </span><span class="n">isRefreshing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">true</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">newToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">await</span><span class="w"> </span><span class="n">refreshToken</span><span class="p">();</span>
+<span class="w">    </span><span class="n">refreshSubscribers</span><span class="o">.</span><span class="n">forEach</span><span class="p">(</span><span class="n">cb</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">cb</span><span class="p">(</span><span class="n">newToken</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">axios</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="n">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">isRefreshing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">refreshSubscribers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">return</span><span class="w"> </span><span class="n">Promise</span><span class="o">.</span><span class="n">reject</span><span class="p">(</span><span class="n">error</span><span class="p">);</span>
+</code></pre></div>
+
+<p>}
+);
+```</p>
+<h4 id="3_1">问题 3：刷新页面后登录状态丢失</h4>
+<p><strong>现象</strong>: 刷新页面后需要重新登录</p>
+<p><strong>解决方案</strong>:
+<code>typescript
+// 在 App.vue 中恢复登录状态
+onMounted(async () =&gt; {
+  const authStore = useAuthStore();
+  if (authStore.token) {
+    await authStore.loadUser();
+  }
+});</code></p>
+<hr />
+<h2 id="_13">七、完成后的文件结构 📁</h2>
+<h3 id="_14">后端新增/修改的文件</h3>
+<p><code>backend/src/main/java/com/dormpower/
+├── model/
+│   ├── UserAccount.java           ✅ 新建
+│   ├── Role.java                  ✅ 新建
+│   ├── Permission.java            ✅ 新建
+│   ├── UserRole.java              ✅ 新建
+│   ├── LoginLog.java              ✅ 新建
+│   └── IpAccessControl.java       ✅ 新建
+├── repository/
+│   ├── UserAccountRepository.java ✅ 新建
+│   ├── RoleRepository.java        ✅ 新建
+│   ├── PermissionRepository.java  ✅ 新建
+│   └── LoginLogRepository.java    ✅ 新建
+├── service/
+│   ├── AuthService.java           ✅ 新建
+│   ├── UserService.java           ✅ 新建
+│   ├── RbacService.java           ✅ 新建
+│   └── impl/
+│       ├── AuthServiceImpl.java   ✅ 新建
+│       ├── UserServiceImpl.java   ✅ 新建
+│       └── RbacServiceImpl.java   ✅ 新建
+├── controller/
+│   ├── AuthController.java        ✅ 新建
+│   ├── UserController.java        ✅ 新建
+│   └── RbacController.java        ✅ 新建
+├── dto/
+│   ├── request/
+│   │   ├── LoginRequest.java      ✅ 新建
+│   │   └── CreateUserRequest.java ✅ 新建
+│   └── response/
+│       ├── AuthResponse.java      ✅ 新建
+│       └── UserResponse.java      ✅ 新建
+├── config/
+│   ├── SecurityConfig.java        ✅ 新建
+│   └── JwtTokenProvider.java      ✅ 新建
+└── exception/
+    ├── AuthenticationException.java ✅ 新建
+    └── AccessDeniedException.java   ✅ 新建</code></p>
+<h3 id="_15">前端新增/修改的文件</h3>
+<p><code>frontend/src/
+├── types/
+│   └── auth.ts                    ✅ 新建
+├── api/
+│   └── auth.ts                    ✅ 新建
+├── views/
+│   ├── LoginView.vue              ✅ 新建
+│   ├── UserManagementView.vue     ✅ 新建
+│   └── RbacView.vue               ✅ 新建
+├── stores/
+│   └── auth.ts                    ✅ 新建
+├── components/
+│   └── AuthGuard.vue              ✅ 新建
+└── router/
+    └── index.ts                   ✏️ 修改（添加路由守卫）</code></p>
+<h3 id="_16">测试文件</h3>
+<p><code>backend/src/test/java/com/dormpower/
+├── controller/
+│   ├── AuthControllerTest.java    ✅ 新建
+│   ├── UserControllerTest.java    ✅ 新建
+│   └── RbacControllerTest.java    ✅ 新建
+└── service/
+    └── AuthServiceTest.java       ✅ 新建</code></p>
+<hr />
+<h2 id="_17">八、扩展练习 💪</h2>
+<h3 id="_18">基础练习</h3>
+<ol>
+<li>添加邮箱验证功能</li>
+<li>实现密码找回功能</li>
+<li>添加登录验证码</li>
+<li>实现记住我功能</li>
+</ol>
+<h3 id="_19">进阶练习</h3>
+<ol>
+<li>实现双因素认证（2FA）</li>
+<li>集成第三方登录（微信、QQ）</li>
+<li>实现登录设备管理</li>
+<li>添加异常登录检测</li>
+</ol>
+<h3 id="_20">挑战练习</h3>
+<ol>
+<li>实现 OAuth2 认证服务器</li>
+<li>实现单点登录（SSO）</li>
+<li>实现权限动态配置</li>
+<li>实现操作审计日志</li>
+</ol>
+<hr />
+<h2 id="_21">九、知识点总结 📝</h2>
+<h3 id="_22">核心知识点</h3>
+<h4 id="_23">后端</h4>
+<ol>
+<li><strong>Spring Security</strong></li>
+<li>认证流程</li>
+<li>授权机制</li>
+<li>
+<p>过滤器链配置</p>
+</li>
+<li>
+<p><strong>JWT</strong></p>
+</li>
+<li>Token 结构</li>
+<li>签名验证</li>
+<li>
+<p>过期处理</p>
+</li>
+<li>
+<p><strong>密码加密</strong></p>
+</li>
+<li>BCrypt 算法</li>
+<li>
+<p>加盐策略</p>
+</li>
+<li>
+<p><strong>RBAC 模型</strong></p>
+</li>
+<li>用户 - 角色 - 权限关系</li>
+<li>权限继承</li>
+</ol>
+<h4 id="_24">前端</h4>
+<ol>
+<li><strong>Vue Router 守卫</strong></li>
+<li>全局前置守卫</li>
+<li>路由独享守卫</li>
+<li>
+<p>组件内守卫</p>
+</li>
+<li>
+<p><strong>Pinia 状态管理</strong></p>
+</li>
+<li>State</li>
+<li>Getters</li>
+<li>
+<p>Actions</p>
+</li>
+<li>
+<p><strong>Axios 拦截器</strong></p>
+</li>
+<li>请求拦截</li>
+<li>响应拦截</li>
+<li>Token 刷新</li>
+</ol>
+<h3 id="_25">最佳实践</h3>
+<ol>
+<li><strong>安全性</strong></li>
+<li>密码加密存储</li>
+<li>HTTPS 传输</li>
+<li>Token 安全存储</li>
+<li>
+<p>CSRF 防护</p>
+</li>
+<li>
+<p><strong>性能优化</strong></p>
+</li>
+<li>Token 缓存</li>
+<li>权限缓存</li>
+<li>
+<p>懒加载路由</p>
+</li>
+<li>
+<p><strong>用户体验</strong></p>
+</li>
+<li>无感知刷新</li>
+<li>友好的错误提示</li>
+<li>登录状态保持</li>
+</ol>
+<hr />
+<h2 id="_26">十、下一步学习</h2>
+<p>完成本模块后，建议继续学习：</p>
+<ol>
+<li><strong><a href="./07-宿舍管理模块.md">07-宿舍管理模块</a></strong> - 学习基础数据管理</li>
+<li><strong><a href="./02-设备管理模块.md">02-设备管理模块</a></strong> - 学习 IoT 设备管理</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-21<br />
+<strong>作者</strong>: 教学文档编写组<br />
+<strong>状态</strong>: ✅ 已完成</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav-container a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
