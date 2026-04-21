@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/learn/*.md'
-      - 'docs/learn/convert.py'
-      - 'docs/learn/generate_index.py'
   workflow_dispatch:
 
 permissions:
