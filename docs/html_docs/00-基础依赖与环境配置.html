@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>00 基础依赖与环境配置 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块 00：基础依赖与环境配置</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 2-3 天<br />
+<strong>难度</strong>: ⭐⭐☆☆☆<br />
+<strong>前置知识</strong>: Java 基础、Maven 基础、Node.js 基础</p>
+</blockquote>
+<hr />
+<h2>一、项目概述</h2>
+<h3>1.1 技术栈总览</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">后端技术栈</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">核心框架</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Java 21 (LTS)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spring Boot 3.2.3</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spring Security (认证授权)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spring Data JPA (数据持久化)</span>
+
+<span class="w">  </span><span class="nt">通信协议</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MQTT (IoT设备通信)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WebSocket (实时推送)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REST API (前后端交互)</span>
+
+<span class="w">  </span><span class="nt">数据存储</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQL (主数据库)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H2 (开发环境内存数据库)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Redis (分布式缓存)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Caffeine (本地缓存)</span>
+
+<span class="w">  </span><span class="nt">消息中间件</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RabbitMQ (消息队列)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kafka (高吞吐消息处理)</span>
+
+<span class="w">  </span><span class="nt">监控与可观测性</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spring Boot Actuator</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus + Grafana</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Micrometer</span>
+
+<span class="w">  </span><span class="nt">其他工具</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lombok (代码简化)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JWT (Token认证)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Springdoc OpenAPI (API文档)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Guava (工具库)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resilience4j (熔断降级)</span>
+
+<span class="nt">前端技术栈</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">核心框架</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vue 3.5 (Composition API)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TypeScript 5.7</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vite 6.2 (构建工具)</span>
+
+<span class="w">  </span><span class="nt">UI组件库</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ant Design Vue 4.2</span>
+
+<span class="w">  </span><span class="nt">状态管理</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pinia 3.0</span>
+
+<span class="w">  </span><span class="nt">路由管理</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vue Router 4.5</span>
+
+<span class="w">  </span><span class="nt">数据可视化</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ECharts 5.6</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vue-ECharts 7.0</span>
+
+<span class="w">  </span><span class="nt">HTTP客户端</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Axios 1.7</span>
+
+<span class="w">  </span><span class="nt">工具库</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Day.js (时间处理)</span>
+
+<span class="w">  </span><span class="nt">代码质量</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ESLint 9.2</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Husky (Git钩子)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Commitlint (提交规范)</span>
+</code></pre></div>
+
+<h3>1.2 项目结构</h3>
+<div class="codehilite"><pre><span></span><code><span class="nx">dorm</span><span class="o">-</span><span class="nx">power</span><span class="o">-</span><span class="nx">console</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">backend</span><span class="o">/</span><span class="w">                           </span><span class="err">#</span><span class="w"> </span><span class="nx">后端项目</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">java</span><span class="o">/</span><span class="nx">com</span><span class="o">/</span><span class="nx">dormpower</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">config</span><span class="o">/</span><span class="w">                   </span><span class="err">#</span><span class="w"> </span><span class="nx">配置类</span><span class="err">（</span><span class="mi">22</span><span class="nx">个配置类</span><span class="err">）</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">controller</span><span class="o">/</span><span class="w">               </span><span class="err">#</span><span class="w"> </span><span class="nx">REST控制器</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">service</span><span class="o">/</span><span class="w">                  </span><span class="err">#</span><span class="w"> </span><span class="nx">业务逻辑层</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">repository</span><span class="o">/</span><span class="w">               </span><span class="err">#</span><span class="w"> </span><span class="nx">数据访问层</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">model</span><span class="o">/</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="nx">JPA实体类</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">dto</span><span class="o">/</span><span class="w">                      </span><span class="err">#</span><span class="w"> </span><span class="nx">数据传输对象</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">mqtt</span><span class="o">/</span><span class="w">                     </span><span class="err">#</span><span class="w"> </span><span class="nx">MQTT消息处理</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">websocket</span><span class="o">/</span><span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="nx">WebSocket处理</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">scheduler</span><span class="o">/</span><span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="nx">定时任务</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">annotation</span><span class="o">/</span><span class="w">               </span><span class="err">#</span><span class="w"> </span><span class="nx">自定义注解</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">exception</span><span class="o">/</span><span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="nx">异常处理</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">utils</span><span class="o">/</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="nx">工具类</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">src</span><span class="o">/</span><span class="nx">main</span><span class="o">/</span><span class="nx">resources</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">application</span><span class="p">.</span><span class="nx">yml</span><span class="w">           </span><span class="err">#</span><span class="w"> </span><span class="nx">主配置文件</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">application</span><span class="o">-</span><span class="nx">dev</span><span class="p">.</span><span class="nx">yml</span><span class="w">       </span><span class="err">#</span><span class="w"> </span><span class="nx">开发环境配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">application</span><span class="o">-</span><span class="nx">local</span><span class="p">.</span><span class="nx">yml</span><span class="w">     </span><span class="err">#</span><span class="w"> </span><span class="nx">本地环境配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">application</span><span class="o">-</span><span class="nx">prod</span><span class="p">.</span><span class="nx">yml</span><span class="w">      </span><span class="err">#</span><span class="w"> </span><span class="nx">生产环境配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">application</span><span class="o">-</span><span class="nx">low</span><span class="o">-</span><span class="nx">memory</span><span class="p">.</span><span class="nx">yml</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="nx">低内存配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">pom</span><span class="p">.</span><span class="nx">xml</span><span class="w">                       </span><span class="err">#</span><span class="w"> </span><span class="nx">Maven依赖配置</span>
+<span class="err">│</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">frontend</span><span class="o">/</span><span class="w">                          </span><span class="err">#</span><span class="w"> </span><span class="nx">前端项目</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">src</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="kn">api</span><span class="o">/</span><span class="w">                      </span><span class="err">#</span><span class="w"> </span><span class="nx">API接口封装</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">components</span><span class="o">/</span><span class="w">               </span><span class="err">#</span><span class="w"> </span><span class="nx">公共组件</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">views</span><span class="o">/</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="nx">页面组件</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">router</span><span class="o">/</span><span class="w">                   </span><span class="err">#</span><span class="w"> </span><span class="nx">路由配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">stores</span><span class="o">/</span><span class="w">                   </span><span class="err">#</span><span class="w"> </span><span class="nx">Pinia状态管理</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">types</span><span class="o">/</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="nx">TypeScript类型定义</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">utils</span><span class="o">/</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="nx">工具函数</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="kn">package</span><span class="p">.</span><span class="nx">json</span><span class="w">                  </span><span class="err">#</span><span class="w"> </span><span class="nx">前端依赖配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="nx">vite</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">ts</span><span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="nx">Vite构建配置</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">tsconfig</span><span class="p">.</span><span class="nx">json</span><span class="w">                 </span><span class="err">#</span><span class="w"> </span><span class="nx">TypeScript配置</span>
+<span class="err">│</span>
+<span class="err">└──</span><span class="w"> </span><span class="nx">docs</span><span class="o">/</span><span class="w">                              </span><span class="err">#</span><span class="w"> </span><span class="nx">项目文档</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="nx">learn</span><span class="o">/</span><span class="w">                         </span><span class="err">#</span><span class="w"> </span><span class="nx">学习文档</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="nx">html_docs</span><span class="o">/</span><span class="w">                     </span><span class="err">#</span><span class="w"> </span><span class="nx">HTML文档</span>
+</code></pre></div>
+
+<hr />
+<h2>二、后端依赖配置</h2>
+<h3>2.1 Maven 核心依赖</h3>
+<p><strong>文件位置</strong>: <code>backend/pom.xml</code></p>
+<h4>2.1.1 Spring Boot 基础依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- 父POM：统一管理Spring Boot版本 --&gt;</span>
+<span class="nt">&lt;parent&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-parent<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>3.2.3<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;relativePath/&gt;</span>
+<span class="nt">&lt;/parent&gt;</span>
+
+<span class="cm">&lt;!-- 核心依赖说明 --&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;java.version&gt;</span>21<span class="nt">&lt;/java.version&gt;</span><span class="w">              </span><span class="cm">&lt;!-- 使用Java 21 LTS --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;maven.compiler.source&gt;</span>${java.version}<span class="nt">&lt;/maven.compiler.source&gt;</span>
+<span class="w">    </span><span class="nt">&lt;maven.compiler.target&gt;</span>${java.version}<span class="nt">&lt;/maven.compiler.target&gt;</span>
+<span class="w">    </span><span class="nt">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="nt">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="w">    </span><span class="nt">&lt;lombok.version&gt;</span>1.18.34<span class="nt">&lt;/lombok.version&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Web服务依赖 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- 排除默认Logback，使用Log4j2 --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- JPA数据持久化 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-data-jpa<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- WebSocket实时通信 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-websocket<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- 安全框架 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-security<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- 监控端点 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-actuator<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.2 数据库依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- PostgreSQL生产数据库 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.postgresql<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>postgresql<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>42.7.3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- H2开发环境内存数据库 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.h2database<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>h2<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>2.2.224<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span><span class="w">  </span><span class="cm">&lt;!-- 仅运行时使用 --&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.3 缓存依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Redis分布式缓存 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-data-redis<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Redis连接池 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.apache.commons<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>commons-pool2<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Caffeine本地缓存（多级缓存） --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.github.ben-manes.caffeine<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>caffeine<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>3.1.8<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.4 消息中间件依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- RabbitMQ消息队列 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-amqp<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Kafka高吞吐消息处理 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.kafka<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-kafka<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.5 IoT通信依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- MQTT客户端（Eclipse Paho） --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.eclipse.paho<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>org.eclipse.paho.client.mqttv3<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.2.5<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.6 安全与认证依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- JWT认证 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.jsonwebtoken<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>jjwt-api<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>0.11.5<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.jsonwebtoken<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>jjwt-impl<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>0.11.5<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.jsonwebtoken<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>jjwt-jackson<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>0.11.5<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.7 工具类依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Lombok代码简化 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.projectlombok<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>lombok<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.18.34<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;optional&gt;</span>true<span class="nt">&lt;/optional&gt;</span><span class="w">  </span><span class="cm">&lt;!-- 编译时依赖，不打包到jar --&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Guava工具库 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.google.guava<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>guava<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>33.0.0-jre<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- 参数校验 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-validation<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.8 监控与可观测性依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Prometheus监控指标 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.micrometer<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>micrometer-registry-prometheus<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Resilience4j熔断降级 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.github.resilience4j<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>resilience4j-circuitbreaker<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>2.2.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.github.resilience4j<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>resilience4j-micrometer<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>2.2.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.9 API文档依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Springdoc OpenAPI（替代Swagger） --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springdoc<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>springdoc-openapi-starter-webmvc-ui<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>2.3.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.10 日志依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Log4j2日志框架（替代Logback） --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.apache.logging.log4j<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>log4j-core<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>2.20.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.apache.logging.log4j<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>log4j-slf4j2-impl<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>2.20.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h4>2.1.11 测试依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- Spring Boot测试 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-test<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="w">    </span><span class="nt">&lt;exclusions&gt;</span>
+<span class="w">        </span><span class="nt">&lt;exclusion&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-logging<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/exclusion&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/exclusions&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Spring Security测试 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.security<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-security-test<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- JUnit 5 --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>junit-jupiter<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>5.9.3<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+<span class="cm">&lt;!-- Mockito（Java 25兼容） --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.mockito<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mockito-inline<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>5.3.1<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>net.bytebuddy<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>byte-buddy-agent<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.14.18<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+
+<h3>2.2 Maven 构建配置</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;build&gt;</span>
+<span class="w">    </span><span class="nt">&lt;plugins&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- Spring Boot Maven插件 --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;plugin&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-boot-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;configuration&gt;</span>
+<span class="w">                </span><span class="nt">&lt;excludes&gt;</span>
+<span class="w">                    </span><span class="cm">&lt;!-- Lombok不打包到jar --&gt;</span>
+<span class="w">                    </span><span class="nt">&lt;exclude&gt;</span>
+<span class="w">                        </span><span class="nt">&lt;groupId&gt;</span>org.projectlombok<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">                        </span><span class="nt">&lt;artifactId&gt;</span>lombok<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">                    </span><span class="nt">&lt;/exclude&gt;</span>
+<span class="w">                </span><span class="nt">&lt;/excludes&gt;</span>
+<span class="w">            </span><span class="nt">&lt;/configuration&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/plugin&gt;</span>
+
+<span class="w">        </span><span class="cm">&lt;!-- 编译器插件 --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;plugin&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+<span class="w">            </span><span class="nt">&lt;configuration&gt;</span>
+<span class="w">                </span><span class="nt">&lt;source&gt;</span>${java.version}<span class="nt">&lt;/source&gt;</span>
+<span class="w">                </span><span class="nt">&lt;target&gt;</span>${java.version}<span class="nt">&lt;/target&gt;</span>
+<span class="w">                </span><span class="nt">&lt;annotationProcessorPaths&gt;</span>
+<span class="w">                    </span><span class="cm">&lt;!-- Lombok注解处理器 --&gt;</span>
+<span class="w">                    </span><span class="nt">&lt;path&gt;</span>
+<span class="w">                        </span><span class="nt">&lt;groupId&gt;</span>org.projectlombok<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">                        </span><span class="nt">&lt;artifactId&gt;</span>lombok<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">                        </span><span class="nt">&lt;version&gt;</span>${lombok.version}<span class="nt">&lt;/version&gt;</span>
+<span class="w">                    </span><span class="nt">&lt;/path&gt;</span>
+<span class="w">                </span><span class="nt">&lt;/annotationProcessorPaths&gt;</span>
+<span class="w">            </span><span class="nt">&lt;/configuration&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/plugin&gt;</span>
+
+<span class="w">        </span><span class="cm">&lt;!-- 测试插件（Java 21模块系统兼容） --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;plugin&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;version&gt;</span>3.1.2<span class="nt">&lt;/version&gt;</span>
+<span class="w">            </span><span class="nt">&lt;configuration&gt;</span>
+<span class="w">                </span><span class="nt">&lt;argLine&gt;</span>
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.base/java.lang=ALL-UNNAMED
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.base/java.lang.invoke=ALL-UNNAMED
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.base/java.util=ALL-UNNAMED
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.base/java.io=ALL-UNNAMED
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.base/java.lang.reflect=ALL-UNNAMED
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.base/java.text=ALL-UNNAMED
+<span class="w">                    </span>--add-opens<span class="w"> </span>java.desktop/java.awt.font=ALL-UNNAMED
+<span class="w">                    </span>-Dnet.bytebuddy.experimental=true
+<span class="w">                </span><span class="nt">&lt;/argLine&gt;</span>
+<span class="w">            </span><span class="nt">&lt;/configuration&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/plugin&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/plugins&gt;</span>
+<span class="nt">&lt;/build&gt;</span>
+</code></pre></div>
+
+<hr />
+<h2>三、前端依赖配置</h2>
+<h3>3.1 package.json 依赖</h3>
+<p><strong>文件位置</strong>: <code>frontend/package.json</code></p>
+<h4>3.1.1 生产依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;@ant-design/icons-vue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^7.0.1&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Ant Design图标</span>
+<span class="w">    </span><span class="nt">&quot;ant-design-vue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4.2.6&quot;</span><span class="p">,</span><span class="w">          </span><span class="c1">// UI组件库</span>
+<span class="w">    </span><span class="nt">&quot;axios&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^1.7.9&quot;</span><span class="p">,</span><span class="w">                   </span><span class="c1">// HTTP客户端</span>
+<span class="w">    </span><span class="nt">&quot;dayjs&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^1.11.13&quot;</span><span class="p">,</span><span class="w">                 </span><span class="c1">// 轻量时间处理库</span>
+<span class="w">    </span><span class="nt">&quot;echarts&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5.6.0&quot;</span><span class="p">,</span><span class="w">                 </span><span class="c1">// 图表库</span>
+<span class="w">    </span><span class="nt">&quot;pinia&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^3.0.1&quot;</span><span class="p">,</span><span class="w">                   </span><span class="c1">// 状态管理（替代Vuex）</span>
+<span class="w">    </span><span class="nt">&quot;vue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^3.5.13&quot;</span><span class="p">,</span><span class="w">                    </span><span class="c1">// Vue 3框架</span>
+<span class="w">    </span><span class="nt">&quot;vue-echarts&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^7.0.3&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// Vue封装的ECharts</span>
+<span class="w">    </span><span class="nt">&quot;vue-router&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4.5.0&quot;</span><span class="w">               </span><span class="c1">// 路由管理</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>3.1.2 开发依赖</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;@commitlint/cli&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^20.4.3&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// Git提交规范检查</span>
+<span class="w">    </span><span class="nt">&quot;@commitlint/config-conventional&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^20.4.3&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 常规提交配置</span>
+<span class="w">    </span><span class="nt">&quot;@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^22.13.5&quot;</span><span class="p">,</span><span class="w">              </span><span class="c1">// Node.js类型定义</span>
+<span class="w">    </span><span class="nt">&quot;@vitejs/plugin-vue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5.2.1&quot;</span><span class="p">,</span><span class="w">         </span><span class="c1">// Vite Vue插件</span>
+<span class="w">    </span><span class="nt">&quot;@vue/eslint-config-typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^14.4.0&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Vue+TS ESLint配置</span>
+<span class="w">    </span><span class="nt">&quot;@vue/tsconfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.7.0&quot;</span><span class="p">,</span><span class="w">              </span><span class="c1">// Vue TypeScript配置</span>
+<span class="w">    </span><span class="nt">&quot;eslint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^9.20.1&quot;</span><span class="p">,</span><span class="w">                    </span><span class="c1">// 代码检查工具</span>
+<span class="w">    </span><span class="nt">&quot;husky&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^9.1.7&quot;</span><span class="p">,</span><span class="w">                      </span><span class="c1">// Git钩子管理</span>
+<span class="w">    </span><span class="nt">&quot;rollup-plugin-visualizer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5.14.0&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 打包分析插件</span>
+<span class="w">    </span><span class="nt">&quot;sass-embedded&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^1.97.3&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// CSS预处理器</span>
+<span class="w">    </span><span class="nt">&quot;terser&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5.46.0&quot;</span><span class="p">,</span><span class="w">                    </span><span class="c1">// JS压缩工具</span>
+<span class="w">    </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5.7.3&quot;</span><span class="p">,</span><span class="w">                 </span><span class="c1">// TypeScript编译器</span>
+<span class="w">    </span><span class="nt">&quot;vite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^6.2.0&quot;</span><span class="p">,</span><span class="w">                       </span><span class="c1">// 现代构建工具</span>
+<span class="w">    </span><span class="nt">&quot;vue-tsc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^2.2.8&quot;</span><span class="w">                     </span><span class="c1">// Vue TypeScript检查</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>3.1.3 NPM脚本</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vite&quot;</span><span class="p">,</span><span class="w">                          </span><span class="c1">// 启动开发服务器</span>
+<span class="w">    </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vue-tsc &amp;&amp; vite build&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">// 类型检查+构建</span>
+<span class="w">    </span><span class="nt">&quot;build:analyze&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ANALYZE=true vue-tsc &amp;&amp; vite build&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 构建分析</span>
+<span class="w">    </span><span class="nt">&quot;preview&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vite preview&quot;</span><span class="p">,</span><span class="w">              </span><span class="c1">// 预览生产构建</span>
+<span class="w">    </span><span class="nt">&quot;lint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eslint . --ext .vue,.ts --fix&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 代码检查修复</span>
+<span class="w">    </span><span class="nt">&quot;type-check&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vue-tsc --noEmit&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">// TypeScript类型检查</span>
+<span class="w">    </span><span class="nt">&quot;prepare&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;husky&quot;</span><span class="w">                      </span><span class="c1">// 安装Git钩子</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>3.2 Vite 配置</h3>
+<p><strong>文件位置</strong>: <code>frontend/vite.config.ts</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vite&#39;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">vue</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@vitejs/plugin-vue&#39;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">resolve</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;path&#39;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">visualizer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;rollup-plugin-visualizer&#39;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nx">vue</span><span class="p">(),</span>
+<span class="w">    </span><span class="c1">// 打包分析（可选）</span>
+<span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ANALYZE</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">visualizer</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">open</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">gzipSize</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">brotliSize</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="p">],</span>
+
+<span class="w">  </span><span class="nx">resolve</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">alias</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s1">&#39;@&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;src&#39;</span><span class="p">)</span><span class="w">  </span><span class="c1">// 路径别名</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="nx">server</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="kt">3000</span><span class="p">,</span><span class="w">                        </span><span class="c1">// 开发服务器端口</span>
+<span class="w">    </span><span class="nx">proxy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// API代理配置</span>
+<span class="w">      </span><span class="s1">&#39;/api&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://localhost:8000&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">changeOrigin</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s1">&#39;/ws&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://localhost:8000&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">ws</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="nx">build</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;es2015&#39;</span><span class="p">,</span><span class="w">                  </span><span class="c1">// 编译目标</span>
+<span class="w">    </span><span class="nx">outDir</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;dist&#39;</span><span class="p">,</span><span class="w">                    </span><span class="c1">// 输出目录</span>
+<span class="w">    </span><span class="nx">sourcemap</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w">                  </span><span class="c1">// 生产环境不生成sourcemap</span>
+<span class="w">    </span><span class="nx">rollupOptions</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">output</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 手动分包</span>
+<span class="w">        </span><span class="nx">manualChunks</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">vendor</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;vue&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vue-router&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;pinia&#39;</span><span class="p">],</span>
+<span class="w">          </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;ant-design-vue&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;@ant-design/icons-vue&#39;</span><span class="p">],</span>
+<span class="w">          </span><span class="nx">charts</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;echarts&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vue-echarts&#39;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="c1">// 压缩配置</span>
+<span class="w">    </span><span class="nx">minify</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;terser&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">terserOptions</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">compress</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">drop_console</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">            </span><span class="c1">// 移除console</span>
+<span class="w">        </span><span class="nx">drop_debugger</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w">            </span><span class="c1">// 移除debugger</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+
+<h3>3.3 TypeScript 配置</h3>
+<p><strong>文件位置</strong>: <code>frontend/tsconfig.json</code></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;extends&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@vue/tsconfig/tsconfig.dom.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;baseUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;@/*&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;vite/client&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                    </span><span class="c1">// 严格模式</span>
+<span class="w">    </span><span class="nt">&quot;noImplicitAny&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">             </span><span class="c1">// 禁止隐式any</span>
+<span class="w">    </span><span class="nt">&quot;strictNullChecks&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">          </span><span class="c1">// 严格null检查</span>
+<span class="w">    </span><span class="nt">&quot;noUnusedLocals&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">            </span><span class="c1">// 未使用变量检查</span>
+<span class="w">    </span><span class="nt">&quot;noUnusedParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">         </span><span class="c1">// 未使用参数检查</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;src/**/*.ts&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;src/**/*.vue&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;env.d.ts&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;exclude&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、后端配置文件</h2>
+<h3>4.1 配置文件结构</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">配置文件说明</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">application.yml</span><span class="p">:</span><span class="w">               </span><span class="c1"># 主配置文件（公共配置）</span>
+<span class="w">  </span><span class="nt">application-dev.yml</span><span class="p">:</span><span class="w">           </span><span class="c1"># 开发环境（H2内存数据库）</span>
+<span class="w">  </span><span class="nt">application-local.yml</span><span class="p">:</span><span class="w">         </span><span class="c1"># 本地环境（本地PostgreSQL）</span>
+<span class="w">  </span><span class="nt">application-prod.yml</span><span class="p">:</span><span class="w">          </span><span class="c1"># 生产环境（远程PostgreSQL）</span>
+<span class="w">  </span><span class="nt">application-low-memory.yml</span><span class="p">:</span><span class="w">    </span><span class="c1"># 低内存环境（2核2G服务器）</span>
+<span class="w">  </span><span class="nt">application-dev-full.yml</span><span class="p">:</span><span class="w">      </span><span class="c1"># 开发完整环境（启用所有中间件）</span>
+</code></pre></div>
+
+<h3>4.2 application.yml 主配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/resources/application.yml</code></p>
+<h4>4.2.1 数据库配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://localhost:5432/dorm_power</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rongx</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.postgresql.Driver</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span><span class="w">                              </span><span class="c1"># HikariCP连接池</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                    </span><span class="c1"># 最小空闲连接</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">               </span><span class="c1"># 最大连接池大小</span>
+<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60000</span><span class="w">                </span><span class="c1"># 空闲超时（60秒）</span>
+<span class="w">      </span><span class="nt">pool-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DormPowerHikariPool</span><span class="w">     </span><span class="c1"># 连接池名称</span>
+<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span><span class="w">              </span><span class="c1"># 连接最大生命周期（30分钟）</span>
+<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30000</span><span class="w">          </span><span class="c1"># 连接超时（30秒）</span>
+<span class="w">      </span><span class="nt">leak-detection-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120000</span><span class="w">   </span><span class="c1"># 连接泄漏检测（120秒）</span>
+
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span><span class="w">                   </span><span class="c1"># 自动更新表结构</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">                      </span><span class="c1"># 不打印SQL</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format_sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">                </span><span class="c1"># 不格式化SQL</span>
+<span class="w">        </span><span class="nt">dialect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.hibernate.dialect.PostgreSQLDialect</span>
+<span class="w">        </span><span class="nt">jdbc</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">                 </span><span class="c1"># 批量操作大小</span>
+<span class="w">        </span><span class="nt">order_inserts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># 优化插入顺序</span>
+<span class="w">        </span><span class="nt">order_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># 优化更新顺序</span>
+</code></pre></div>
+
+<h4>4.2.2 RabbitMQ配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rabbitmq</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_HOST:localhost}</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_PORT:5672}</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_USERNAME:guest}</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_PASSWORD:guest}</span>
+<span class="w">    </span><span class="nt">virtual-host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_VHOST:/}</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_ENABLED:true}</span>
+<span class="w">    </span><span class="nt">queue</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">telemetry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_QUEUE_TELEMETRY:telemetry.data}</span>
+<span class="w">      </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_QUEUE_ALERT:alert.message}</span>
+<span class="w">      </span><span class="nt">bill</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_QUEUE_BILL:bill.generate}</span>
+<span class="w">    </span><span class="nt">exchange</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">direct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_EXCHANGE_DIRECT:dormpower.direct}</span>
+<span class="w">    </span><span class="nt">routing</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">telemetry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_ROUTING_TELEMETRY:telemetry}</span>
+<span class="w">      </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_ROUTING_ALERT:alert}</span>
+<span class="w">      </span><span class="nt">bill</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${RABBITMQ_ROUTING_BILL:bill}</span>
+</code></pre></div>
+
+<h4>4.2.3 MQTT配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">mqtt</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${MQTT_ENABLED:true}</span>
+<span class="w">  </span><span class="nt">broker-url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${MQTT_BROKER_URL:tcp://localhost:1883}</span>
+<span class="w">  </span><span class="nt">client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${MQTT_CLIENT_ID:dorm-power-backend}</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${MQTT_USERNAME:admin}</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${MQTT_PASSWORD:admin}</span>
+<span class="w">  </span><span class="nt">topic-prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${MQTT_TOPIC_PREFIX:dorm}</span>
+<span class="w">  </span><span class="nt">topics</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">device-status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status</span><span class="w">               </span><span class="c1"># 设备状态主题</span>
+<span class="w">    </span><span class="nt">device-telemetry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telemetry</span><span class="w">         </span><span class="c1"># 遥测数据主题</span>
+<span class="w">    </span><span class="nt">device-command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="w">                 </span><span class="c1"># 命令下发主题</span>
+<span class="w">    </span><span class="nt">device-ack</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ack</span><span class="w">                     </span><span class="c1"># 命令确认主题</span>
+<span class="w">    </span><span class="nt">device-event</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event</span><span class="w">                 </span><span class="c1"># 设备事件主题</span>
+</code></pre></div>
+
+<h4>4.2.4 安全配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">security</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${JWT_SECRET:your-secret-key-must-be-at-least-256-bits-long-for-jwt}</span>
+<span class="w">    </span><span class="nt">expiration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${JWT_EXPIRATION:86400000}</span><span class="w">  </span><span class="c1"># 24小时（毫秒）</span>
+</code></pre></div>
+
+<h4>4.2.5 监控配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">management</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info,metrics,prometheus</span>
+<span class="w">      </span><span class="nt">base-path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/actuator</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">show-details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">diskspace</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+
+<h4>4.2.6 API文档配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">springdoc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api-docs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/v3/api-docs</span>
+<span class="w">  </span><span class="nt">swagger-ui</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/swagger-ui.html</span>
+<span class="w">    </span><span class="nt">tags-sorter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alpha</span><span class="w">                  </span><span class="c1"># 按字母排序</span>
+<span class="w">    </span><span class="nt">operations-sorter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alpha</span>
+</code></pre></div>
+
+<h3>4.3 application-dev.yml 开发环境</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/resources/application-dev.yml</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># 使用H2内存数据库（开发环境）</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:h2:mem:dorm_power;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sa</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.h2.Driver</span>
+
+<span class="w">  </span><span class="c1"># H2控制台（浏览器访问 http://localhost:8000/h2-console）</span>
+<span class="w">  </span><span class="nt">h2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">console</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/h2-console</span>
+
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                      </span><span class="c1"># 打印SQL</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format_sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                </span><span class="c1"># 格式化SQL</span>
+
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
+<span class="w">    </span><span class="nt">com.dormpower</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span><span class="w">                </span><span class="c1"># 项目日志DEBUG级别</span>
+<span class="w">    </span><span class="nt">org.hibernate.SQL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span><span class="w">            </span><span class="c1"># 打印SQL</span>
+<span class="w">    </span><span class="nt">org.hibernate.type.descriptor.sql.BasicBinder</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trace</span><span class="w">  </span><span class="c1"># 打印参数</span>
+</code></pre></div>
+
+<h3>4.4 application-local.yml 本地环境</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/resources/application-local.yml</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://localhost:5432/dorm_power</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.postgresql.Driver</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">com.dormpower</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
+</code></pre></div>
+
+<h3>4.5 application-prod.yml 生产环境</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/resources/application-prod.yml</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:dorm_power}</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_USERNAME:postgres}</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASSWORD:postgres}</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30000</span>
+<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span>
+<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30000</span>
+
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span><span class="w">                    </span><span class="c1"># 生产环境不自动更新</span>
+
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
+<span class="w">    </span><span class="nt">com.dormpower</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
+<span class="w">    </span><span class="nt">org.hibernate.SQL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">off</span>
+</code></pre></div>
+
+<h3>4.6 application-low-memory.yml 低内存环境</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/resources/application-low-memory.yml</code></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 针对2核2G服务器的优化配置</span>
+<span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">              </span><span class="c1"># 减少连接池</span>
+
+<span class="w">  </span><span class="c1"># 禁用不需要的功能</span>
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">open-in-view</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">                 </span><span class="c1"># 关闭Open-in-View</span>
+
+<span class="c1"># 减少线程池大小</span>
+<span class="nt">app</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">thread-pool</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">core-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">max-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">    </span><span class="nt">queue-capacity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
+<span class="w">    </span><span class="nt">com.dormpower</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
+</code></pre></div>
+
+<hr />
+<h2>五、Config配置类详解</h2>
+<h3>5.1 Config类总览</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">配置类清单（22个）</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">核心配置</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">AppConfig.java</span><span class="p">:</span><span class="w">                  </span><span class="c1"># 应用基础配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">AsyncConfig.java</span><span class="p">:</span><span class="w">                </span><span class="c1"># 异步任务配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CorsConfig.java</span><span class="p">:</span><span class="w">                 </span><span class="c1"># 跨域配置</span>
+
+<span class="w">  </span><span class="nt">安全配置</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">SecurityConfig.java</span><span class="p">:</span><span class="w">             </span><span class="c1"># Spring Security配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">JwtAuthenticationFilter.java</span><span class="p">:</span><span class="w">    </span><span class="c1"># JWT过滤器</span>
+
+<span class="w">  </span><span class="nt">数据库与缓存</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CacheConfig.java</span><span class="p">:</span><span class="w">                </span><span class="c1"># Caffeine缓存配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">RedisCacheConfig.java</span><span class="p">:</span><span class="w">           </span><span class="c1"># Redis缓存配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CacheIntegrationConfig.java</span><span class="p">:</span><span class="w">     </span><span class="c1"># 多级缓存集成</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">MultiLevelCacheConfig.java</span><span class="p">:</span><span class="w">      </span><span class="c1"># 多级缓存配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CacheWarmupRunner.java</span><span class="p">:</span><span class="w">          </span><span class="c1"># 缓存预热</span>
+
+<span class="w">  </span><span class="nt">消息中间件</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">MqttConfig.java</span><span class="p">:</span><span class="w">                 </span><span class="c1"># MQTT配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">MqttStartupRunner.java</span><span class="p">:</span><span class="w">          </span><span class="c1"># MQTT启动Runner</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">RabbitMQConfig.java</span><span class="p">:</span><span class="w">             </span><span class="c1"># RabbitMQ配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">KafkaConfig.java</span><span class="p">:</span><span class="w">                </span><span class="c1"># Kafka配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">RedisPubSubConfig.java</span><span class="p">:</span><span class="w">          </span><span class="c1"># Redis发布订阅</span>
+
+<span class="w">  </span><span class="nt">高可用配置</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">RedisHighAvailabilityConfig.java</span><span class="p">:</span><span class="w"> </span><span class="c1"># Redis高可用配置</span>
+
+<span class="w">  </span><span class="nt">通信配置</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">WebSocketConfig.java</span><span class="p">:</span><span class="w">            </span><span class="c1"># WebSocket配置</span>
+
+<span class="w">  </span><span class="nt">API文档</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">OpenApiConfig.java</span><span class="p">:</span><span class="w">              </span><span class="c1"># OpenAPI文档配置</span>
+
+<span class="w">  </span><span class="nt">监控配置</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">MetricsConfig.java</span><span class="p">:</span><span class="w">              </span><span class="c1"># Prometheus指标配置</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ThreadPoolMetricsConfig.java</span><span class="p">:</span><span class="w">    </span><span class="c1"># 线程池指标</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ThreadPoolHealthIndicator.java</span><span class="p">:</span><span class="w">  </span><span class="c1"># 线程池健康检查</span>
+
+<span class="w">  </span><span class="nt">限流配置</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">RateLimitConfig.java</span><span class="p">:</span><span class="w">            </span><span class="c1"># 限流配置</span>
+</code></pre></div>
+
+<h3>5.2 SecurityConfig 安全配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/SecurityConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.config.annotation.web.builders.HttpSecurity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.config.annotation.web.configuration.EnableWebSecurity</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.config.http.SessionCreationPolicy</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.crypto.password.PasswordEncoder</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.web.SecurityFilterChain</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Spring Security配置类</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 禁用CSRF（前后端分离架构，使用JWT）</span>
+<span class="cm"> * 2. 禁用Session（无状态认证）</span>
+<span class="cm"> * 3. 配置URL访问权限</span>
+<span class="cm"> * 4. 添加JWT过滤器</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSecurity</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SecurityConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">JwtAuthenticationFilter</span><span class="w"> </span><span class="n">jwtAuthenticationFilter</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 配置安全过滤链</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SecurityFilterChain</span><span class="w"> </span><span class="nf">filterChain</span><span class="p">(</span><span class="n">HttpSecurity</span><span class="w"> </span><span class="n">http</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">http</span>
+<span class="w">            </span><span class="c1">// 禁用CSRF（前后端分离）</span>
+<span class="w">            </span><span class="p">.</span><span class="na">csrf</span><span class="p">(</span><span class="n">csrf</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">csrf</span><span class="p">.</span><span class="na">disable</span><span class="p">())</span>
+
+<span class="w">            </span><span class="c1">// 禁用Session（JWT无状态）</span>
+<span class="w">            </span><span class="p">.</span><span class="na">sessionManagement</span><span class="p">(</span><span class="n">session</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span>
+<span class="w">                </span><span class="n">session</span><span class="p">.</span><span class="na">sessionCreationPolicy</span><span class="p">(</span><span class="n">SessionCreationPolicy</span><span class="p">.</span><span class="na">STATELESS</span><span class="p">))</span>
+
+<span class="w">            </span><span class="c1">// 配置URL访问权限</span>
+<span class="w">            </span><span class="p">.</span><span class="na">authorizeHttpRequests</span><span class="p">(</span><span class="n">auth</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">auth</span>
+<span class="w">                </span><span class="c1">// 公开接口</span>
+<span class="w">                </span><span class="p">.</span><span class="na">requestMatchers</span><span class="p">(</span>
+<span class="w">                    </span><span class="s">&quot;/api/auth/login&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/api/auth/register&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/api/auth/forgot-password&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/h2-console/**&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/swagger-ui/**&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/v3/api-docs/**&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/actuator/**&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;/ws/**&quot;</span>
+<span class="w">                </span><span class="p">).</span><span class="na">permitAll</span><span class="p">()</span>
+
+<span class="w">                </span><span class="c1">// 其他接口需要认证</span>
+<span class="w">                </span><span class="p">.</span><span class="na">anyRequest</span><span class="p">().</span><span class="na">authenticated</span><span class="p">()</span>
+<span class="w">            </span><span class="p">)</span>
+
+<span class="w">            </span><span class="c1">// 添加JWT过滤器</span>
+<span class="w">            </span><span class="p">.</span><span class="na">addFilterBefore</span><span class="p">(</span>
+<span class="w">                </span><span class="n">jwtAuthenticationFilter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">UsernamePasswordAuthenticationFilter</span><span class="p">.</span><span class="na">class</span>
+<span class="w">            </span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">http</span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 密码加密器</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">PasswordEncoder</span><span class="w"> </span><span class="nf">passwordEncoder</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BCryptPasswordEncoder</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.3 CorsConfig 跨域配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/CorsConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.cors.CorsConfiguration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.cors.UrlBasedCorsConfigurationSource</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.filter.CorsFilter</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * CORS跨域配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 允许前端域名访问</span>
+<span class="cm"> * 2. 允许的HTTP方法</span>
+<span class="cm"> * 3. 允许的请求头</span>
+<span class="cm"> * 4. 凭证支持</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CorsConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CorsFilter</span><span class="w"> </span><span class="nf">corsFilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CorsConfiguration</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CorsConfiguration</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 允许的源（开发环境允许localhost:3000）</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">setAllowedOrigins</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;http://localhost:3000&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot;http://localhost:5173&quot;</span>
+<span class="w">        </span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// 允许凭证（Cookie、Authorization头）</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">setAllowCredentials</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 允许的HTTP方法</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">setAllowedMethods</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;POST&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;PUT&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;DELETE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;OPTIONS&quot;</span>
+<span class="w">        </span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// 允许的请求头</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">setAllowedHeaders</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// 预检请求缓存时间（秒）</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">setMaxAge</span><span class="p">(</span><span class="mi">3600L</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">UrlBasedCorsConfigurationSource</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UrlBasedCorsConfigurationSource</span><span class="p">();</span>
+<span class="w">        </span><span class="n">source</span><span class="p">.</span><span class="na">registerCorsConfiguration</span><span class="p">(</span><span class="s">&quot;/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CorsFilter</span><span class="p">(</span><span class="n">source</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.4 AsyncConfig 异步配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/AsyncConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.scheduling.annotation.EnableAsync</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.Executor</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 异步任务配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 启用异步支持（@EnableAsync）</span>
+<span class="cm"> * 2. 配置线程池参数</span>
+<span class="cm"> * 3. 自定义线程名称</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@EnableAsync</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AsyncConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;taskExecutor&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Executor</span><span class="w"> </span><span class="nf">taskExecutor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ThreadPoolTaskExecutor</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ThreadPoolTaskExecutor</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 核心线程数</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setCorePoolSize</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 最大线程数</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setMaxPoolSize</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 队列容量</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setQueueCapacity</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 线程名称前缀</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setThreadNamePrefix</span><span class="p">(</span><span class="s">&quot;AsyncTask-&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 等待所有任务结束后再关闭线程池</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setWaitForTasksToCompleteOnShutdown</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 等待时间（秒）</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setAwaitTerminationSeconds</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 拒绝策略：由调用线程处理</span>
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">setRejectedExecutionHandler</span><span class="p">(</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">concurrent</span><span class="p">.</span><span class="na">ThreadPoolExecutor</span><span class="p">.</span><span class="na">CallerRunsPolicy</span><span class="p">()</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">executor</span><span class="p">.</span><span class="na">initialize</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">executor</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.5 WebSocketConfig WebSocket配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/WebSocketConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.config.annotation.EnableWebSocket</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.config.annotation.WebSocketConfigurer</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * WebSocket配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 启用WebSocket支持</span>
+<span class="cm"> * 2. 注册WebSocket处理器</span>
+<span class="cm"> * 3. 配置跨域</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocket</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">WebSocketConfig</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">WebSocketConfigurer</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="na">dormpower</span><span class="p">.</span><span class="na">websocket</span><span class="p">.</span><span class="na">DeviceWebSocketHandler</span><span class="w"> </span><span class="n">deviceWebSocketHandler</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">registerWebSocketHandlers</span><span class="p">(</span><span class="n">WebSocketHandlerRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="na">addHandler</span><span class="p">(</span><span class="n">deviceWebSocketHandler</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/ws/device&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">setAllowedOrigins</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.6 CacheConfig 缓存配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/CacheConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.github.benmanes.caffeine.cache.Caffeine</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.cache.CacheManager</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.cache.annotation.EnableCaching</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.cache.caffeine.CaffeineCacheManager</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.TimeUnit</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Caffeine本地缓存配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 启用缓存注解支持（@EnableCaching）</span>
+<span class="cm"> * 2. 配置Caffeine缓存参数</span>
+<span class="cm"> * 3. 定义缓存策略</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@EnableCaching</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CacheConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CacheManager</span><span class="w"> </span><span class="nf">cacheManager</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CaffeineCacheManager</span><span class="w"> </span><span class="n">cacheManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CaffeineCacheManager</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">cacheManager</span><span class="p">.</span><span class="na">setCaffeine</span><span class="p">(</span><span class="n">Caffeine</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">()</span>
+<span class="w">            </span><span class="c1">// 写入后10分钟过期</span>
+<span class="w">            </span><span class="p">.</span><span class="na">expireAfterWrite</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">MINUTES</span><span class="p">)</span>
+<span class="w">            </span><span class="c1">// 最大1000条记录</span>
+<span class="w">            </span><span class="p">.</span><span class="na">maximumSize</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="w">            </span><span class="c1">// 记录统计信息</span>
+<span class="w">            </span><span class="p">.</span><span class="na">recordStats</span><span class="p">()</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cacheManager</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.7 MqttConfig MQTT配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/MqttConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Data</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * MQTT配置属性</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 使用@ConfigurationProperties绑定配置</span>
+<span class="cm"> * 2. 支持环境变量覆盖</span>
+<span class="cm"> * 3. 定义主题结构</span>
+<span class="cm"> */</span>
+<span class="nd">@Data</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mqtt&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MqttConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">brokerUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;tcp://localhost:1883&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">clientId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dorm-power-backend&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;admin&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;admin&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">topicPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dorm&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 获取完整主题</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getFullTopic</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">topicKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topics</span><span class="p">.</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">topicKey</span><span class="p">,</span><span class="w"> </span><span class="n">topicKey</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">topicPrefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">topic</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 获取设备特定主题</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getDeviceTopic</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">topicKey</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">getFullTopic</span><span class="p">(</span><span class="n">topicKey</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">deviceId</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.8 OpenApiConfig API文档配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/OpenApiConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.OpenAPI</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.info.Contact</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.info.Info</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.info.License</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.security.SecurityRequirement</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.models.security.SecurityScheme</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * OpenAPI文档配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. API基本信息</span>
+<span class="cm"> * 2. 安全认证方案</span>
+<span class="cm"> * 3. 全局安全要求</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">OpenApiConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">OpenAPI</span><span class="w"> </span><span class="nf">customOpenAPI</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">securitySchemeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bearerAuth&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAPI</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Info</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">&quot;宿舍用电管理系统 API&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">version</span><span class="p">(</span><span class="s">&quot;1.0.0&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;宿舍用电管理系统REST API文档&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">contact</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Contact</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;DormPower Team&quot;</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">email</span><span class="p">(</span><span class="s">&quot;contact@dormpower.com&quot;</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">license</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">License</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;MIT&quot;</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">url</span><span class="p">(</span><span class="s">&quot;https://opensource.org/licenses/MIT&quot;</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">.</span><span class="na">addSecurityItem</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SecurityRequirement</span><span class="p">().</span><span class="na">addList</span><span class="p">(</span><span class="n">securitySchemeName</span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="na">components</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="na">swagger</span><span class="p">.</span><span class="na">v3</span><span class="p">.</span><span class="na">oas</span><span class="p">.</span><span class="na">models</span><span class="p">.</span><span class="na">Components</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">addSecuritySchemes</span><span class="p">(</span><span class="n">securitySchemeName</span><span class="p">,</span>
+<span class="w">                    </span><span class="k">new</span><span class="w"> </span><span class="n">SecurityScheme</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="n">securitySchemeName</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">type</span><span class="p">(</span><span class="n">SecurityScheme</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">HTTP</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">scheme</span><span class="p">(</span><span class="s">&quot;bearer&quot;</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">.</span><span class="na">bearerFormat</span><span class="p">(</span><span class="s">&quot;JWT&quot;</span><span class="p">)));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.9 MetricsConfig 监控配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/MetricsConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.MeterRegistry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Prometheus监控指标配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 通用标签配置</span>
+<span class="cm"> * 2. 自定义指标</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MetricsConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">MeterRegistryCustomizer</span><span class="o">&lt;</span><span class="n">MeterRegistry</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">metricsCommonTags</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">registry</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">registry</span><span class="p">.</span><span class="na">config</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">commonTags</span><span class="p">(</span>
+<span class="w">                </span><span class="s">&quot;application&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dorm-power&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
+<span class="w">            </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.10 RateLimitConfig 限流配置</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/RateLimitConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.google.common.util.concurrent.RateLimiter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 限流配置（基于Guava RateLimiter）</span>
+<span class="cm"> * </span>
+<span class="cm"> * 配置说明:</span>
+<span class="cm"> * 1. 令牌桶算法限流</span>
+<span class="cm"> * 2. 支持不同接口不同限流策略</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RateLimitConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 存储各接口的限流器</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">RateLimiter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rateLimiters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 获取或创建限流器</span>
+<span class="cm">     * </span>
+<span class="cm">     * @param key 限流键</span>
+<span class="cm">     * @param permitsPerSecond 每秒许可数</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">RateLimiter</span><span class="w"> </span><span class="nf">getRateLimiter</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">permitsPerSecond</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">rateLimiters</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span>
+<span class="w">            </span><span class="n">RateLimiter</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">permitsPerSecond</span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>六、环境配置对比</h2>
+<h3>6.1 环境配置对照表</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">环境对比</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dev（开发环境）</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">数据库</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H2内存数据库</span>
+<span class="w">    </span><span class="nt">SQL打印</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">是</span>
+<span class="w">    </span><span class="nt">日志级别</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">H2控制台</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">启用</span>
+<span class="w">    </span><span class="nt">适用场景</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">本地开发调试</span>
+
+<span class="w">  </span><span class="nt">local（本地环境）</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">数据库</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">本地PostgreSQL</span>
+<span class="w">    </span><span class="nt">SQL打印</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">否</span>
+<span class="w">    </span><span class="nt">日志级别</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+<span class="w">    </span><span class="nt">适用场景</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">本地完整测试</span>
+
+<span class="w">  </span><span class="nt">prod（生产环境）</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">数据库</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">远程PostgreSQL</span>
+<span class="w">    </span><span class="nt">SQL打印</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">否</span>
+<span class="w">    </span><span class="nt">日志级别</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARN/INFO</span>
+<span class="w">    </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="w">    </span><span class="nt">适用场景</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">生产部署</span>
+
+<span class="w">  </span><span class="nt">low-memory（低内存）</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">数据库</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">远程PostgreSQL</span>
+<span class="w">    </span><span class="nt">连接池</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-5</span>
+<span class="w">    </span><span class="nt">线程池</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2-4</span>
+<span class="w">    </span><span class="nt">日志级别</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARN</span>
+<span class="w">    </span><span class="nt">适用场景</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2核2G服务器</span>
+</code></pre></div>
+
+<h3>6.2 如何切换环境</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 方法1: 命令行参数</span>
+mvn<span class="w"> </span>spring-boot:run<span class="w"> </span>-Dspring-boot.run.profiles<span class="o">=</span>dev
+
+<span class="c1"># 方法2: 环境变量</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SPRING_PROFILES_ACTIVE</span><span class="o">=</span>prod
+mvn<span class="w"> </span>spring-boot:run
+
+<span class="c1"># 方法3: application.properties</span>
+<span class="c1"># 在 src/main/resources/application.properties 中添加：</span>
+<span class="c1"># spring.profiles.active=dev</span>
+
+<span class="c1"># 方法4: JVM参数</span>
+java<span class="w"> </span>-jar<span class="w"> </span>-Dspring.profiles.active<span class="o">=</span>prod<span class="w"> </span>dorm-power-backend.jar
+</code></pre></div>
+
+<hr />
+<h2>七、开发环境搭建</h2>
+<h3>7.1 环境要求</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">必备环境</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">JDK</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21+ (推荐21 LTS)</span>
+<span class="w">  </span><span class="nt">Maven</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.8+</span>
+<span class="w">  </span><span class="nt">Node.js</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18+ (推荐20 LTS)</span>
+<span class="w">  </span><span class="nt">npm: 9+ 或 pnpm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8+</span>
+
+<span class="nt">可选环境</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">PostgreSQL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14+ (本地开发)</span>
+<span class="w">  </span><span class="nt">Docker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20+ (容器化部署)</span>
+<span class="w">  </span><span class="nt">Redis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7+ (缓存)</span>
+<span class="w">  </span><span class="nt">RabbitMQ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.12+ (消息队列)</span>
+</code></pre></div>
+
+<h3>7.2 后端启动</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 1. 克隆项目</span>
+git<span class="w"> </span>clone<span class="w"> </span>&lt;repository-url&gt;
+<span class="nb">cd</span><span class="w"> </span>dorm-power-console/backend
+
+<span class="c1"># 2. 安装依赖</span>
+mvn<span class="w"> </span>clean<span class="w"> </span>install
+
+<span class="c1"># 3. 开发环境启动（使用H2内存数据库）</span>
+mvn<span class="w"> </span>spring-boot:run<span class="w"> </span>-Dspring-boot.run.profiles<span class="o">=</span>dev
+
+<span class="c1"># 4. 访问API文档</span>
+<span class="c1"># http://localhost:8000/swagger-ui.html</span>
+
+<span class="c1"># 5. H2控制台（仅dev环境）</span>
+<span class="c1"># http://localhost:8000/h2-console</span>
+<span class="c1"># JDBC URL: jdbc:h2:mem:dorm_power</span>
+<span class="c1"># 用户名: sa</span>
+<span class="c1"># 密码: (空)</span>
+</code></pre></div>
+
+<h3>7.3 前端启动</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 1. 进入前端目录</span>
+<span class="nb">cd</span><span class="w"> </span>dorm-power-console/frontend
+
+<span class="c1"># 2. 安装依赖</span>
+npm<span class="w"> </span>install
+
+<span class="c1"># 3. 启动开发服务器</span>
+npm<span class="w"> </span>run<span class="w"> </span>dev
+
+<span class="c1"># 4. 访问前端页面</span>
+<span class="c1"># http://localhost:3000</span>
+
+<span class="c1"># 5. 类型检查</span>
+npm<span class="w"> </span>run<span class="w"> </span>type-check
+
+<span class="c1"># 6. 代码检查</span>
+npm<span class="w"> </span>run<span class="w"> </span>lint
+
+<span class="c1"># 7. 生产构建</span>
+npm<span class="w"> </span>run<span class="w"> </span>build
+</code></pre></div>
+
+<h3>7.4 使用Docker启动（推荐）</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 1. 启动所有服务（PostgreSQL + Redis + RabbitMQ + MQTT）</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.production.yml<span class="w"> </span>--env-file<span class="w"> </span>.env.production<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># 2. 查看服务状态</span>
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+
+<span class="c1"># 3. 查看日志</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f
+
+<span class="c1"># 4. 停止服务</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down
+</code></pre></div>
+
+<hr />
+<h2>八、常见问题</h2>
+<h3>8.1 依赖问题</h3>
+<p><strong>Q: Maven依赖下载慢</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 配置国内镜像（~/.m2/settings.xml）</span>
+&lt;mirrors&gt;
+<span class="w">    </span>&lt;mirror&gt;
+<span class="w">        </span>&lt;id&gt;aliyun&lt;/id&gt;
+<span class="w">        </span>&lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+<span class="w">        </span>&lt;name&gt;Aliyun<span class="w"> </span>Maven&lt;/name&gt;
+<span class="w">        </span>&lt;url&gt;https://maven.aliyun.com/repository/central&lt;/url&gt;
+<span class="w">    </span>&lt;/mirror&gt;
+&lt;/mirrors&gt;
+</code></pre></div>
+
+<p><strong>Q: npm install失败</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 配置国内镜像</span>
+npm<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>registry<span class="w"> </span>https://registry.npmmirror.com
+
+<span class="c1"># 清除缓存重试</span>
+npm<span class="w"> </span>cache<span class="w"> </span>clean<span class="w"> </span>--force
+npm<span class="w"> </span>install
+</code></pre></div>
+
+<h3>8.2 配置问题</h3>
+<p><strong>Q: 如何查看当前生效的配置</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 启动后访问</span>
+http://localhost:8000/actuator/env
+
+<span class="c1"># 或查看启动日志中的Active profiles</span>
+</code></pre></div>
+
+<p><strong>Q: 数据库连接失败</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">排查步骤</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">1. 检查数据库是否启动</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">2. 检查application.yml中的数据库配置</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">3. 检查环境变量是否覆盖配置</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">4. 查看启动日志中的错误信息</span>
+</code></pre></div>
+
+<h3>8.3 端口冲突</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 查看端口占用</span>
+<span class="c1"># Windows</span>
+netstat<span class="w"> </span>-ano<span class="w"> </span><span class="p">|</span><span class="w"> </span>findstr<span class="w"> </span>:8000
+
+<span class="c1"># 修改端口</span>
+<span class="c1"># application.yml</span>
+server:
+<span class="w">  </span>port:<span class="w"> </span><span class="m">8001</span>
+</code></pre></div>
+
+<hr />
+<h2>九、扩展练习</h2>
+<h3>练习1：添加自定义配置属性</h3>
+<ol>
+<li>在<code>application.yml</code>中添加自定义配置</li>
+<li>创建<code>@ConfigurationProperties</code>配置类</li>
+<li>在Service中注入并使用</li>
+</ol>
+<h3>练习2：配置多数据源</h3>
+<ol>
+<li>添加第二个数据源配置</li>
+<li>创建对应的<code>EntityManagerFactory</code></li>
+<li>配置不同Repository使用不同数据源</li>
+</ol>
+<h3>练习3：集成Redis缓存</h3>
+<ol>
+<li>安装Redis</li>
+<li>配置<code>RedisCacheConfig</code></li>
+<li>使用<code>@Cacheable</code>注解缓存数据</li>
+</ol>
+<h3>练习4：配置MQTT消息监听</h3>
+<ol>
+<li>启动MQTT Broker（Mosquitto）</li>
+<li>配置<code>MqttConfig</code></li>
+<li>创建消息监听器处理遥测数据</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

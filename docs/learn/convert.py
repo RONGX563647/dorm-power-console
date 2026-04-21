@@ -276,6 +276,11 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         </div>
         
         <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
             <div class="nav-section-title">模块教程</div>
             <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
             <a href="02-设备管理模块.html">02-设备管理模块</a>

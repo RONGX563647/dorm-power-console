@@ -258,6 +258,11 @@
         </div>
         
         <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
             <div class="nav-section-title">模块教程</div>
             <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
             <a href="02-设备管理模块.html">02-设备管理模块</a>
@@ -694,6 +699,188 @@
 - [ ] 创建 RoomBalance.java 和 RechargeRecord.java
 - [ ] 理解@UniqueConstraint 用法
 - [ ] 理解余额账户设计思路</p>
+<hr />
+<h4>1.4 创建 DTO 数据传输对象</h4>
+<blockquote>
+<p><strong>为什么需要 DTO?</strong>
+- 分离内部模型和外部接口
+- 控制数据暴露范围(不暴露内部字段)
+- 添加数据验证注解
+- 支持 API 版本控制</p>
+</blockquote>
+<p><strong>消息 DTO 设计</strong>:</p>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/dto/BillMessage.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.media.Schema</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.*</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.Serializable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * 计费数据消息DTO</span>
+<span class="cm"> * </span>
+<span class="cm"> * 用于接收计费数据，包含参数校验规则。</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;计费数据消息&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">BillMessage</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Serializable</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">serialVersionUID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1L</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@NotBlank</span><span class="p">(</span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;设备ID不能为空&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;设备ID&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;device_001&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@NotNull</span><span class="p">(</span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;账单周期不能为空&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;账单周期&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2024-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">billingPeriod</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@DecimalMin</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.00&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;用电量不能为负数&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;用电量（kWh）&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;125.50&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">energyConsumption</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@DecimalMin</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.00&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;电费不能为负数&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;电费（元）&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;89.50&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">cost</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;单价（元/kWh）&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.65&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">unitPrice</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;开始时间&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;结束时间&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Getters and Setters should be added for each field</span>
+<span class="w">    </span><span class="c1">// For brevity, only showing field definitions with annotations</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>响应 DTO 设计</strong>:</p>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/dto/BillResponse.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.dto</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.swagger.v3.oas.annotations.media.Schema</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.validation.constraints.*</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.Serializable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.UUID</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * 计费数据响应DTO</span>
+<span class="cm"> * </span>
+<span class="cm"> * 设计说明:</span>
+<span class="cm"> * 1. 不返回内部字段</span>
+<span class="cm"> * 2. 只返回前端展示需要的字段</span>
+<span class="cm"> * 3. 使用Builder模式构建对象</span>
+<span class="cm"> */</span>
+<span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;计费数据响应&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">BillResponse</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;账单ID&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;设备ID&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="n">deviceId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;账单周期&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">billingPeriod</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;用电量（kWh）&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">energyConsumption</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;电费（元）&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">cost</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;单价（元/kWh）&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">unitPrice</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;开始时间&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">startTime</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;结束时间&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">endTime</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;支付状态&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">paymentStatus</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;创建时间&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">BillResponse</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="nf">BillResponse</span><span class="p">(</span><span class="cm">/* constructor parameters */</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Initialize fields</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Builder</span><span class="w"> </span><span class="nf">builder</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Builder</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Getters and Setters will be added for each field</span>
+
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>DTO 设计原则</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">┌─────────────────────────────────────────────┐</span>
+<span class="err">│</span><span class="w">            </span><span class="n">DTO</span><span class="w"> </span><span class="n">设计最佳实践</span><span class="w">                   </span><span class="err">│</span>
+<span class="err">├─────────────────────────────────────────────┤</span>
+<span class="err">│</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="nl">职责单一</span><span class="p">:</span><span class="w">                                 </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">Request</span><span class="w"> </span><span class="nl">DTO</span><span class="p">:</span><span class="w"> </span><span class="n">接收前端数据</span><span class="p">,</span><span class="n">添加验证</span><span class="w">       </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">Response</span><span class="w"> </span><span class="nl">DTO</span><span class="p">:</span><span class="w"> </span><span class="n">返回前端数据</span><span class="p">,</span><span class="n">过滤敏感信息</span><span class="w">  </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="nl">DTO</span><span class="p">:</span><span class="w"> </span><span class="n">消息传递载体</span><span class="p">(</span><span class="n">MQTT</span><span class="o">/</span><span class="n">WebSocket</span><span class="p">)</span><span class="err">│</span>
+<span class="err">│</span><span class="w">                                            </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="nl">命名规范</span><span class="p">:</span><span class="w">                                 </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">请求DTO</span><span class="p">:</span><span class="w"> </span><span class="n">XxxRequest</span><span class="p">.</span><span class="n">java</span><span class="w">                </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">响应DTO</span><span class="p">:</span><span class="w"> </span><span class="n">XxxResponse</span><span class="p">.</span><span class="n">java</span><span class="w">               </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">消息DTO</span><span class="p">:</span><span class="w"> </span><span class="n">XxxMessage</span><span class="p">.</span><span class="n">java</span><span class="w">                </span><span class="err">│</span>
+<span class="err">│</span><span class="w">                                            </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="nl">验证注解</span><span class="p">:</span><span class="w">                                 </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">@NotNull</span><span class="err">:</span><span class="w"> </span><span class="n">不能为null</span><span class="w">                    </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">@NotBlank</span><span class="err">:</span><span class="w"> </span><span class="n">不能为空白字符串</span><span class="w">              </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">@Size</span><span class="err">:</span><span class="w"> </span><span class="n">字符串</span><span class="o">/</span><span class="n">集合大小限制</span><span class="w">               </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">@Pattern</span><span class="err">:</span><span class="w"> </span><span class="n">正则表达式验证</span><span class="w">                 </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">@DecimalMin</span><span class="o">/</span><span class="nl">DecimalMax</span><span class="p">:</span><span class="w"> </span><span class="n">数值范围验证</span><span class="w">     </span><span class="err">│</span>
+<span class="err">│</span><span class="w">                                            </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="nl">API文档</span><span class="p">:</span><span class="w">                                  </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">@Schema</span><span class="err">:</span><span class="w"> </span><span class="n">OpenAPI</span><span class="w"> </span><span class="mf">3.0</span><span class="w"> </span><span class="n">文档注解</span><span class="w">           </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">description</span><span class="p">:</span><span class="w"> </span><span class="n">字段说明</span><span class="w">                   </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">example</span><span class="p">:</span><span class="w"> </span><span class="n">示例值</span><span class="w">                         </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">required</span><span class="p">:</span><span class="w"> </span><span class="n">是否必填</span><span class="w">                      </span><span class="err">│</span>
+<span class="err">│</span><span class="w">                                            </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="mf">5.</span><span class="w"> </span><span class="nl">与Entity的区别</span><span class="p">:</span><span class="w">                           </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">Entity</span><span class="p">:</span><span class="w"> </span><span class="n">数据库映射</span><span class="p">,</span><span class="n">包含JPA注解</span><span class="w">           </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nl">DTO</span><span class="p">:</span><span class="w"> </span><span class="n">数据传输</span><span class="p">,</span><span class="n">包含验证注解</span><span class="w">               </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">两者可以相互转换</span><span class="p">,</span><span class="n">使用Mapper或手动转换</span><span class="w">    </span><span class="err">│</span>
+<span class="err">│</span><span class="w">                                            </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="mf">6.</span><span class="w"> </span><span class="nl">Builder模式</span><span class="p">:</span><span class="w">                              </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">响应DTO推荐使用Builder模式</span><span class="w">               </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">链式调用</span><span class="p">,</span><span class="n">代码更简洁</span><span class="w">                      </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">避免构造函数参数过多</span><span class="w">                     </span><span class="err">│</span>
+<span class="err">└─────────────────────────────────────────────┘</span>
+</code></pre></div>
+
+<p><strong>实操任务</strong>:
+- [ ] 创建 dto 目录
+- [ ] 创建消息DTO文件
+- [ ] 创建响应DTO文件
+- [ ] 理解 DTO 与 Entity 的区别
+- [ ] 在 Controller 中使用 DTO 替代 Entity</p>
 <hr />
 <h3>步骤 2：Repository 层</h3>
 <h4>2.1 创建 ElectricityBillRepository</h4>
