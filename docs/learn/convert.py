@@ -382,6 +382,8 @@ def main():
     print("Markdown 转 HTML 转换器")
     print("=" * 60)
     print()
+    print("版本：2.0 - 浅橙色简约风格")
+    print()
     
     # 查找所有模块文档
     module_files = sorted(DOCS_DIR.glob("*.md"))
