@@ -1,136 +1,103 @@
 package com.dormpower.config;
 
-import com.dormpower.cache.MultiLevelCacheManager;
-import com.dormpower.cache.bloom.RedisBloomFilter;
-import com.dormpower.cache.consistency.CacheInvalidationBroadcaster;
-import com.dormpower.cache.hotkey.HotKeyDetectorService;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 多级缓存配置类
- *
- * 配置本地缓存(Caffeine) + 分布式缓存(Redis)的多级缓存架构
- *
- * 特点：
- * 1. L1缓存：Caffeine本地缓存 - 高性能、自动过期、容量限制
- * 2. L2缓存：Redis分布式缓存 - 数据共享、持久化
- * 3. 多级缓存管理器：协调两级缓存
- *
- * 高级功能集成：
- * - 熔断保护：Redis故障时自动降级
- * - 热点检测：自动识别热点Key
- * - 缓存广播：多节点缓存一致性
- * - 布隆过滤器：防止缓存穿透
- *
- * TTL策略：
- * - L1缓存TTL较短（30秒），支持多节点最终一致性
- * - L2缓存TTL较长（5分钟），减少数据库压力
- *
+ * 多级缓存配置
+ * 
+ * 架构设计:
+ * L1: Caffeine 本地缓存 (JVM 内存)
+ *   - 访问延迟：<1μs
+ *   - 容量：1000 个条目
+ *   - 过期时间：1 分钟
+ *   - 适用场景：热点数据 (设备状态、用户信息)
+ * 
+ * L2: Redis 分布式缓存 (远程 Redis)
+ *   - 访问延迟：~1ms (网络)
+ *   - 容量：无限制
+ *   - 过期时间：5-30 分钟
+ *   - 适用场景：全量数据、共享数据
+ * 
+ * 缓存策略:
+ * 1. 先查 L1，命中直接返回
+ * 2. L1 未命中查 L2，写入 L1
+ * 3. 数据更新时同时清除 L1 和 L2
+ * 
  * @author dormpower team
- * @version 3.0
+ * @version 1.0
  */
 @Configuration
-@EnableCaching
-@ConditionalOnClass(name = "org.springframework.data.redis.connection.RedisConnectionFactory")
-@ConditionalOnProperty(name = "spring.data.redis.host", matchIfMissing = true)
 public class MultiLevelCacheConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(MultiLevelCacheConfig.class);
-
-    @Autowired
-    @Qualifier("redisCacheManager")
-    private CacheManager redisCacheManager;
-
-    // 可选的高级功能组件
-    @Autowired(required = false)
-    private CircuitBreaker circuitBreaker;
-
-    @Autowired(required = false)
-    private HotKeyDetectorService hotKeyDetectorService;
-
-    @Autowired(required = false)
-    private CacheInvalidationBroadcaster cacheInvalidationBroadcaster;
-
-    @Autowired(required = false)
-    private RedisBloomFilter redisBloomFilter;
-
-    @Value("${cache.l1.ttl-seconds:30}")
-    private int l1TtlSeconds;
-
-    @Value("${cache.l1.max-size:10000}")
-    private int l1MaxSize;
-
     /**
-     * Caffeine本地缓存管理器
+     * L1 缓存管理器：Caffeine
+     * 
+     * 配置说明:
+     * - maximumSize: 最大缓存 1000 个条目
+     * - expireAfterWrite: 写入后 1 分钟过期
+     * - recordStats: 记录命中率统计
      */
-    @Bean
+    @Bean("caffeineCacheManager")
+    @Primary
     public CacheManager caffeineCacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-
-        Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
-            .maximumSize(l1MaxSize)
-            .expireAfterWrite(l1TtlSeconds, TimeUnit.SECONDS)
-            .expireAfterAccess(l1TtlSeconds * 2, TimeUnit.SECONDS)
-            .recordStats();
-
-        cacheManager.setCaffeine(caffeine);
-
+        
+        cacheManager.setCaffeine(Caffeine.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .recordStats());
+        
         return cacheManager;
     }
 
     /**
-     * 多级缓存管理器（主缓存管理器）
-     *
-     * 创建时注入所有高级功能组件
+     * L2 缓存管理器：Redis
+     * 
+     * 配置说明:
+     * - defaultTtl: 默认 5 分钟过期
+     * - keySerializer: String 序列化
+     * - valueSerializer: JSON 序列化
+     * - usePrefix: 使用缓存前缀
      */
-    @Bean
-    @Primary
-    public CacheManager multiLevelCacheManager() {
-        MultiLevelCacheManager manager = new MultiLevelCacheManager(
-            caffeineCacheManager(),
-            redisCacheManager
-        );
-
-        // 注入熔断器
-        if (circuitBreaker != null) {
-            manager.setCircuitBreaker(circuitBreaker);
-            logger.info("CircuitBreaker integrated into MultiLevelCacheManager");
-        }
-
-        // 注入热点检测服务
-        if (hotKeyDetectorService != null) {
-            manager.setHotKeyDetectorService(hotKeyDetectorService);
-            logger.info("HotKeyDetector integrated into MultiLevelCacheManager");
-        }
-
-        // 注入缓存广播服务
-        if (cacheInvalidationBroadcaster != null) {
-            manager.setCacheInvalidationBroadcaster(cacheInvalidationBroadcaster);
-            logger.info("CacheInvalidationBroadcaster integrated into MultiLevelCacheManager");
-        }
-
-        // 注入布隆过滤器
-        if (redisBloomFilter != null) {
-            manager.setRedisBloomFilter(redisBloomFilter);
-            logger.info("RedisBloomFilter integrated into MultiLevelCacheManager");
-        }
-
-        return manager;
+    @Bean("redisCacheManager")
+    public CacheManager redisCacheManager(RedisConnectionFactory factory) {
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(5))  // 默认 5 分钟
+            .serializeKeysWith(RedisSerializationContext.SerializationPair
+                .fromSerializer(new StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair
+                .fromSerializer(new GenericJackson2JsonRedisSerializer()))
+            .prefixCacheNameWith("cache:")  // 缓存 key 前缀
+            .disableCachingNullValues();  // 不缓存 null 值
+        
+        // 为不同缓存配置不同的 TTL
+        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
+            .cacheDefaults(config)
+            .withCacheConfiguration("devices", 
+                config.entryTtl(Duration.ofMinutes(1)))  // 设备缓存 1 分钟
+            .withCacheConfiguration("users", 
+                config.entryTtl(Duration.ofMinutes(30)))  // 用户缓存 30 分钟
+            .withCacheConfiguration("telemetry", 
+                config.entryTtl(Duration.ofMinutes(10)))  // 遥测缓存 10 分钟
+            .withCacheConfiguration("aiReport", 
+                config.entryTtl(Duration.ofMinutes(15)))  // AI 报告缓存 15 分钟
+            .transactionAware()
+            .build();
+        
+        return cacheManager;
     }
 }

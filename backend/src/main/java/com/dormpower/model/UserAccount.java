@@ -1,50 +1,70 @@
 package com.dormpower.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * 用户账户模型
+ * 用户账户实体
+ * 
+ * 支持 RBAC 权限模型:
+ * - 用户可以拥有多个角色
+ * - 角色可以拥有多个权限
+ * - 权限精确到方法级别
  */
 @Entity
-@Table(name = "user_account", indexes = {
-        @Index(name = "idx_email", columnList = "email", unique = true)
-})
-@Getter
-@Setter
-@NoArgsConstructor
+@Table(name = "user_account")
+@Data
 public class UserAccount {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false, length = 50)
+    private String account;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(length = 50)
     private String username;
 
-    @NotNull
-    private String email;
+    @Column(length = 20)
+    private String role;  // ADMIN, OPERATOR, VIEWER
 
-    @NotNull
-    private String passwordHash;
+    @Column(length = 20)
+    private String status;  // ACTIVE, INACTIVE, LOCKED
 
-    @NotNull
-    private String role;
+    @Column(name = "created_at")
+    private Instant createdAt;
 
-    @NotNull
-    private String resetCodeHash;
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
-    @NotNull
-    private long resetExpiresAt;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Role> roles = new HashSet<>();
 
-    @NotNull
-    private long createdAt;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
 
-    @NotNull
-    private long updatedAt;
-
-    @NotNull
-    private boolean enabled = true;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
 }

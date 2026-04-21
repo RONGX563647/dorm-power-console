@@ -1,59 +1,44 @@
 package com.dormpower.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.Instant;
 
 /**
  * 权限实体
+ * 
+ * 细粒度权限控制:
+ * - 精确到方法级别
+ * - 支持资源类型限制
+ * - 支持操作类型限制
  */
 @Entity
-@Table(name = "permissions", indexes = {
-    @Index(name = "idx_permission_code", columnList = "code", unique = true)
-})
-@Getter
-@Setter
-@NoArgsConstructor
+@Table(name = "permission")
+@Data
 public class Permission {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank
-    @Column(unique = true, nullable = false)
-    private String code;
+    @Column(unique = true, nullable = false, length = 100)
+    private String name;  // device:create, device:read, device:update, device:delete
 
-    @NotBlank
-    private String name;
+    @Column(length = 20)
+    private String resourceType;  // device, command, telemetry, user, report
 
+    @Column(length = 20)
+    private String operation;  // CREATE, READ, UPDATE, DELETE, EXPORT
+
+    @Column(length = 200)
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resource_id")
-    @JsonIgnoreProperties({"permissions", "hibernateLazyInitializer", "handler"})
-    private Resource resource;
+    @Column(name = "created_at")
+    private Instant createdAt;
 
-    @NotNull
-    private String action;
-
-    @NotNull
-    private boolean enabled = true;
-
-    @NotNull
-    private long createdAt = System.currentTimeMillis() / 1000;
-
-    @NotNull
-    private long updatedAt = System.currentTimeMillis() / 1000;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+    }
 }

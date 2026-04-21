@@ -5,39 +5,64 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
+/**
+ * 审计日志仓库
+ */
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 
-    Page<AuditLog> findByUsernameOrderByTsDesc(String username, Pageable pageable);
+    /**
+     * 按用户 ID 查询审计日志
+     */
+    Page<AuditLog> findByUserId(Long userId, Pageable pageable);
 
-    Page<AuditLog> findByModuleOrderByTsDesc(String module, Pageable pageable);
+    /**
+     * 按操作类型查询审计日志
+     */
+    Page<AuditLog> findByAction(String action, Pageable pageable);
 
-    Page<AuditLog> findByActionOrderByTsDesc(String action, Pageable pageable);
+    /**
+     * 按资源查询审计日志
+     */
+    Page<AuditLog> findByResourceContaining(String resource, Pageable pageable);
 
-    Page<AuditLog> findByTargetIdOrderByTsDesc(String targetId, Pageable pageable);
+    /**
+     * 按时间范围查询审计日志
+     */
+    Page<AuditLog> findByTimestampBetween(Instant start, Instant end, Pageable pageable);
 
-    Page<AuditLog> findByStatusOrderByTsDesc(String status, Pageable pageable);
+    /**
+     * 按用户和操作类型查询
+     */
+    Page<AuditLog> findByUserIdAndAction(Long userId, String action, Pageable pageable);
 
-    Page<AuditLog> findAllByOrderByTsDesc(Pageable pageable);
+    /**
+     * 查询最近的操作日志
+     */
+    @Query("SELECT a FROM AuditLog a WHERE a.userId = :userId ORDER BY a.timestamp DESC")
+    Page<AuditLog> findRecentLogs(@Param("userId") Long userId, Pageable pageable);
 
-    @Query("SELECT a FROM AuditLog a WHERE a.ts BETWEEN :startTime AND :endTime ORDER BY a.ts DESC")
-    Page<AuditLog> findByTimeRange(long startTime, long endTime, Pageable pageable);
+    /**
+     * 统计指定时间范围内的操作次数
+     */
+    @Query("SELECT COUNT(a) FROM AuditLog a WHERE a.timestamp BETWEEN :start AND :end")
+    long countByTimestampBetween(@Param("start") Instant start, @Param("end") Instant end);
 
-    @Query("SELECT a FROM AuditLog a WHERE a.username = :username AND a.ts BETWEEN :startTime AND :endTime ORDER BY a.ts DESC")
-    Page<AuditLog> findByUsernameAndTimeRange(String username, long startTime, long endTime, Pageable pageable);
+    /**
+     * 按操作类型统计
+     */
+    @Query("SELECT a.action, COUNT(a) FROM AuditLog a WHERE a.timestamp BETWEEN :start AND :end GROUP BY a.action")
+    List<Object[]> countByActionBetween(@Param("start") Instant start, @Param("end") Instant end);
 
-    @Query("SELECT a.module, COUNT(a) as cnt FROM AuditLog a WHERE a.ts > :since GROUP BY a.module ORDER BY cnt DESC")
-    List<Object[]> countByModuleSince(long since);
-
-    @Query("SELECT a.action, COUNT(a) as cnt FROM AuditLog a WHERE a.module = :module AND a.ts > :since GROUP BY a.action ORDER BY cnt DESC")
-    List<Object[]> countByActionInModuleSince(String module, long since);
-
-    @Query("SELECT a.username, COUNT(a) as cnt FROM AuditLog a WHERE a.ts > :since GROUP BY a.username ORDER BY cnt DESC")
-    List<Object[]> findTopActiveUsers(long since, Pageable pageable);
-
-    long deleteByTsBefore(long ts);
+    /**
+     * 删除指定时间之前的日志 (用于日志清理)
+     */
+    @Query("DELETE FROM AuditLog a WHERE a.timestamp < :timestamp")
+    int deleteByTimestampBefore(@Param("timestamp") Instant timestamp);
 }

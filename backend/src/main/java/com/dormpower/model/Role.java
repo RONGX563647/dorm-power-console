@@ -1,64 +1,51 @@
 package com.dormpower.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 角色实体
+ * 
+ * RBAC 模型核心:
+ * - 角色可以包含多个权限
+ * - 用户可以拥有多个角色
  */
 @Entity
-@Table(name = "roles", indexes = {
-    @Index(name = "idx_role_code", columnList = "code", unique = true)
-})
-@Getter
-@Setter
-@NoArgsConstructor
+@Table(name = "role")
+@Data
 public class Role {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank
-    @Column(unique = true, nullable = false)
-    private String code;
+    @Column(unique = true, nullable = false, length = 50)
+    private String name;  // ROLE_ADMIN, ROLE_OPERATOR, ROLE_VIEWER
 
-    @NotBlank
-    private String name;
-
+    @Column(length = 100)
     private String description;
 
-    @NotNull
-    private boolean enabled = true;
+    @Column(name = "created_at")
+    private Instant createdAt;
 
-    @NotNull
-    private boolean system = false;
-
-    @NotNull
-    private long createdAt = System.currentTimeMillis() / 1000;
-
-    @NotNull
-    private long updatedAt = System.currentTimeMillis() / 1000;
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "role_permissions",
+        name = "role_permission",
         joinColumns = @JoinColumn(name = "role_id"),
         inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
-    @JsonIgnoreProperties({"resource", "hibernateLazyInitializer", "handler"})
-    private Set<Permission> permissions;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Permission> permissions = new HashSet<>();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+    }
 }

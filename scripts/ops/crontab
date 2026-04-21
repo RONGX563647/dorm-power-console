@@ -1,0 +1,12 @@
+# Crontab定时任务配置
+# 每5分钟执行一次监控
+*/5 * * * * /opt/dorm-power/scripts/ops/monitor.sh >> /opt/dorm-power/logs/cron.log 2>&1
+
+# 每天凌晨2点执行数据库备份
+0 2 * * * /opt/dorm-power/scripts/ops/backup_db.sh >> /opt/dorm-power/logs/cron.log 2>&1
+
+# 每天凌晨3点执行日志清理
+0 3 * * * /opt/dorm-power/scripts/ops/cleanup_logs.sh >> /opt/dorm-power/logs/cron.log 2>&1
+
+# 每周日凌晨4点重启后端服务（可选）
+0 4 * * 0 /bin/systemctl restart dorm-power-backend >> /opt/dorm-power/logs/cron.log 2>&1

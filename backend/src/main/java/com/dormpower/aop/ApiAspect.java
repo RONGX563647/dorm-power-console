@@ -2,7 +2,7 @@ package com.dormpower.aop;
 
 import com.dormpower.annotation.AuditLog;
 import com.dormpower.annotation.RateLimit;
-import com.dormpower.limiter.RedisRateLimiter;
+import com.dormpower.util.RedisRateLimiter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +25,10 @@ import java.util.Arrays;
  * AOP切面类：统一处理API请求日志、限流和审计日志。
  * 通过注解实现横切关注点，提升代码可维护性和安全性。
  *
- * 使用 Redis 分布式限流，支持多实例部署。
+ * 使用 Redis+Lua 分布式限流，支持多实例部署:
+ * - 滑动窗口算法，精确到毫秒
+ * - Lua 脚本原子操作，避免并发问题
+ * - 支持 10000+ QPS
  */
 @Aspect
 @Component
@@ -34,7 +37,7 @@ public class ApiAspect {
     private static final Logger logger = LoggerFactory.getLogger(ApiAspect.class);
     private static final Logger auditLogger = LoggerFactory.getLogger("AUDIT");
 
-    // Redis 分布式限流器
+    // Redis 分布式限流器 (Lua 脚本实现)
     @Autowired(required = false)
     private RedisRateLimiter redisRateLimiter;
 
@@ -63,12 +66,16 @@ public class ApiAspect {
 
         // 检查是否为管理员用户，如果是则跳过限流
         if (!isTestProfile && !isAdminUser()) {
-            // 限流检查
+            // 限流检查 - 使用 Redis+Lua 分布式限流
             RateLimit rateLimit = targetMethod.getAnnotation(RateLimit.class);
             if (rateLimit != null && redisRateLimiter != null) {
-                String limitKey = RedisRateLimiter.apiKey(rateLimit.type());
-                if (!redisRateLimiter.tryAcquire(limitKey, 1, (long) rateLimit.value(), 1000)) {
-                    logger.warn("请求被限流: {} {} from {}", method, uri, ip);
+                // 构建限流 key: rate_limit:{type}:{ip}
+                String limitKey = buildRateLimitKey(rateLimit.type(), ip);
+                
+                // 滑动窗口限流：windowSize 秒内最多 value 个请求
+                if (!redisRateLimiter.tryAcquire(limitKey, rateLimit.value(), rateLimit.windowSize())) {
+                    logger.warn("请求被限流 (Redis+Lua): {} {} from {} - 限制：{}/{}s", 
+                        method, uri, ip, rateLimit.value(), rateLimit.windowSize());
                     throw new RuntimeException("请求过于频繁，请稍后再试");
                 }
             }
@@ -131,6 +138,17 @@ public class ApiAspect {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    /**
+     * 构建限流 key
+     * 
+     * @param type 限流类型
+     * @param ip 客户端 IP
+     * @return 限流 key
+     */
+    private String buildRateLimitKey(String type, String ip) {
+        return String.format("rate_limit:%s:%s", type, ip);
     }
 
     private boolean isAdminUser() {

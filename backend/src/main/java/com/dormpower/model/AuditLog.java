@@ -1,99 +1,75 @@
 package com.dormpower.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.Instant;
 
 /**
- * 操作审计日志实体
+ * 审计日志实体
+ * 
+ * 记录所有关键操作:
+ * - 操作人
+ * - 操作类型
+ * - 操作资源
+ * - 操作时间
+ * - 操作结果
  */
 @Entity
 @Table(name = "audit_log", indexes = {
-    @Index(name = "idx_audit_username", columnList = "username"),
-    @Index(name = "idx_audit_ts", columnList = "ts"),
-    @Index(name = "idx_audit_module", columnList = "module"),
-    @Index(name = "idx_audit_action", columnList = "action")
+    @Index(name = "idx_user_id", columnList = "user_id"),
+    @Index(name = "idx_action", columnList = "action"),
+    @Index(name = "idx_resource", columnList = "resource"),
+    @Index(name = "idx_timestamp", columnList = "timestamp")
 })
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class AuditLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false, length = 50)
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "username", length = 50)
     private String username;
 
-    @NotBlank
-    @Column(nullable = false, length = 50)
-    private String module;
+    @Column(name = "action", length = 50, nullable = false)
+    private String action;  // LOGIN, LOGOUT, DEVICE_CONTROL, DATA_EXPORT, etc.
 
-    @NotBlank
-    @Column(nullable = false, length = 50)
-    private String action;
+    @Column(name = "resource", length = 200)
+    private String resource;  // device:001, user:123, etc.
 
-    @Column(length = 200)
-    private String target;
+    @Column(name = "description", length = 500)
+    private String description;
 
-    @Column(length = 100)
-    private String targetType;
+    @Column(name = "params", columnDefinition = "TEXT")
+    private String params;  // JSON 格式存储请求参数
 
-    @Column(length = 100)
-    private String targetId;
+    @Column(name = "result", columnDefinition = "TEXT")
+    private String result;  // JSON 格式存储响应结果
 
-    @Column(length = 100)
+    @Column(name = "status", length = 20)
+    private String status;  // SUCCESS, FAILED
+
+    @Column(name = "error_message", length = 1000)
+    private String errorMessage;
+
+    @Column(name = "ip_address", length = 50)
     private String ipAddress;
 
-    @Column(length = 500)
+    @Column(name = "user_agent", length = 500)
     private String userAgent;
 
-    @Column(columnDefinition = "TEXT")
-    private String requestMethod;
+    @Column(name = "timestamp", nullable = false)
+    private Instant timestamp;
 
-    @Column(columnDefinition = "TEXT")
-    private String requestUrl;
+    @Column(name = "duration_ms")
+    private Long durationMs;  // 操作耗时 (毫秒)
 
-    @Column(columnDefinition = "TEXT")
-    private String requestParams;
-
-    @Column(columnDefinition = "TEXT")
-    private String requestBody;
-
-    @Column(columnDefinition = "TEXT")
-    private String responseData;
-
-    @NotBlank
-    @Column(nullable = false, length = 20)
-    private String status;
-
-    @Column(length = 500)
-    private String message;
-
-    private long ts;
-
-    private long duration;
-
-    private String traceId;
-
-    /**
-     * 默认构造函数，初始化时间戳
-     */
-    public AuditLog(String username, String module, String action, String status) {
-        this.ts = System.currentTimeMillis() / 1000;
-        this.username = username;
-        this.module = module;
-        this.action = action;
-        this.status = status;
+    @PrePersist
+    protected void onCreate() {
+        timestamp = Instant.now();
     }
 }

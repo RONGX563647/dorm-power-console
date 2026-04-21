@@ -1,8 +1,8 @@
 package com.dormpower.mqtt;
 
 import com.dormpower.config.MqttConfig;
-import com.dormpower.kafka.TelemetryProducer;
-import com.dormpower.kafka.CommandAckProducer;
+import com.dormpower.dto.AlertMessage;
+import com.dormpower.dto.TelemetryMessage;
 import com.dormpower.model.CommandAckMessage;
 import com.dormpower.model.CommandRecord;
 import com.dormpower.model.Device;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import java.time.Instant;
 
 /**
  * MQTT桥接类
@@ -71,16 +72,10 @@ public class MqttBridge {
     private AlertService alertService;
 
     @Autowired(required = false)
-    private TelemetryProducer telemetryProducer;
+    private RabbitMQProducer rabbitMQProducer;
 
-    @Autowired(required = false)
-    private CommandAckProducer commandAckProducer;
-
-    @Value("${kafka.enabled:true}")
-    private boolean kafkaEnabled;
-
-    @Value("${kafka.command.enabled:true}")
-    private boolean commandKafkaEnabled;
+    @Value("${rabbitmq.enabled:true}")
+    private boolean rabbitmqEnabled;
 
     private MqttClient mqttClient;
     private boolean connected = false;
@@ -262,24 +257,38 @@ public class MqttBridge {
         double currentA = payload.has("current_a") ? payload.get("current_a").asDouble() : 0.0;
         long ts = payload.has("ts") ? payload.get("ts").asLong() : now;
 
-        // 优先使用 Kafka 发送（异步处理，高吞吐）
-        if (kafkaEnabled && telemetryProducer != null) {
-            telemetryProducer.sendTelemetry(deviceId, ts, powerW, voltageV, currentA);
-            // Kafka 消费者会处理 WebSocket 通知和告警检查
+        // 优先使用 RabbitMQ 发送（异步处理，高吞吐）
+        if (rabbitmqEnabled && rabbitMQProducer != null) {
+            // 构建设遥测消息
+            TelemetryMessage telemetryMessage = new TelemetryMessage();
+            telemetryMessage.setDeviceId(deviceId);
+            telemetryMessage.setTimestamp(ts);
+            telemetryMessage.setPowerW(powerW);
+            telemetryMessage.setVoltageV(voltageV);
+            telemetryMessage.setCurrentA(currentA);
+            
+            // 从数据库查询房间和楼栋信息
+            deviceRepository.findById(deviceId).ifPresent(device -> {
+                telemetryMessage.setRoom(device.getRoom());
+                telemetryMessage.setBuilding(device.getBuilding());
+                
+                // 发送到 RabbitMQ
+                rabbitMQProducer.sendTelemetry(telemetryMessage);
+            });
+            
+            // RabbitMQ 消费者会处理数据库写入、WebSocket 通知和告警检查
         } else {
             // 降级：直接写入数据库（低吞吐场景）
             Telemetry telemetry = new Telemetry();
             telemetry.setDeviceId(deviceId);
-            telemetry.setTs(ts);
+            telemetry.setTs(Instant.ofEpochSecond(ts));
             telemetry.setPowerW(powerW);
             telemetry.setVoltageV(voltageV);
             telemetry.setCurrentA(currentA);
             telemetryRepository.save(telemetry);
 
             // 检查告警
-            alertService.checkAndGenerateAlert(deviceId, "power", powerW);
-            alertService.checkAndGenerateAlert(deviceId, "voltage", voltageV);
-            alertService.checkAndGenerateAlert(deviceId, "current", currentA);
+            alertService.checkAndGenerateAlert(deviceId, powerW, voltageV, currentA);
 
             deviceRepository.findById(deviceId).ifPresent(device -> {
                 device.setLastSeenTs(now);

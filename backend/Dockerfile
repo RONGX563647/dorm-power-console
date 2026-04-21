@@ -16,8 +16,8 @@ RUN mkdir -p /root/.m2 && \
     echo '  </mirrors>' >> /root/.m2/settings.xml && \
     echo '</settings>' >> /root/.m2/settings.xml
 
-COPY pom.xml .
-COPY src ./src
+COPY backend/pom.xml .
+COPY backend/src ./src
 
 RUN apk add --no-cache maven && \
     mvn clean package -DskipTests -B && \
@@ -27,7 +27,7 @@ RUN apk add --no-cache curl postgresql-client
 
 EXPOSE 8000
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY scripts/deploy/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
