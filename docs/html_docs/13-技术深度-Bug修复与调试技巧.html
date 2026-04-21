@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13 技术深度 Bug修复与调试技巧 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>技术深度：Bug 修复与调试技巧</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-5 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: 完成所有功能模块，熟悉系统运行</p>
+</blockquote>
+<hr />
+<h2>一、典型 Bug 分析</h2>
+<h3>1.1 并发 Bug</h3>
+<p><strong>Bug 描述</strong>: WebSocket 消息丢失</p>
+<p><strong>现象</strong>: 前端设备状态更新延迟或不更新</p>
+<p><strong>原因</strong>: </p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例 - 非线程安全的集合操作</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">subscribers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addSubscriber</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">subscribers</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">sessionId</span><span class="p">);</span><span class="w">  </span><span class="c1">// 多线程下可能丢失数据</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>修复方案</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 正确示例 - 使用线程安全的集合</span>
+<span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">subscribers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CopyOnWriteArraySet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addSubscriber</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">subscribers</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">sessionId</span><span class="p">);</span><span class="w">  </span><span class="c1">// 线程安全</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>1.2 内存泄漏</h3>
+<p><strong>Bug 描述</strong>: 应用运行几天后 OOM</p>
+<p><strong>现象</strong>: 内存使用持续增长，GC 无效</p>
+<p><strong>原因</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例 - 静态集合持续增长</span>
+<span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">updateDevice</span><span class="p">(</span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">deviceCache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">device</span><span class="p">);</span><span class="w">  </span><span class="c1">// 只添加不清理</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>修复方案</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 正确示例 - 使用 Caffeine 缓存</span>
+<span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Cache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Caffeine</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">maximumSize</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">expireAfterWrite</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">MINUTES</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">updateDevice</span><span class="p">(</span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">deviceCache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">device</span><span class="p">);</span><span class="w">  </span><span class="c1">// 自动过期清理</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>1.3 空指针异常</h3>
+<p><strong>Bug 描述</strong>: 设备详情页面崩溃</p>
+<p><strong>现象</strong>: 前端显示错误，后端报 NPE</p>
+<p><strong>原因</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例 - 未检查 null</span>
+<span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/devices/{id}&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">DeviceDTO</span><span class="w"> </span><span class="nf">getDevice</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Room</span><span class="w"> </span><span class="n">room</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device</span><span class="p">.</span><span class="na">getRoom</span><span class="p">();</span><span class="w">  </span><span class="c1">// 可能为 null</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceDTO</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="n">room</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span><span class="w">  </span><span class="c1">// NPE!</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>修复方案</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 正确示例 - 使用 Optional</span>
+<span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/devices/{id}&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">DeviceDTO</span><span class="w"> </span><span class="nf">getDevice</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceNotFoundException</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">roomName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">ofNullable</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="na">getRoom</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">Room</span><span class="p">::</span><span class="n">getName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="s">&quot;未分配&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceDTO</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="n">roomName</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>二、调试技巧</h2>
+<h3>2.1 日志分析</h3>
+<p><strong>配置结构化日志</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LoggingConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">JacksonJsonProvider</span><span class="w"> </span><span class="nf">jsonProvider</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JacksonJsonProvider</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用示例</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DeviceService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">processDeviceData</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;处理设备数据&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">kv</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">),</span>
+<span class="w">            </span><span class="n">kv</span><span class="p">(</span><span class="s">&quot;dataLength&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">kv</span><span class="p">(</span><span class="s">&quot;timestamp&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>日志格式</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-04-21T10:30:00.000Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;处理设备数据&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;deviceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DEV-001&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;dataLength&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1713702600000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http-nio-8080-exec-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;logger&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;com.dormpower.service.DeviceService&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.2 性能分析</h3>
+<p><strong>使用 JProfiler 分析</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 启动应用并启用 JProfiler</span>
+java<span class="w"> </span>-agentpath:/path/to/jprofiler/bin/linux-x64/libjprofilerti.so<span class="o">=</span><span class="nv">port</span><span class="o">=</span><span class="m">8849</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-jar<span class="w"> </span>dorm-power-backend.jar
+</code></pre></div>
+
+<p><strong>热点代码分析</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 分析耗时操作</span>
+<span class="nd">@Profile</span><span class="p">(</span><span class="s">&quot;debug&quot;</span><span class="p">)</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PerformanceAspect</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Around</span><span class="p">(</span><span class="s">&quot;@annotation(org.springframework.web.bind.annotation.RequestMapping)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">profile</span><span class="p">(</span><span class="n">ProceedingJoinPoint</span><span class="w"> </span><span class="n">pjp</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">pjp</span><span class="p">.</span><span class="na">proceed</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">long</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">methodName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pjp</span><span class="p">.</span><span class="na">getSignature</span><span class="p">().</span><span class="na">getName</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">duration</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">warn</span><span class="p">(</span><span class="s">&quot;慢请求: {} 耗时: {}ms&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">methodName</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.3 内存分析</h3>
+<p><strong>使用 jmap 分析堆</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 生成堆转储文件</span>
+jmap<span class="w"> </span>-dump:live,format<span class="o">=</span>b,file<span class="o">=</span>heapdump.hprof<span class="w"> </span>&lt;pid&gt;
+
+<span class="c1"># 分析堆转储</span>
+jhat<span class="w"> </span>heapdump.hprof
+</code></pre></div>
+
+<p><strong>查找内存泄漏</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 使用 MAT (Memory Analyzer Tool) 分析</span>
+<span class="c1">// 1. 打开 heapdump.hprof</span>
+<span class="c1">// 2. 运行 Dominator Tree</span>
+<span class="c1">// 3. 查找最大的对象树</span>
+<span class="c1">// 4. 分析 GC Root</span>
+</code></pre></div>
+
+<hr />
+<h2>三、常见错误处理</h2>
+<h3>3.1 数据库连接错误</h3>
+<p><strong>错误</strong>: <code>Connection refused</code></p>
+<p><strong>排查步骤</strong>:
+1. 检查数据库服务是否运行
+2. 检查网络连接
+3. 检查防火墙规则
+4. 检查连接池配置</p>
+<p><strong>修复方案</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30000</span>
+<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600000</span>
+<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span>
+<span class="w">      </span><span class="nt">connection-test-query</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SELECT 1</span>
+</code></pre></div>
+
+<h3>3.2 MQTT 连接错误</h3>
+<p><strong>错误</strong>: <code>Unable to connect to server</code></p>
+<p><strong>排查步骤</strong>:
+1. 检查 MQTT Broker 状态
+2. 检查网络连通性
+3. 检查认证信息
+4. 检查主题权限</p>
+<p><strong>修复方案</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MqttReconnectHandler</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Scheduled</span><span class="p">(</span><span class="n">fixedDelay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">checkAndReconnect</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mqttClient</span><span class="p">.</span><span class="na">isConnected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">reconnect</span><span class="p">();</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;MQTT 重连成功&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">MqttException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;MQTT 重连失败&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>3.3 前端请求错误</h3>
+<p><strong>错误</strong>: <code>401 Unauthorized</code></p>
+<p><strong>排查步骤</strong>:
+1. 检查 Token 是否过期
+2. 检查 Token 格式
+3. 检查权限配置
+4. 检查拦截器配置</p>
+<p><strong>修复方案</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">JwtTokenProvider</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">validateToken</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Jwts</span><span class="p">.</span><span class="na">parserBuilder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">setSigningKey</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">parseClaimsJws</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ExpiredJwtException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">warn</span><span class="p">(</span><span class="s">&quot;Token 已过期&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Token 验证失败&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、测试技巧</h2>
+<h3>4.1 单元测试</h3>
+<div class="codehilite"><pre><span></span><code><span class="nd">@ExtendWith</span><span class="p">(</span><span class="n">MockitoExtension</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nc">DeviceServiceTest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Mock</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">DeviceRepository</span><span class="w"> </span><span class="n">deviceRepository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Mock</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">EventPublisher</span><span class="w"> </span><span class="n">eventPublisher</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@InjectMocks</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">DeviceService</span><span class="w"> </span><span class="n">deviceService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">testCreateDevice</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Given</span>
+<span class="w">        </span><span class="n">DeviceDTO</span><span class="w"> </span><span class="n">dto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceDTO</span><span class="p">();</span>
+<span class="w">        </span><span class="n">dto</span><span class="p">.</span><span class="na">setDeviceId</span><span class="p">(</span><span class="s">&quot;DEV-001&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">dto</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&quot;测试设备&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">when</span><span class="p">(</span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">existsByDeviceId</span><span class="p">(</span><span class="s">&quot;DEV-001&quot;</span><span class="p">)).</span><span class="na">thenReturn</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">        </span><span class="n">when</span><span class="p">(</span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">any</span><span class="p">(</span><span class="n">Device</span><span class="p">.</span><span class="na">class</span><span class="p">))).</span><span class="na">thenAnswer</span><span class="p">(</span><span class="n">invocation</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">invocation</span><span class="p">.</span><span class="na">getArgument</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="n">device</span><span class="p">.</span><span class="na">setId</span><span class="p">(</span><span class="n">UUID</span><span class="p">.</span><span class="na">randomUUID</span><span class="p">());</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">device</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// When</span>
+<span class="w">        </span><span class="n">Device</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceService</span><span class="p">.</span><span class="na">createDevice</span><span class="p">(</span><span class="n">dto</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Then</span>
+<span class="w">        </span><span class="n">assertNotNull</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&quot;DEV-001&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">verify</span><span class="p">(</span><span class="n">eventPublisher</span><span class="p">).</span><span class="na">publishEvent</span><span class="p">(</span><span class="n">any</span><span class="p">(</span><span class="n">DeviceCreatedEvent</span><span class="p">.</span><span class="na">class</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>4.2 集成测试</h3>
+<div class="codehilite"><pre><span></span><code><span class="nd">@SpringBootTest</span><span class="p">(</span><span class="n">webEnvironment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringBootTest</span><span class="p">.</span><span class="na">WebEnvironment</span><span class="p">.</span><span class="na">RANDOM_PORT</span><span class="p">)</span>
+<span class="nd">@AutoConfigureTestDatabase</span><span class="p">(</span><span class="n">replace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AutoConfigureTestDatabase</span><span class="p">.</span><span class="na">Replace</span><span class="p">.</span><span class="na">NONE</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nc">DeviceControllerIntegrationTest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">TestRestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">DeviceRepository</span><span class="w"> </span><span class="n">deviceRepository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@BeforeEach</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setUp</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">deleteAll</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">testCreateDeviceEndpoint</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Given</span>
+<span class="w">        </span><span class="n">DeviceDTO</span><span class="w"> </span><span class="n">dto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceDTO</span><span class="p">();</span>
+<span class="w">        </span><span class="n">dto</span><span class="p">.</span><span class="na">setDeviceId</span><span class="p">(</span><span class="s">&quot;DEV-001&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">dto</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&quot;测试设备&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// When</span>
+<span class="w">        </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;/api/devices&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">dto</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Then</span>
+<span class="w">        </span><span class="n">assertEquals</span><span class="p">(</span><span class="n">HttpStatus</span><span class="p">.</span><span class="na">CREATED</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getStatusCode</span><span class="p">());</span>
+<span class="w">        </span><span class="n">assertNotNull</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">().</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&quot;DEV-001&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">().</span><span class="na">getDeviceId</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>五、扩展练习</h2>
+<ol>
+<li>实现自动化性能测试</li>
+<li>实现分布式链路追踪</li>
+<li>实现错误码统一管理</li>
+<li>实现灰度发布策略</li>
+<li>实现故障自动恢复机制</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2024-04-21<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

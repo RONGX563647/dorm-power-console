@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14 技术深度 性能优化与改进方向 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块14：性能优化与改进方向</h1>
+<p><strong>学习时间</strong>：约4-5小时<br />
+<strong>难度</strong>：⭐️⭐️⭐️⭐️⭐️<br />
+<strong>前置知识</strong>：模块11-13内容，Java性能调优基础，JVM内存模型，Spring Boot自动配置原理</p>
+<hr />
+<h2>学习目标</h2>
+<ul>
+<li>掌握系统性能瓶颈分析方法</li>
+<li>学会使用JVM调优工具优化内存使用</li>
+<li>理解数据库慢查询优化策略</li>
+<li>掌握代码级性能优化技巧</li>
+<li>制定系统持续改进方案</li>
+</ul>
+<hr />
+<h2>一、性能瓶颈分析</h2>
+<h3>1.1 瓶颈识别方法</h3>
+<h4>1.1.1 系统资源监控</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># CPU使用率</span>
+top<span class="w"> </span>-p<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>java<span class="k">)</span>
+
+<span class="c1"># 内存使用</span>
+free<span class="w"> </span>-m
+
+<span class="c1"># 磁盘IO</span>
+iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span>
+
+<span class="c1"># 网络IO</span>
+iftop<span class="w"> </span>-i<span class="w"> </span>eth0
+</code></pre></div>
+
+<h4>1.1.2 JVM性能指标</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># GC频率和停顿时间</span>
+jstat<span class="w"> </span>-gcutil<span class="w"> </span>&lt;pid&gt;<span class="w"> </span><span class="m">1000</span>
+
+<span class="c1"># 线程状态</span>
+jstack<span class="w"> </span>&lt;pid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;WAITING\|BLOCKED&quot;</span>
+
+<span class="c1"># 内存分布</span>
+jmap<span class="w"> </span>-histo:live<span class="w"> </span>&lt;pid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+
+<h4>1.1.3 应用层监控</h4>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PerformanceMonitor</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MeterRegistry</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Timer</span><span class="w"> </span><span class="n">requestTimer</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">PerformanceMonitor</span><span class="p">(</span><span class="n">MeterRegistry</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">meterRegistry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">requestTimer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Timer</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;http.request.duration&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;application&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dorm-power&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="nf">monitor</span><span class="p">(</span><span class="n">Supplier</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operation</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">operationName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">requestTimer</span><span class="p">.</span><span class="na">record</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">long</span><span class="w"> </span><span class="n">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">operation</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">startTime</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">duration</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">warn</span><span class="p">(</span><span class="s">&quot;Slow operation detected: {} took {}ms&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                        </span><span class="n">operationName</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>1.2 常见性能瓶颈</h3>
+<table>
+<thead>
+<tr>
+<th>瓶颈类型</th>
+<th>典型症状</th>
+<th>排查工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU密集型</td>
+<td>CPU使用率持续&gt;80%</td>
+<td>jstack, async-profiler</td>
+</tr>
+<tr>
+<td>内存泄漏</td>
+<td>内存持续增长不下降</td>
+<td>jmap, MAT</td>
+</tr>
+<tr>
+<td>GC频繁</td>
+<td>应用响应抖动</td>
+<td>jstat, GC日志</td>
+</tr>
+<tr>
+<td>数据库慢查询</td>
+<td>接口响应时间长</td>
+<td>slow query log, EXPLAIN</td>
+</tr>
+<tr>
+<td>锁竞争</td>
+<td>大量线程BLOCKED</td>
+<td>jstack -l</td>
+</tr>
+<tr>
+<td>网络IO阻塞</td>
+<td>连接超时</td>
+<td>tcpdump, Wireshark</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>二、JVM调优实践</h2>
+<h3>2.1 内存参数优化</h3>
+<h4>2.1.1 2核2G服务器配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 生产环境JVM参数（针对低配置服务器）</span>
+java<span class="w"> </span>-Xms256m<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-Xmx384m<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-XX:MetaspaceSize<span class="o">=</span>64m<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-XX:MaxMetaspaceSize<span class="o">=</span>128m<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-XX:+UseG1GC<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-XX:MaxGCPauseMillis<span class="o">=</span><span class="m">200</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-XX:+HeapDumpOnOutOfMemoryError<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-XX:HeapDumpPath<span class="o">=</span>/var/log/dorm-power/heapdump.hprof<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-Xlog:gc*:file<span class="o">=</span>/var/log/dorm-power/gc.log:time,uptime,level,tags:filecount<span class="o">=</span><span class="m">5</span>,filesize<span class="o">=</span>10M<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-jar<span class="w"> </span>dorm-power.jar
+</code></pre></div>
+
+<h4>2.1.2 参数说明</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">内存分配策略</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">堆内存</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-Xms256m</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;初始堆大小256MB（避免启动时频繁GC）&quot;</span>
+<span class="w">    </span><span class="nt">-Xmx384m</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;最大堆大小384MB（预留系统内存）&quot;</span>
+
+<span class="w">  </span><span class="nt">元空间</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-XX:MetaspaceSize=64m</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;初始元空间64MB&quot;</span>
+<span class="w">    </span><span class="nt">-XX:MaxMetaspaceSize=128m</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;最大元空间128MB&quot;</span>
+
+<span class="w">  </span><span class="nt">GC策略</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-XX:+UseG1GC</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;使用G1垃圾回收器（适合大堆低延迟）&quot;</span>
+<span class="w">    </span><span class="nt">-XX:MaxGCPauseMillis=200</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;目标GC停顿时间200ms&quot;</span>
+
+<span class="w">  </span><span class="nt">诊断</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-XX:+HeapDumpOnOutOfMemoryError</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OOM时自动dump堆&quot;</span>
+<span class="w">    </span><span class="nt">-Xlog:gc*</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;输出详细GC日志&quot;</span>
+</code></pre></div>
+
+<h3>2.2 GC日志分析</h3>
+<h4>2.2.1 GC日志示例</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span><span class="mi">2024</span><span class="o">-</span><span class="mo">01</span><span class="o">-</span><span class="mi">15</span><span class="n">T10</span><span class="o">:</span><span class="mi">30</span><span class="o">:</span><span class="mf">45.123</span><span class="o">+</span><span class="mi">0800</span><span class="p">]</span><span class="w"> </span><span class="n">GC</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">Pause</span><span class="w"> </span><span class="n">Young</span><span class="w"> </span><span class="p">(</span><span class="n">Normal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">G1</span><span class="w"> </span><span class="n">Evacuation</span><span class="w"> </span><span class="n">Pause</span><span class="p">)</span>
+<span class="w">  </span><span class="n">Pre</span><span class="w"> </span><span class="n">Evacuate</span><span class="w"> </span><span class="n">Collection</span><span class="w"> </span><span class="nf">Set</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="n">ms</span>
+<span class="w">  </span><span class="n">Evacuate</span><span class="w"> </span><span class="n">Collection</span><span class="w"> </span><span class="nf">Set</span><span class="o">:</span><span class="w"> </span><span class="mf">12.3</span><span class="n">ms</span>
+<span class="w">  </span><span class="n">Post</span><span class="w"> </span><span class="n">Evacuate</span><span class="w"> </span><span class="n">Collection</span><span class="w"> </span><span class="nf">Set</span><span class="o">:</span><span class="w"> </span><span class="mf">1.2</span><span class="n">ms</span>
+<span class="w">  </span><span class="n">Other</span><span class="o">:</span><span class="w"> </span><span class="mf">2.1</span><span class="n">ms</span>
+<span class="w">  </span><span class="p">[</span><span class="n">Eden</span><span class="o">:</span><span class="w"> </span><span class="mf">64.0</span><span class="n">M</span><span class="p">(</span><span class="mf">64.0</span><span class="n">M</span><span class="p">)</span><span class="o">-&gt;</span><span class="mf">0.0</span><span class="n">B</span><span class="p">(</span><span class="mf">64.0</span><span class="n">M</span><span class="p">)</span><span class="w"> </span><span class="n">Survivors</span><span class="o">:</span><span class="w"> </span><span class="mf">8192.0</span><span class="n">K</span><span class="o">-&gt;</span><span class="mf">8192.0</span><span class="n">K</span><span class="w"> </span>
+<span class="w">   </span><span class="n">Heap</span><span class="o">:</span><span class="w"> </span><span class="mf">256.0</span><span class="n">M</span><span class="p">(</span><span class="mf">384.0</span><span class="n">M</span><span class="p">)</span><span class="o">-&gt;</span><span class="mf">195.2</span><span class="n">M</span><span class="p">(</span><span class="mf">384.0</span><span class="n">M</span><span class="p">)]</span>
+<span class="w">  </span><span class="p">[</span><span class="n">Times</span><span class="o">:</span><span class="w"> </span><span class="n">user</span><span class="o">=</span><span class="mf">45.2</span><span class="n">ms</span><span class="w"> </span><span class="n">sys</span><span class="o">=</span><span class="mf">3.1</span><span class="n">ms</span><span class="p">,</span><span class="w"> </span><span class="n">real</span><span class="o">=</span><span class="mf">16.1</span><span class="n">ms</span><span class="p">]</span>
+</code></pre></div>
+
+<h4>2.2.2 GC调优建议</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// GC调优指南</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GCTuningGuide</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="cm">/*</span>
+<span class="cm">     * 1. 观察GC频率</span>
+<span class="cm">     *    - Young GC: 理想频率 10-50次/小时</span>
+<span class="cm">     *    - Full GC: 理想频率 &lt;1次/天</span>
+<span class="cm">     * </span>
+<span class="cm">     * 2. 调整新生代比例</span>
+<span class="cm">     *    -Xmn128m  (堆的1/3到1/4)</span>
+<span class="cm">     * </span>
+<span class="cm">     * 3. 如果Full GC频繁:</span>
+<span class="cm">     *    - 检查是否有内存泄漏</span>
+<span class="cm">     *    - 增加堆大小</span>
+<span class="cm">     *    - 使用G1GC替代CMS</span>
+<span class="cm">     * </span>
+<span class="cm">     * 4. 如果GC停顿时间长:</span>
+<span class="cm">     *    - 减少堆大小</span>
+<span class="cm">     *    - 使用ZGC（Java 15+）</span>
+<span class="cm">     *    - 优化对象分配速率</span>
+<span class="cm">     */</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.3 内存泄漏排查</h3>
+<h4>2.3.1 常见内存泄漏场景</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例1: 静态集合持续增长</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">BadCacheExample</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 内存泄漏！无界集合</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="w"> </span><span class="n">CACHE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addToCache</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CACHE</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span><span class="w">  </span><span class="c1">// 永远不会移除</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 正确示例: 使用Caffeine有界缓存</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GoodCacheExample</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Cache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="w"> </span><span class="n">CACHE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Caffeine</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">maximumSize</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span><span class="w">  </span><span class="c1">// 最大10000条</span>
+<span class="w">        </span><span class="p">.</span><span class="na">expireAfterWrite</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofMinutes</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span><span class="w">  </span><span class="c1">// 30分钟过期</span>
+<span class="w">        </span><span class="p">.</span><span class="na">recordStats</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addToCache</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CACHE</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span><span class="w">  </span><span class="c1">// 自动淘汰旧数据</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例2: 未关闭的资源</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ResourceLeakExample</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 内存泄漏！Connection未关闭</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">queryData</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">SQLException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Connection</span><span class="w"> </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataSource</span><span class="p">.</span><span class="na">getConnection</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PreparedStatement</span><span class="w"> </span><span class="n">stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conn</span><span class="p">.</span><span class="na">prepareStatement</span><span class="p">(</span><span class="s">&quot;SELECT * FROM telemetry&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ResultSet</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stmt</span><span class="p">.</span><span class="na">executeQuery</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">rs</span><span class="p">.</span><span class="na">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">mapRow</span><span class="p">(</span><span class="n">rs</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 忘记关闭rs, stmt, conn</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 正确示例: try-with-resources</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">queryDataFixed</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">SQLException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">Connection</span><span class="w"> </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataSource</span><span class="p">.</span><span class="na">getConnection</span><span class="p">();</span>
+<span class="w">             </span><span class="n">PreparedStatement</span><span class="w"> </span><span class="n">stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conn</span><span class="p">.</span><span class="na">prepareStatement</span><span class="p">(</span><span class="s">&quot;SELECT * FROM telemetry&quot;</span><span class="p">);</span>
+<span class="w">             </span><span class="n">ResultSet</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stmt</span><span class="p">.</span><span class="na">executeQuery</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">rs</span><span class="p">.</span><span class="na">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">mapRow</span><span class="p">(</span><span class="n">rs</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>2.3.2 MAT分析步骤</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 1. 获取堆dump</span>
+jmap<span class="w"> </span>-dump:live,format<span class="o">=</span>b,file<span class="o">=</span>heapdump.hprof<span class="w"> </span>&lt;pid&gt;
+
+<span class="c1"># 2. 使用MAT分析</span>
+<span class="c1"># 打开Eclipse MAT -&gt; File -&gt; Open Heap Dump</span>
+<span class="c1"># 查看:</span>
+<span class="c1">#   - Dominator Tree: 最大对象树</span>
+<span class="c1">#   - Histogram: 对象分布</span>
+<span class="c1">#   - Leak Suspects: 泄漏嫌疑报告</span>
+
+<span class="c1"># 3. 分析OQL查询</span>
+<span class="c1"># 查找大对象</span>
+SELECT<span class="w"> </span>*<span class="w"> </span>FROM<span class="w"> </span>java.lang.String<span class="w"> </span>s<span class="w"> </span>WHERE<span class="w"> </span>s.value.length<span class="w"> </span>&gt;<span class="w"> </span><span class="m">1000</span>
+
+<span class="c1"># 查找特定类的实例</span>
+SELECT<span class="w"> </span>*<span class="w"> </span>FROM<span class="w"> </span>INSTANCEOF<span class="w"> </span>com.dormpower.model.TelemetryData
+</code></pre></div>
+
+<hr />
+<h2>三、数据库性能优化</h2>
+<h3>3.1 慢查询优化</h3>
+<h4>3.1.1 慢查询日志配置</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- PostgreSQL配置</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">log_min_duration_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 记录&gt;1s的查询</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">log_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;mod&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 记录所有修改语句</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">log_lock_waits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">on</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 记录锁等待</span>
+
+<span class="c1">-- 重新加载配置</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">pg_reload_conf</span><span class="p">();</span>
+</code></pre></div>
+
+<h4>3.1.2 EXPLAIN分析</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- 慢查询示例</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">room_id</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="k">COUNT</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">telemetry_count</span><span class="p">,</span>
+<span class="w">       </span><span class="k">AVG</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">voltage</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_voltage</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">devices</span><span class="w"> </span><span class="n">d</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">telemetry</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">device_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">device_id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ONLINE&#39;</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">collected_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">room_id</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">telemetry_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- 分析执行计划</span>
+<span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="k">ANALYZE</span><span class="p">,</span><span class="w"> </span><span class="n">BUFFERS</span><span class="p">,</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span><span class="w"> </span>
+<span class="o">&lt;</span><span class="err">上面的查询</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div>
+
+<h4>3.1.3 索引优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- 创建复合索引</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_telemetry_device_time</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">telemetry</span><span class="p">(</span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">collected_at</span><span class="w"> </span><span class="k">DESC</span><span class="p">);</span>
+
+<span class="c1">-- 创建部分索引（只索引在线设备）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_devices_online</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">devices</span><span class="p">(</span><span class="n">device_id</span><span class="p">,</span><span class="w"> </span><span class="n">room_id</span><span class="p">)</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ONLINE&#39;</span><span class="p">;</span>
+
+<span class="c1">-- 查看索引使用情况</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">schemaname</span><span class="p">,</span><span class="w"> </span><span class="n">tablename</span><span class="p">,</span><span class="w"> </span><span class="n">indexname</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="n">idx_scan</span><span class="p">,</span><span class="w"> </span><span class="n">idx_tup_read</span><span class="p">,</span><span class="w"> </span><span class="n">idx_tup_fetch</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_indexes</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">idx_scan</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span>
+
+<span class="c1">-- 删除未使用的索引</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_unused_index</span><span class="p">;</span>
+</code></pre></div>
+
+<h3>3.2 查询优化技巧</h3>
+<h4>3.2.1 分页查询优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例: OFFSET深分页</span>
+<span class="nd">@Query</span><span class="p">(</span><span class="s">&quot;SELECT t FROM TelemetryData t WHERE t.deviceId = :deviceId ORDER BY t.collectedAt DESC&quot;</span><span class="p">)</span>
+<span class="n">Page</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">queryWithOffset</span><span class="p">(</span><span class="nd">@Param</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+<span class="c1">// 问题: OFFSET 100000需要扫描前10万条数据</span>
+
+<span class="c1">// 正确示例: 游标分页</span>
+<span class="nd">@Query</span><span class="p">(</span><span class="s">&quot;SELECT t FROM TelemetryData t WHERE t.deviceId = :deviceId &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">       </span><span class="s">&quot;AND t.collectedAt &lt; :cursor ORDER BY t.collectedAt DESC&quot;</span><span class="p">)</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">queryWithCursor</span><span class="p">(</span>
+<span class="w">    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span>
+<span class="w">    </span><span class="nd">@Param</span><span class="p">(</span><span class="s">&quot;cursor&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">cursor</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Pageable</span><span class="w"> </span><span class="n">pageable</span><span class="p">);</span>
+</code></pre></div>
+
+<h4>3.2.2 N+1查询优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 错误示例: N+1查询</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Device</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@OneToMany</span><span class="p">(</span><span class="n">mappedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;device&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="na">EAGER</span><span class="p">)</span><span class="w">  </span><span class="c1">// 懒加载变 eager</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">telemetryList</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 查询1次Device，然后N次查询Telemetry</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">devices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">findAll</span><span class="p">();</span>
+
+<span class="c1">// 正确示例: JOIN FETCH</span>
+<span class="nd">@Repository</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">DeviceRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">Device</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">&quot;SELECT DISTINCT d FROM Device d LEFT JOIN FETCH d.telemetryList&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findAllWithTelemetry</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 或使用EntityGraph</span>
+<span class="w">    </span><span class="nd">@EntityGraph</span><span class="p">(</span><span class="n">attributePaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;telemetryList&quot;</span><span class="p">})</span>
+<span class="w">    </span><span class="nd">@Query</span><span class="p">(</span><span class="s">&quot;SELECT d FROM Device d&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findAllWithTelemetryGraph</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>3.2.3 批量操作优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">BatchOptimizationService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">JdbcTemplate</span><span class="w"> </span><span class="n">jdbcTemplate</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 批量插入优化</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">batchInsertTelemetry</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dataList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;INSERT INTO telemetry (device_id, voltage, current, power, collected_at) &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                    </span><span class="s">&quot;VALUES (?, ?, ?, ?, ?)&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">jdbcTemplate</span><span class="p">.</span><span class="na">batchUpdate</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BatchPreparedStatementSetter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setValues</span><span class="p">(</span><span class="n">PreparedStatement</span><span class="w"> </span><span class="n">ps</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">SQLException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">TelemetryData</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataList</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setDouble</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">getVoltage</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setDouble</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">getCurrent</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setDouble</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">getPower</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setTimestamp</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">Timestamp</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">getCollectedAt</span><span class="p">()));</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getBatchSize</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">dataList</span><span class="p">.</span><span class="na">size</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 分批处理（避免内存溢出）</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">processLargeDataset</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">totalRecords</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">batchSize</span><span class="p">,</span><span class="w"> </span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">processor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">offset</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">totalRecords</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">batch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IntStream</span><span class="p">.</span><span class="na">range</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">batchSize</span><span class="p">,</span><span class="w"> </span><span class="n">totalRecords</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">boxed</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">processor</span><span class="p">.</span><span class="na">accept</span><span class="p">(</span><span class="n">batch</span><span class="p">);</span>
+<span class="w">            </span><span class="n">offset</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">batchSize</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、代码级性能优化</h2>
+<h3>4.1 对象创建优化</h3>
+<h4>4.1.1 对象池复用</h4>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ObjectPoolService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 使用对象池复用DateFormatter（线程不安全）</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ObjectPool</span><span class="o">&lt;</span><span class="n">SimpleDateFormat</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dateFormatterPool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GenericObjectPool</span><span class="o">&lt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">BasePooledObjectFactory</span><span class="o">&lt;</span><span class="n">SimpleDateFormat</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SimpleDateFormat</span><span class="w"> </span><span class="nf">create</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SimpleDateFormat</span><span class="p">(</span><span class="s">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">PooledObject</span><span class="o">&lt;</span><span class="n">SimpleDateFormat</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">wrap</span><span class="p">(</span><span class="n">SimpleDateFormat</span><span class="w"> </span><span class="n">obj</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DefaultPooledObject</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">formatDate</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="n">date</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SimpleDateFormat</span><span class="w"> </span><span class="n">sdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dateFormatterPool</span><span class="p">.</span><span class="na">borrowObject</span><span class="p">();</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">sdf</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="n">date</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sdf</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">dateFormatterPool</span><span class="p">.</span><span class="na">returnObject</span><span class="p">(</span><span class="n">sdf</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>4.1.2 字符串优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">StringOptimization</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 错误: 循环中字符串拼接</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">buildMessageBad</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">parts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">result</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">part</span><span class="p">;</span><span class="w">  </span><span class="c1">// 每次创建新String对象</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 正确: 使用StringBuilder</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">buildMessageGood</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">(</span><span class="n">parts</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span><span class="w">  </span><span class="c1">// 预估容量</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">parts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sb</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">part</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sb</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 最佳: Stream API（简洁但稍慢）</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">buildMessageStream</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">parts</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">joining</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>4.2 集合优化</h3>
+<h4>4.2.1 选择合适的数据结构</h4>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CollectionOptimization</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 场景1: 高频读取，低频写入</span>
+<span class="w">    </span><span class="c1">// 使用: ConcurrentHashMap</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 场景2: 有序数据，频繁范围查询</span>
+<span class="w">    </span><span class="c1">// 使用: TreeMap</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">TreeMap</span><span class="o">&lt;</span><span class="n">LocalDateTime</span><span class="p">,</span><span class="w"> </span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">timeSeriesData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TreeMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 场景3: 固定大小，高性能</span>
+<span class="w">    </span><span class="c1">// 使用: ArrayDeque</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ArrayDeque</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">recentCommands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayDeque</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 场景4: 需要去重</span>
+<span class="w">    </span><span class="c1">// 使用: LinkedHashSet（保持插入顺序）</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">LinkedHashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uniqueDeviceIds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedHashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>4.2.2 集合初始化优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CollectionInitialization</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 错误: 默认容量，频繁扩容</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">loadAllBad</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">  </span><span class="c1">// 初始容量10</span>
+<span class="w">        </span><span class="c1">// 加载10000条数据，会扩容10+次</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">list</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 正确: 预估容量</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">loadAllGood</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">expectedSize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 初始容量 = expectedSize / 0.75 + 1</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)(</span><span class="n">expectedSize</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">0.75f</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">list</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// HashMap初始化</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buildDeviceMap</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">expectedSize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 避免扩容: capacity = expectedSize / loadFactor + 1</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)(</span><span class="n">expectedSize</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">0.75f</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">map</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>4.3 并发优化</h3>
+<h4>4.3.1 锁优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LockOptimization</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 错误: 粗粒度锁</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">synchronized</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">processDevicesBad</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">devices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 整个方法加锁，串行执行</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">devices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">processDevice</span><span class="p">(</span><span class="n">device</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 正确: 细粒度锁</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">processDevicesGood</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">devices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">devices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">synchronized</span><span class="w"> </span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 只锁单个设备</span>
+<span class="w">                </span><span class="n">processDevice</span><span class="p">(</span><span class="n">device</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 最佳: 并发集合</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">AtomicInteger</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceCounters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">incrementCounter</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">deviceCounters</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AtomicInteger</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="na">incrementAndGet</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>4.3.2 虚拟线程优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VirtualThreadConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ExecutorService</span><span class="w"> </span><span class="nf">virtualThreadExecutor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Java 21虚拟线程</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Executors</span><span class="p">.</span><span class="na">newVirtualThreadPerTaskExecutor</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">TaskExecutor</span><span class="w"> </span><span class="nf">taskExecutor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TaskExecutorAdapter</span><span class="w"> </span><span class="n">adapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TaskExecutorAdapter</span><span class="p">(</span>
+<span class="w">            </span><span class="n">Executors</span><span class="p">.</span><span class="na">newVirtualThreadPerTaskExecutor</span><span class="p">()</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">adapter</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VirtualThreadService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ExecutorService</span><span class="w"> </span><span class="n">virtualThreadExecutor</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 使用虚拟线程处理大量I/O任务</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DeviceStatus</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">checkAllDevicesAsync</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceIds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">DeviceStatus</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">futures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceIds</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">deviceId</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">supplyAsync</span><span class="p">(</span>
+<span class="w">                </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">checkDeviceStatus</span><span class="p">(</span><span class="n">deviceId</span><span class="p">),</span>
+<span class="w">                </span><span class="n">virtualThreadExecutor</span>
+<span class="w">            </span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">allOf</span><span class="p">(</span><span class="n">futures</span><span class="p">.</span><span class="na">toArray</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="na">thenApply</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">futures</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">CompletableFuture</span><span class="p">::</span><span class="n">join</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">()));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>五、系统改进方向</h2>
+<h3>5.1 短期优化（1-3个月）</h3>
+<h4>5.1.1 监控完善</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">改进计划</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1. 增加业务指标监控</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">设备在线率</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据采集成功率</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">命令执行成功率</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API响应时间P95/P99</span>
+
+<span class="w">  </span><span class="nt">2. 告警规则</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">设备离线超过5分钟告警</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API错误率&gt;5%告警</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据库连接池使用率&gt;80%告警</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">内存使用率&gt;85%告警</span>
+
+<span class="w">  </span><span class="nt">3. 日志增强</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">增加TraceId追踪</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">结构化JSON日志</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">慢查询日志自动分析</span>
+</code></pre></div>
+
+<h4>5.1.2 缓存优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 改进: 多级缓存策略</span>
+<span class="nd">@Service</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MultiLevelCacheService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Cache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">localCache</span><span class="p">;</span><span class="w">  </span><span class="c1">// Caffeine L1</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">RedisTemplate</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">;</span><span class="w">  </span><span class="c1">// Redis L2</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Device</span><span class="w"> </span><span class="nf">getDevice</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// L1: 本地缓存</span>
+<span class="w">        </span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">localCache</span><span class="p">.</span><span class="na">getIfPresent</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">device</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">device</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// L2: Redis缓存</span>
+<span class="w">        </span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;device:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">device</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">localCache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">device</span><span class="p">);</span><span class="w">  </span><span class="c1">// 回填L1</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">device</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// L3: 数据库</span>
+<span class="w">        </span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">deviceId</span><span class="p">).</span><span class="na">orElse</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">device</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="s">&quot;device:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">device</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="n">Duration</span><span class="p">.</span><span class="na">ofMinutes</span><span class="p">(</span><span class="mi">30</span><span class="p">));</span>
+<span class="w">            </span><span class="n">localCache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">device</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">device</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 缓存更新策略: Cache-Aside</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">updateDevice</span><span class="p">(</span><span class="n">Device</span><span class="w"> </span><span class="n">device</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">deviceRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">device</span><span class="p">);</span>
+<span class="w">        </span><span class="n">localCache</span><span class="p">.</span><span class="na">invalidate</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="s">&quot;device:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">device</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>5.1.3 数据库优化</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- 改进: 分区表（按月分区）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">telemetry_partitioned</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">BIGSERIAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">device_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+<span class="w">    </span><span class="n">voltage</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="p">,</span>
+<span class="w">    </span><span class="k">current</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="p">,</span>
+<span class="w">    </span><span class="n">power</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="p">,</span>
+<span class="w">    </span><span class="n">collected_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">)</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="n">collected_at</span><span class="p">);</span>
+
+<span class="c1">-- 创建分区</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">telemetry_y2024m01</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">telemetry_partitioned</span>
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2024-01-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2024-02-01&#39;</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">telemetry_y2024m02</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">telemetry_partitioned</span>
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2024-02-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2024-03-01&#39;</span><span class="p">);</span>
+<span class="c1">-- 自动化分区创建脚本...</span>
+
+<span class="c1">-- 改进: 数据归档</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">telemetry_archive</span><span class="w"> </span><span class="p">(</span><span class="k">LIKE</span><span class="w"> </span><span class="n">telemetry_partitioned</span><span class="w"> </span><span class="k">INCLUDING</span><span class="w"> </span><span class="k">ALL</span><span class="p">);</span>
+</code></pre></div>
+
+<h3>5.2 中期改进（3-6个月）</h3>
+<h4>5.2.1 微服务拆分</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">服务拆分方案</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1. 设备管理服务</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">设备注册/注销</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">设备状态管理</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">设备配置管理</span>
+
+<span class="w">  </span><span class="nt">2. 数据采集服务</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MQTT消息处理</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据解析存储</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">实时数据推送</span>
+
+<span class="w">  </span><span class="nt">3. 命令服务</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">命令下发</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">命令状态跟踪</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">命令重试机制</span>
+
+<span class="w">  </span><span class="nt">4. 分析服务</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用电分析</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">异常检测</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">报告生成</span>
+
+<span class="w">  </span><span class="nt">技术选型</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">服务注册</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacos</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">API网关</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spring Cloud Gateway</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">服务调用</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenFeign</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">配置中心</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacos Config</span>
+</code></pre></div>
+
+<h4>5.2.2 消息队列引入</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 改进: 使用RabbitMQ替代直接MQTT处理</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RabbitMQConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Queue</span><span class="w"> </span><span class="nf">telemetryQueue</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">QueueBuilder</span><span class="p">.</span><span class="na">durable</span><span class="p">(</span><span class="s">&quot;telemetry.queue&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">withArgument</span><span class="p">(</span><span class="s">&quot;x-dead-letter-exchange&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dlx.exchange&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Queue</span><span class="w"> </span><span class="nf">commandQueue</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">QueueBuilder</span><span class="p">.</span><span class="na">durable</span><span class="p">(</span><span class="s">&quot;command.queue&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">withArgument</span><span class="p">(</span><span class="s">&quot;x-message-ttl&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">60000</span><span class="p">)</span><span class="w">  </span><span class="c1">// 60秒TTL</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Service</span>
+<span class="nd">@RabbitListener</span><span class="p">(</span><span class="n">queues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;telemetry.queue&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TelemetryConsumer</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@RabbitHandler</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleTelemetry</span><span class="p">(</span><span class="n">TelemetryMessage</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 异步处理遥测数据</span>
+<span class="w">        </span><span class="n">telemetryService</span><span class="p">.</span><span class="na">saveAsync</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>5.2.3 读写分离</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 配置读写分离</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DataSourceConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="s">&quot;spring.datasource.write&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">writeDataSource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DataSourceBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="s">&quot;spring.datasource.read&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">readDataSource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DataSourceBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">().</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">routingDataSource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Object</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">targetDataSources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">targetDataSources</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;write&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">writeDataSource</span><span class="p">());</span>
+<span class="w">        </span><span class="n">targetDataSources</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;read&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">readDataSource</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">RoutingDataSource</span><span class="w"> </span><span class="n">routingDataSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RoutingDataSource</span><span class="p">();</span>
+<span class="w">        </span><span class="n">routingDataSource</span><span class="p">.</span><span class="na">setDefaultTargetDataSource</span><span class="p">(</span><span class="n">writeDataSource</span><span class="p">());</span>
+<span class="w">        </span><span class="n">routingDataSource</span><span class="p">.</span><span class="na">setTargetDataSources</span><span class="p">(</span><span class="n">targetDataSources</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">routingDataSource</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用注解切换数据源</span>
+<span class="nd">@Target</span><span class="p">({</span><span class="n">ElementType</span><span class="p">.</span><span class="na">METHOD</span><span class="p">})</span>
+<span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">ReadOnly</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="nd">@Aspect</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DataSourceAspect</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Before</span><span class="p">(</span><span class="s">&quot;@annotation(readOnly)&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setReadDataSourceType</span><span class="p">(</span><span class="n">ReadOnly</span><span class="w"> </span><span class="n">readOnly</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">DataSourceContextHolder</span><span class="p">.</span><span class="na">setDataSourceType</span><span class="p">(</span><span class="s">&quot;read&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>5.3 长期规划（6-12个月）</h3>
+<h4>5.3.1 云原生改造</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">云原生架构</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1. 容器化</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Docker多阶段构建</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">镜像优化（Alpine基础镜像）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">健康检查配置</span>
+
+<span class="w">  </span><span class="nt">2. Kubernetes部署</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment自动扩缩容</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service服务发现</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap配置管理</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret敏感信息管理</span>
+
+<span class="w">  </span><span class="nt">3. 可观测性</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus指标采集</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Grafana可视化</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Jaeger链路追踪</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ELK日志聚合</span>
+
+<span class="w">  </span><span class="nt">4. CI/CD</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub Actions自动构建</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ArgoCD GitOps部署</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">自动化测试流水线</span>
+</code></pre></div>
+
+<h4>5.3.2 AI增强</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 改进: AI异常检测</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnomalyDetector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;基于机器学习的异常检测&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">detect_anomaly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TelemetryData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AnomalyResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;检测用电异常&quot;&quot;&quot;</span>
+        <span class="c1"># 特征工程</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_features</span><span class="p">(</span><span class="n">telemetry_data</span><span class="p">)</span>
+
+        <span class="c1"># 模型预测</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="c1"># 生成报告</span>
+        <span class="k">return</span> <span class="n">AnomalyResult</span><span class="p">(</span>
+            <span class="n">is_anomaly</span><span class="o">=</span><span class="n">prediction</span><span class="p">[</span><span class="s1">&#39;is_anomaly&#39;</span><span class="p">],</span>
+            <span class="n">confidence</span><span class="o">=</span><span class="n">prediction</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">],</span>
+            <span class="n">anomaly_type</span><span class="o">=</span><span class="n">prediction</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+            <span class="n">suggestions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_suggestions</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TelemetryData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;提取特征: 电压波动、电流峰值、功率趋势等&quot;&quot;&quot;</span>
+        <span class="n">voltages</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">voltage</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">currents</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">current</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">powers</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">power</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">voltages</span><span class="p">),</span>  <span class="c1"># 电压标准差</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">currents</span><span class="p">),</span>  <span class="c1"># 电流峰值</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powers</span><span class="p">)),</span> <span class="n">powers</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># 功率趋势</span>
+            <span class="c1"># 更多特征...</span>
+        <span class="p">])</span>
+</code></pre></div>
+
+<h4>5.3.3 边缘计算</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">边缘计算架构</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1. 边缘网关</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据预处理和过滤</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">本地缓存和断网续传</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">实时告警判断</span>
+
+<span class="w">  </span><span class="nt">2. 云端协同</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">模型下发（云端训练，边缘推理）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据聚合上传</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">配置同步</span>
+
+<span class="w">  </span><span class="nt">3. 技术选型</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K3s轻量K8s</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MQTT边缘代理</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SQLite本地存储</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gRPC云边通信</span>
+</code></pre></div>
+
+<hr />
+<h2>六、性能基准测试</h2>
+<h3>6.1 JMH基准测试</h3>
+<div class="codehilite"><pre><span></span><code><span class="nd">@BenchmarkMode</span><span class="p">(</span><span class="n">Mode</span><span class="p">.</span><span class="na">AverageTime</span><span class="p">)</span>
+<span class="nd">@OutputTimeUnit</span><span class="p">(</span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">)</span>
+<span class="nd">@State</span><span class="p">(</span><span class="n">Scope</span><span class="p">.</span><span class="na">Thread</span><span class="p">)</span>
+<span class="nd">@Warmup</span><span class="p">(</span><span class="n">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="nd">@Measurement</span><span class="p">(</span><span class="n">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="nd">@Fork</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PerformanceBenchmark</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TelemetryData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">testData</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">DeviceCacheService</span><span class="w"> </span><span class="n">cacheService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Setup</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">testData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">generateTestData</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cacheService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceCacheService</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Benchmark</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">testHashMapLookup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">TelemetryData</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">testData</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Device</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;device-5000&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Benchmark</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">testConcurrentHashMapLookup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">TelemetryData</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">testData</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Device</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;device-5000&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Benchmark</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">testCaffeineCacheLookup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Cache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Device</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Caffeine</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">maximumSize</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">TelemetryData</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">testData</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">cache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Device</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">cache</span><span class="p">.</span><span class="na">getIfPresent</span><span class="p">(</span><span class="s">&quot;device-5000&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 运行测试</span>
+<span class="c1">// java -jar target/benchmarks.jar PerformanceBenchmark</span>
+</code></pre></div>
+
+<h3>6.2 压测工具使用</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Apache JMeter压测</span>
+<span class="c1"># 1. 创建测试计划</span>
+<span class="c1"># 2. 添加HTTP请求采样器</span>
+<span class="c1"># 3. 设置线程组（模拟并发用户）</span>
+<span class="c1"># 4. 添加监听器（聚合报告、图形结果）</span>
+
+<span class="c1"># 使用ab工具</span>
+ab<span class="w"> </span>-n<span class="w"> </span><span class="m">10000</span><span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>http://localhost:8080/api/devices
+
+<span class="c1"># 使用wrk</span>
+wrk<span class="w"> </span>-t12<span class="w"> </span>-c400<span class="w"> </span>-d30s<span class="w"> </span>http://localhost:8080/api/devices
+</code></pre></div>
+
+<hr />
+<h2>扩展练习</h2>
+<h3>练习1：性能调优实战</h3>
+<ol>
+<li>启动应用，使用<code>jstat -gcutil</code>监控GC情况</li>
+<li>使用JMeter对<code>/api/telemetry</code>接口进行100并发压测</li>
+<li>分析GC日志，找出GC停顿时间最长的3次</li>
+<li>调整JVM参数，重新压测对比效果</li>
+</ol>
+<h3>练习2：慢查询优化</h3>
+<ol>
+<li>开启PostgreSQL慢查询日志（&gt;1秒）</li>
+<li>执行以下查询并分析执行计划：
+   <code>sql
+   SELECT d.*, COUNT(t.id) 
+   FROM devices d 
+   LEFT JOIN telemetry t ON d.device_id = t.device_id 
+   GROUP BY d.device_id;</code></li>
+<li>创建合适的索引，验证查询性能提升</li>
+<li>记录优化前后的查询时间对比</li>
+</ol>
+<h3>练习3：内存泄漏排查</h3>
+<ol>
+<li>模拟内存泄漏：创建一个不断增长的静态Map</li>
+<li>使用<code>jmap -dump</code>获取堆dump</li>
+<li>使用MAT分析dump文件，定位泄漏对象</li>
+<li>修复内存泄漏，验证修复效果</li>
+</ol>
+<h3>练习4：并发性能测试</h3>
+<ol>
+<li>使用JMH对比以下场景的性能：</li>
+<li><code>synchronized</code> vs <code>ReentrantLock</code></li>
+<li><code>ArrayList</code> vs <code>CopyOnWriteArrayList</code></li>
+<li>单线程 vs 虚拟线程池</li>
+<li>记录测试结果，分析性能差异原因</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>版本</strong>: v1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
