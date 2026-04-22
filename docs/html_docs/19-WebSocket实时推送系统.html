@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19 WebSocket实时推送系统 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">核心亮点</div>
+            <a href="16-多级缓存系统设计与实现.html">16-多级缓存系统</a>
+            <a href="17-MQTT桥接与IoT通信系统.html">17-MQTT桥接与IoT通信</a>
+            <a href="18-Kafka批量消息处理系统.html">18-Kafka批量消息处理</a>
+            <a href="19-WebSocket实时推送系统.html">19-WebSocket实时推送</a>
+            <a href="20-AI智能检测与预测系统.html">20-AI智能检测与预测</a>
+            <a href="21-Java21虚拟线程高并发优化.html">21-Java21虚拟线程</a>
+            <a href="22-分布式限流与熔断降级.html">22-分布式限流与熔断</a>
+            <a href="23-AOP切面与监控审计系统.html">23-AOP切面与监控审计</a>
+            <a href="24-分布式锁与数据一致性.html">24-分布式锁与一致性</a>
+            <a href="25-Prometheus监控与可观测性.html">25-Prometheus监控</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块19：WebSocket实时推送系统</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-5 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: HTTP协议、WebSocket基础、并发编程</p>
+</blockquote>
+<hr />
+<h2>一、系统架构</h2>
+<h3>1.1 为什么需要WebSocket？</h3>
+<div class="codehilite"><pre><span></span><code>传统HTTP轮询 vs WebSocket:
+
+轮询方案:
+  前端: 每2秒请求一次 /api/devices/status
+  ❌ 大量无效请求（99%数据未变化）
+  ❌ 服务器压力大（10000设备 = 5000次/秒）
+  ❌ 延迟高（最多2秒）
+  ❌ 带宽浪费
+
+WebSocket方案:
+  服务端: 数据变化时主动推送
+  ✅ 按需推送（数据变化才推送）
+  ✅ 服务器压力小（长连接，复用）
+  ✅ 延迟低（&lt; 100ms）
+  ✅ 带宽节省
+</code></pre></div>
+
+<h3>1.2 系统组件</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">WebSocket组件</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">WebSocketManager.java</span><span class="p">:</span><span class="w">          </span><span class="c1"># 连接管理器（核心）</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">WebSocketHandler.java</span><span class="p">:</span><span class="w">          </span><span class="c1"># 消息处理器</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">MessageAggregator.java</span><span class="p">:</span><span class="w">         </span><span class="c1"># 消息聚合器</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">WebSocketNotificationService.java</span><span class="p">:</span><span class="w"> </span><span class="c1"># 通知服务</span>
+</code></pre></div>
+
+<hr />
+<h2>二、核心组件</h2>
+<h3>2.1 WebSocketManager 连接管理器</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/websocket/WebSocketManager.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.websocket</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.WebSocketSession</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.CopyOnWriteArraySet</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * WebSocket连接管理器</span>
+<span class="cm"> * </span>
+<span class="cm"> * 功能:</span>
+<span class="cm"> * 1. 管理所有WebSocket连接</span>
+<span class="cm"> * 2. 设备级别的消息路由</span>
+<span class="cm"> * 3. 线程安全的并发控制</span>
+<span class="cm"> * </span>
+<span class="cm"> * 数据结构:</span>
+<span class="cm"> * - sessionMap: sessionId -&gt; WebSocketSession</span>
+<span class="cm"> * - deviceSubscriptions: deviceId -&gt; Set&lt;sessionId&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * 技术亮点:</span>
+<span class="cm"> * - ConcurrentHashMap: 线程安全的Map</span>
+<span class="cm"> * - CopyOnWriteArraySet: 线程安全的Set（读多写少场景）</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">WebSocketManager</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 所有活跃连接</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">WebSocketSession</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sessionMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 设备订阅关系: deviceId -&gt; Session集合</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">deviceSubscriptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 用户订阅关系: userId -&gt; Session集合</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">userSubscriptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 添加连接</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addSession</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">getId</span><span class="p">();</span>
+<span class="w">        </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">session</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;Session added: {}, total: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 移除连接</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">removeSession</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">getId</span><span class="p">();</span>
+<span class="w">        </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">sessionId</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 清理订阅关系</span>
+<span class="w">        </span><span class="n">deviceSubscriptions</span><span class="p">.</span><span class="na">values</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">sessions</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">sessions</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">sessionId</span><span class="p">));</span>
+<span class="w">        </span><span class="n">userSubscriptions</span><span class="p">.</span><span class="na">values</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">sessions</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">sessions</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">sessionId</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;Session removed: {}, total: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 订阅设备消息</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">subscribeDevice</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">deviceSubscriptions</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CopyOnWriteArraySet</span><span class="o">&lt;&gt;</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">sessionId</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Session {} subscribed to device {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 取消订阅设备</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">unsubscribeDevice</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sessions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceSubscriptions</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sessions</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sessions</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">sessionId</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sessions</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">deviceSubscriptions</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 发送消息到指定设备的所有订阅者</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendToDevice</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sessionIds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceSubscriptions</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sessionIds</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">sessionIds</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sentCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">failCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">sessionId</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">sessionIds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">sessionId</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">session</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">isOpen</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">session</span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">socket</span><span class="p">.</span><span class="na">TextMessage</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">sentCount</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to send message to session {}: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">failCount</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                    </span><span class="c1">// 移除失效连接</span>
+<span class="w">                    </span><span class="n">removeSession</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Message sent to device {}: success={}, failed={}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">sentCount</span><span class="p">,</span><span class="w"> </span><span class="n">failCount</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 广播消息给所有连接</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">broadcast</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sentCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">values</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">session</span><span class="p">.</span><span class="na">isOpen</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">session</span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">socket</span><span class="p">.</span><span class="na">TextMessage</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">sentCount</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to broadcast: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Broadcast message sent to {} sessions&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sentCount</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 获取连接数</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getConnectionCount</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sessionMap</span><span class="p">.</span><span class="na">size</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 获取设备订阅数</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getDeviceSubscriptionCount</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sessions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceSubscriptions</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sessions</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">sessions</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.2 WebSocketHandler 消息处理器</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/websocket/WebSocketHandler.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.websocket</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.JsonNode</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.CloseStatus</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.TextMessage</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.WebSocketSession</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.socket.handler.TextWebSocketHandler</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * WebSocket消息处理器</span>
+<span class="cm"> * </span>
+<span class="cm"> * 消息格式:</span>
+<span class="cm"> * {</span>
+<span class="cm"> *   &quot;type&quot;: &quot;subscribe&quot; | &quot;unsubscribe&quot; | &quot;ping&quot;,</span>
+<span class="cm"> *   &quot;deviceId&quot;: &quot;device_001&quot;,</span>
+<span class="cm"> *   &quot;userId&quot;: &quot;user_123&quot;</span>
+<span class="cm"> * }</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Component</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">WebSocketHandler</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">TextWebSocketHandler</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">WebSocketManager</span><span class="w"> </span><span class="n">webSocketManager</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">afterConnectionEstablished</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">addSession</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;WebSocket connection established: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleTextMessage</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">TextMessage</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">readTree</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="na">getPayload</span><span class="p">());</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;type&quot;</span><span class="p">).</span><span class="na">asText</span><span class="p">();</span>
+
+<span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;subscribe&quot;</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">handleSubscribe</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">json</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;unsubscribe&quot;</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">handleUnsubscribe</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">json</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;ping&quot;</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">handlePing</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">default</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">warn</span><span class="p">(</span><span class="s">&quot;Unknown message type: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to handle message: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">afterConnectionClosed</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">CloseStatus</span><span class="w"> </span><span class="n">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">removeSession</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;WebSocket connection closed: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleTransportError</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="n">exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;WebSocket transport error: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exception</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">removeSession</span><span class="p">(</span><span class="n">session</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleSubscribe</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">json</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">has</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">).</span><span class="na">asText</span><span class="p">();</span>
+<span class="w">            </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">subscribeDevice</span><span class="p">(</span><span class="n">session</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleUnsubscribe</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">json</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">has</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">).</span><span class="na">asText</span><span class="p">();</span>
+<span class="w">            </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">unsubscribeDevice</span><span class="p">(</span><span class="n">session</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handlePing</span><span class="p">(</span><span class="n">WebSocketSession</span><span class="w"> </span><span class="n">session</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">session</span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TextMessage</span><span class="p">(</span><span class="s">&quot;{\&quot;type\&quot;:\&quot;pong\&quot;,\&quot;ts\&quot;:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;}&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to send pong: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.3 WebSocketNotificationService 通知服务</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/service/WebSocketNotificationService.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.websocket.WebSocketManager</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.JsonNode</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * WebSocket通知服务</span>
+<span class="cm"> * </span>
+<span class="cm"> * 功能:</span>
+<span class="cm"> * 1. 遥测数据推送</span>
+<span class="cm"> * 2. 设备状态推送</span>
+<span class="cm"> * 3. 告警推送</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">WebSocketNotificationService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">WebSocketManager</span><span class="w"> </span><span class="n">webSocketManager</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 推送遥测数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">broadcastTelemetry</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">                </span><span class="s">&quot;type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;telemetry&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;deviceId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;data&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span>
+<span class="w">            </span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">sendToDevice</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to broadcast telemetry: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 推送设备状态</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">broadcastDeviceStatus</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">                </span><span class="s">&quot;type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;device_status&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;deviceId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;data&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span>
+<span class="w">            </span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">sendToDevice</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to broadcast device status: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 推送告警</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">broadcastAlert</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">alertType</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">alertMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">                </span><span class="s">&quot;type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;alert&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;deviceId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;alertType&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alertType</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;message&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">,</span>
+<span class="w">                </span><span class="s">&quot;ts&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span>
+<span class="w">            </span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">webSocketManager</span><span class="p">.</span><span class="na">sendToDevice</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">alertMessage</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to broadcast alert: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>三、前端使用</h2>
+<h3>3.1 Vue 3 连接示例</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="p">,</span><span class="w"> </span><span class="nx">onMounted</span><span class="p">,</span><span class="w"> </span><span class="nx">onUnmounted</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">useWebSocket</span><span class="p">(</span><span class="nx">deviceId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="o">&lt;</span><span class="nx">WebSocket</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">isConnected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">telemetryData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">connect</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8000/ws/device&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">onopen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">isConnected</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// 订阅设备</span>
+<span class="w">      </span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="o">!</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">        </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;subscribe&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">deviceId</span><span class="o">:</span><span class="w"> </span><span class="kt">deviceId</span>
+<span class="w">      </span><span class="p">}));</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">onmessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;telemetry&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">telemetryData</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">onclose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">isConnected</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">      </span><span class="c1">// 5秒后重连</span>
+<span class="w">      </span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">connect</span><span class="p">,</span><span class="w"> </span><span class="mf">5000</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">disconnect</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">ws</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">onMounted</span><span class="p">(</span><span class="nx">connect</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">onUnmounted</span><span class="p">(</span><span class="nx">disconnect</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">isConnected</span><span class="p">,</span><span class="w"> </span><span class="nx">telemetryData</span><span class="w"> </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、性能指标</h2>
+<div class="codehilite"><pre><span></span><code>WebSocket性能（10000并发连接）:
+
+┌────────────┬──────────┬──────────┬─────────┐
+│ 指标       │ 值       │ 说明     │ 状态    │
+├────────────┼──────────┼──────────┼─────────┤
+│ 并发连接   │ 10000    │ 同时在线 │ ✅      │
+│ 消息延迟   │ &lt; 50ms   │ P99      │ ✅      │
+│ 内存占用   │ 500MB    │ 10K连接  │ ✅      │
+│ CPU使用    │ 5%       │ 空闲时   │ ✅      │
+│ 推送吞吐量 │ 50000/s  │ 峰值     │ ✅      │
+└────────────┴──────────┴──────────┴─────────┘
+</code></pre></div>
+
+<hr />
+<h2>五、扩展练习</h2>
+<h3>练习1：实现心跳检测</h3>
+<ol>
+<li>客户端每30秒发送ping</li>
+<li>服务端60秒未收到消息则断开</li>
+<li>自动重连机制</li>
+</ol>
+<h3>练习2：实现消息队列</h3>
+<ol>
+<li>离线消息缓存</li>
+<li>重连后补发消息</li>
+<li>消息去重</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

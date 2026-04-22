@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18 Kafka批量消息处理系统 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">核心亮点</div>
+            <a href="16-多级缓存系统设计与实现.html">16-多级缓存系统</a>
+            <a href="17-MQTT桥接与IoT通信系统.html">17-MQTT桥接与IoT通信</a>
+            <a href="18-Kafka批量消息处理系统.html">18-Kafka批量消息处理</a>
+            <a href="19-WebSocket实时推送系统.html">19-WebSocket实时推送</a>
+            <a href="20-AI智能检测与预测系统.html">20-AI智能检测与预测</a>
+            <a href="21-Java21虚拟线程高并发优化.html">21-Java21虚拟线程</a>
+            <a href="22-分布式限流与熔断降级.html">22-分布式限流与熔断</a>
+            <a href="23-AOP切面与监控审计系统.html">23-AOP切面与监控审计</a>
+            <a href="24-分布式锁与数据一致性.html">24-分布式锁与一致性</a>
+            <a href="25-Prometheus监控与可观测性.html">25-Prometheus监控</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块18：Kafka批量消息处理系统</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 4-6 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: Kafka基础、Spring Kafka、消息队列概念</p>
+</blockquote>
+<hr />
+<h2>一、系统架构</h2>
+<h3>1.1 Kafka vs RabbitMQ</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">对比</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">RabbitMQ</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">优势</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">低延迟（微秒级）</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">灵活路由（Exchange/Queue）</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">管理界面友好</span>
+<span class="w">    </span><span class="nt">场景</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">日常消息处理</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">命令下发</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">告警通知</span>
+
+<span class="w">  </span><span class="nt">Kafka</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">优势</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">高吞吐（百万级/秒）</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">批量处理</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">消息回溯</span>
+<span class="w">    </span><span class="nt">场景</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">大规模遥测数据</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">日志收集</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据流处理</span>
+</code></pre></div>
+
+<h3>1.2 为什么用Kafka处理遥测数据？</h3>
+<div class="codehilite"><pre><span></span><code>场景分析:
+  10000设备 × 每10秒上报1次 = 1000条/秒 = 8640万条/天
+
+  如果使用单条插入:
+    ❌ 数据库连接耗尽
+    ❌ 磁盘IO瓶颈
+    ❌ 响应延迟高
+
+  使用Kafka批量处理:
+    ✅ 批量消费（100条/批）
+    ✅ 批量插入（100条/次）
+    ✅ 吞吐量提升100倍
+    ✅ 数据库压力降低90%
+</code></pre></div>
+
+<hr />
+<h2>二、Kafka配置</h2>
+<h3>2.1 KafkaConfig 配置类</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/KafkaConfig.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.kafka.clients.consumer.ConsumerConfig</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.kafka.clients.producer.ProducerConfig</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.kafka.common.serialization.StringDeserializer</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.kafka.common.serialization.StringSerializer</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Value</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Bean</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.core.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.listener.ContainerProperties</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Kafka配置</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">KafkaConfig</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${spring.kafka.bootstrap-servers:localhost:9092}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">bootstrapServers</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 生产者配置</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ProducerFactory</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">producerFactory</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">BOOTSTRAP_SERVERS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">bootstrapServers</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">KEY_SERIALIZER_CLASS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">StringSerializer</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">VALUE_SERIALIZER_CLASS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">StringSerializer</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">ACKS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;all&quot;</span><span class="p">);</span><span class="w">           </span><span class="c1">// 所有副本确认</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">RETRIES_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w">            </span><span class="c1">// 重试3次</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">BATCH_SIZE_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="mi">16384</span><span class="p">);</span><span class="w">     </span><span class="c1">// 批量大小16KB</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">LINGER_MS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w">         </span><span class="c1">// 等待10ms</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ProducerConfig</span><span class="p">.</span><span class="na">BUFFER_MEMORY_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="mi">33554432</span><span class="p">);</span><span class="w"> </span><span class="c1">// 缓冲区32MB</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DefaultKafkaProducerFactory</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">KafkaTemplate</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">kafkaTemplate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KafkaTemplate</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">producerFactory</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 消费者配置（批量模式）</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ConsumerFactory</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">consumerFactory</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">BOOTSTRAP_SERVERS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">bootstrapServers</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">KEY_DESERIALIZER_CLASS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">StringDeserializer</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">VALUE_DESERIALIZER_CLASS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="n">StringDeserializer</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">GROUP_ID_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dorm-power&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">AUTO_OFFSET_RESET_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;latest&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">ENABLE_AUTO_COMMIT_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span><span class="w">  </span><span class="c1">// 手动提交</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">MAX_POLL_RECORDS_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span><span class="w">      </span><span class="c1">// 每次拉取100条</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">ConsumerConfig</span><span class="p">.</span><span class="na">FETCH_MIN_BYTES_CONFIG</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span><span class="w">      </span><span class="c1">// 最小拉取1KB</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DefaultKafkaConsumerFactory</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 批量监听容器工厂</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ConcurrentKafkaListenerContainerFactory</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">batchKafkaListenerContainerFactory</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ConcurrentKafkaListenerContainerFactory</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentKafkaListenerContainerFactory</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setConsumerFactory</span><span class="p">(</span><span class="n">consumerFactory</span><span class="p">());</span>
+<span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setBatchListener</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">  </span><span class="c1">// 启用批量监听</span>
+<span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">getContainerProperties</span><span class="p">().</span><span class="na">setAckMode</span><span class="p">(</span><span class="n">ContainerProperties</span><span class="p">.</span><span class="na">AckMode</span><span class="p">.</span><span class="na">MANUAL</span><span class="p">);</span>
+<span class="w">        </span><span class="n">factory</span><span class="p">.</span><span class="na">setConcurrency</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w">  </span><span class="c1">// 3个并发消费者</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">factory</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>三、核心组件</h2>
+<h3>3.1 TelemetryProducer 遥测数据生产者</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/kafka/TelemetryProducer.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.kafka</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.core.KafkaTemplate</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.support.SendResult</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.CompletableFuture</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 遥测数据Kafka生产者</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TelemetryProducer</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">KafkaTemplate</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">kafkaTemplate</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">TOPIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dorm.telemetry&quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 发送遥测数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">SendResult</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">kafkaTemplate</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">TOPIC</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">whenComplete</span><span class="p">((</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ex</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Telemetry sent: device={}, offset={}&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                        </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">getRecordMetadata</span><span class="p">().</span><span class="na">offset</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to send telemetry: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>3.2 TelemetryConsumer 遥测数据消费者</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/kafka/TelemetryConsumer.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.kafka</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Telemetry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.repository.TelemetryBulkRepository</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.AlertService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.WebSocketNotificationService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.JsonNode</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.Counter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.MeterRegistry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.Timer</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.kafka.clients.consumer.ConsumerRecord</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.autoconfigure.condition.ConditionalOnProperty</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.annotation.KafkaListener</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.kafka.support.Acknowledgment</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.scheduling.annotation.Async</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.annotation.PostConstruct</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.CompletableFuture</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 遥测数据Kafka批量消费者</span>
+<span class="cm"> * </span>
+<span class="cm"> * 功能:</span>
+<span class="cm"> * 1. 批量消费遥测数据（100条/批）</span>
+<span class="cm"> * 2. 批量写入数据库</span>
+<span class="cm"> * 3. 触发WebSocket通知</span>
+<span class="cm"> * 4. 触发告警检查</span>
+<span class="cm"> * 5. 监控指标收集</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Component</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="nd">@ConditionalOnProperty</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;kafka.enabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">havingValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TelemetryConsumer</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">TelemetryBulkRepository</span><span class="w"> </span><span class="n">telemetryBulkRepository</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">WebSocketNotificationService</span><span class="w"> </span><span class="n">webSocketNotificationService</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AlertService</span><span class="w"> </span><span class="n">alertService</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MeterRegistry</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 监控指标</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Counter</span><span class="w"> </span><span class="n">processedCounter</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Counter</span><span class="w"> </span><span class="n">errorCounter</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Timer</span><span class="w"> </span><span class="n">processTimer</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@PostConstruct</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">initMetrics</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">processedCounter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Counter</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;kafka.consumer.messages&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dorm.telemetry&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;status&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;processed&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">errorCounter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Counter</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;kafka.consumer.messages&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dorm.telemetry&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;status&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">processTimer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Timer</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;kafka.consumer.process.time&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dorm.telemetry&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 批量消费遥测数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nd">@KafkaListener</span><span class="p">(</span>
+<span class="w">        </span><span class="n">topics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dorm.telemetry&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">groupId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dorm-power-telemetry&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">containerFactory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;batchKafkaListenerContainerFactory&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">consumeBatch</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ConsumerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">records</span><span class="p">,</span><span class="w"> </span><span class="n">Acknowledgment</span><span class="w"> </span><span class="n">ack</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">records</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Received {} telemetry records&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">records</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">Timer</span><span class="p">.</span><span class="na">Sample</span><span class="w"> </span><span class="n">sample</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Timer</span><span class="p">.</span><span class="na">start</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">processedCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">errorCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 1. 解析消息</span>
+<span class="w">            </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Telemetry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">telemetryList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">records</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+<span class="w">            </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">wsNotifications</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ConsumerRecord</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">JsonNode</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">readTree</span><span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="na">value</span><span class="p">());</span>
+
+<span class="w">                    </span><span class="n">Telemetry</span><span class="w"> </span><span class="n">telemetry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Telemetry</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">telemetry</span><span class="p">.</span><span class="na">setDeviceId</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;deviceId&quot;</span><span class="p">).</span><span class="na">asText</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">telemetry</span><span class="p">.</span><span class="na">setTs</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;ts&quot;</span><span class="p">).</span><span class="na">asLong</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">telemetry</span><span class="p">.</span><span class="na">setPowerW</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;powerW&quot;</span><span class="p">).</span><span class="na">asDouble</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">telemetry</span><span class="p">.</span><span class="na">setVoltageV</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;voltageV&quot;</span><span class="p">).</span><span class="na">asDouble</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">telemetry</span><span class="p">.</span><span class="na">setCurrentA</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;currentA&quot;</span><span class="p">).</span><span class="na">asDouble</span><span class="p">());</span>
+
+<span class="w">                    </span><span class="n">telemetryList</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">telemetry</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">processedCount</span><span class="o">++</span><span class="p">;</span>
+
+<span class="w">                    </span><span class="c1">// 异步发送WebSocket通知</span>
+<span class="w">                    </span><span class="n">wsNotifications</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">notifyTelemetryAsync</span><span class="p">(</span><span class="n">telemetry</span><span class="p">));</span>
+
+<span class="w">                    </span><span class="c1">// 异步检查告警</span>
+<span class="w">                    </span><span class="n">checkAlertsAsync</span><span class="p">(</span><span class="n">telemetry</span><span class="p">);</span>
+
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to parse message: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">errorCount</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 2. 批量写入数据库</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">telemetryList</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">telemetryBulkRepository</span><span class="p">.</span><span class="na">batchInsert</span><span class="p">(</span><span class="n">telemetryList</span><span class="p">);</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;Batch inserted {} telemetry records&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">telemetryList</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 3. 等待WebSocket通知完成</span>
+<span class="w">            </span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">allOf</span><span class="p">(</span><span class="n">wsNotifications</span><span class="p">.</span><span class="na">toArray</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)).</span><span class="na">join</span><span class="p">();</span>
+
+<span class="w">            </span><span class="c1">// 4. 手动提交偏移量</span>
+<span class="w">            </span><span class="n">ack</span><span class="p">.</span><span class="na">acknowledge</span><span class="p">();</span>
+
+<span class="w">            </span><span class="c1">// 5. 记录监控指标</span>
+<span class="w">            </span><span class="n">processedCounter</span><span class="p">.</span><span class="na">increment</span><span class="p">(</span><span class="n">processedCount</span><span class="p">);</span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to process batch: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="n">errorCounter</span><span class="p">.</span><span class="na">increment</span><span class="p">(</span><span class="n">errorCount</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// 不提交偏移量，让Kafka重新投递</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sample</span><span class="p">.</span><span class="na">stop</span><span class="p">(</span><span class="n">processTimer</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Async</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">notifyTelemetryAsync</span><span class="p">(</span><span class="n">Telemetry</span><span class="w"> </span><span class="n">telemetry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">webSocketNotificationService</span><span class="p">.</span><span class="na">broadcastTelemetry</span><span class="p">(</span>
+<span class="w">                </span><span class="n">telemetry</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">objectMapper</span><span class="p">.</span><span class="na">valueToTree</span><span class="p">(</span><span class="n">telemetry</span><span class="p">)</span>
+<span class="w">            </span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Failed to send WS notification: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">completedFuture</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Async</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">checkAlertsAsync</span><span class="p">(</span><span class="n">Telemetry</span><span class="w"> </span><span class="n">telemetry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">alertService</span><span class="p">.</span><span class="na">checkAndGenerateAlert</span><span class="p">(</span><span class="n">telemetry</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;power&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">telemetry</span><span class="p">.</span><span class="na">getPowerW</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Failed to check alerts: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、批量数据库操作</h2>
+<h3>4.1 TelemetryBulkRepository 批量操作</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/repository/TelemetryBulkRepository.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.repository</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Telemetry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.jdbc.core.JdbcTemplate</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.jdbc.core.BatchPreparedStatementSetter</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Repository</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.PreparedStatement</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.SQLException</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.Timestamp</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 遥测数据批量操作Repository</span>
+<span class="cm"> * </span>
+<span class="cm"> * 优化:</span>
+<span class="cm"> * - 使用JDBC批量插入（比JPA快10倍）</span>
+<span class="cm"> * - 使用JPQL批量更新（减少网络往返）</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Repository</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TelemetryBulkRepository</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">JdbcTemplate</span><span class="w"> </span><span class="n">jdbcTemplate</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">BATCH_INSERT_SQL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;INSERT INTO telemetry (device_id, ts, power_w, voltage_v, current_a) &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">        </span><span class="s">&quot;VALUES (?, ?, ?, ?, ?)&quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">BATCH_UPDATE_LAST_SEEN_SQL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;UPDATE device SET last_seen_ts = ? WHERE device_id IN (&quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 批量插入遥测数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">batchInsert</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Telemetry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">telemetryList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">jdbcTemplate</span><span class="p">.</span><span class="na">batchUpdate</span><span class="p">(</span><span class="n">BATCH_INSERT_SQL</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BatchPreparedStatementSetter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setValues</span><span class="p">(</span><span class="n">PreparedStatement</span><span class="w"> </span><span class="n">ps</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">SQLException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Telemetry</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">telemetryList</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setLong</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">getTs</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setDouble</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">getPowerW</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setDouble</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">getVoltageV</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ps</span><span class="p">.</span><span class="na">setDouble</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">getCurrentA</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getBatchSize</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">telemetryList</span><span class="p">.</span><span class="na">size</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 批量更新设备最后在线时间</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">batchUpdateLastSeen</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceIds</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">timestamp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">deviceIds</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 构建IN语句</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">placeholders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">join</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceIds</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;?&quot;</span><span class="p">).</span><span class="na">toArray</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="p">::</span><span class="k">new</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;UPDATE device SET last_seen_ts = ? WHERE device_id IN (&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">placeholders</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// 使用参数数组</span>
+<span class="w">        </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Object</span><span class="o">[</span><span class="n">deviceIds</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="n">params</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timestamp</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">deviceIds</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">params</span><span class="o">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceIds</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">jdbcTemplate</span><span class="p">.</span><span class="na">update</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>五、性能对比</h2>
+<div class="codehilite"><pre><span></span><code>插入10万条遥测数据:
+
+┌──────────┬──────────┬──────────┬─────────┐
+│ 方式     │ 耗时     │ TPS      │ 内存    │
+├──────────┼──────────┼──────────┼─────────┤
+│ 单条插入 │ 500s     │ 200/s    │ 低      │
+│ JPA批量  │ 50s      │ 2000/s   │ 中      │
+│ JDBC批量 │ 5s       │ 20000/s  │ 低      │
+│ Kafka+JDBC│ 3s      │ 33000/s  │ 中      │
+└──────────┴──────────┴──────────┴─────────┘
+
+Kafka批量处理优势:
+  ✅ 吞吐量提升100倍
+  ✅ 数据库连接数降低90%
+  ✅ 支持水平扩展
+  ✅ 消息可回溯
+</code></pre></div>
+
+<hr />
+<h2>六、扩展练习</h2>
+<h3>练习1：实现命令ACK消费者</h3>
+<ol>
+<li>消费命令确认消息</li>
+<li>更新命令状态</li>
+<li>超时未确认则重试</li>
+</ol>
+<h3>练习2：实现缓存更新消费者</h3>
+<ol>
+<li>消费缓存更新消息</li>
+<li>清除/更新Redis缓存</li>
+<li>保证多实例缓存一致性</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

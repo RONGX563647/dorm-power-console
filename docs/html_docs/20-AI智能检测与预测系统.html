@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20 AI智能检测与预测系统 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">核心亮点</div>
+            <a href="16-多级缓存系统设计与实现.html">16-多级缓存系统</a>
+            <a href="17-MQTT桥接与IoT通信系统.html">17-MQTT桥接与IoT通信</a>
+            <a href="18-Kafka批量消息处理系统.html">18-Kafka批量消息处理</a>
+            <a href="19-WebSocket实时推送系统.html">19-WebSocket实时推送</a>
+            <a href="20-AI智能检测与预测系统.html">20-AI智能检测与预测</a>
+            <a href="21-Java21虚拟线程高并发优化.html">21-Java21虚拟线程</a>
+            <a href="22-分布式限流与熔断降级.html">22-分布式限流与熔断</a>
+            <a href="23-AOP切面与监控审计系统.html">23-AOP切面与监控审计</a>
+            <a href="24-分布式锁与数据一致性.html">24-分布式锁与一致性</a>
+            <a href="25-Prometheus监控与可观测性.html">25-Prometheus监控</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块20：AI智能检测与预测系统</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 5-7 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: 机器学习基础、Python基础、数据分析</p>
+</blockquote>
+<hr />
+<h2>一、系统架构</h2>
+<h3>1.1 AI在用电管理中的应用</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">应用场景</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1. 异常检测</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">电流异常（短路、漏电）</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">功率异常（违规电器）</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">电压异常（线路故障）</span>
+
+<span class="w">  </span><span class="nt">2. 行为学习</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用电习惯分析</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">异常行为识别</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">使用模式聚类</span>
+
+<span class="w">  </span><span class="nt">3. 功率预测</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">短期预测（1小时）</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">中期预测（24小时）</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">长期预测（7天）</span>
+
+<span class="w">  </span><span class="nt">4. 智能场景</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">自动断电（长时间无人）</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">节能建议</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">故障预警</span>
+</code></pre></div>
+
+<h3>1.2 技术栈</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">AI技术栈</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">机器学习</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scikit-learn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">传统ML算法</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">XGBoost</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">梯度提升树</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">LSTM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">时序预测</span>
+
+<span class="w">  </span><span class="nt">深度学习</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PyTorch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">深度学习框架</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">TensorFlow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">备选方案</span>
+
+<span class="w">  </span><span class="nt">特征工程</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">统计特征（均值、方差）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">时序特征（滑动窗口）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">频域特征（FFT）</span>
+
+<span class="w">  </span><span class="nt">集成方式</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python脚本（离线训练）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Java服务（在线推理）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REST API（模型调用）</span>
+</code></pre></div>
+
+<hr />
+<h2>二、核心组件</h2>
+<h3>2.1 AnomalyDetectionAgent 异常检测</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/ml/AnomalyDetectionAgent.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.ml</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.model.Telemetry</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.service.AlertService</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 异常检测Agent</span>
+<span class="cm"> * </span>
+<span class="cm"> * 检测算法:</span>
+<span class="cm"> * 1. 统计方法: 3-Sigma原则</span>
+<span class="cm"> * 2. 规则引擎: 阈值判断</span>
+<span class="cm"> * 3. 时序分析: 趋势异常</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AnomalyDetectionAgent</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AlertService</span><span class="w"> </span><span class="n">alertService</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 设备历史数据缓存</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">deviceHistory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 统计参数</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Statistics</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceStats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 检测异常</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">AnomalyResult</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="n">Telemetry</span><span class="w"> </span><span class="n">telemetry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">telemetry</span><span class="p">.</span><span class="na">getDeviceId</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 1. 更新历史数据</span>
+<span class="w">        </span><span class="n">updateHistory</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">telemetry</span><span class="p">.</span><span class="na">getPowerW</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// 2. 更新统计参数</span>
+<span class="w">        </span><span class="n">Statistics</span><span class="w"> </span><span class="n">stats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">updateStatistics</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 3. 多维度检测</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">isPowerAnomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">detectPowerAnomaly</span><span class="p">(</span><span class="n">telemetry</span><span class="p">.</span><span class="na">getPowerW</span><span class="p">(),</span><span class="w"> </span><span class="n">stats</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">isVoltageAnomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">detectVoltageAnomaly</span><span class="p">(</span><span class="n">telemetry</span><span class="p">.</span><span class="na">getVoltageV</span><span class="p">());</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">isCurrentAnomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">detectCurrentAnomaly</span><span class="p">(</span><span class="n">telemetry</span><span class="p">.</span><span class="na">getCurrentA</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// 4. 综合判断</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isPowerAnomaly</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">isVoltageAnomaly</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">isCurrentAnomaly</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">AnomalyResult</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">isAnomaly</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">powerAnomaly</span><span class="p">(</span><span class="n">isPowerAnomaly</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">voltageAnomaly</span><span class="p">(</span><span class="n">isVoltageAnomaly</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">currentAnomaly</span><span class="p">(</span><span class="n">isCurrentAnomaly</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">AnomalyResult</span><span class="p">.</span><span class="na">normal</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 功率异常检测（3-Sigma原则）</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">detectPowerAnomaly</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">power</span><span class="p">,</span><span class="w"> </span><span class="n">Statistics</span><span class="w"> </span><span class="n">stats</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stats</span><span class="p">.</span><span class="na">count</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">  </span><span class="c1">// 数据不足</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 3-Sigma原则: 超出均值±3倍标准差为异常</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="na">mean</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="na">stdDev</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="na">mean</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="na">stdDev</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">power</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">power</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">lower</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 电压异常检测（阈值判断）</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">detectVoltageAnomaly</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">voltage</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 正常范围: 198V - 242V (220V ± 10%)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">voltage</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">198</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">voltage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">242</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 电流异常检测</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">detectCurrentAnomaly</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">current</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 过流保护: &gt; 20A</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 更新历史数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">updateHistory</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">deviceHistory</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 保留最近1000条数据</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">history</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceHistory</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">history</span><span class="p">.</span><span class="na">subList</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1000</span><span class="p">).</span><span class="na">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 更新统计参数</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Statistics</span><span class="w"> </span><span class="nf">updateStatistics</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">history</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceHistory</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">history</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Statistics</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">Double</span><span class="p">::</span><span class="n">doubleValue</span><span class="p">).</span><span class="na">average</span><span class="p">().</span><span class="na">orElse</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">stdDev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">sqrt</span><span class="p">(</span>
+<span class="w">            </span><span class="n">history</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">pow</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">average</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">Statistics</span><span class="w"> </span><span class="n">stats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Statistics</span><span class="p">();</span>
+<span class="w">        </span><span class="n">stats</span><span class="p">.</span><span class="na">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">;</span>
+<span class="w">        </span><span class="n">stats</span><span class="p">.</span><span class="na">stdDev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdDev</span><span class="p">;</span>
+<span class="w">        </span><span class="n">stats</span><span class="p">.</span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">deviceStats</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">stats</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stats</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@lombok.Data</span>
+<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Statistics</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">stdDev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@lombok.Data</span>
+<span class="w">    </span><span class="nd">@lombok.Builder</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AnomalyResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">isAnomaly</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">powerAnomaly</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">voltageAnomaly</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">currentAnomaly</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kd">static</span><span class="w"> </span><span class="n">AnomalyResult</span><span class="w"> </span><span class="nf">normal</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">AnomalyResult</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">isAnomaly</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.2 PowerPredictionAgent 功率预测</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/ml/PowerPredictionAgent.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.ml</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 功率预测Agent</span>
+<span class="cm"> * </span>
+<span class="cm"> * 预测方法:</span>
+<span class="cm"> * 1. 移动平均法（短期）</span>
+<span class="cm"> * 2. 线性回归（中期）</span>
+<span class="cm"> * 3. 季节性分解（长期）</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PowerPredictionAgent</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 短期预测（1小时）- 移动平均</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">predictShortTerm</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">history</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">steps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">history</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 简单移动平均</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">windowSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">());</span><span class="w">  </span><span class="c1">// 取最近6个数据点</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">recent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">subList</span><span class="p">(</span>
+<span class="w">            </span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">windowSize</span><span class="p">,</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">()</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">recent</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">Double</span><span class="p">::</span><span class="n">doubleValue</span><span class="p">).</span><span class="na">sum</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">windowSize</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 中期预测（24小时）- 线性回归</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="o">[]</span><span class="w"> </span><span class="nf">predictMidTerm</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">history</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">steps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="o">[</span><span class="n">steps</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 简单线性回归: y = a + bx</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">size</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">sumX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sumY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sumXY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sumX2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sumX</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="n">sumY</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">sumXY</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">history</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">sumX2</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">slope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sumXY</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sumX</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sumY</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sumX2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sumX</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sumX</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">intercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">sumY</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">slope</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sumX</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// 预测未来steps个点</span>
+<span class="w">        </span><span class="kt">double</span><span class="o">[]</span><span class="w"> </span><span class="n">predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="o">[</span><span class="n">steps</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">steps</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">predictions</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intercept</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">slope</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">predictions</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>三、特征工程</h2>
+<h3>3.1 MLUtils 工具类</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/ml/MLUtils.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.ml</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 机器学习工具类</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MLUtils</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 计算统计特征</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">FeatureSet</span><span class="w"> </span><span class="nf">extractFeatures</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FeatureSet</span><span class="w"> </span><span class="n">features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FeatureSet</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 基础统计</span>
+<span class="w">        </span><span class="n">features</span><span class="p">.</span><span class="na">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">Double</span><span class="p">::</span><span class="n">doubleValue</span><span class="p">).</span><span class="na">average</span><span class="p">().</span><span class="na">orElse</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">features</span><span class="p">.</span><span class="na">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">Double</span><span class="p">::</span><span class="n">doubleValue</span><span class="p">).</span><span class="na">max</span><span class="p">().</span><span class="na">orElse</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">features</span><span class="p">.</span><span class="na">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">Double</span><span class="p">::</span><span class="n">doubleValue</span><span class="p">).</span><span class="na">min</span><span class="p">().</span><span class="na">orElse</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">features</span><span class="p">.</span><span class="na">stdDev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calculateStdDev</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="p">.</span><span class="na">mean</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 趋势特征</span>
+<span class="w">        </span><span class="n">features</span><span class="p">.</span><span class="na">trend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calculateTrend</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 波动特征</span>
+<span class="w">        </span><span class="n">features</span><span class="p">.</span><span class="na">volatility</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calculateVolatility</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">features</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">calculateStdDev</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">mean</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">sqrt</span><span class="p">(</span>
+<span class="w">            </span><span class="n">data</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">mapToDouble</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">pow</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">average</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">calculateTrend</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">first</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">calculateVolatility</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">abs</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">FeatureSet</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">mean</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">max</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">min</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">stdDev</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">trend</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">volatility</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、扩展练习</h2>
+<h3>练习1：实现LSTM预测模型</h3>
+<ol>
+<li>使用PyTorch训练LSTM模型</li>
+<li>导出为ONNX格式</li>
+<li>Java中使用ONNX Runtime推理</li>
+</ol>
+<h3>练习2：实现智能场景引擎</h3>
+<ol>
+<li>识别用户用电模式</li>
+<li>自动推荐节能方案</li>
+<li>异常用电自动断电</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

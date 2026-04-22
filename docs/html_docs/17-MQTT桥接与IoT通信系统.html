@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17 MQTT桥接与IoT通信系统 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">核心亮点</div>
+            <a href="16-多级缓存系统设计与实现.html">16-多级缓存系统</a>
+            <a href="17-MQTT桥接与IoT通信系统.html">17-MQTT桥接与IoT通信</a>
+            <a href="18-Kafka批量消息处理系统.html">18-Kafka批量消息处理</a>
+            <a href="19-WebSocket实时推送系统.html">19-WebSocket实时推送</a>
+            <a href="20-AI智能检测与预测系统.html">20-AI智能检测与预测</a>
+            <a href="21-Java21虚拟线程高并发优化.html">21-Java21虚拟线程</a>
+            <a href="22-分布式限流与熔断降级.html">22-分布式限流与熔断</a>
+            <a href="23-AOP切面与监控审计系统.html">23-AOP切面与监控审计</a>
+            <a href="24-分布式锁与数据一致性.html">24-分布式锁与一致性</a>
+            <a href="25-Prometheus监控与可观测性.html">25-Prometheus监控</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块17：MQTT桥接与IoT通信系统</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 4-6 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: 网络协议基础、MQTT协议、消息队列概念</p>
+</blockquote>
+<hr />
+<h2>一、系统架构</h2>
+<h3>1.1 IoT通信架构</h3>
+<div class="codehilite"><pre><span></span><code>设备端                          服务端                          前端
+┌─────────┐                  ┌──────────────┐               ┌─────────┐
+│ IoT设备  │◄────MQTT────►│ MqttBridge   │               │ 浏览器  │
+│ (ESP32)  │  发布/订阅     │              │               │         │
+└─────────┘                  │  ├─────►│RabbitMQ    │               │         │
+                            │  │           │◄──WebSocket──►│         │
+                            │  ├─────►│Kafka       │               └─────────┘
+                            └──────────────┘
+
+数据流向:
+1. 设备 → MQTT Broker → MqttBridge → RabbitMQ → 数据库
+2. 数据库 → WebSocket → 浏览器（实时展示）
+3. 浏览器 → REST API → RabbitMQ → MqttBridge → MQTT → 设备（控制命令）
+</code></pre></div>
+
+<h3>1.2 MQTT协议基础</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">MQTT核心概念</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">发布/订阅模式</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Publisher</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">消息发布者（设备）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Subscriber</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">消息订阅者（服务端）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Broker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">消息代理（Mosquitto）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">消息主题（路由）</span>
+
+<span class="w">  </span><span class="nt">QoS等级</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">QoS 0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">最多一次（可能丢失）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">QoS 1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">至少一次（可能重复）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">QoS 2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">恰好一次（最可靠）</span>
+
+<span class="w">  </span><span class="nt">消息类型</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CONNECT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">客户端连接</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PUBLISH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">发布消息</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">SUBSCRIBE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">订阅主题</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">UNSUBSCRIBE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">取消订阅</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PINGREQ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">心跳请求</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">DISCONNECT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">断开连接</span>
+</code></pre></div>
+
+<hr />
+<h2>二、核心组件</h2>
+<h3>2.1 MqttBridge MQTT桥接</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/mqtt/MqttBridge.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.mqtt</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.dormpower.config.MqttConfig</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fasterxml.jackson.databind.ObjectMapper</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.eclipse.paho.client.mqttv3.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.eclipse.paho.client.mqttv3.persist.MemoryPersistence</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.autoconfigure.condition.ConditionalOnProperty</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.annotation.PostConstruct</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.annotation.PreDestroy</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.StandardCharsets</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.atomic.AtomicBoolean</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * MQTT桥接服务</span>
+<span class="cm"> * </span>
+<span class="cm"> * 功能:</span>
+<span class="cm"> * 1. 连接MQTT Broker</span>
+<span class="cm"> * 2. 订阅设备主题</span>
+<span class="cm"> * 3. 转发消息到RabbitMQ/Kafka</span>
+<span class="cm"> * 4. 下发命令到设备</span>
+<span class="cm"> * </span>
+<span class="cm"> * 技术亮点:</span>
+<span class="cm"> * - 自动重连机制</span>
+<span class="cm"> * - 连接池管理</span>
+<span class="cm"> * - 消息过滤与路由</span>
+<span class="cm"> * - 异常处理与降级</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Component</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="nd">@ConditionalOnProperty</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mqtt.enabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">havingValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">matchIfMissing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MqttBridge</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MqttConfig</span><span class="w"> </span><span class="n">mqttConfig</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">RabbitMQProducer</span><span class="w"> </span><span class="n">rabbitMQProducer</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="w"> </span><span class="n">objectMapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">MqttClient</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AtomicBoolean</span><span class="w"> </span><span class="n">connected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AtomicBoolean</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 设备在线状态缓存</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deviceOnlineStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@PostConstruct</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">isEnabled</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;MQTT is disabled, skipping initialization&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">connect</span><span class="p">();</span>
+<span class="w">            </span><span class="n">subscribeTopics</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">MqttException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to initialize MQTT bridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 连接MQTT Broker</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">connect</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">MqttException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">brokerUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getBrokerUrl</span><span class="p">();</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">clientId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getClientId</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 创建MQTT客户端</span>
+<span class="w">        </span><span class="n">mqttClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MqttClient</span><span class="p">(</span><span class="n">brokerUrl</span><span class="p">,</span><span class="w"> </span><span class="n">clientId</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MemoryPersistence</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// 配置连接选项</span>
+<span class="w">        </span><span class="n">MqttConnectOptions</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MqttConnectOptions</span><span class="p">();</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="na">setUserName</span><span class="p">(</span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getUsername</span><span class="p">());</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="na">setPassword</span><span class="p">(</span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getPassword</span><span class="p">().</span><span class="na">toCharArray</span><span class="p">());</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="na">setConnectionTimeout</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">          </span><span class="c1">// 连接超时10秒</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="na">setKeepAliveInterval</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span><span class="w">          </span><span class="c1">// 心跳间隔60秒</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="na">setAutomaticReconnect</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">       </span><span class="c1">// 自动重连</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="na">setCleanSession</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span><span class="w">            </span><span class="c1">// 保留Session</span>
+
+<span class="w">        </span><span class="c1">// 设置回调</span>
+<span class="w">        </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">setCallback</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">MqttCallback</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">connectionLost</span><span class="p">(</span><span class="n">Throwable</span><span class="w"> </span><span class="n">cause</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;MQTT connection lost: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cause</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">                </span><span class="n">connected</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">messageArrived</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">MqttMessage</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">handleMessage</span><span class="p">(</span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="nd">@Override</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">deliveryComplete</span><span class="p">(</span><span class="n">IMqttDeliveryToken</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Message delivered: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">token</span><span class="p">.</span><span class="na">getMessageId</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// 连接</span>
+<span class="w">        </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">connect</span><span class="p">(</span><span class="n">options</span><span class="p">);</span>
+<span class="w">        </span><span class="n">connected</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;MQTT connected to {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">brokerUrl</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 订阅主题</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">subscribeTopics</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">MqttException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getTopics</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">topics</span><span class="p">.</span><span class="na">entrySet</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">topicKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="na">getKey</span><span class="p">();</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">topicPattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getFullTopic</span><span class="p">(</span><span class="n">topicKey</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// 订阅主题（QoS 1）</span>
+<span class="w">            </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">subscribe</span><span class="p">(</span><span class="n">topicPattern</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/+&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;Subscribed to topic: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">topicPattern</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 处理接收到的消息</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleMessage</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">MqttMessage</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="na">getPayload</span><span class="p">(),</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// 解析主题</span>
+<span class="w">            </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">parts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topic</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parts</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">warn</span><span class="p">(</span><span class="s">&quot;Invalid topic format: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">topicType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parts</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span><span class="w">  </span><span class="c1">// status, telemetry, event</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parts</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">;</span><span class="w">   </span><span class="c1">// 设备ID</span>
+
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Received message: topic={}, device={}, payload={}&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                     </span><span class="n">topicType</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// 根据主题类型路由</span>
+<span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">topicType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;telemetry&quot;</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">handleTelemetry</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;status&quot;</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">handleDeviceStatus</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;event&quot;</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">handleDeviceEvent</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="k">default</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">warn</span><span class="p">(</span><span class="s">&quot;Unknown topic type: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">topicType</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to handle MQTT message: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 处理遥测数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleTelemetry</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 转发到RabbitMQ</span>
+<span class="w">            </span><span class="n">rabbitMQProducer</span><span class="p">.</span><span class="na">sendTelemetry</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to forward telemetry: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 处理设备状态</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleDeviceStatus</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">boolean</span><span class="w"> </span><span class="n">online</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">payload</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;online&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="n">deviceOnlineStatus</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">online</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">rabbitMQProducer</span><span class="p">.</span><span class="na">sendDeviceStatus</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to handle device status: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 处理设备事件</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleDeviceEvent</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rabbitMQProducer</span><span class="p">.</span><span class="na">sendEvent</span><span class="p">(</span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to handle device event: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 下发命令到设备</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendCommand</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">command</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqttConfig</span><span class="p">.</span><span class="na">getDeviceTopic</span><span class="p">(</span><span class="s">&quot;cmd&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">MqttMessage</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MqttMessage</span><span class="p">(</span><span class="n">command</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">));</span>
+<span class="w">            </span><span class="n">message</span><span class="p">.</span><span class="na">setQos</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span><span class="c1">// QoS 1 至少一次</span>
+<span class="w">            </span><span class="n">message</span><span class="p">.</span><span class="na">setRetained</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">publish</span><span class="p">(</span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;Command sent: device={}, topic={}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">topic</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">MqttException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to send command: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="s">&quot;Failed to send command&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@PreDestroy</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">destroy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqttClient</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">isConnected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">disconnect</span><span class="p">();</span>
+<span class="w">                </span><span class="n">mqttClient</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;MQTT disconnected&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">MqttException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Failed to disconnect MQTT&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isConnected</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">connected</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.2 RabbitMQProducer 消息生产者</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/mqtt/RabbitMQProducer.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.mqtt</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.extern.slf4j.Slf4j</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.amqp.rabbit.core.RabbitTemplate</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Service</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * RabbitMQ消息生产者</span>
+<span class="cm"> * </span>
+<span class="cm"> * 功能:</span>
+<span class="cm"> * 1. 将MQTT消息转发到RabbitMQ</span>
+<span class="cm"> * 2. 支持不同消息类型路由</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="nd">@Service</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RabbitMQProducer</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">RabbitTemplate</span><span class="w"> </span><span class="n">rabbitTemplate</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 发送遥测数据</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendTelemetry</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rabbitTemplate</span><span class="p">.</span><span class="na">convertAndSend</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;dormpower.direct&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">// 交换机</span>
+<span class="w">            </span><span class="s">&quot;telemetry&quot;</span><span class="p">,</span><span class="w">             </span><span class="c1">// 路由键</span>
+<span class="w">            </span><span class="n">payload</span><span class="w">                  </span><span class="c1">// 消息</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;Telemetry sent to RabbitMQ: device={}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deviceId</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 发送设备状态</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendDeviceStatus</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rabbitTemplate</span><span class="p">.</span><span class="na">convertAndSend</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;dormpower.direct&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot;device.status&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">payload</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * 发送设备事件</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sendEvent</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">deviceId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rabbitTemplate</span><span class="p">.</span><span class="na">convertAndSend</span><span class="p">(</span>
+<span class="w">            </span><span class="s">&quot;dormpower.direct&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot;device.event&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">payload</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>三、MQTT主题设计</h2>
+<h3>3.1 主题结构</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">主题命名规范</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">格式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/{type}/{deviceId}</span>
+
+<span class="w">  </span><span class="nt">主题列表</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/telemetry/{deviceId}</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">遥测数据（电压、电流、功率）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/status/{deviceId}</span><span class="p p-Indicator">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">设备状态（在线/离线）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/cmd/{deviceId}</span><span class="p p-Indicator">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">命令下发（开关、配置）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/ack/{deviceId}</span><span class="p p-Indicator">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">命令确认</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/event/{deviceId}</span><span class="p p-Indicator">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">设备事件（告警、故障）</span>
+
+<span class="w">  </span><span class="nt">示例</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/telemetry/device_001</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/status/A1-301-plug</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorm/cmd/device_002</span>
+</code></pre></div>
+
+<h3>3.2 消息格式</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 遥测数据</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;deviceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;device_001&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;ts&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1642234567</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;voltageV&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">220.5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;currentA&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;powerW&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1128.6</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;energyKwh&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">125.34</span>
+<span class="p">}</span>
+
+<span class="c1">// 设备状态</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;deviceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;device_001&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;online&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;ts&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1642234567</span>
+<span class="p">}</span>
+
+<span class="c1">// 命令下发</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;switch&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;on&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1642234567</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、扩展练习</h2>
+<h3>练习1：实现命令确认机制</h3>
+<ol>
+<li>设备收到命令后发送ACK</li>
+<li>服务端记录命令状态</li>
+<li>超时未确认则重试</li>
+</ol>
+<h3>练习2：实现QoS优化</h3>
+<ol>
+<li>根据消息类型选择QoS等级</li>
+<li>遥测数据使用QoS 0</li>
+<li>命令下发使用QoS 1</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

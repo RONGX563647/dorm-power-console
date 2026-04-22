@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25 Prometheus监控与可观测性 - 宿舍用电管理系统教学文档</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边导航 */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #eaeaea;
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .nav-header p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav a {
+            display: block;
+            padding: 10px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: #fff5f0;
+            color: #ff6b35;
+        }
+        
+        .nav a.active {
+            background: #fff5f0;
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+        }
+        
+        /* 主内容区 */
+        .content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            flex: 1;
+        }
+        
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* 标题样式 */
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 40px 0 20px;
+        }
+        
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px;
+        }
+        
+        .markdown-body p {
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-body li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .markdown-body a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 代码块样式 */
+        .markdown-body pre {
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f6f8fa;
+        }
+        
+        .markdown-body code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .markdown-body :not(pre) > code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        /* 表格样式 */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .markdown-body th, .markdown-body td {
+            padding: 12px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+        }
+        
+        .markdown-body th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        /* 引用块 */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ff6b35;
+            background: #fff5f0;
+            color: #666;
+        }
+        
+        /* 分割线 */
+        .markdown-body hr {
+            height: 1px;
+            border: none;
+            background: #eaeaea;
+            margin: 40px 0;
+        }
+        
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b35;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            text-decoration: none;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background: #ff5722;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="nav">
+        <div class="nav-header">
+            <h3>宿舍用电管理系统</h3>
+            <p>教学文档</p>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <a href="index.html">首页</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">基础配置</div>
+            <a href="00-基础依赖与环境配置.html">00-基础依赖与环境配置</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">模块教程</div>
+            <a href="01-用户认证与权限管理模块.html">01-用户认证与权限管理</a>
+            <a href="02-设备管理模块.html">02-设备管理模块</a>
+            <a href="03-数据采集与监控模块.html">03-数据采集与监控模块</a>
+            <a href="04-计费管理模块.html">04-计费管理模块</a>
+            <a href="05-告警管理模块.html">05-告警管理模块</a>
+            <a href="06-控制管理模块.html">06-控制管理模块</a>
+            <a href="07-宿舍管理模块.html">07-宿舍管理模块</a>
+            <a href="08-系统管理模块.html">08-系统管理模块</a>
+            <a href="09-AI 智能模块.html">09-AI 智能模块</a>
+            <a href="10-通知管理模块.html">10-通知管理模块</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">技术深度</div>
+            <a href="11-技术深度-高并发架构设计.html">11-高并发架构设计</a>
+            <a href="12-技术深度-数据一致性处理.html">12-数据一致性处理</a>
+            <a href="13-技术深度-Bug修复与调试技巧.html">13-Bug修复与调试技巧</a>
+            <a href="14-技术深度-性能优化与改进方向.html">14-性能优化与改进方向</a>
+            <a href="15-技术深度-系统演进与未来规划.html">15-系统演进与未来规划</a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">核心亮点</div>
+            <a href="16-多级缓存系统设计与实现.html">16-多级缓存系统</a>
+            <a href="17-MQTT桥接与IoT通信系统.html">17-MQTT桥接与IoT通信</a>
+            <a href="18-Kafka批量消息处理系统.html">18-Kafka批量消息处理</a>
+            <a href="19-WebSocket实时推送系统.html">19-WebSocket实时推送</a>
+            <a href="20-AI智能检测与预测系统.html">20-AI智能检测与预测</a>
+            <a href="21-Java21虚拟线程高并发优化.html">21-Java21虚拟线程</a>
+            <a href="22-分布式限流与熔断降级.html">22-分布式限流与熔断</a>
+            <a href="23-AOP切面与监控审计系统.html">23-AOP切面与监控审计</a>
+            <a href="24-分布式锁与数据一致性.html">24-分布式锁与一致性</a>
+            <a href="25-Prometheus监控与可观测性.html">25-Prometheus监控</a>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="content">
+        <article class="markdown-body">
+<h1>模块25：Prometheus监控与可观测性</h1>
+<blockquote>
+<p><strong>学习时长</strong>: 3-5 天<br />
+<strong>难度</strong>: ⭐⭐⭐⭐<br />
+<strong>前置知识</strong>: 监控概念、Prometheus基础、Grafana</p>
+</blockquote>
+<hr />
+<h2>一、系统架构</h2>
+<h3>1.1 可观测性三大支柱</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">可观测性</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1. Metrics（指标）</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus + Grafana</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">系统指标（CPU、内存）</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">业务指标（QPS、延迟）</span>
+
+<span class="w">  </span><span class="nt">2. Logging（日志）</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log4j2 + ELK</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">应用日志</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">审计日志</span>
+
+<span class="w">  </span><span class="nt">3. Tracing（链路追踪）</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Jaeger / Zipkin</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">请求链路</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">性能分析</span>
+</code></pre></div>
+
+<h3>1.2 监控指标分类</h3>
+<div class="codehilite"><pre><span></span><code>指标类型:
+  ├── Counter（计数器）
+  │   ├── 请求总数
+  │   ├── 错误总数
+  │   └── 消息处理数
+  │
+  ├── Gauge（仪表盘）
+  │   ├── 连接数
+  │   ├── 队列大小
+  │   └── 缓存命中率
+  │
+  ├── Histogram（直方图）
+  │   ├── 请求延迟分布
+  │   ├── 响应大小分布
+  │   └── 批处理大小
+  │
+  └── Summary（摘要）
+      ├── P50/P90/P99延迟
+      └── 平均响应时间
+</code></pre></div>
+
+<hr />
+<h2>二、核心组件</h2>
+<h3>2.1 PrometheusMetrics 监控指标</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/monitoring/PrometheusMetrics.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.monitoring</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io.micrometer.core.instrument.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.annotation.PostConstruct</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Prometheus监控指标</span>
+<span class="cm"> * </span>
+<span class="cm"> * 指标列表:</span>
+<span class="cm"> * 1. 设备在线数</span>
+<span class="cm"> * 2. 消息处理速率</span>
+<span class="cm"> * 3. 缓存命中率</span>
+<span class="cm"> * 4. WebSocket连接数</span>
+<span class="cm"> * 5. 数据库连接池</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Component</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PrometheusMetrics</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">MeterRegistry</span><span class="w"> </span><span class="n">meterRegistry</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Counter</span><span class="w"> </span><span class="n">telemetryProcessedCounter</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Counter</span><span class="w"> </span><span class="n">telemetryErrorCounter</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Gauge</span><span class="w"> </span><span class="n">onlineDevicesGauge</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Gauge</span><span class="w"> </span><span class="n">wsConnectionsGauge</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Timer</span><span class="w"> </span><span class="n">telemetryProcessTimer</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@PostConstruct</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">initMetrics</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 遥测处理计数器</span>
+<span class="w">        </span><span class="n">telemetryProcessedCounter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Counter</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;dormpower.telemetry.processed&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Total telemetry messages processed&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;component&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mqtt&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 遥测错误计数器</span>
+<span class="w">        </span><span class="n">telemetryErrorCounter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Counter</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;dormpower.telemetry.errors&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Total telemetry processing errors&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;component&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mqtt&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// WebSocket连接数</span>
+<span class="w">        </span><span class="n">wsConnectionsGauge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gauge</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;dormpower.websocket.connections&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">getWsConnectionCount</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Current WebSocket connection count&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 遥测处理耗时</span>
+<span class="w">        </span><span class="n">telemetryProcessTimer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Timer</span><span class="p">.</span><span class="na">builder</span><span class="p">(</span><span class="s">&quot;dormpower.telemetry.process.time&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Time to process telemetry message&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">tag</span><span class="p">(</span><span class="s">&quot;component&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mqtt&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">meterRegistry</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">incrementTelemetryProcessed</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">telemetryProcessedCounter</span><span class="p">.</span><span class="na">increment</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">incrementTelemetryError</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">telemetryErrorCounter</span><span class="p">.</span><span class="na">increment</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">recordTelemetryProcessTime</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">millis</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">telemetryProcessTimer</span><span class="p">.</span><span class="na">record</span><span class="p">(</span><span class="n">millis</span><span class="p">,</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">concurrent</span><span class="p">.</span><span class="na">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getWsConnectionCount</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 从WebSocketManager获取</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2.2 ThreadPoolHealthIndicator 线程池健康检查</h3>
+<p><strong>文件位置</strong>: <code>backend/src/main/java/com/dormpower/config/ThreadPoolHealthIndicator.java</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.dormpower.config</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lombok.RequiredArgsConstructor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.actuate.health.Health</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.actuate.health.HealthIndicator</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 线程池健康检查</span>
+<span class="cm"> * </span>
+<span class="cm"> * 检查项:</span>
+<span class="cm"> * 1. 活跃线程数</span>
+<span class="cm"> * 2. 队列等待数</span>
+<span class="cm"> * 3. 拒绝任务数</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author dormpower team</span>
+<span class="cm"> * @version 1.0</span>
+<span class="cm"> */</span>
+<span class="nd">@Component</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ThreadPoolHealthIndicator</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">HealthIndicator</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">ThreadPoolTaskExecutor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">threadPools</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Health</span><span class="w"> </span><span class="nf">health</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Health</span><span class="p">.</span><span class="na">Builder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Health</span><span class="p">.</span><span class="na">up</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">ThreadPoolTaskExecutor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">threadPools</span><span class="p">.</span><span class="na">entrySet</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="na">getKey</span><span class="p">();</span>
+<span class="w">            </span><span class="n">ThreadPoolTaskExecutor</span><span class="w"> </span><span class="n">pool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
+
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="na">getActiveCount</span><span class="p">();</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">poolSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="na">getPoolSize</span><span class="p">();</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">queueSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="na">getThreadPoolExecutor</span><span class="p">().</span><span class="na">getQueue</span><span class="p">().</span><span class="na">size</span><span class="p">();</span>
+
+<span class="w">            </span><span class="c1">// 如果队列堆积超过1000，标记为DOWN</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">queueSize</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">builder</span><span class="p">.</span><span class="na">withDetail</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">                    </span><span class="s">&quot;status&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;DOWN&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;active&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">active</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;poolSize&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">poolSize</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;queueSize&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">queueSize</span>
+<span class="w">                </span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">builder</span><span class="p">.</span><span class="na">withDetail</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">                    </span><span class="s">&quot;status&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;UP&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;active&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">active</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;poolSize&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">poolSize</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">&quot;queueSize&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">queueSize</span>
+<span class="w">                </span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>三、Prometheus配置</h2>
+<h3>3.1 prometheus.yml</h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+<span class="w">  </span><span class="nt">evaluation_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dorm-power&#39;</span>
+<span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/actuator/prometheus&#39;</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;backend:8000&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dorm-power&#39;</span>
+</code></pre></div>
+
+<h3>3.2 Grafana Dashboard</h3>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;宿舍用电管理系统监控&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;设备在线数&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dormpower.devices.online&quot;</span><span class="p">}]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;遥测消息处理速率&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rate(dormpower.telemetry.processed[5m])&quot;</span><span class="p">}]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;API响应时间P99&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;histogram_quantile(0.99, rate(api_request_duration_seconds_bucket[5m]))&quot;</span><span class="p">}]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>四、监控最佳实践</h2>
+<div class="codehilite"><pre><span></span><code><span class="nt">指标命名规范</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">格式</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">application</span><span class="p p-Indicator">}</span><span class="l l-Scalar l-Scalar-Plain">.{component}.{metric}</span>
+<span class="w">  </span><span class="nt">示例</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dormpower.telemetry.processed</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dormpower.mqtt.connections</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dormpower.cache.hit_rate</span>
+
+<span class="nt">告警规则</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">1. 设备离线率 &gt; 10% 持续5分钟</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">2. API错误率 &gt; 5% 持续1分钟</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">3. 数据库连接池使用率 &gt; 80%</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">4. 内存使用率 &gt; 85%</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">5. 磁盘使用率 &gt; 90%</span>
+</code></pre></div>
+
+<hr />
+<p><strong>最后更新</strong>: 2026-04-22<br />
+<strong>文档版本</strong>: 1.0</p>
+        </article>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <!-- Prism.js 代码高亮 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-vue.min.js"></script>
+    
+    <script>
+        // 初始化 Prism 高亮
+        Prism.highlightAll();
+        
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // 当前页面高亮
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('.nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

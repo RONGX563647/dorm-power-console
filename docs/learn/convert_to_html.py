@@ -58,6 +58,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         pre {{
             border-radius: 6px;
             overflow: hidden;
+            position: relative;
         }}
         
         pre[class*="language-"] {{
@@ -141,6 +142,42 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         .back-to-top:hover {{
             background: #0255b3;
         }}
+        
+        /* 代码块复制按钮 */
+        .code-copy-btn {{
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 4px;
+            padding: 6px;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0;
+            transition: all 0.3s;
+            z-index: 10;
+            opacity: 0;
+        }}
+        
+        pre:hover .code-copy-btn {{
+            opacity: 1;
+        }}
+        
+        .code-copy-btn:hover {{
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }}
+        
+        .code-copy-btn.copied {{
+            color: #10b981;
+        }}
+        
+        .code-copy-btn svg {{
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }}
     </style>
 </head>
 <body>
@@ -188,6 +225,41 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <script>
         // 初始化 Prism 高亮
         Prism.highlightAll();
+        
+        // 为所有代码块添加复制按钮
+        function addCopyButtons() {{
+            const copyIcon = '<svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>';
+            const checkIcon = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+            
+            document.querySelectorAll('pre code').forEach(codeBlock => {{
+                const button = document.createElement('button');
+                button.className = 'code-copy-btn';
+                button.innerHTML = copyIcon;
+                button.setAttribute('aria-label', '复制代码');
+                
+                button.addEventListener('click', async () => {{
+                    try {{
+                        const code = codeBlock.textContent;
+                        await navigator.clipboard.writeText(code);
+                        
+                        button.innerHTML = checkIcon;
+                        button.classList.add('copied');
+                        
+                        setTimeout(() => {{
+                            button.innerHTML = copyIcon;
+                            button.classList.remove('copied');
+                        }}, 2000);
+                    }} catch (err) {{
+                        console.error('复制失败:', err);
+                    }}
+                }});
+                
+                codeBlock.parentElement.appendChild(button);
+            }});
+        }}
+        
+        // 初始化复制按钮
+        addCopyButtons();
         
         // 返回顶部按钮
         const backToTop = document.getElementById('backToTop');
